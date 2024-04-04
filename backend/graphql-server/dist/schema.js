@@ -7,6 +7,7 @@ const typeDefs = `#graphql
         email: String!
         password: String!
         is_authorized: Boolean!
+        workouts: [Workout!]
     }
 
     type Workout {
@@ -15,6 +16,7 @@ const typeDefs = `#graphql
         end_time: Int!
         comment: String
         user_uid: ID!
+        exercises: [Exercise!]
     }
 
     type Exercise {
@@ -35,12 +37,40 @@ const typeDefs = `#graphql
     type Query {
         users: [User]
         user(uid: ID!): User
-
         workouts: [Workout]
         workout(uid: ID!): Workout
-
         exercises: [Exercise]
         exercise(uid: ID!): Exercise
     }
+
+    type Mutation {
+        deleteExercise(uid: ID!): [Exercise]!
+        # TODO: deleteWorkoutWithExercises
+        # TODO: deleteUserWithWorkouts
+
+        addUser(user: AddUserInput!): User 
+        # TODO: add workoutWithExercises
+
+        updateUser(uid: ID!, edits: EditUserInput!): User
+        # TODO: add updateWorkout
+        # TODO: add updateExercise
+    }   
+    
+    # "This isn't a type, it's a collection of fields for a mutation"
+    # Note: No uid or is_authorized, we want our system to handle those
+    input AddUserInput {
+        first_name: String!
+        last_name: String!
+        email: String!
+        password: String!
+    }
+
+    input EditUserInput {
+        first_name: String
+        last_name: String
+        email: String
+        password: String
+    }
+
 `;
 export default typeDefs;
