@@ -2,21 +2,33 @@
 const typeDefs = `#graphql
     type User {
         uid: ID!
-        firstName: String!
-        lastName: String!
+        first_name: String!
+        last_name: String!
         email: String!
+        password: String!
+        is_authorized: Boolean!
     }
 
     type Workout {
         uid: ID!
-        date: String!
-        userUid: ID!
+        start_time: Int!
+        end_time: Int!
+        comment: String
+        user_uid: ID!
     }
 
     type Exercise {
         uid: ID!
-        workoutUid: ID!
+        workout_uid: ID!
         title: String!
+        weight: Float
+        weight_unit: String
+        sets: Int
+        reps: Int
+        reps_display: String
+        comment: String
+        start_time: Int
+        end_time: Int
     }
 
     # Required: Defines the entry points to the graph
