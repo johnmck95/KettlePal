@@ -1,3 +1,5 @@
+# Database
+
 ## Connect to PostgreSQL from Terminal
 
 At the root, run `psql postgres://johnmckinnon@localhost:5432/johnmckinnon`
@@ -11,3 +13,13 @@ In the app you can hit `Start` or `Stop` accordingly.
 
 TablePlus connects with the PostgreSQL via the `KettlePal` conection. You can then hit Cmmd + K to connect to the `johnmckinnon` DB.
 In the future, you may want to make your own DB connection.
+
+# GraphQL
+
+## Run the GraphQL Serer
+
+`cd` to `kettlepal/backend/graphql-server`, then run `npm start`
+You can now open `http://localhost:4000/` in the browser to usew Apollo
+Server to test your GQL layer.
+
+NOTE: The server does _not_ hot reload. I think "codemon" is a tool that can do this?
