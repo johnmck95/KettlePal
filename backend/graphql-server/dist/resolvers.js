@@ -1,4 +1,5 @@
 import mock_db from "./mock_db.js";
+import { v4 as uuidv4 } from "uuid";
 // Incoming Resolver Properties are: (parent, args, context)
 const resolvers = {
     // The top-level resolvers inside Query are the entry point resolvers for the graph
@@ -46,7 +47,7 @@ const resolvers = {
         addUser(_, args) {
             let new_user = {
                 ...args.user,
-                uid: Math.floor(Math.random() * 10000).toString(), // TODO: find a uid generator
+                uid: uuidv4(),
                 is_authorized: false,
             };
             mock_db.users.push(new_user);
