@@ -1,8 +1,7 @@
 import mock_db from "./mock_db.js";
 import { v4 as uuidv4 } from "uuid";
 import knex from "./knexfile.js";
-// import knex from "knex";
-// const useKnex = knex(knexConfig);
+
 // Incoming Resolver Properties are: (parent, args, context)
 const resolvers = {
   // The top-level resolvers inside Query are the entry point resolvers for the graph
@@ -66,7 +65,7 @@ const resolvers = {
     addUser(_, args) {
       let new_user = {
         ...args.user,
-        uid: uuidv4(),
+        uid: uuidv4(), // may want to do this on the DB side
         is_authorized: false,
       };
       mock_db.users.push(new_user);
