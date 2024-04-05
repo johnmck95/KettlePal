@@ -20,9 +20,13 @@ To make `kettlebell-dev` have an identical schema & data as `kettlepal-stage`, r
 
 # GraphQL
 
-## Run the GraphQL Serer
+## Run the GraphQL Server
 
 `cd` to `kettlepal/backend/graphql-server`, then run `npm start`
 You can now open `http://localhost:4000/` in the browser to use Apollo Server to test your GQL layer.
 
 NOTE: The server does _not_ hot reload. I think "codemon" is a tool that can do this?
+
+## Selecting the Database
+
+`knexfile.ts` in _/backend/graphql-server/src_ contains the `knexConfig` required for defining the DB connection. It uses env variables to choose to corresponding DB. Update these env variables to change the DB you are pointing to.

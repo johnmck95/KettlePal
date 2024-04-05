@@ -1,13 +1,27 @@
 import mock_db from "./mock_db.js";
 import { v4 as uuidv4 } from "uuid";
+import knex from "./knexfile.js";
+// import knex from "knex";
+// const useKnex = knex(knexConfig);
 
 // Incoming Resolver Properties are: (parent, args, context)
 const resolvers = {
   // The top-level resolvers inside Query are the entry point resolvers for the graph
   // They don't handlke nested queries, like workout{ exercises{...} }
   Query: {
-    users() {
-      return mock_db.users;
+    async users() {
+      console.log("Fetching users from database");
+      try {
+        const users = await knex("users").select("*");
+        console.log("Fetched users:", users);
+        return users;
+      } catch (error) {
+        console.error("Error fetching users:", error);
+        throw error; // Rethrow the error to propagate it to the GraphQL layer
+      }
+      // console.log("something");
+      // return await knex("users").select("*");
+      // // return mock_db.users;
     },
     user(_, args) {
       return mock_db.users.find((user) => user.uid === args.uid);
