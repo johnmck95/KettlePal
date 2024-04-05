@@ -9,21 +9,29 @@ const resolvers = {
     // They don't handlke nested queries, like workout{ exercises{...} }
     Query: {
         async users() {
-            console.log("Fetching users from database");
             try {
-                const users = await knex("users").select("*");
-                console.log("Fetched users:", users);
-                return users;
+                return await knex("users").select("*");
             }
             catch (error) {
                 console.error("Error fetching users:", error);
-                throw error; // Rethrow the error to propagate it to the GraphQL layer
+                throw error;
             }
-            // console.log("something");
-            // return await knex("users").select("*");
-            // // return mock_db.users;
         },
-        user(_, args) {
+        async user(_, args) {
+            try {
+                // const query = knex("users")
+                //   .select("*")
+                //   .where({ uid: args.uid })
+                //   .toQuery();
+                // console.log(query);
+                const result = await knex("users").select("*").where({ uid: args.uid });
+                console.log(result);
+                return await knex("users").select("*").where({ uid: args.uid }).first();
+            }
+            catch (error) {
+                console.error("Error fetching user:", error);
+                throw error;
+            }
             return mock_db.users.find((user) => user.uid === args.uid);
         },
         workouts() {
