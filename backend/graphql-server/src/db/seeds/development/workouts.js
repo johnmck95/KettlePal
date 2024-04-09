@@ -1,7 +1,6 @@
 export async function seed(knex) {
   const usersUids = (await knex("users")).map((user) => user.uid);
 
-  // Deletes ALL existing entries
   await knex("workouts").del();
   await knex("workouts").insert([
     {
