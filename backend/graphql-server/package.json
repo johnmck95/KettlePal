@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "compile": "tsc",
-    "start": "npm run compile && node ./dist/src/index.js",
+    "start": "npm run compile && node ./dist/index.js",
     "restore_kettlepal-dev": "./bin/stage_to_dev_migration.sh"
   },
   "keywords": [],

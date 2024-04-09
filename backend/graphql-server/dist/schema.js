@@ -8,7 +8,7 @@ const typeDefs = `#graphql
         password: String!
         is_authorized: Boolean!
         workouts: [Workout!]
-        created_at: Timestamp! // to confirm type.
+        created_at: Int! # to confirm type.
     }
 
     type Workout {
