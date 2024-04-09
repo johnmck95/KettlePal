@@ -2,7 +2,6 @@ import mock_db from "./mock_db.js";
 import { v4 as uuidv4 } from "uuid";
 import knexConfig from "../knexfile.js";
 import knex from "knex";
-// const useKnex = knex(knexConfig);
 const knexInstance = knex(knexConfig);
 // Incoming Resolver Properties are: (parent, args, context)
 const resolvers = {

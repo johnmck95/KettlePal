@@ -1,8 +1,8 @@
 import mock_db from "./mock_db.js";
 import { v4 as uuidv4 } from "uuid";
-import knex from "./knexfile.js";
-// import knex from "knex";
-// const useKnex = knex(knexConfig);
+import knexConfig from "../knexfile.js";
+import knex from "knex";
+const knexInstance = knex(knexConfig);
 // Incoming Resolver Properties are: (parent, args, context)
 const resolvers = {
     // The top-level resolvers inside Query are the entry point resolvers for the graph
@@ -10,7 +10,7 @@ const resolvers = {
     Query: {
         async users() {
             try {
-                return await knex("users").select("*");
+                return await knexInstance("users").select("*");
             }
             catch (error) {
                 console.error("Error fetching users:", error);
@@ -19,7 +19,10 @@ const resolvers = {
         },
         async user(_, args) {
             try {
-                return await knex("users").select("*").where({ uid: args.uid }).first();
+                return await knexInstance("users")
+                    .select("*")
+                    .where({ uid: args.uid })
+                    .first();
             }
             catch (error) {
                 console.error("Error fetching user:", error);

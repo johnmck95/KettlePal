@@ -2,11 +2,11 @@
   "name": "graphql-server",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.ts",
   "type": "module",
   "scripts": {
     "compile": "tsc",
-    "start": "npm run compile && node ./dist/index.js",
+    "start": "npm run compile && node ./dist/src/index.js",
     "restore_kettlepal-dev": "./bin/stage_to_dev_migration.sh"
   },
   "keywords": [],
@@ -19,7 +19,7 @@
     "ts-node": "^10.9.2"
   },
   "devDependencies": {
-    "@types/node": "^20.12.4",
+    "@types/node": "^20.12.6",
     "typescript": "^5.4.3"
   }
 }

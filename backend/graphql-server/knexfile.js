@@ -24,13 +24,13 @@ const knexConfig = {
     max: 10,
   },
   migrations: {
-    directory: path.join(decodedDirname, "./src/db/migrations"),
+    directory: path.join(decodedDirname, "/src/db/migrations"),
     tableName: "knex_migrations",
   },
   seeds: {
     directory: path.join(
       decodedDirname,
-      "./src/db/seeds",
+      "/src/db/seeds",
       process.env.NODE_ENV === "development" ? "development" : "staging"
     ),
   },
