@@ -18,6 +18,16 @@ There are currently two local databases, `kettlepal-stage` & `kettlepal-dev`.
 
 To make `kettlebell-dev` have an identical schema & data as `kettlepal-stage`, run `npm run restore_kettlepal-dev`. This will drop the `kettlepal-dev` database, pg_dump the contents of `kettlepal-stage`, then create a new `kettlepal-dev` DB with the dumped data. Finally, it removes the data dump file.
 
+## Migrations
+
+- Make a new migration with `knex migrate:make migration_name`, this will be stored in `src/db/migrations`.
+- See the docs for various up/down/latest.. commands. https://knexjs.org/guide/migrations.html#migration-cli
+
+## Seeds
+
+- Make a new Seed file with `knex seed:make table_name`, this will be stored in `src/db/seeds`.
+- Run the particular seeding file with `knex seed:make name`
+
 # GraphQL
 
 ## Run the GraphQL Server
