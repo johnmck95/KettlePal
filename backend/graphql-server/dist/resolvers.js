@@ -122,8 +122,7 @@ const resolvers = {
                     ...args.user,
                     is_authorized: false,
                 };
-                const insertedRows = await knexInstance("users").insert(new_user);
-                console.log(`Inserted ${insertedRows.length} rows into users.`);
+                await knexInstance("users").insert(new_user);
                 const insertedUser = await knexInstance("users")
                     .where({
                     email: args.user.email,
@@ -140,15 +139,23 @@ const resolvers = {
             // mock_db.users.push(new_user);
             // return new_user;
         },
-        // updateUser(_, args) {
-        //   mock_db.users = mock_db.users.map((user) => {
-        //     if (user.uid === args.uid) {
-        //       return { ...user, ...args.edits };
-        //     }
-        //     return user;
-        //   });
-        //   return mock_db.users.find((user) => user.uid === args.uid);
-        // },
+        async updateUser(_, args) {
+            try {
+                await knexInstance("users").where({ uid: args.uid }).update(args.edits);
+                return await knexInstance("users").where({ uid: args.uid }).first();
+            }
+            catch (e) {
+                console.error("Error updating user:", e);
+                throw e;
+            }
+            // mock_db.users = mock_db.users.map((user) => {
+            //   if (user.uid === args.uid) {
+            //     return { ...user, ...args.edits };
+            //   }
+            //   return user;
+            // });
+            // return mock_db.users.find((user) => user.uid === args.uid);
+        },
     },
 };
 export default resolvers;
