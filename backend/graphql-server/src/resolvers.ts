@@ -1,5 +1,3 @@
-// import mock_db from "./mock_db.js";
-import { v4 as uuidv4 } from "uuid";
 import knexConfig from "../knexfile.js";
 import knex from "knex";
 
@@ -121,16 +119,32 @@ const resolvers = {
     // TODO: deleteWorkoutWithExercises
     // TODO: deleteUserWithWorkouts
 
-    // addUser(_, args) {
-    //   let new_user = {
-    //     ...args.user,
-    //     uid: uuidv4(),
-    //     is_authorized: false,
-    //   };
-    //   mock_db.users.push(new_user);
+    async addUser(_, args) {
+      try {
+        let new_user = {
+          ...args.user,
+          is_authorized: false,
+        };
+        await knexInstance("users").insert(new_user);
 
-    //   return new_user;
-    // },
+        const insertedUser = await knexInstance("users")
+          .where({
+            email: args.user.email,
+            first_name: args.user.first_name,
+            last_name: args.user.last_name,
+          })
+          .first();
+
+        return insertedUser;
+      } catch (error) {
+        console.error("Error adding user:", error);
+        throw error;
+      }
+
+      // mock_db.users.push(new_user);
+
+      // return new_user;
+    },
 
     // updateUser(_, args) {
     //   mock_db.users = mock_db.users.map((user) => {
