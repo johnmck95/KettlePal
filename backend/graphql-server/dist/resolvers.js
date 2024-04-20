@@ -35,7 +35,6 @@ const resolvers = {
                 console.error("Error fetching workouts:", error);
                 throw error;
             }
-            // return mock_db.workouts;
         },
         async workout(_, args) {
             try {
@@ -48,7 +47,6 @@ const resolvers = {
                 console.error("Error fetching workout:", error);
                 throw error;
             }
-            // return mock_db.workouts.find((workout) => workout.uid === args.uid);
         },
         async exercises() {
             try {
@@ -71,7 +69,6 @@ const resolvers = {
                 console.error("Error fetching exercises:", error);
                 throw error;
             }
-            // return mock_db.exercises.find((exercise) => exercise.uid === args.uid);
         },
     },
     // This is the resolver to gather all of the workouts for a given user
@@ -87,11 +84,6 @@ const resolvers = {
                 throw error;
             }
         },
-        // workouts(parent) {
-        //   return mock_db.workouts.filter(
-        //     (workout) => workout.user_uid === parent.uid
-        //   );
-        // },
     },
     // This is the resolver for returning all exercises within a workout
     Workout: {
@@ -105,39 +97,43 @@ const resolvers = {
                 console.error("Error fetching exercises:", error);
                 throw error;
             }
-            // return mock_db.exercises.filter(
-            //   (exercise) => exercise.workout_uid === parent.uid
-            // );
         },
     },
     // Takes in the same args as our query resolvers
-    // Mutation: {
-    //   deleteExercise(_, args) {
-    //     mock_db.exercises = mock_db.exercises.filter(
-    //       (exercise) => exercise.uid !== args.uid
-    //     );
-    //     return mock_db.exercises;
-    //   },
-    //   // TODO: deleteWorkoutWithExercises
-    //   // TODO: deleteUserWithWorkouts
-    //   addUser(_, args) {
-    //     let new_user = {
-    //       ...args.user,
-    //       uid: uuidv4(),
-    //       is_authorized: false,
-    //     };
-    //     mock_db.users.push(new_user);
-    //     return new_user;
-    //   },
-    //   updateUser(_, args) {
-    //     mock_db.users = mock_db.users.map((user) => {
-    //       if (user.uid === args.uid) {
-    //         return { ...user, ...args.edits };
-    //       }
-    //       return user;
-    //     });
-    //     return mock_db.users.find((user) => user.uid === args.uid);
-    //   },
-    // },
+    Mutation: {
+        async deleteExercise(_, args) {
+            try {
+                const numAffectedRows = await knexInstance("exercises")
+                    .where({ uid: args.uid })
+                    .del();
+                console.log(`${numAffectedRows} rows affected in deleteExercise mutation.`);
+                return await knexInstance("exercises").select("*");
+            }
+            catch (error) {
+                console.error("Error deleting exercise:", error);
+                throw error;
+            }
+        },
+        // TODO: deleteWorkoutWithExercises
+        // TODO: deleteUserWithWorkouts
+        // addUser(_, args) {
+        //   let new_user = {
+        //     ...args.user,
+        //     uid: uuidv4(),
+        //     is_authorized: false,
+        //   };
+        //   mock_db.users.push(new_user);
+        //   return new_user;
+        // },
+        // updateUser(_, args) {
+        //   mock_db.users = mock_db.users.map((user) => {
+        //     if (user.uid === args.uid) {
+        //       return { ...user, ...args.edits };
+        //     }
+        //     return user;
+        //   });
+        //   return mock_db.users.find((user) => user.uid === args.uid);
+        // },
+    },
 };
 export default resolvers;
