@@ -1,10 +1,11 @@
 import knexConfig from "../knexfile.js";
 import knex from "knex";
+// import { UpdateUserArgs, AddOrEditUserInput, User, Workout } from "../../types";
 const knexInstance = knex(knexConfig);
 // Incoming Resolver Properties are: (parent, args, context)
 const resolvers = {
     // The top-level resolvers inside Query are the entry point resolvers for the graph
-    // They don't handlke nested queries, like workout{ exercises{...} }
+    // They don't handle nested queries, like workout{ exercises{...} }
     Query: {
         async users() {
             try {
@@ -15,11 +16,11 @@ const resolvers = {
                 throw error;
             }
         },
-        async user(_, args) {
+        async user(_, { uid }) {
             try {
                 return await knexInstance("users")
                     .select("*")
-                    .where({ uid: args.uid })
+                    .where({ uid: uid })
                     .first();
             }
             catch (error) {
@@ -36,11 +37,11 @@ const resolvers = {
                 throw error;
             }
         },
-        async workout(_, args) {
+        async workout(_, { uid }) {
             try {
                 return await knexInstance("workouts")
                     .select("*")
-                    .where({ uid: args.uid })
+                    .where({ uid: uid })
                     .first();
             }
             catch (error) {
@@ -58,11 +59,11 @@ const resolvers = {
             }
             // return mock_db.exercises;
         },
-        async exercise(_, args) {
+        async exercise(_, { uid }) {
             try {
                 return await knexInstance("exercises")
                     .select("*")
-                    .where({ uid: args.uid })
+                    .where({ uid: uid })
                     .first();
             }
             catch (error) {
@@ -101,10 +102,12 @@ const resolvers = {
     },
     // Takes in the same args as our query resolvers
     Mutation: {
-        async deleteExercise(_, args) {
+        // async deleteUserWithWorkouts (cascased to exercises)
+        // async deleteWorkoutWithExercises
+        async deleteExercise(_, { uid }) {
             try {
                 const numAffectedRows = await knexInstance("exercises")
-                    .where({ uid: args.uid })
+                    .where({ uid: uid })
                     .del();
                 console.log(`${numAffectedRows} rows affected in deleteExercise mutation.`);
                 return await knexInstance("exercises").select("*");
@@ -114,20 +117,18 @@ const resolvers = {
                 throw error;
             }
         },
-        // TODO: deleteWorkoutWithExercises
-        // TODO: deleteUserWithWorkouts
-        async addUser(_, args) {
+        async addUser(_, { user }) {
             try {
                 let new_user = {
-                    ...args.user,
+                    ...user,
                     is_authorized: false,
                 };
                 await knexInstance("users").insert(new_user);
                 const insertedUser = await knexInstance("users")
                     .where({
-                    email: args.user.email,
-                    first_name: args.user.first_name,
-                    last_name: args.user.last_name,
+                    email: user.email,
+                    first_name: user.first_name,
+                    last_name: user.last_name,
                 })
                     .first();
                 return insertedUser;
@@ -136,26 +137,24 @@ const resolvers = {
                 console.error("Error adding user:", error);
                 throw error;
             }
-            // mock_db.users.push(new_user);
-            // return new_user;
         },
+        /** WEIRDNESS!!  Updating this function isn't actually getting reflected in the server on it's own
+         * I have to comment out the 'UpdateUserArgs' import, run the server, get the error, uncomment the import, and then run the server again.
+         * ..then it magically works!! WHY. Everything else is a mess right now. Add TS types and fix the other resolvers.
+         */
         async updateUser(_, args) {
+            const { edits, uid } = args;
             try {
-                await knexInstance("users").where({ uid: args.uid }).update(args.edits);
-                return await knexInstance("users").where({ uid: args.uid }).first();
+                await knexInstance("users").where({ uid: uid }).update(edits);
+                return await knexInstance("users").where({ uid: uid }).first();
             }
             catch (e) {
                 console.error("Error updating user:", e);
                 throw e;
             }
-            // mock_db.users = mock_db.users.map((user) => {
-            //   if (user.uid === args.uid) {
-            //     return { ...user, ...args.edits };
-            //   }
-            //   return user;
-            // });
-            // return mock_db.users.find((user) => user.uid === args.uid);
         },
+        // addWorkoutWithExercises
+        // updateWorkoutWithExercises
     },
 };
 export default resolvers;
