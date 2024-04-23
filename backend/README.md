@@ -25,8 +25,11 @@ To make `kettlebell-dev` have an identical schema & data as `kettlepal-stage`, r
 
 ## Seeds
 
-- Make a new Seed file with `knex seed:make table_name`, this will be stored in `src/db/seeds`.
-- Run the seeding with `knex seed:run`
+- Make a new Seed file with `knex seed:make table_name`, this will be stored in `src/db/seeds`. IF THIS SEED FILENAME ALREADY EXISTS, IT WILL OVERWRITE THE FILE! You've been warned.
+
+- You can generically run the seeding with `knex seed:run`, or
+- Run a specific seed file with `knex seed:run --specific=filename.js`
+- Note the table dependencies are ordered as such: Users -> Workouts -> Exercises
 
 # GraphQL
 
