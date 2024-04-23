@@ -107,8 +107,8 @@ const resolvers = {
 
   // Takes in the same args as our query resolvers
   Mutation: {
-    // async deleteUserWithWorkouts (cascased to exercises)
-    // async deleteWorkoutWithExercises
+    // async deleteUser - throw error if any workouts exist with this user_uid
+    // async deleteWorkout - throw error if any exercises exist with this workout_uid
     async deleteExercise(_, { uid }: { uid: String }) {
       try {
         const numAffectedRows = await knexInstance("exercises")
@@ -149,6 +149,40 @@ const resolvers = {
       }
     },
 
+    async addWorkout(
+      _,
+      {
+        user_uid,
+        workout,
+      }: {
+        user_uid: String;
+        workout: AddOrEditWorkoutInput;
+      }
+    ) {
+      try {
+        // TODO: Implement a way of adding start and end times based on user input
+        let new_workout = {
+          ...workout,
+          user_uid: user_uid,
+          start_time: dayjs().format("YYYY-MM-DDTHH:mm:ss.SSSZ"),
+          end_time: dayjs().add(1, "hour").format("YYYY-MM-DDTHH:mm:ss.SSSZ"),
+        };
+        await knexInstance("workouts").insert(new_workout);
+
+        const insertedWorkout = await knexInstance("workouts")
+          .where({
+            comment: workout.comment,
+            user_uid: user_uid,
+          })
+          .first();
+
+        return insertedWorkout;
+      } catch (error) {
+        console.error("Error adding workout:", error);
+        throw error;
+      }
+    },
+
     async addExercise(
       _,
       {
@@ -185,39 +219,6 @@ const resolvers = {
       }
     },
 
-    async addWorkout(
-      _,
-      {
-        user_uid,
-        workout,
-      }: {
-        user_uid: String;
-        workout: AddOrEditWorkoutInput;
-      }
-    ) {
-      try {
-        let new_workout = {
-          ...workout,
-          user_uid: user_uid,
-          start_time: dayjs().format("YYYY-MM-DDTHH:mm:ss.SSSZ"),
-          end_time: dayjs().add(1, "hour").format("YYYY-MM-DDTHH:mm:ss.SSSZ"),
-        };
-        await knexInstance("workouts").insert(new_workout);
-
-        const insertedWorkout = await knexInstance("workouts")
-          .where({
-            comment: workout.comment,
-            user_uid: user_uid,
-          })
-          .first();
-
-        return insertedWorkout;
-      } catch (error) {
-        console.error("Error adding workout:", error);
-        throw error;
-      }
-    },
-
     /** WEIRDNESS!!  Updating this function isn't actually getting reflected in the server on it's own
      * I have to comment out the 'UpdateUserArgs' import, run the server, get the error, uncomment the import, and then run the server again.
      * ..then it magically works!! WHY. Everything else is a mess right now. Add TS types and fix the other resolvers.
@@ -234,6 +235,7 @@ const resolvers = {
         throw e;
       }
     },
+
     // update Workout
     // update Exercise
   },
