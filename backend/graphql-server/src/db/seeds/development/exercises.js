@@ -1,13 +1,98 @@
-/**
- * @param { import("knex").Knex } knex
- * @returns { Promise<void> } 
- */
-exports.seed = async function(knex) {
-  // Deletes ALL existing entries
-  await knex('table_name').del()
-  await knex('table_name').insert([
-    {id: 1, colName: 'rowValue1'},
-    {id: 2, colName: 'rowValue2'},
-    {id: 3, colName: 'rowValue3'}
+export async function seed(knex) {
+  const workoutsUids = (await knex("workouts")).map((workout) => workout.uid);
+
+  await knex("exercises").del();
+  await knex("exercises").insert([
+    {
+      workout_uid: workoutsUids[0],
+      title: "Swing",
+      weight: 24,
+      weight_unit: "kg",
+      sets: 10,
+      reps: 12,
+      reps_display: "std",
+      comment: "John 1st workout - Swings & Press",
+    },
+    {
+      workout_uid: workoutsUids[0],
+      title: "Press",
+      weight: 24,
+      weight_unit: "kg",
+      sets: 5,
+      reps: 10,
+      reps_display: "l/r",
+      comment: "John 1st workout - Swings & Press",
+    },
+
+    {
+      workout_uid: workoutsUids[1],
+      title: "Snatch",
+      weight: 20,
+      weight_unit: "kg",
+      sets: 10,
+      reps: 10,
+      reps_display: "l/r",
+      comment: "John's 2nd workout - Snatch",
+    },
+    {
+      workout_uid: workoutsUids[2],
+      title: "Squat",
+      weight: 16,
+      weight_unit: "kg",
+      sets: 15,
+      reps: 20,
+      reps_display: "std",
+      comment: "Jane's 1st workout - Squat",
+    },
+    {
+      workout_uid: workoutsUids[3],
+      title: "TGU",
+      weight: 35,
+      weight_unit: "lb",
+      sets: 10,
+      reps: 1,
+      reps_display: "l/r",
+      comment: " Robert's 1st workout - TGU",
+    },
+    {
+      workout_uid: workoutsUids[4],
+      title: "SA Swing",
+      weight: 24,
+      weight_unit: "kg",
+      sets: 10,
+      reps: 10,
+      reps_display: "l/r",
+      comment: "Ada's 1st workout - SA Swing & TGU",
+    },
+    {
+      workout_uid: workoutsUids[4],
+      title: "TGU",
+      weight: 16,
+      weight_unit: "kg",
+      sets: 10,
+      reps: 1,
+      reps_display: "std",
+      comment: "Ada's 1st workout - SA Swing & TGU",
+    },
+    {
+      workout_uid: workoutsUids[5],
+      title: "Goblet Squat",
+      weight: 28,
+      weight_unit: "kg",
+      sets: 5,
+      reps: 5,
+      reps_display: "std",
+      comment: "Ada's 2nd workout - Squat & Press",
+    },
+    {
+      workout_uid: workoutsUids[5],
+      title: "Press",
+      weight: 24,
+      weight_unit: "kg",
+      sets: 3,
+      reps: 2,
+      reps_display: "l/r",
+      comment: "Ada's 2nd workout - Squat & Press",
+    },
   ]);
-};
+}
