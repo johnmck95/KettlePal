@@ -185,21 +185,38 @@ const resolvers = {
       }
     },
 
-    // can have 0 exercises
-    async addWorkoutWithExercises(
+    async addWorkout(
       _,
       {
         user_uid,
         workout,
-        exercises
-      } : {
+      }: {
         user_uid: String;
         workout: AddOrEditWorkoutInput;
-        exercises: AddOrEditExerciseInput[]; 
       }
     ) {
-      
-    }
+      try {
+        let new_workout = {
+          ...workout,
+          user_uid: user_uid,
+          start_time: dayjs().format("YYYY-MM-DDTHH:mm:ss.SSSZ"),
+          end_time: dayjs().add(1, "hour").format("YYYY-MM-DDTHH:mm:ss.SSSZ"),
+        };
+        await knexInstance("workouts").insert(new_workout);
+
+        const insertedWorkout = await knexInstance("workouts")
+          .where({
+            comment: workout.comment,
+            user_uid: user_uid,
+          })
+          .first();
+
+        return insertedWorkout;
+      } catch (error) {
+        console.error("Error adding workout:", error);
+        throw error;
+      }
+    },
 
     /** WEIRDNESS!!  Updating this function isn't actually getting reflected in the server on it's own
      * I have to comment out the 'UpdateUserArgs' import, run the server, get the error, uncomment the import, and then run the server again.

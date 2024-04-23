@@ -52,7 +52,7 @@ const typeDefs = `#graphql
 
         addUser(user: AddUserInput!): User 
         addExercise(workout_uid: ID!, exercise: AddExerciseInput!): Exercise
-        addWorkoutWithExercises(user_uid: ID!, workout: AddWorkoutInput!, exercises: [AddExerciseInput]!): Workout
+        addWorkout(user_uid: ID!, workout: AddWorkoutInput!): Workout
         # TODO: add workoutWithExercises
 
         updateUser(uid: ID!, edits: EditUserInput!): User
@@ -68,10 +68,16 @@ const typeDefs = `#graphql
         email: String!
         password: String!
     }
+    input EditUserInput {
+        first_name: String
+        last_name: String
+        email: String
+        password: String
+    }
 
     input AddWorkoutInput {
-        start_time: Int!
-        end_time: Int!
+        start_time: Int
+        end_time: Int
         comment: String
     }
 
@@ -88,12 +94,6 @@ const typeDefs = `#graphql
     
     }
 
-    input EditUserInput {
-        first_name: String
-        last_name: String
-        email: String
-        password: String
-    }
 
 `;
 

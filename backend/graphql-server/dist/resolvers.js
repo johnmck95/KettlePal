@@ -6,6 +6,7 @@ import dayjs from "dayjs";
 //   AddOrEditUserInput,
 //   User,
 //   Workout,
+//   AddOrEditWorkoutInput,
 //   AddOrEditExerciseInput,
 // } from "../../types";
 const knexInstance = knex(knexConfig);
@@ -144,9 +145,9 @@ const resolvers = {
                 throw error;
             }
         },
-        //addWorkoutWithExercises   // can have 0 exercises
         async addExercise(_, { workout_uid, exercise, }) {
             try {
+                // TODO: Implement a way of adding start and end times based on user input
                 let new_exercise = {
                     ...exercise,
                     workout_uid: workout_uid,
@@ -154,8 +155,6 @@ const resolvers = {
                     end_time: dayjs()
                         .add(10, "minutes")
                         .format("YYYY-MM-DDTHH:mm:ss.SSSZ"),
-                    // start_time: null, // TODO: Figure out how to send timestamps
-                    // end_time: null, // TODO: Figure out how to send timestamps
                 };
                 await knexInstance("exercises").insert(new_exercise);
                 const insertedExercise = await knexInstance("exercises")
@@ -171,6 +170,29 @@ const resolvers = {
             }
             catch (error) {
                 console.error("Error adding exercise:", error);
+                throw error;
+            }
+        },
+        async addWorkout(_, { user_uid, workout, }) {
+            // console.log("in addWorkout resolver");
+            try {
+                let new_workout = {
+                    ...workout,
+                    user_uid: user_uid,
+                    start_time: dayjs().format("YYYY-MM-DDTHH:mm:ss.SSSZ"),
+                    end_time: dayjs().add(1, "hour").format("YYYY-MM-DDTHH:mm:ss.SSSZ"),
+                };
+                await knexInstance("workouts").insert(new_workout);
+                const insertedWorkout = await knexInstance("workouts")
+                    .where({
+                    comment: workout.comment,
+                    user_uid: user_uid,
+                })
+                    .first();
+                return insertedWorkout;
+            }
+            catch (error) {
+                console.error("Error adding workout:", error);
                 throw error;
             }
         },
