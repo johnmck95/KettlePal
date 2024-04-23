@@ -51,6 +51,7 @@ const typeDefs = `#graphql
         # TODO: deleteUserWithWorkouts
 
         addUser(user: AddUserInput!): User 
+        addExercise(workout_uid: ID!, exercise: AddExerciseInput!): Exercise
         # TODO: add workoutWithExercises
 
         updateUser(uid: ID!, edits: EditUserInput!): User
@@ -65,6 +66,19 @@ const typeDefs = `#graphql
         last_name: String!
         email: String!
         password: String!
+    }
+
+    input AddExerciseInput {
+        title: String!
+        weight: Float
+        weight_unit: String
+        sets: Int
+        reps: Int
+        reps_display: String
+        comment: String
+        start_time: Int
+        end_time: Int
+    
     }
 
     input EditUserInput {

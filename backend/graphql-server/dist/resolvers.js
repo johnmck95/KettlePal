@@ -1,6 +1,13 @@
 import knexConfig from "../knexfile.js";
 import knex from "knex";
-// import { UpdateUserArgs, AddOrEditUserInput, User, Workout } from "../../types";
+import dayjs from "dayjs";
+// import {
+//   UpdateUserArgs,
+//   AddOrEditUserInput,
+//   User,
+//   Workout,
+//   AddOrEditExerciseInput,
+// } from "../../types";
 const knexInstance = knex(knexConfig);
 // Incoming Resolver Properties are: (parent, args, context)
 const resolvers = {
@@ -57,7 +64,6 @@ const resolvers = {
                 console.error("Error fetching exercises:", error);
                 throw error;
             }
-            // return mock_db.exercises;
         },
         async exercise(_, { uid }) {
             try {
@@ -138,6 +144,36 @@ const resolvers = {
                 throw error;
             }
         },
+        //addWorkoutWithExercises   // can have 0 exercises
+        async addExercise(_, { workout_uid, exercise, }) {
+            try {
+                let new_exercise = {
+                    ...exercise,
+                    workout_uid: workout_uid,
+                    start_time: dayjs().format("YYYY-MM-DDTHH:mm:ss.SSSZ"),
+                    end_time: dayjs()
+                        .add(10, "minutes")
+                        .format("YYYY-MM-DDTHH:mm:ss.SSSZ"),
+                    // start_time: null, // TODO: Figure out how to send timestamps
+                    // end_time: null, // TODO: Figure out how to send timestamps
+                };
+                await knexInstance("exercises").insert(new_exercise);
+                const insertedExercise = await knexInstance("exercises")
+                    .where({
+                    title: exercise.title,
+                    weight: exercise.weight,
+                    sets: exercise.sets,
+                    reps: exercise.reps,
+                    workout_uid: workout_uid,
+                })
+                    .first();
+                return insertedExercise;
+            }
+            catch (error) {
+                console.error("Error adding exercise:", error);
+                throw error;
+            }
+        },
         /** WEIRDNESS!!  Updating this function isn't actually getting reflected in the server on it's own
          * I have to comment out the 'UpdateUserArgs' import, run the server, get the error, uncomment the import, and then run the server again.
          * ..then it magically works!! WHY. Everything else is a mess right now. Add TS types and fix the other resolvers.
@@ -153,8 +189,8 @@ const resolvers = {
                 throw e;
             }
         },
-        // addWorkoutWithExercises
-        // updateWorkoutWithExercises
+        // update Workout
+        // update Exercise
     },
 };
 export default resolvers;

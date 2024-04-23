@@ -24,3 +24,19 @@ export type Workout = {
   end_time: Number;
   comment: String;
 };
+
+export type Exercise = {
+  uid: String;
+  workout_uid: String;
+  title: String;
+  weight: Number;
+  weight_unit: String;
+  sets: Number;
+  reps: Number;
+  reps_display: String;
+  comment: String;
+  start_time: Number;
+  end_time: Number;
+};
+
+export type AddOrEditExerciseInput = Omit<Exercise, "uid">;
