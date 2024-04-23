@@ -25,6 +25,8 @@ export type Workout = {
   comment: String;
 };
 
+export type AddOrEditWorkoutInput = Omit<Workout, "uid" | "user_uid">;
+
 export type Exercise = {
   uid: String;
   workout_uid: String;
@@ -39,4 +41,4 @@ export type Exercise = {
   end_time: Number;
 };
 
-export type AddOrEditExerciseInput = Omit<Exercise, "uid">;
+export type AddOrEditExerciseInput = Omit<Exercise, "uid" | "workout_uid">;

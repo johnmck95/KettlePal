@@ -6,6 +6,7 @@ import {
   AddOrEditUserInput,
   User,
   Workout,
+  AddOrEditWorkoutInput,
   AddOrEditExerciseInput,
 } from "../../types";
 
@@ -147,7 +148,6 @@ const resolvers = {
         throw error;
       }
     },
-    //addWorkoutWithExercises   // can have 0 exercises
 
     async addExercise(
       _,
@@ -184,6 +184,22 @@ const resolvers = {
         throw error;
       }
     },
+
+    // can have 0 exercises
+    async addWorkoutWithExercises(
+      _,
+      {
+        user_uid,
+        workout,
+        exercises
+      } : {
+        user_uid: String;
+        workout: AddOrEditWorkoutInput;
+        exercises: AddOrEditExerciseInput[]; 
+      }
+    ) {
+      
+    }
 
     /** WEIRDNESS!!  Updating this function isn't actually getting reflected in the server on it's own
      * I have to comment out the 'UpdateUserArgs' import, run the server, get the error, uncomment the import, and then run the server again.
