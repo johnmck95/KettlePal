@@ -45,6 +45,7 @@ const typeDefs = `#graphql
         exercise(uid: ID!): Exercise
     }
 
+
     type Mutation {
         deleteUser(uid: ID!): [User]!
         deleteWorkout(uid: ID!): [Workout]!
@@ -60,8 +61,8 @@ const typeDefs = `#graphql
 
     }   
     
-    # "This isn't a type, it's a collection of fields for a mutation"
-    # Note: No uid or is_authorized, we want our system to handle those
+    # Input types omit data fields we want the system to generate (like uids)
+    # Edits often vary from inputs, because we don't want to require all fields
     input AddUserInput {
         first_name: String!
         last_name: String!
