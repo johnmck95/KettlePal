@@ -236,6 +236,19 @@ const resolvers = {
       }
     },
 
+    async updateWorkout(
+      _,
+      { uid, edits }: { uid: String; edits: AddOrEditWorkoutInput }
+    ) {
+      try {
+        await knexInstance("workouts").where({ uid: uid }).update(edits);
+        return await knexInstance("workouts").where({ uid: uid }).first(); // this line
+      } catch (error) {
+        console.error("Error updating workout:", error);
+        throw error;
+      }
+    },
+
     // update Workout
     // update Exercise
   },

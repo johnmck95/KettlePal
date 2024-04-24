@@ -13,8 +13,8 @@ const typeDefs = `#graphql
 
     type Workout {
         uid: ID!
-        start_time: Int!
-        end_time: Int!
+        start_time: String!
+        end_time: String!
         comment: String
         user_uid: ID!
         exercises: [Exercise!]
@@ -30,8 +30,8 @@ const typeDefs = `#graphql
         reps: Int
         reps_display: String
         comment: String
-        start_time: Int
-        end_time: Int
+        start_time: String
+        end_time: String
     }
 
     # Required: Defines the entry points to the graph
@@ -51,10 +51,11 @@ const typeDefs = `#graphql
 
         addUser(user: AddUserInput!): User 
         addExercise(workout_uid: ID!, exercise: AddExerciseInput!): Exercise
-        addWorkout(user_uid: ID!, workout: AddWorkoutInput!): Workout
+        addWorkout(user_uid: ID!, workout: AddOrEditWorkoutInput!): Workout
         # TODO: add workoutWithExercises
 
         updateUser(uid: ID!, edits: EditUserInput!): User
+        updateWorkout(uid: ID!, edits: AddOrEditWorkoutInput!): Workout
         # TODO: add updateWorkout
         # TODO: add updateExercise
     }   
@@ -67,10 +68,16 @@ const typeDefs = `#graphql
         email: String!
         password: String!
     }
+    input EditUserInput {
+        first_name: String
+        last_name: String
+        email: String
+        password: String
+    }
 
-    input AddWorkoutInput {
-        start_time: Int
-        end_time: Int
+    input AddOrEditWorkoutInput {
+        start_time: String
+        end_time: String
         comment: String
     }
 
@@ -82,17 +89,11 @@ const typeDefs = `#graphql
         reps: Int
         reps_display: String
         comment: String
-        start_time: Int
-        end_time: Int
+        start_time: String
+        end_time: String
     
     }
 
-    input EditUserInput {
-        first_name: String
-        last_name: String
-        email: String
-        password: String
-    }
 
 `;
 export default typeDefs;
