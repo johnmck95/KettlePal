@@ -242,15 +242,25 @@ const resolvers = {
     ) {
       try {
         await knexInstance("workouts").where({ uid: uid }).update(edits);
-        return await knexInstance("workouts").where({ uid: uid }).first(); // this line
+        return await knexInstance("workouts").where({ uid: uid }).first();
       } catch (error) {
         console.error("Error updating workout:", error);
         throw error;
       }
     },
 
-    // update Workout
-    // update Exercise
+    async updateExercise(
+      _,
+      { uid, edits }: { uid: String; edits: AddOrEditExerciseInput }
+    ) {
+      try {
+        await knexInstance("exercises").where({ uid: uid }).update(edits);
+        return await knexInstance("exercises").where({ uid: uid }).first();
+      } catch (error) {
+        console.error("Error updating exercise:", error);
+        throw error;
+      }
+    },
   },
 };
 

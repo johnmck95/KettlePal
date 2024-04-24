@@ -46,18 +46,17 @@ const typeDefs = `#graphql
 
     type Mutation {
         deleteExercise(uid: ID!): [Exercise]!
-        # TODO: deleteWorkoutWithExercises
-        # TODO: deleteUserWithWorkouts
+        # TODO: deleteWorkout
+        # TODO: deleteExercise
 
         addUser(user: AddUserInput!): User 
         addExercise(workout_uid: ID!, exercise: AddExerciseInput!): Exercise
         addWorkout(user_uid: ID!, workout: AddOrEditWorkoutInput!): Workout
-        # TODO: add workoutWithExercises
 
         updateUser(uid: ID!, edits: EditUserInput!): User
         updateWorkout(uid: ID!, edits: AddOrEditWorkoutInput!): Workout
-        # TODO: add updateWorkout
-        # TODO: add updateExercise
+        updateExercise(uid: ID!, edits: EditExerciseInput!): Exercise
+
     }   
     
     # "This isn't a type, it's a collection of fields for a mutation"
@@ -91,7 +90,17 @@ const typeDefs = `#graphql
         comment: String
         start_time: String
         end_time: String
-    
+    }
+    input EditExerciseInput {
+        title: String
+        weight: Float
+        weight_unit: String
+        sets: Int
+        reps: Int
+        reps_display: String
+        comment: String
+        start_time: String
+        end_time: String
     }
 
 
