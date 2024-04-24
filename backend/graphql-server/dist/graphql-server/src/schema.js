@@ -45,9 +45,9 @@ const typeDefs = `#graphql
     }
 
     type Mutation {
-        deleteExercise(uid: ID!): [Exercise]!
+        deleteUser(uid: ID!): [User]!
         deleteWorkout(uid: ID!): [Workout]!
-        # TODO: deleteExercise
+        deleteExercise(uid: ID!): [Exercise]!
 
         addUser(user: AddUserInput!): User 
         addExercise(workout_uid: ID!, exercise: AddExerciseInput!): Exercise

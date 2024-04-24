@@ -228,7 +228,7 @@ const resolvers = {
                     .where({ workout_uid: uid })
                     .first()).count);
                 if (exercisesCount > 0) {
-                    throw new Error(`Please delete the ${exercisesCount} exercises associated with this workout first. Exiting without deleting workout.`);
+                    throw new Error(`Please delete the ${exercisesCount} exercises associated with this workout before deleting the workout. Exiting without deleting workout.`);
                 }
                 const numAffectedRows = await knexInstance("workouts")
                     .where({ uid: uid })
@@ -241,8 +241,26 @@ const resolvers = {
                 throw error;
             }
         },
-        // async deleteUser - throw error if any workouts exist with this user_uid
-        // async deleteWorkout - throw error if any exercises exist with this workout_uid
+        async deleteUser(_, { uid }) {
+            try {
+                const workoutsCount = Number((await knexInstance("workouts")
+                    .count("*")
+                    .where({ user_uid: uid })
+                    .first()).count);
+                if (workoutsCount > 0) {
+                    throw new Error(`Please delete the ${workoutsCount} workouts associated with this user before deleting the user. Exiting without deleting user.`);
+                }
+                const numAffectedRows = await knexInstance("users")
+                    .where({ uid: uid })
+                    .del();
+                console.log(`${numAffectedRows} rows affected in deleteUser mutation.`);
+                return await knexInstance("users").select("*");
+            }
+            catch (error) {
+                console.error("Error deleting user:", error);
+                throw error;
+            }
+        },
     },
 };
 export default resolvers;
