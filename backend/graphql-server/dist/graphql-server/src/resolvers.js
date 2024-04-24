@@ -1,6 +1,10 @@
 import knexConfig from "../knexfile.js";
 import knex from "knex";
 import dayjs from "dayjs";
+/** WEIRDNESS!!  Updating this file isn't actually getting reflected in the server on it's own
+ * I have to comment out the 'UpdateUserArgs' import, run the server, get the error, uncomment the import, and then run the server again.
+ * ..then it magically works!! WHY. Everything else is a mess right now. Add TS types and fix the other resolvers.
+ */
 const knexInstance = knex(knexConfig);
 // Incoming Resolver Properties are: (parent, args, context)
 const resolvers = {
@@ -101,21 +105,6 @@ const resolvers = {
     },
     // Takes in the same args as our query resolvers
     Mutation: {
-        // async deleteUser - throw error if any workouts exist with this user_uid
-        // async deleteWorkout - throw error if any exercises exist with this workout_uid
-        async deleteExercise(_, { uid }) {
-            try {
-                const numAffectedRows = await knexInstance("exercises")
-                    .where({ uid: uid })
-                    .del();
-                console.log(`${numAffectedRows} rows affected in deleteExercise mutation.`);
-                return await knexInstance("exercises").select("*");
-            }
-            catch (error) {
-                console.error("Error deleting exercise:", error);
-                throw error;
-            }
-        },
         async addUser(_, { user }) {
             try {
                 let new_user = {
@@ -188,10 +177,6 @@ const resolvers = {
                 throw error;
             }
         },
-        /** WEIRDNESS!!  Updating this function isn't actually getting reflected in the server on it's own
-         * I have to comment out the 'UpdateUserArgs' import, run the server, get the error, uncomment the import, and then run the server again.
-         * ..then it magically works!! WHY. Everything else is a mess right now. Add TS types and fix the other resolvers.
-         */
         async updateUser(_, args) {
             const { edits, uid } = args;
             try {
@@ -223,6 +208,41 @@ const resolvers = {
                 throw error;
             }
         },
+        async deleteExercise(_, { uid }) {
+            try {
+                const numAffectedRows = await knexInstance("exercises")
+                    .where({ uid: uid })
+                    .del();
+                console.log(`${numAffectedRows} rows affected in deleteExercise mutation.`);
+                return await knexInstance("exercises").select("*");
+            }
+            catch (error) {
+                console.error("Error deleting exercise:", error);
+                throw error;
+            }
+        },
+        async deleteWorkout(_, { uid }) {
+            try {
+                const exercisesCount = Number((await knexInstance("exercises")
+                    .count("*")
+                    .where({ workout_uid: uid })
+                    .first()).count);
+                if (exercisesCount > 0) {
+                    throw new Error(`Please delete the ${exercisesCount} exercises associated with this workout first. Exiting without deleting workout.`);
+                }
+                const numAffectedRows = await knexInstance("workouts")
+                    .where({ uid: uid })
+                    .del();
+                console.log(`${numAffectedRows} rows affected in deleteWorkout mutation.`);
+                return await knexInstance("workouts").select("*");
+            }
+            catch (error) {
+                console.error("Error deleting workout:", error);
+                throw error;
+            }
+        },
+        // async deleteUser - throw error if any workouts exist with this user_uid
+        // async deleteWorkout - throw error if any exercises exist with this workout_uid
     },
 };
 export default resolvers;
