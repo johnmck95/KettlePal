@@ -10,6 +10,7 @@ import {
   ApolloProvider,
   gql,
 } from "@apollo/client";
+import { BrowserRouter } from "react-router-dom";
 
 const client = new ApolloClient({
   uri: "http://localhost:4000/",
@@ -23,8 +24,10 @@ const root = ReactDOM.createRoot(container);
 root.render(
   <ApolloProvider client={client}>
     <React.StrictMode>
-      <ColorModeScript />
-      <App />
+      <BrowserRouter>
+        <ColorModeScript />
+        <App />
+      </BrowserRouter>
     </React.StrictMode>
   </ApolloProvider>
 );
