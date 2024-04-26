@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 import { useQuery, gql } from "@apollo/client";
 import { Button, Center, Heading, Text, VStack } from "@chakra-ui/react";
 
@@ -44,8 +44,18 @@ export const useUser = () => useContext(UserContext);
 export default function UserProvider({
   children,
 }: UserProviderProps): JSX.Element {
-  const [selectedUser, setSelectedUser] = useState<any | undefined>(undefined);
   const { loading, error, data } = useQuery(GET_USERS);
+
+  // Currently, you need to manually delete the user from localStorage to "logout"
+  const [selectedUser, setSelectedUser] = useState<any | undefined>(() => {
+    const storedUser = localStorage.getItem("selectedUser");
+    return storedUser ? JSON.parse(storedUser) : undefined;
+  });
+  useEffect(() => {
+    if (selectedUser) {
+      localStorage.setItem("selectedUser", JSON.stringify(selectedUser));
+    }
+  }, [selectedUser]);
 
   if (loading) {
     return (
