@@ -4,27 +4,27 @@ export async function seed(knex) {
   await knex("workouts").del();
   await knex("workouts").insert([
     {
-      user_uid: usersUids[0],
+      userUid: usersUids[0],
       comment: "John's first workout",
     },
     {
-      user_uid: usersUids[0],
+      userUid: usersUids[0],
       comment: "John's second workout",
     },
     {
-      user_uid: usersUids[1],
+      userUid: usersUids[1],
       comment: "Jane's workout",
     },
     {
-      user_uid: usersUids[2],
+      userUid: usersUids[2],
       comment: "Robert's workout",
     },
     {
-      user_uid: usersUids[3],
+      userUid: usersUids[3],
       comment: "Ada's first workout",
     },
     {
-      user_uid: usersUids[3],
+      userUid: usersUids[3],
       comment: "Ada's second workout",
     },
   ]);

@@ -2,36 +2,36 @@
 const typeDefs = `#graphql
     type User {
         uid: ID!
-        first_name: String!
-        last_name: String!
+        firstName: String!
+        lastName: String!
         email: String!
         password: String!
-        is_authorized: Boolean!
+        isAuthorized: Boolean!
         workouts: [Workout!]
-        created_at: String! 
+        createdAt: String! 
     }
 
     type Workout {
         uid: ID!
-        start_time: String!
-        end_time: String!
+        startTime: String!
+        endTime: String!
         comment: String
-        user_uid: ID!
+        userUid: ID!
         exercises: [Exercise!]
     }
 
     type Exercise {
         uid: ID!
-        workout_uid: ID!
+        workoutUid: ID!
         title: String!
         weight: Float
-        weight_unit: String
+        weightUnit: String
         sets: Int
         reps: Int
-        reps_display: String
+        repsDisplay: String
         comment: String
-        start_time: String
-        end_time: String
+        startTime: String
+        endTime: String
     }
 
     # Required: Defines the entry points to the graph
@@ -51,8 +51,8 @@ const typeDefs = `#graphql
         deleteExercise(uid: ID!): [Exercise]!
 
         addUser(user: AddUserInput!): User 
-        addExercise(workout_uid: ID!, exercise: AddExerciseInput!): Exercise
-        addWorkout(user_uid: ID!, workout: AddOrEditWorkoutInput!): Workout
+        addExercise(workoutUid: ID!, exercise: AddExerciseInput!): Exercise
+        addWorkout(userUid: ID!, workout: AddOrEditWorkoutInput!): Workout
 
         updateUser(uid: ID!, edits: EditUserInput!): User
         updateWorkout(uid: ID!, edits: AddOrEditWorkoutInput!): Workout
@@ -63,45 +63,45 @@ const typeDefs = `#graphql
     # Input types omit data fields we want the system to generate (like uids)
     # Edits often vary from inputs, because we don't want to require all fields
     input AddUserInput {
-        first_name: String!
-        last_name: String!
+        firstName: String!
+        lastName: String!
         email: String!
         password: String!
     }
     input EditUserInput {
-        first_name: String
-        last_name: String
+        firstName: String
+        lastName: String
         email: String
         password: String
     }
 
     input AddOrEditWorkoutInput {
-        start_time: String
-        end_time: String
+        startTime: String
+        endTime: String
         comment: String
     }
 
     input AddExerciseInput {
         title: String!
         weight: Float
-        weight_unit: String
+        weightUnit: String
         sets: Int
         reps: Int
-        reps_display: String
+        repsDisplay: String
         comment: String
-        start_time: String
-        end_time: String
+        startTime: String
+        endTime: String
     }
     input EditExerciseInput {
         title: String
         weight: Float
-        weight_unit: String
+        weightUnit: String
         sets: Int
         reps: Int
-        reps_display: String
+        repsDisplay: String
         comment: String
-        start_time: String
-        end_time: String
+        startTime: String
+        endTime: String
     }
 
 

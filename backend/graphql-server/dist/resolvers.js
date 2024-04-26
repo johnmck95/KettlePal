@@ -88,7 +88,7 @@ const resolvers = {
             try {
                 return await knexInstance("workouts")
                     .select("*")
-                    .where({ user_uid: parent.uid });
+                    .where({ userUid: parent.uid });
             }
             catch (error) {
                 console.error("Error fetching workouts:", error);
@@ -102,7 +102,7 @@ const resolvers = {
             try {
                 return await knexInstance("exercises")
                     .select("*")
-                    .where({ workout_uid: parent.uid });
+                    .where({ workoutUid: parent.uid });
             }
             catch (error) {
                 console.error("Error fetching exercises:", error);
@@ -114,16 +114,16 @@ const resolvers = {
     Mutation: {
         async addUser(_, { user }) {
             try {
-                let new_user = {
+                let newUser = {
                     ...user,
-                    is_authorized: false,
+                    isAuthorized: false,
                 };
-                await knexInstance("users").insert(new_user);
+                await knexInstance("users").insert(newUser);
                 const insertedUser = await knexInstance("users")
                     .where({
                     email: user.email,
-                    first_name: user.first_name,
-                    last_name: user.last_name,
+                    firstName: user.firstName,
+                    lastName: user.lastName,
                 })
                     .first();
                 return insertedUser;
@@ -133,20 +133,20 @@ const resolvers = {
                 throw error;
             }
         },
-        async addWorkout(_, { user_uid, workout, }) {
+        async addWorkout(_, { userUid, workout, }) {
             try {
                 // TODO: Implement a way of adding start and end times based on user input
-                let new_workout = {
+                let newWorkout = {
                     ...workout,
-                    user_uid: user_uid,
-                    start_time: dayjs().format("YYYY-MM-DDTHH:mm:ss.SSSZ"),
-                    end_time: dayjs().add(1, "hour").format("YYYY-MM-DDTHH:mm:ss.SSSZ"),
+                    userUid: userUid,
+                    startTime: dayjs().format("YYYY-MM-DDTHH:mm:ss.SSSZ"),
+                    endTime: dayjs().add(1, "hour").format("YYYY-MM-DDTHH:mm:ss.SSSZ"),
                 };
-                await knexInstance("workouts").insert(new_workout);
+                await knexInstance("workouts").insert(newWorkout);
                 const insertedWorkout = await knexInstance("workouts")
                     .where({
                     comment: workout.comment,
-                    user_uid: user_uid,
+                    usesUid: userUid,
                 })
                     .first();
                 return insertedWorkout;
@@ -156,25 +156,25 @@ const resolvers = {
                 throw error;
             }
         },
-        async addExercise(_, { workout_uid, exercise, }) {
+        async addExercise(_, { workoutUid, exercise, }) {
             try {
                 // TODO: Implement a way of adding start and end times based on user input
-                let new_exercise = {
+                let newExercise = {
                     ...exercise,
-                    workout_uid: workout_uid,
-                    start_time: dayjs().format("YYYY-MM-DDTHH:mm:ss.SSSZ"),
-                    end_time: dayjs()
+                    workoutUid: workoutUid,
+                    startTime: dayjs().format("YYYY-MM-DDTHH:mm:ss.SSSZ"),
+                    endTime: dayjs()
                         .add(10, "minutes")
                         .format("YYYY-MM-DDTHH:mm:ss.SSSZ"),
                 };
-                await knexInstance("exercises").insert(new_exercise);
+                await knexInstance("exercises").insert(newExercise);
                 const insertedExercise = await knexInstance("exercises")
                     .where({
                     title: exercise.title,
                     weight: exercise.weight,
                     sets: exercise.sets,
                     reps: exercise.reps,
-                    workout_uid: workout_uid,
+                    workoutUid: workoutUid,
                 })
                     .first();
                 return insertedExercise;
@@ -219,7 +219,7 @@ const resolvers = {
             try {
                 const workoutsCount = Number((await knexInstance("workouts")
                     .count("*")
-                    .where({ user_uid: uid })
+                    .where({ userUid: uid })
                     .first()).count);
                 if (workoutsCount > 0) {
                     throw new Error(`Please delete the ${workoutsCount} workouts associated with this user before deleting the user. Exiting without deleting user.`);
@@ -239,7 +239,7 @@ const resolvers = {
             try {
                 const exercisesCount = Number((await knexInstance("exercises")
                     .count("*")
-                    .where({ workout_uid: uid })
+                    .where({ workoutUid: uid })
                     .first()).count);
                 if (exercisesCount > 0) {
                     throw new Error(`Please delete the ${exercisesCount} exercises associated with this workout before deleting the workout. Exiting without deleting workout.`);

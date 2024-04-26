@@ -2,43 +2,43 @@
 
 export type User = {
   uid: String;
-  first_name: String;
-  last_name: String;
+  firstName: String;
+  lastName: String;
   email: String;
   password: String;
-  is_authorized: Boolean;
-  created_at: Number;
+  isAuthorized: Boolean;
+  createdAt: Number;
 };
 
 export type AddOrEditUserInput = Omit<
   User,
-  "uid" | "is_authorized" | "created_at"
+  "uid" | "isAuthorized" | "createdAt"
 >;
 
 export type UpdateUserArgs = { uid: String; edits: AddOrEditUserInput };
 
 export type Workout = {
   uid: String;
-  user_uid: String;
-  start_time: Number;
-  end_time: Number;
+  userUid: String;
+  startTime: Number;
+  endTime: Number;
   comment: String;
 };
 
-export type AddOrEditWorkoutInput = Omit<Workout, "uid" | "user_uid">;
+export type AddOrEditWorkoutInput = Omit<Workout, "uid" | "userUid">;
 
 export type Exercise = {
   uid: String;
-  workout_uid: String;
+  workoutUid: String;
   title: String;
   weight: Number;
-  weight_unit: String;
+  weightUnit: String;
   sets: Number;
   reps: Number;
-  reps_display: String;
+  repsDisplay: String;
   comment: String;
-  start_time: Number;
-  end_time: Number;
+  startTime: Number;
+  endTime: Number;
 };
 
-export type AddOrEditExerciseInput = Omit<Exercise, "uid" | "workout_uid">;
+export type AddOrEditExerciseInput = Omit<Exercise, "uid" | "workoutUid">;

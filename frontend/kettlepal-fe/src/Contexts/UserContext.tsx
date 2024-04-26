@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useQuery, gql } from "@apollo/client";
 import { Button, Center, Heading, Text, VStack } from "@chakra-ui/react";
+import { User } from "../Constants/types";
 
 /** A TEMPORARY (terrible) WAY OF HANDLING USER LOGIN */
 /** because I want to work on the fun stuff.. */
@@ -9,23 +10,14 @@ const GET_USERS = gql`
   query {
     users {
       uid
-      first_name
-      last_name
+      firstName
+      lastName
       email
-      is_authorized
-      created_at
+      isAuthorized
+      createdAt
     }
   }
 `;
-
-interface User {
-  uid: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  isAuthorized: boolean;
-  createdAt: number;
-}
 
 interface UserProviderProps {
   children: React.ReactNode;
@@ -39,7 +31,7 @@ const UserContext = createContext<User>({
   isAuthorized: false,
   createdAt: 0,
 });
-export const useUser = () => useContext(UserContext);
+export const useUser = () => useContext<User>(UserContext);
 
 export default function UserProvider({
   children,
@@ -73,10 +65,6 @@ export default function UserProvider({
     );
   }
 
-  const handleUserSelect = (user: User) => {
-    setSelectedUser(user);
-  };
-
   return (
     <UserContext.Provider value={selectedUser}>
       {selectedUser ? (
@@ -94,19 +82,10 @@ export default function UserProvider({
                 padding="0.5rem 1rem"
                 margin="1rem"
                 borderRadius={"0.25rem"}
-                onClick={() =>
-                  handleUserSelect({
-                    uid: user.uid,
-                    firstName: user.first_name,
-                    lastName: user.last_name,
-                    email: user.email,
-                    isAuthorized: user.is_authorized,
-                    createdAt: user.created_at,
-                  })
-                }
+                onClick={() => setSelectedUser(user)}
               >
                 <Text>
-                  {user.first_name} {user.last_name}
+                  {user.firstName} {user.lastName}
                 </Text>
               </Button>
             ))}

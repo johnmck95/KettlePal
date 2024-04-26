@@ -2,32 +2,32 @@ export async function seed(knex) {
   await knex("users").del();
   await knex("users").insert([
     {
-      first_name: "John",
-      last_name: "Doe",
+      firstName: "John",
+      lastName: "Doe",
       email: "JoeyDoey@email.com",
       password: "hashme",
-      is_authorized: false,
+      isAuthorized: false,
     },
     {
-      first_name: "Jane",
-      last_name: "Doe",
+      firstName: "Jane",
+      lastName: "Doe",
       email: "JaneDoe@email.com",
       password: "hashme",
-      is_authorized: false,
+      isAuthorized: false,
     },
     {
-      first_name: "Robert",
-      last_name: "Lebowsky",
+      firstName: "Robert",
+      lastName: "Lebowsky",
       email: "RobLeb@email.com",
       password: "hashme",
-      is_authorized: false,
+      isAuthorized: false,
     },
     {
-      first_name: "Ada",
-      last_name: "Funk",
+      firstName: "Ada",
+      lastName: "Funk",
       email: "AdaFunk@email.com",
       password: "hashme",
-      is_authorized: false,
+      isAuthorized: false,
     },
   ]);
 }
