@@ -13,11 +13,10 @@ import dayjs from "dayjs";
  * I have to comment out the 'UpdateUserArgs' import, run the server, get the error, uncomment the import, and then run the server again.
  * ..then it magically works!! WHY. Everything else is a mess right now. Add TS types and fix the other resolvers.
  */
-const knexInstance = knex(knexConfig);
 // Incoming Resolver Properties are: (parent, args, context)
+const knexInstance = knex(knexConfig);
 const resolvers = {
-    // The top-level resolvers inside Query are the entry point resolvers for the graph
-    // They don't handle nested queries, like workout{ exercises{...} }
+    // The top-level resolvers inside Query are the entry point resolvers for the graph, not nested queries like workout{ exercises{...} }
     Query: {
         async users() {
             try {
@@ -83,7 +82,7 @@ const resolvers = {
             }
         },
     },
-    // This is the resolver to gather all of the workouts for a given user
+    // Resolvers to gather nested fields within a User query (EX: User{ workouts{...} })
     User: {
         async workouts(parent) {
             try {
@@ -216,16 +215,23 @@ const resolvers = {
                 throw error;
             }
         },
-        async deleteExercise(_, { uid }) {
+        async deleteUser(_, { uid }) {
             try {
-                const numAffectedRows = await knexInstance("exercises")
+                const workoutsCount = Number((await knexInstance("workouts")
+                    .count("*")
+                    .where({ user_uid: uid })
+                    .first()).count);
+                if (workoutsCount > 0) {
+                    throw new Error(`Please delete the ${workoutsCount} workouts associated with this user before deleting the user. Exiting without deleting user.`);
+                }
+                const numAffectedRows = await knexInstance("users")
                     .where({ uid: uid })
                     .del();
-                console.log(`${numAffectedRows} rows affected in deleteExercise mutation.`);
-                return await knexInstance("exercises").select("*");
+                console.log(`${numAffectedRows} rows affected in deleteUser mutation.`);
+                return await knexInstance("users").select("*");
             }
             catch (error) {
-                console.error("Error deleting exercise:", error);
+                console.error("Error deleting user:", error);
                 throw error;
             }
         },
@@ -249,23 +255,16 @@ const resolvers = {
                 throw error;
             }
         },
-        async deleteUser(_, { uid }) {
+        async deleteExercise(_, { uid }) {
             try {
-                const workoutsCount = Number((await knexInstance("workouts")
-                    .count("*")
-                    .where({ user_uid: uid })
-                    .first()).count);
-                if (workoutsCount > 0) {
-                    throw new Error(`Please delete the ${workoutsCount} workouts associated with this user before deleting the user. Exiting without deleting user.`);
-                }
-                const numAffectedRows = await knexInstance("users")
+                const numAffectedRows = await knexInstance("exercises")
                     .where({ uid: uid })
                     .del();
-                console.log(`${numAffectedRows} rows affected in deleteUser mutation.`);
-                return await knexInstance("users").select("*");
+                console.log(`${numAffectedRows} rows affected in deleteExercise mutation.`);
+                return await knexInstance("exercises").select("*");
             }
             catch (error) {
-                console.error("Error deleting user:", error);
+                console.error("Error deleting exercise:", error);
                 throw error;
             }
         },
