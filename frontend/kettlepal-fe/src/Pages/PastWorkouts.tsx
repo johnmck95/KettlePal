@@ -2,7 +2,7 @@ import React from "react";
 import { useUser } from "../Contexts/UserContext";
 import { useQuery, gql } from "@apollo/client";
 import LoadingSpinner from "../Components/LoadingSpinner";
-import { Box, Center, Text } from "@chakra-ui/react";
+import { Box, VStack, Center, Flex, Text } from "@chakra-ui/react";
 import { UserWithWorkouts, WorkoutWithExercises } from "../Constants/types";
 import ViewWorkout from "../Components/ViewWorkouts/ViewWorkout";
 
@@ -43,7 +43,7 @@ export default function PastWorkouts() {
   );
 
   return (
-    <Box>
+    <Flex w="100%">
       {loading && (
         <Center w="100%" h="4rem" my="1rem">
           <LoadingSpinner />
@@ -51,7 +51,7 @@ export default function PastWorkouts() {
       )}
       {error && <Text>An Unexpected Error has occurred: {error.message}</Text>}
       {!loading && !error && data && (
-        <Box>
+        <VStack w="100%">
           {data === null ? (
             <Text>No User Found</Text>
           ) : (
@@ -64,8 +64,8 @@ export default function PastWorkouts() {
               )
             )
           )}
-        </Box>
+        </VStack>
       )}
-    </Box>
+    </Flex>
   );
 }
