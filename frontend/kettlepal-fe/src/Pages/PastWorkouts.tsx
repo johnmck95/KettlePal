@@ -3,7 +3,8 @@ import { useUser } from "../Contexts/UserContext";
 import { useQuery, gql } from "@apollo/client";
 import LoadingSpinner from "../Components/LoadingSpinner";
 import { Box, Center, Text } from "@chakra-ui/react";
-import { UserWithWorkouts } from "../Constants/types";
+import { UserWithWorkouts, WorkoutWithExercises } from "../Constants/types";
+import ViewWorkout from "../Components/ViewWorkouts/ViewWorkout";
 
 const WORKOUTS_WITH_EXERCISES_QUERY = gql`
   query UserWithWorkouts($uid: ID!) {
@@ -50,10 +51,20 @@ export default function PastWorkouts() {
       )}
       {error && <Text>An Unexpected Error has occurred: {error.message}</Text>}
       {!loading && !error && data && (
-        <Text>
-          {data === null && <Text> No User Found </Text>}
-          {data.user.firstName} {data.user.lastName}
-        </Text>
+        <Box>
+          {data === null ? (
+            <Text>No User Found</Text>
+          ) : (
+            data.user.workouts.map(
+              (workoutWithExercises: WorkoutWithExercises) => (
+                <ViewWorkout
+                  key={workoutWithExercises.uid}
+                  workoutWithExercises={workoutWithExercises}
+                />
+              )
+            )
+          )}
+        </Box>
       )}
     </Box>
   );

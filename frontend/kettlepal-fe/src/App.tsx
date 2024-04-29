@@ -9,7 +9,7 @@ import Tray from "./Components/Tray";
 export const App = () => (
   <ChakraProvider theme={theme}>
     {/* <TestComponent /> */}
-    <Box h="calc(100vh - 3rem)">
+    <Box h="calc(100vh - 3rem)" overflowY={"scroll"}>
       <Routes>
         <Route path="/" element={<PastWorkouts />} />
         <Route path="/new-workout" element={<NewWorkout />} />

@@ -27,6 +27,27 @@ export type UserWithWorkouts = {
   };
 };
 
+export type WorkoutWithExercises = {
+  uid: string;
+  comment: string;
+  startTime: string;
+  endTime: string;
+  exercises: [
+    {
+      uid: string;
+      title: string;
+      weight: number;
+      weightUnit: string;
+      sets: number;
+      reps: number;
+      repsDisplay: string;
+      comment: string;
+      startTime: string;
+      endTime: string;
+    }
+  ];
+};
+
 export type User = {
   uid: string;
   firstName: string;
@@ -50,7 +71,7 @@ export type Exercise = {
   workoutUid: string;
   title: string;
   weight: number;
-  weightUnit: number;
+  weightUnit: string;
   sets: number;
   reps: number;
   repsDisplay: string;
