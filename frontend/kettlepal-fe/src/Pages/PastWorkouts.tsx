@@ -51,7 +51,7 @@ export default function PastWorkouts() {
       )}
       {error && <Text>An Unexpected Error has occurred: {error.message}</Text>}
       {!loading && !error && data && (
-        <VStack w="100%">
+        <VStack w="100%" my="0.5rem">
           {data === null ? (
             <Text>No User Found</Text>
           ) : (

@@ -23,6 +23,46 @@ export async function seed(knex) {
       repsDisplay: "l/r",
       comment: "John 1st workout - Swings & Press",
     },
+    {
+      workoutUid: workoutsUids[0],
+      title: "TGU",
+      weight: 24,
+      weightUnit: "kg",
+      sets: 2,
+      reps: 6, // 1/1 + 2/2 = 6 total reps
+      repsDisplay: "(1,2)",
+      comment: "John 1st workout - (1,2) Ladder TGU",
+    },
+    {
+      workoutUid: workoutsUids[0],
+      title: "TGU",
+      weight: 24,
+      weightUnit: "kg",
+      sets: 3,
+      reps: 12, // 1/1 + 2/2 + 3/3 = 12 total reps
+      repsDisplay: "(1,2,3)",
+      comment: "John 1st workout - (1,2,3) Ladder TGU",
+    },
+    {
+      workoutUid: workoutsUids[0],
+      title: "TGU",
+      weight: 24,
+      weightUnit: "kg",
+      sets: 4,
+      reps: 20, // 1/1 + 2/2 + 3/3 + 4/4 = 20 total reps
+      repsDisplay: "(1,2,3,4)",
+      comment: "John 1st workout - (1,2,3,4) Ladder TGU",
+    },
+    {
+      workoutUid: workoutsUids[0],
+      title: "TGU",
+      weight: 24,
+      weightUnit: "kg",
+      sets: 5,
+      reps: 30, // 1/1 + 2/2 + 3/3 + 4/4 + 5/5 = 30 total reps
+      repsDisplay: "(1,2,3,4,5)",
+      comment: "John 1st workout - (1,2,3,4,5) Ladder TGU",
+    },
 
     {
       workoutUid: workoutsUids[1],

@@ -25,11 +25,7 @@ export default function ViewWorkout({
       <CalendarWidget date={workoutWithExercises.startTime} w="4rem" />
       <VStack mx="1rem">
         {exercises.map((exercise) => {
-          return (
-            <HStack key={exercise.uid}>
-              <ViewExercise exercise={exercise} />
-            </HStack>
-          );
+          return <ViewExercise key={exercise.uid} exercise={exercise} />;
         })}
       </VStack>
     </HStack>
