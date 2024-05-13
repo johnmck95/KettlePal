@@ -7,9 +7,11 @@ import {
 } from "@chakra-ui/react";
 
 export default function AddComment({
+  placeholderText,
   comment,
   setComment,
 }: {
+  placeholderText?: string;
   comment: string;
   setComment: (newComment: string) => void;
 }) {
@@ -27,7 +29,7 @@ export default function AddComment({
       <Editable
         value={comment}
         onChange={handleChange}
-        placeholder="Add Comment"
+        placeholder={placeholderText || "Add a comment..."}
       >
         <EditablePreview w="100%" />
         <EditableInput w="100%" />
