@@ -60,37 +60,41 @@ export default function Timer({
   };
 
   return (
-    <VStack display="block">
-      <Text m="0px">{formatTime(timer)}</Text>
-      <Box m="0px">
-        {showStartStop && (
-          <>
-            {isActive ? (
-              <Button
-                width="4rem"
-                height="2rem"
-                variant="outline"
-                color={theme.colors.bole[700]}
-                backgroundColor={theme.white}
-                onClick={handleStop}
-              >
-                Stop
-              </Button>
-            ) : (
-              <Button
-                width="4rem"
-                height="2rem"
-                variant="outline"
-                color={theme.colors.green[700]}
-                backgroundColor={theme.white}
-                onClick={handleStart}
-              >
-                Start
-              </Button>
-            )}
-          </>
-        )}
-      </Box>
-    </VStack>
+    <Box w="110px" padding="0.25rem">
+      <VStack w="100%" justifyContent={"flex-start"} alignItems={"flex-start"}>
+        <Text textAlign="left" w="100%">
+          {formatTime(timer)}
+        </Text>
+        <Box m="0px">
+          {showStartStop && (
+            <>
+              {isActive ? (
+                <Button
+                  width="4.25rem"
+                  height="1.75rem"
+                  variant="outline"
+                  color={theme.colors.bole[700]}
+                  backgroundColor={theme.white}
+                  onClick={handleStop}
+                >
+                  Stop
+                </Button>
+              ) : (
+                <Button
+                  width="4.25rem"
+                  height="1.75rem"
+                  variant="outline"
+                  color={theme.colors.green[700]}
+                  backgroundColor={theme.white}
+                  onClick={handleStart}
+                >
+                  Start
+                </Button>
+              )}
+            </>
+          )}
+        </Box>
+      </VStack>
+    </Box>
   );
 }

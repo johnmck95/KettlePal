@@ -57,6 +57,18 @@ const theme = extendTheme({
       900: "#BD884C",
     },
   },
+  components: {
+    Editable: {
+      padding: "0rem",
+      baseStyle: {
+        input: {
+          _focus: {
+            boxShadow: "none",
+          },
+        },
+      },
+    },
+  },
 });
 
 export default theme;

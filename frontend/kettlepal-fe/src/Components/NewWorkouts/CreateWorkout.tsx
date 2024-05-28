@@ -48,7 +48,7 @@ export default function CreateWorkout() {
     <Box m="0.5rem">
       {/* DATE */}
       {/* TIMER */}
-      <HStack w="100%" justifyContent={"space-between"}>
+      <HStack justifyContent={"space-around"}>
         <FormControl>
           <FormLabel fontSize={["sm", "lg"]}>Workout Date</FormLabel>
           <Input
@@ -60,7 +60,6 @@ export default function CreateWorkout() {
             onChange={handleStateChange}
             border="1px solid grey"
             borderRadius={"5px"}
-            p="0.5rem"
           />
         </FormControl>
 
