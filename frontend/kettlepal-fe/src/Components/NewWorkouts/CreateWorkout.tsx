@@ -48,7 +48,7 @@ export default function CreateWorkout() {
     <Box m="0.5rem">
       {/* DATE */}
       {/* TIMER */}
-      <HStack justifyContent={"space-around"}>
+      <HStack justifyContent={"space-around"} pb="0.5rem">
         <FormControl>
           <FormLabel fontSize={["sm", "lg"]}>Workout Date</FormLabel>
           <Input
@@ -77,6 +77,7 @@ export default function CreateWorkout() {
         <FormLabel
           as="button"
           variant="link"
+          fontSize={["sm", "lg"]}
           onClick={() => setAddWorkoutComment((prev) => !prev)}
         >
           {addWorkoutComment ? "Hide Comment" : "Add Comment"}

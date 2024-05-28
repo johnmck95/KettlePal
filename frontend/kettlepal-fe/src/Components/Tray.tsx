@@ -17,8 +17,16 @@ export default function Tray() {
           aria-label="Past-Workouts"
           icon={<FaListAlt />}
           size={["sm", "md"]}
-          variant="outline"
-          color="olive.700"
+          color="white"
+          backgroundColor="olive.400"
+          sx={{
+            _hover: {
+              filter: "brightness(0.9)",
+            },
+            _active: {
+              filter: "brightness(0.8)",
+            },
+          }}
         />
       </Link>
       <Link href="new-workout">
@@ -26,8 +34,16 @@ export default function Tray() {
           aria-label="New-Workout"
           icon={<FaPlusCircle />}
           size={["sm", "md"]}
-          variant="outline"
-          color="olive.700"
+          color="white"
+          backgroundColor="olive.400"
+          sx={{
+            _hover: {
+              filter: "brightness(0.9)",
+            },
+            _active: {
+              filter: "brightness(0.8)",
+            },
+          }}
         />
       </Link>
     </HStack>
