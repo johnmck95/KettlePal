@@ -1,21 +1,33 @@
 import React, { ChangeEvent, useState } from "react";
 import CreateExercise from "./CreateExercise";
 
-import { Box, FormControl, FormLabel, Input } from "@chakra-ui/react";
+import { Box, FormControl, FormLabel, HStack, Input } from "@chakra-ui/react";
 import AddComment from "../AddComment";
 import { getCurrentDate } from "../../Functions/Time/time";
+import Timer from "../../Components/Timer";
 
 type CreateWorkoutState = {
   date: string;
   workoutComment: string;
+  startTime: Date | undefined;
+  endTime: Date | undefined;
 };
 
 export default function CreateWorkout() {
   const [state, setState] = useState<CreateWorkoutState>({
     date: getCurrentDate(),
     workoutComment: "",
+    startTime: undefined,
+    endTime: undefined,
   });
   const [addWorkoutComment, setAddWorkoutComment] = useState<boolean>(false);
+
+  const setTime = (newTime: Date, stateName: "startTime" | "endTime") => {
+    setState((prevState: CreateWorkoutState) => ({
+      ...prevState,
+      [stateName]: newTime,
+    }));
+  };
 
   const setComment = (newComment: string) => {
     setState((prevState: CreateWorkoutState) => ({
@@ -32,24 +44,34 @@ export default function CreateWorkout() {
     }));
   }
 
-  //   console.log(state);
   return (
     <Box m="0.5rem">
       {/* DATE */}
-      <FormControl>
-        <FormLabel fontSize={["sm", "lg"]}>Workout Date</FormLabel>
-        <Input
-          size={["sm", "lg"]}
-          name="date"
-          type="date"
-          maxW="180px"
-          value={state.date}
-          onChange={handleStateChange}
-          border="1px solid grey"
-          borderRadius={"5px"}
-          p="0.5rem"
+      {/* TIMER */}
+      <HStack w="100%" justifyContent={"space-between"}>
+        <FormControl>
+          <FormLabel fontSize={["sm", "lg"]}>Workout Date</FormLabel>
+          <Input
+            size={["sm", "lg"]}
+            name="date"
+            type="date"
+            maxW="180px"
+            value={state.date}
+            onChange={handleStateChange}
+            border="1px solid grey"
+            borderRadius={"5px"}
+            p="0.5rem"
+          />
+        </FormControl>
+
+        <Timer
+          showStartStop={true}
+          autoStart={false}
+          startTime={state.startTime}
+          endTime={state.endTime}
+          setTime={setTime}
         />
-      </FormControl>
+      </HStack>
 
       {/* COMMENT */}
       <FormControl>

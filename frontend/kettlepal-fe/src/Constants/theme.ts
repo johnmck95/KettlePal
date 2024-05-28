@@ -1,4 +1,6 @@
-export default {
+import { extendTheme } from "@chakra-ui/react";
+
+const theme = extendTheme({
   colors: {
     transparent: "transparent",
     black: "#000",
@@ -55,4 +57,6 @@ export default {
       900: "#BD884C",
     },
   },
-};
+});
+
+export default theme;
