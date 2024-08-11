@@ -22,10 +22,11 @@ export default function AddComment({
 
   return (
     <Box
-      w="calc(100%-0.5rem)"
+      w="100%"
       border="1px solid grey"
       borderRadius={"5px"}
-      p="0.5rem"
+      p="0rem 0.5rem"
+      mb="0.5rem"
     >
       <Editable
         value={comment}

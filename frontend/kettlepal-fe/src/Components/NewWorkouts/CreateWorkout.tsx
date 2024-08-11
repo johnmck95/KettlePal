@@ -1,16 +1,36 @@
 import React, { ChangeEvent, useState } from "react";
 import CreateExercise from "./CreateExercise";
 
-import { Box, FormControl, FormLabel, HStack, Input } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  FormControl,
+  FormLabel,
+  HStack,
+  Input,
+} from "@chakra-ui/react";
 import AddComment from "../AddComment";
 import { getCurrentDate } from "../../Functions/Time/time";
 import Timer from "../../Components/Timer";
+import { FaPlusCircle } from "react-icons/fa";
+import theme from "../../Constants/theme";
 
-type CreateWorkoutState = {
+export type CreateWorkoutState = {
   date: string;
   workoutComment: string;
   startTime: Date | undefined;
   endTime: Date | undefined;
+  exercises: Array<{
+    title: string;
+    weight: number;
+    weightUnit: string;
+    sets: number;
+    reps: number;
+    repsDisplay: string;
+    comment: string;
+    startTime: Date | undefined;
+    endTime: Date | undefined;
+  }>;
 };
 
 export default function CreateWorkout() {
@@ -19,6 +39,7 @@ export default function CreateWorkout() {
     workoutComment: "",
     startTime: undefined,
     endTime: undefined,
+    exercises: [],
   });
   const [addWorkoutComment, setAddWorkoutComment] = useState<boolean>(false);
 
@@ -44,10 +65,44 @@ export default function CreateWorkout() {
     }));
   }
 
+  function handleAddExercise(): void {
+    setState((prevState) => ({
+      ...prevState,
+      exercises: [
+        ...prevState.exercises,
+        {
+          title: "",
+          weight: 0,
+          weightUnit: "",
+          sets: 0,
+          reps: 0,
+          repsDisplay: "",
+          comment: "",
+          startTime: undefined,
+          endTime: undefined,
+        },
+      ],
+    }));
+  }
+
+  function handleExercise(name: string, value: any, index: number): void {
+    setState((prevState) => ({
+      ...prevState,
+      exercises: prevState.exercises.map((exercise, i) => {
+        if (i === index) {
+          return {
+            ...exercise,
+            [name]: value,
+          };
+        }
+        return exercise;
+      }),
+    }));
+  }
+
   return (
     <Box m="0.5rem">
       {/* DATE */}
-      {/* TIMER */}
       <HStack justifyContent={"space-around"} pb="0.5rem">
         <FormControl>
           <FormLabel fontSize={["sm", "lg"]}>Workout Date</FormLabel>
@@ -63,6 +118,7 @@ export default function CreateWorkout() {
           />
         </FormControl>
 
+        {/* TIMER */}
         <Timer
           showStartStop={true}
           autoStart={false}
@@ -72,7 +128,7 @@ export default function CreateWorkout() {
         />
       </HStack>
 
-      {/* COMMENT */}
+      {/* WORKOUT COMMENT */}
       <FormControl>
         <FormLabel
           as="button"
@@ -91,7 +147,29 @@ export default function CreateWorkout() {
         )}
       </FormControl>
 
-      {/* <CreateExercise /> */}
+      {/* EXERCISES */}
+      <Box>
+        {state.exercises.map((exercise, index) => {
+          return (
+            <CreateExercise
+              key={index}
+              exercise={exercise}
+              handleExercise={handleExercise}
+              exerciseIndex={index}
+            />
+          );
+        })}
+      </Box>
+
+      <Button
+        color={theme.colors.green[700]}
+        borderColor={theme.colors.green[400]}
+        leftIcon={<FaPlusCircle />}
+        variant="outline"
+        onClick={handleAddExercise}
+      >
+        Add Exercise
+      </Button>
     </Box>
   );
 }
