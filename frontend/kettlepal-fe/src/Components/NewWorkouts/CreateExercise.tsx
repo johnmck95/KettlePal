@@ -13,6 +13,10 @@ import {
   Select,
   VStack,
   Button,
+  Flex,
+  IconButton,
+  theme,
+  useDisclosure,
 } from "@chakra-ui/react";
 import AddComment from "../AddComment";
 import {
@@ -21,14 +25,18 @@ import {
   RepsDisplayOptions,
   WeightOptions,
 } from "../../Constants/ExercisesOptions";
+import { FaTimes } from "react-icons/fa";
+import ConfirmModal from "../ConfirmModal";
 
 export default function CreateExercise({
   exercise,
   handleExercise,
+  deleteExercise,
   exerciseIndex,
 }: {
   exercise: CreateWorkoutState["exercises"][number];
   handleExercise: (name: string, value: any, index: number) => void;
+  deleteExercise: (index: number) => void;
   exerciseIndex: number;
 }) {
   const [addExerciseComment, setAddExerciseComment] = useState<boolean>(false);
@@ -37,6 +45,18 @@ export default function CreateExercise({
   const setExerciseComment = (newComment: string) => {
     handleExercise("comment", newComment, exerciseIndex);
   };
+
+  // Delete Exercise Modal Controls
+  const {
+    isOpen: isOpenDeleteExercise,
+    onOpen: onOpenDeleteExercise,
+    onClose: onCloseDeleteExercise,
+  } = useDisclosure();
+
+  function onDeleteExercise(): void {
+    deleteExercise(exerciseIndex);
+    onCloseDeleteExercise();
+  }
 
   return (
     <VStack
@@ -213,27 +233,48 @@ export default function CreateExercise({
       </HStack>
 
       {/* COMMENT */}
-      <FormControl>
-        <FormLabel
-          as="button"
-          variant="link"
-          fontSize={["sm", "lg"]}
-          onClick={() => setAddExerciseComment((prev) => !prev)}
-        >
-          {addExerciseComment ? "Hide Comment" : "Add Comment"}
-        </FormLabel>
-        {addExerciseComment && (
-          <AddComment
-            placeholderText="Add an Exercise Comment"
-            comment={exercise.comment}
-            setComment={setExerciseComment}
-          />
-        )}
-      </FormControl>
+      <Flex w="100%">
+        <FormControl>
+          <FormLabel
+            as="button"
+            variant="link"
+            fontSize={["sm", "lg"]}
+            onClick={() => setAddExerciseComment((prev) => !prev)}
+          >
+            {addExerciseComment ? "Hide Comment" : "Add Comment"}
+          </FormLabel>
+          {addExerciseComment && (
+            <AddComment
+              placeholderText="Add an Exercise Comment"
+              comment={exercise.comment}
+              setComment={setExerciseComment}
+            />
+          )}
+        </FormControl>
+        <IconButton
+          variant="ghost"
+          colorScheme={theme.colors.green[700]}
+          aria-label="Send email"
+          icon={<FaTimes />}
+          size="xs"
+          onClick={onOpenDeleteExercise}
+        />
+      </Flex>
 
       {/* SETS COMPLETED */}
 
       {/* STOPWATCH */}
+
+      {/* DELETE EXERCISE MODAL */}
+      <ConfirmModal
+        isOpen={isOpenDeleteExercise}
+        onClose={onCloseDeleteExercise}
+        onConfirmation={onDeleteExercise}
+        ModalTitle="Delete Exercise"
+        ModalBodyText="Are you sure you would like to delete this Exercise? This cannot be undone."
+        CloseText="Cancel"
+        ProceedText="Delete"
+      />
     </VStack>
   );
 }
