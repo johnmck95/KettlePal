@@ -11,7 +11,6 @@ An overbuilt "just-for-me" learning project that is made to keep track of my per
   - [x] Create DB seed script
   - [x] Create Apollo/GQL Server
   - [ ] Make basic CRUD Resolvers/Mutations (90% done)
-  - [ ] Build a
 - Frontend
   - [x] React/TypeScript/Chakra/Apollo Configuration
   - [x] Build the page structure
