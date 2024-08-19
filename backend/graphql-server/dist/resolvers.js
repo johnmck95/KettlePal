@@ -32,7 +32,9 @@ const resolvers = {
         },
         async workouts() {
             try {
-                return await knexInstance("workouts").select("*");
+                return await knexInstance("workouts")
+                    .select("*")
+                    .orderBy("createdAt", "desc");
             }
             catch (error) {
                 console.error("Error fetching workouts:", error);
@@ -79,7 +81,8 @@ const resolvers = {
             try {
                 return await knexInstance("workouts")
                     .select("*")
-                    .where({ userUid: parent.uid });
+                    .where({ userUid: parent.uid })
+                    .orderBy("createdAt", "desc");
             }
             catch (error) {
                 console.error("Error fetching workouts:", error);

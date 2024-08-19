@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Center } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import theme from "../Constants/theme";
-import { postgresToDayJs } from "../Functions/Time/time";
+import { postgresToDayJs } from "../utils/Time/time";
 
 export default function CalendarWidget({
   date,

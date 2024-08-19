@@ -35,7 +35,6 @@ const typeDefs = `#graphql
         endTime: String
     }
 
-
     # Required: Defines the entry points to the graph
     type Query {
         users: [User]
@@ -106,7 +105,7 @@ const typeDefs = `#graphql
     }
 
     input EditExerciseInput {
-        title: String
+        title: String!
         weight: String
         weightUnit: String
         sets: String

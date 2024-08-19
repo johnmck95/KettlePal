@@ -40,7 +40,7 @@ export default function ConfirmModal({
         isCentered
       >
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent margin={"1rem"}>
           <ModalHeader>{ModalTitle}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>

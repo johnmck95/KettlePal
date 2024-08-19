@@ -12,7 +12,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import AddComment from "../AddComment";
-import { getCurrentDate } from "../../Functions/Time/time";
+import { getCurrentDate } from "../../utils/Time/time";
 import Timer from "../../Components/Timer";
 import { FaPlusCircle, FaSave } from "react-icons/fa";
 import theme from "../../Constants/theme";

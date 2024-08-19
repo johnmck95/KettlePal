@@ -1,8 +1,7 @@
 import React from "react";
 import { Exercise } from "../../Constants/types";
-import { VStack, HStack, Text } from "@chakra-ui/react";
-import dayjs from "dayjs";
-import { formatReps } from "../../Functions/Exercises/exercises";
+import { HStack, Text } from "@chakra-ui/react";
+import { formatReps } from "../../utils/Exercises/exercises";
 
 export default function ViewExercise({
   exercise,
