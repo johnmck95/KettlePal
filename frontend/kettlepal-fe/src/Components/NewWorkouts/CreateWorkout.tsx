@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import CreateExercise from "./CreateExercise";
 
 import {
@@ -181,6 +181,16 @@ export default function CreateWorkout() {
     }
   }
 
+  const [showServerError, setShowServerError] = useState<boolean>(false);
+  useEffect(() => {
+    if (error) {
+      setShowServerError(true);
+      setTimeout(() => {
+        setShowServerError(false);
+      }, 4000);
+    }
+  }, [error]);
+
   return (
     <Box m="0.5rem">
       {loading && <LoadingSpinner />}
@@ -268,7 +278,7 @@ export default function CreateWorkout() {
         )}
       </Flex>
 
-      {error && (
+      {error && showServerError && (
         <Alert status="error" mt="2rem">
           <AlertIcon />
           <AlertTitle>Error:</AlertTitle>
