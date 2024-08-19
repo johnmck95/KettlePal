@@ -8,12 +8,15 @@ import {
   Workout,
   AddOrEditWorkoutInput,
   AddOrEditExerciseInput,
-} from "../../types";
-
-/** WEIRDNESS!!  Updating this file isn't actually getting reflected in the server on it's own
- * I have to comment out the 'UpdateUserArgs' import, run the server, get the error, uncomment the import, and then run the server again.
- * ..then it magically works!! WHY. Everything else is a mess right now. Add TS types and fix the other resolvers.
- */
+  Exercise,
+  AddWorkoutWithExercisesInput,
+} from "./types";
+import { verifyExercises } from "./utils/verifyExercises.js";
+import { verifyWorkout } from "./utils/verifyWorkout.js";
+import {
+  formatExercisesForDB,
+  formatWorkoutForDB,
+} from "./utils/formatDataForDB.js";
 
 // Incoming Resolver Properties are: (parent, args, context)
 const knexInstance = knex(knexConfig);
@@ -135,6 +138,81 @@ const resolvers = {
       }
     },
 
+    async addWorkoutWithExercises(
+      _,
+      {
+        userUid,
+        workoutWithExercises,
+      }: {
+        userUid: string;
+        workoutWithExercises: AddWorkoutWithExercisesInput;
+      }
+    ) {
+      if (!userUid) {
+        throw new Error("userUid required to addWorkoutWithExercises");
+      }
+      const newExercises = formatExercisesForDB(workoutWithExercises);
+      const newWorkout = formatWorkoutForDB(workoutWithExercises, userUid);
+
+      if (!newWorkout) {
+        throw new Error("Workout required to addWorkoutWithExercises");
+      }
+      if (!newExercises || newExercises.length === 0) {
+        throw new Error(
+          "At least one exercise required to addWorkoutWithExercises"
+        );
+      }
+
+      const isWorkoutValid = verifyWorkout(newWorkout);
+      if (isWorkoutValid.result === false) {
+        throw new Error(isWorkoutValid.reason);
+      }
+      const areExercisesValid = verifyExercises(newExercises);
+      if (areExercisesValid.result === false) {
+        throw new Error(areExercisesValid.reason);
+      }
+
+      try {
+        let addedWorkoutWithExercises = null;
+        await knexInstance.transaction(async function (trx) {
+          try {
+            const [workout] = (await trx("workouts")
+              .returning("*")
+              .insert(newWorkout)) as unknown as Workout[];
+
+            const [exercises] = (await Promise.all(
+              newExercises.map((exercise) => {
+                return trx("exercises")
+                  .returning("*")
+                  .insert({
+                    ...exercise,
+                    workoutUid: workout.uid,
+                  });
+              })
+            )) as unknown as Exercise[];
+
+            await trx.commit();
+
+            if (trx.isCompleted()) {
+              addedWorkoutWithExercises = {
+                ...workout,
+                exercises,
+              };
+            }
+
+            return addedWorkoutWithExercises;
+          } catch (error) {
+            await trx.rollback();
+            throw new Error("Failed to create workout with exercises.");
+          }
+        });
+
+        return addedWorkoutWithExercises;
+      } catch (error) {
+        throw new Error("Failed to create workout with exercises.");
+      }
+    },
+
     async addWorkout(
       _,
       {
@@ -158,7 +236,7 @@ const resolvers = {
         const insertedWorkout = await knexInstance("workouts")
           .where({
             comment: workout.comment,
-            usesUid: userUid,
+            userUid: userUid,
           })
           .first();
 

@@ -17,10 +17,12 @@ import Timer from "../../Components/Timer";
 import { FaPlusCircle, FaSave } from "react-icons/fa";
 import theme from "../../Constants/theme";
 import ConfirmModal from "../ConfirmModal";
+import { gql, useMutation } from "@apollo/client";
+import { useUser } from "../../Contexts/UserContext";
 
 export type CreateWorkoutState = {
-  date: string;
-  workoutComment: string;
+  createdAt: string;
+  comment: string;
   startTime: Date | undefined;
   endTime: Date | undefined;
   exercises: Array<{
@@ -36,15 +38,36 @@ export type CreateWorkoutState = {
   }>;
 };
 
+const ADD_WORKOUT_WITH_EXERCISES = gql`
+  mutation addWorkoutWithExercises(
+    $userUid: ID!
+    $workoutWithExercises: AddWorkoutWithExercisesInput!
+  ) {
+    addWorkoutWithExercises(
+      userUid: $userUid
+      workoutWithExercises: $workoutWithExercises
+    ) {
+      uid
+      userUid
+      exercises {
+        uid
+        title
+      }
+    }
+  }
+`;
+
 export default function CreateWorkout() {
   const [state, setState] = useState<CreateWorkoutState>({
-    date: getCurrentDate(),
-    workoutComment: "",
+    createdAt: getCurrentDate(),
+    comment: "",
     startTime: undefined,
     endTime: undefined,
     exercises: [],
   });
   const [addWorkoutComment, setAddWorkoutComment] = useState<boolean>(false);
+  const [addWorkoutWithExercises] = useMutation(ADD_WORKOUT_WITH_EXERCISES);
+  const { uid: userUid } = useUser();
 
   const setTime = (newTime: Date, stateName: "startTime" | "endTime") => {
     setState((prevState: CreateWorkoutState) => ({
@@ -56,7 +79,7 @@ export default function CreateWorkout() {
   const setComment = (newComment: string) => {
     setState((prevState: CreateWorkoutState) => ({
       ...prevState,
-      workoutComment: newComment,
+      comment: newComment,
     }));
   };
 
@@ -95,7 +118,17 @@ export default function CreateWorkout() {
     }));
   }
 
-  function handleExercise(name: string, value: any, index: number): void {
+  function handleExercise(
+    name: string,
+    value: string | number,
+    index: number
+  ): void {
+    if (
+      (name === "weight" || name === "sets" || name === "reps") &&
+      typeof value === "string"
+    ) {
+      value = parseFloat(value);
+    }
     setState((prevState) => ({
       ...prevState,
       exercises: prevState.exercises.map((exercise, i) => {
@@ -117,19 +150,30 @@ export default function CreateWorkout() {
     onClose: onCloseSaveWorkout,
   } = useDisclosure();
 
-  function onSaveWorkout(): void {
+  async function onSaveWorkout(): Promise<void> {
     // TODO: After confirm modal 'continue' is pressed,
     // trigger the gql mutation to save the workout wth exercises to DB
-    console.log("Saving Workout");
     onCloseSaveWorkout();
-    setState({
-      date: getCurrentDate(),
-      workoutComment: "",
-      startTime: undefined,
-      endTime: undefined,
-      exercises: [],
-    });
+
+    try {
+      const result = await addWorkoutWithExercises({
+        variables: {
+          userUid,
+          workoutWithExercises: state,
+        },
+      });
+      setState({
+        createdAt: getCurrentDate(),
+        comment: "",
+        startTime: undefined,
+        endTime: undefined,
+        exercises: [],
+      });
+    } catch (err) {
+      console.error("Error submitting workout with exercises: ", err);
+    }
   }
+
   return (
     <Box m="0.5rem">
       {/* DATE */}
@@ -138,10 +182,10 @@ export default function CreateWorkout() {
           <FormLabel fontSize={["sm", "lg"]}>Workout Date</FormLabel>
           <Input
             size={["sm", "lg"]}
-            name="date"
+            name="createdAt"
             type="date"
             maxW="180px"
-            value={state.date}
+            value={state.createdAt}
             onChange={handleStateChange}
             border="1px solid grey"
             borderRadius={"5px"}
@@ -171,7 +215,7 @@ export default function CreateWorkout() {
         {addWorkoutComment && (
           <AddComment
             placeholderText="Add a Workout Comment"
-            comment={state.workoutComment}
+            comment={state.comment}
             setComment={setComment}
           />
         )}
