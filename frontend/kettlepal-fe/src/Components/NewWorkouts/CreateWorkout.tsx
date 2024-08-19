@@ -2,6 +2,10 @@ import React, { ChangeEvent, useState } from "react";
 import CreateExercise from "./CreateExercise";
 
 import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
   Box,
   Button,
   Flex,
@@ -19,6 +23,7 @@ import theme from "../../Constants/theme";
 import ConfirmModal from "../ConfirmModal";
 import { gql, useMutation } from "@apollo/client";
 import { useUser } from "../../Contexts/UserContext";
+import LoadingSpinner from "../LoadingSpinner";
 
 export type CreateWorkoutState = {
   createdAt: string;
@@ -66,7 +71,9 @@ export default function CreateWorkout() {
     exercises: [],
   });
   const [addWorkoutComment, setAddWorkoutComment] = useState<boolean>(false);
-  const [addWorkoutWithExercises] = useMutation(ADD_WORKOUT_WITH_EXERCISES);
+  const [addWorkoutWithExercises, { loading, error }] = useMutation(
+    ADD_WORKOUT_WITH_EXERCISES
+  );
   const { uid: userUid } = useUser();
 
   const setTime = (newTime: Date, stateName: "startTime" | "endTime") => {
@@ -156,7 +163,7 @@ export default function CreateWorkout() {
     onCloseSaveWorkout();
 
     try {
-      const result = await addWorkoutWithExercises({
+      await addWorkoutWithExercises({
         variables: {
           userUid,
           workoutWithExercises: state,
@@ -176,6 +183,7 @@ export default function CreateWorkout() {
 
   return (
     <Box m="0.5rem">
+      {loading && <LoadingSpinner />}
       {/* DATE */}
       <HStack justifyContent={"space-around"} pb="0.5rem">
         <FormControl>
@@ -259,6 +267,14 @@ export default function CreateWorkout() {
           </Button>
         )}
       </Flex>
+
+      {error && (
+        <Alert status="error" mt="2rem">
+          <AlertIcon />
+          <AlertTitle>Error:</AlertTitle>
+          <AlertDescription>{error.message}</AlertDescription>
+        </Alert>
+      )}
 
       <ConfirmModal
         isOpen={isOpenSaveWorkout}

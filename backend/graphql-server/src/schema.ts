@@ -97,8 +97,8 @@ const typeDefs = `#graphql
         title: String!
         weight: Float!
         weightUnit: String!
-        sets: Float!
-        reps: Float!
+        sets: Float
+        reps: Float
         repsDisplay: String
         comment: String
         startTime: String

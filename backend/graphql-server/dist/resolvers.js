@@ -134,12 +134,6 @@ const resolvers = {
             }
             const newExercises = formatExercisesForDB(workoutWithExercises);
             const newWorkout = formatWorkoutForDB(workoutWithExercises, userUid);
-            if (!newWorkout) {
-                throw new Error("Workout required to addWorkoutWithExercises");
-            }
-            if (!newExercises || newExercises.length === 0) {
-                throw new Error("At least one exercise required to addWorkoutWithExercises");
-            }
             const isWorkoutValid = verifyWorkout(newWorkout);
             if (isWorkoutValid.result === false) {
                 throw new Error(isWorkoutValid.reason);
