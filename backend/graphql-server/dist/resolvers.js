@@ -96,7 +96,8 @@ const resolvers = {
             try {
                 return await knexInstance("exercises")
                     .select("*")
-                    .where({ workoutUid: parent.uid });
+                    .where({ workoutUid: parent.uid })
+                    .orderBy("startTime", "desc");
             }
             catch (error) {
                 console.error("Error fetching exercises:", error);

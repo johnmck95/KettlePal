@@ -8,6 +8,7 @@ export type UserWithWorkouts = {
         comment: string;
         startTime: string;
         endTime: string;
+        createdAt: string;
         exercises: [
           {
             uid: string;
@@ -30,8 +31,9 @@ export type UserWithWorkouts = {
 export type WorkoutWithExercises = {
   uid: string;
   comment: string;
-  startTime: string;
-  endTime: string;
+  startTime: string | null;
+  endTime: string | null;
+  createdAt: string;
   exercises: [
     {
       uid: string;
@@ -42,8 +44,8 @@ export type WorkoutWithExercises = {
       reps: number;
       repsDisplay: string;
       comment: string;
-      startTime: string;
-      endTime: string;
+      startTime: string | null;
+      endTime: string | null;
     }
   ];
 };
@@ -76,6 +78,6 @@ export type Exercise = {
   reps: number;
   repsDisplay: string;
   comment: string;
-  startTime: string;
-  endTime: string;
+  startTime: string | null;
+  endTime: string | null;
 };

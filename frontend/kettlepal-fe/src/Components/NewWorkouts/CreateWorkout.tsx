@@ -23,8 +23,8 @@ import { useUser } from "../../Contexts/UserContext";
 export type CreateWorkoutState = {
   createdAt: string;
   comment: string;
-  startTime: Date | undefined;
-  endTime: Date | undefined;
+  startTime: Date | null;
+  endTime: Date | null;
   exercises: Array<{
     title: string;
     weight: number;
@@ -33,8 +33,8 @@ export type CreateWorkoutState = {
     reps: number;
     repsDisplay: string;
     comment: string;
-    startTime: Date | undefined;
-    endTime: Date | undefined;
+    startTime: Date | null;
+    endTime: Date | null;
   }>;
 };
 
@@ -61,8 +61,8 @@ export default function CreateWorkout() {
   const [state, setState] = useState<CreateWorkoutState>({
     createdAt: getCurrentDate(),
     comment: "",
-    startTime: undefined,
-    endTime: undefined,
+    startTime: null,
+    endTime: null,
     exercises: [],
   });
   const [addWorkoutComment, setAddWorkoutComment] = useState<boolean>(false);
@@ -104,8 +104,8 @@ export default function CreateWorkout() {
           reps: 0,
           repsDisplay: "standard",
           comment: "",
-          startTime: undefined,
-          endTime: undefined,
+          startTime: null,
+          endTime: null,
         },
       ],
     }));
@@ -165,8 +165,8 @@ export default function CreateWorkout() {
       setState({
         createdAt: getCurrentDate(),
         comment: "",
-        startTime: undefined,
-        endTime: undefined,
+        startTime: null,
+        endTime: null,
         exercises: [],
       });
     } catch (err) {

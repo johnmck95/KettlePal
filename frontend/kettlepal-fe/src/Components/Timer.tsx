@@ -9,9 +9,9 @@ import theme from "../Constants/theme";
 interface TimerProps {
   showStartStop: boolean;
   autoStart: boolean;
-  startTime?: Date;
+  startTime?: Date | null;
   setTime: (newTime: Date, stateName: "startTime" | "endTime") => void;
-  endTime?: Date;
+  endTime?: Date | null;
 }
 export default function Timer({
   showStartStop,
@@ -40,7 +40,7 @@ export default function Timer({
   const handleStart = () => {
     setIsActive(true);
     // Ellapsed time - do not reset the initial start time.
-    if (startTime === undefined) {
+    if (startTime === null) {
       setTime(new Date(), "startTime");
     }
   };

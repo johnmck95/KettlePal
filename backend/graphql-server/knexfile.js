@@ -13,9 +13,7 @@ const knexConfig = {
   connection: {
     host: "localhost",
     database:
-      process.env.NODE_ENV === "development"
-        ? "kettlepal-dev"
-        : "kettlepal-stage",
+      process.env.NODE_ENV === "staging" ? "kettlepal-stage" : "kettlepal-dev",
     user: process.env.DB_USER || "",
     password: process.env.DB_PASSWORD || "",
   },
@@ -31,7 +29,7 @@ const knexConfig = {
     directory: path.join(
       decodedDirname,
       "/src/db/seeds",
-      process.env.NODE_ENV === "development" ? "development" : "staging"
+      process.env.NODE_ENV === "staging" ? "staging" : "development"
     ),
   },
 };

@@ -22,7 +22,7 @@ export default function ViewWorkout({
       borderRadius="4px"
       boxShadow={`0 0 2px ${theme.colors.olive[900]}`}
     >
-      <CalendarWidget date={workoutWithExercises.startTime} w="4rem" />
+      <CalendarWidget date={workoutWithExercises.createdAt} w="4rem" />
       <VStack mx="1rem">
         {exercises.map((exercise) => {
           return <ViewExercise key={exercise.uid} exercise={exercise} />;

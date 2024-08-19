@@ -14,8 +14,8 @@ const typeDefs = `#graphql
     type Workout {
         uid: ID!
         createdAt: String!
-        startTime: String!
-        endTime: String!
+        startTime: String
+        endTime: String
         comment: String
         userUid: ID!
         exercises: [Exercise!]

@@ -2,7 +2,7 @@ import React from "react";
 import { useUser } from "../Contexts/UserContext";
 import { useQuery, gql } from "@apollo/client";
 import LoadingSpinner from "../Components/LoadingSpinner";
-import { Box, VStack, Center, Flex, Text } from "@chakra-ui/react";
+import { VStack, Center, Flex, Text } from "@chakra-ui/react";
 import { UserWithWorkouts, WorkoutWithExercises } from "../Constants/types";
 import ViewWorkout from "../Components/ViewWorkouts/ViewWorkout";
 
@@ -16,6 +16,7 @@ const WORKOUTS_WITH_EXERCISES_QUERY = gql`
         comment
         startTime
         endTime
+        createdAt
         exercises {
           uid
           title
@@ -42,6 +43,8 @@ export default function PastWorkouts() {
     }
   );
 
+  const noWorkouts = !data?.user?.workouts;
+
   return (
     <Flex w="100%">
       {loading && (
@@ -55,14 +58,17 @@ export default function PastWorkouts() {
           {data === null ? (
             <Text>No User Found</Text>
           ) : (
-            data.user.workouts.map(
-              (workoutWithExercises: WorkoutWithExercises) => (
-                <ViewWorkout
-                  key={workoutWithExercises.uid}
-                  workoutWithExercises={workoutWithExercises}
-                />
-              )
-            )
+            <>
+              {noWorkouts && <Text> Record your first workout!</Text>}
+              {data?.user?.workouts?.map(
+                (workoutWithExercises: WorkoutWithExercises) => (
+                  <ViewWorkout
+                    key={workoutWithExercises.uid}
+                    workoutWithExercises={workoutWithExercises}
+                  />
+                )
+              )}
+            </>
           )}
         </VStack>
       )}
