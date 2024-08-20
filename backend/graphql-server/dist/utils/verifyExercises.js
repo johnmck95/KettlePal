@@ -11,60 +11,98 @@ export function verifyExercises(exercises) {
                 reason: `Exercise title is required. Received '${title}'.`,
             };
         }
-        if (sets && !reps) {
+        if (!reps && (sets || repsDisplay)) {
             return {
                 result: false,
-                reason: `Exercise reps is required when sets is Provided. Received '${sets}' and '${reps}'.`,
+                reason: `Exercise Reps is required when Sets or Reps Display is provided.`,
             };
         }
-        if (!sets && reps) {
+        if (!sets && (reps || repsDisplay)) {
             return {
                 result: false,
-                reason: `Exercise sets is required when reps is Provided. Received '${sets}' and '${reps}'.`,
+                reason: `Exercise Sets is required when Reps or Reps Display is provided`,
             };
         }
-        if ((sets || reps) && !repsDisplay) {
+        if (!repsDisplay && (sets || reps)) {
             return {
                 result: false,
-                reason: `Exercise repsDisplay is required when sets and reps are Provided. Received '${sets}', '${reps}', and '${repsDisplay}'.`,
-            };
-        }
-        if (repsDisplay && (!sets || !reps)) {
-            return {
-                result: false,
-                reason: `Exercise sets and reps are required when repsDisplay is Provided. Received '${sets}', '${reps}', and '${repsDisplay}'.`,
+                reason: `Exercise Reps Display is required when Sets or Reps are provided.`,
             };
         }
         if (weight && !weightUnit) {
             return {
                 result: false,
-                reason: `Exercise weightUnit is required when weight is Provided. Received '${weight}' and '${weightUnit}'.`,
+                reason: `Exercise Weight Unit is required when Weight is provided`,
             };
         }
         if (!weight && weightUnit) {
             return {
                 result: false,
-                reason: `Exercise weight is required when weightUnit is Provided. Received '${weight}' and '${weightUnit}'.`,
+                reason: `Exercise Weight is required when Weight Unit is provided.`,
             };
         }
         if (startTime && endTime) {
             if (dayjs(startTime).isAfter(endTime)) {
                 return {
                     result: false,
-                    reason: `Exercise startTime must be before endTime. Received '${startTime}' and '${endTime}'.`,
+                    reason: `Exercise Start Time must be before End Time.`,
                 };
             }
         }
         if (startTime && !endTime) {
             return {
                 result: false,
-                reason: `Exercise endTime is required when startTime is Provided. Received '${startTime}' and '${endTime}'.`,
+                reason: `Exercise End Time is required when Start Time is Provided.`,
             };
         }
         if (!startTime && endTime) {
             return {
                 result: false,
-                reason: `Exercise startTime is required when endTime is Provided. Received '${startTime}' and '${endTime}'.`,
+                reason: `Exercise Start Time is required when End Time is Provided.`,
+            };
+        }
+        const validRepsDisplayed = [
+            "l/r",
+            "std",
+            "(1,2)",
+            "(1,2,3)",
+            "(1,2,3,4)",
+            "(1,2,3,4,5)",
+        ];
+        if (!validRepsDisplayed.includes(repsDisplay)) {
+            return {
+                result: false,
+                reason: `Exercise Reps Display must be one of ${validRepsDisplayed.join(", ")}.`,
+            };
+        }
+        if (repsDisplay === "l/r" && reps % 2 !== 0) {
+            return {
+                result: false,
+                reason: `Exercise Reps must be even when Reps Display is 'l/r'.`,
+            };
+        }
+        if (repsDisplay === "(1,2)" && reps !== 6) {
+            return {
+                result: false,
+                reason: `Exercise Reps must be 6 when Reps Display is '(1,2)'.`,
+            };
+        }
+        if (repsDisplay === "(1,2,3)" && reps !== 12) {
+            return {
+                result: false,
+                reason: `Exercise Reps must be 12 when Reps Display is '(1,2,3)'.`,
+            };
+        }
+        if (repsDisplay === "(1,2,3,4)" && reps !== 20) {
+            return {
+                result: false,
+                reason: `Exercise Reps must be 20 when Reps Display is '(1,2,3,4)'.`,
+            };
+        }
+        if (repsDisplay === "(1,2,3,4,5)" && reps !== 30) {
+            return {
+                result: false,
+                reason: `Exercise Reps must be 30 when Reps Display is '(1,2,3,4,5)'.`,
             };
         }
     }

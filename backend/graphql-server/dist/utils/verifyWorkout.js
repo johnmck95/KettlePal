@@ -7,20 +7,20 @@ export function verifyWorkout(workout) {
         if (dayjs(startTime).isAfter(endTime)) {
             return {
                 result: false,
-                reason: `Workout startTime must be before endTime. Received '${startTime}' and '${endTime}'.`,
+                reason: `Workout Start Time must be before End Time.`,
             };
         }
     }
     if (startTime && !endTime) {
         return {
             result: false,
-            reason: `Workout endTime is required when startTime is Provided. Received '${startTime}' and '${endTime}'.`,
+            reason: `Workout End Time is required when Start Time is provided.`,
         };
     }
     if (!startTime && endTime) {
         return {
             result: false,
-            reason: `Workout startTime is required when endTime is Provided. Received '${startTime}' and '${endTime}'.`,
+            reason: `Workout Start Time is required when End Time is provided.`,
         };
     }
     return { result: true, reason: "No workout error detected." };

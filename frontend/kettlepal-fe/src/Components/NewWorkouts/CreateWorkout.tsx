@@ -288,9 +288,8 @@ export default function CreateWorkout() {
       </Flex>
 
       {error && showServerError && (
-        <Alert status="error" mt="2rem">
+        <Alert status="error" mt="2rem" borderRadius={"8px"}>
           <AlertIcon />
-          <AlertTitle>Error:</AlertTitle>
           <AlertDescription>{error.message}</AlertDescription>
         </Alert>
       )}
