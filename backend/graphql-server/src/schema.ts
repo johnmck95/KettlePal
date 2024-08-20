@@ -50,6 +50,7 @@ const typeDefs = `#graphql
         deleteUser(uid: ID!): [User]!
         deleteWorkout(uid: ID!): [Workout]!
         deleteExercise(uid: ID!): [Exercise]!
+        deleteWorkoutWithExercises(workoutUid: ID!): Workout!
 
         addUser(user: AddUserInput!): User
         addExercise(workoutUid: ID!, exercise: AddExerciseInput!): Exercise

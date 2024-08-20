@@ -95,7 +95,10 @@ export default function CreateExercise({
   if (repsIsInvalid) errors.push(ExerciseErrors.reps);
   if (repsDisplayIsInvalid) errors.push(ExerciseErrors.repsDisplay);
 
-  useEffect(() => setFormHasErrors(errors.length > 0), [errors]);
+  useEffect(
+    () => setFormHasErrors(errors.length > 0),
+    [errors, setFormHasErrors]
+  );
 
   return (
     <Box mb="1rem">

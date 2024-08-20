@@ -279,6 +279,44 @@ const resolvers = {
                 throw error;
             }
         },
+        // TODO: This is safely deleting workout & exercises, but the exercises returned is an empty array
+        async deleteWorkoutWithExercises(_, { workoutUid }) {
+            const workout = await knexInstance("workouts").where({ uid: workoutUid });
+            if (!workout) {
+                throw new Error("Workout not found.");
+            }
+            if (workout.length > 1) {
+                throw new Error(`${workout.length} workouts found with uid ${workoutUid}. Exiting gracefully..`);
+            }
+            const exercises = await knexInstance("exercises").where({
+                workoutUid: workoutUid,
+            });
+            if (!exercises) {
+                throw new Error("Exercises not found.");
+            }
+            const workoutWithExercises = {
+                ...workout[0],
+                exercises,
+            };
+            try {
+                await knexInstance.transaction(async function (trx) {
+                    try {
+                        await trx("exercises").where({ workoutUid: workoutUid }).del();
+                        await trx("workouts").where({ uid: workoutUid }).del();
+                        await trx.commit();
+                    }
+                    catch (error) {
+                        await trx.rollback();
+                        throw new Error("Failed to delete workout with exercises.");
+                    }
+                });
+                return workoutWithExercises;
+            }
+            catch (error) {
+                console.error("Error deleting workout with exercises:", error);
+                throw error;
+            }
+        },
         async deleteWorkout(_, { uid }) {
             try {
                 const exercisesCount = Number((await knexInstance("exercises")

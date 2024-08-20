@@ -34,7 +34,7 @@ export const WeightOptions = [
 
 export const RepsDisplayOptions = [
   {
-    value: "standard",
+    value: "std",
     label: "Standard",
   },
   {

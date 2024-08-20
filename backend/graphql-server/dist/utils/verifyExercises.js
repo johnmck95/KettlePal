@@ -62,6 +62,7 @@ export function verifyExercises(exercises) {
             };
         }
         const validRepsDisplayed = [
+            "",
             "l/r",
             "std",
             "(1,2)",

@@ -5,7 +5,6 @@ import {
   Alert,
   AlertDescription,
   AlertIcon,
-  AlertTitle,
   Box,
   Button,
   Flex,
@@ -111,7 +110,7 @@ export default function CreateWorkout() {
           weightUnit: "kg",
           sets: 0,
           reps: 0,
-          repsDisplay: "standard",
+          repsDisplay: "std",
           comment: "",
           startTime: null,
           endTime: null,
@@ -198,6 +197,7 @@ export default function CreateWorkout() {
     }
   }, [error]);
 
+  console.log(state.exercises);
   return (
     <Box m="0.5rem">
       {loading && <LoadingSpinner />}

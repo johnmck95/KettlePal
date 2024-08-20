@@ -36,7 +36,7 @@ const WORKOUTS_WITH_EXERCISES_QUERY = gql`
 
 export default function PastWorkouts() {
   const user = useUser();
-  const { loading, error, data } = useQuery<UserWithWorkouts>(
+  const { loading, error, data, refetch } = useQuery<UserWithWorkouts>(
     WORKOUTS_WITH_EXERCISES_QUERY,
     {
       variables: { uid: user.uid },
@@ -65,6 +65,7 @@ export default function PastWorkouts() {
                   <ViewWorkout
                     key={workoutWithExercises.uid}
                     workoutWithExercises={workoutWithExercises}
+                    refetchPastWorkouts={refetch}
                   />
                 )
               )}

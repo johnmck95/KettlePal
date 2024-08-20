@@ -87,6 +87,7 @@ export function verifyExercises(exercises: AddOrEditExerciseInput[]): {
     }
 
     const validRepsDisplayed = [
+      "",
       "l/r",
       "std",
       "(1,2)",
