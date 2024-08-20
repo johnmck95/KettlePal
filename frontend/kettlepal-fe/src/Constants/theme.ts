@@ -5,6 +5,7 @@ const theme = extendTheme({
     transparent: "transparent",
     black: "#000",
     white: "#fff",
+    error: "#E53E3E",
     olive: {
       100: "#5A725C",
       200: "#516753",

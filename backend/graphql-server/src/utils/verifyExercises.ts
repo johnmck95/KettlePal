@@ -10,25 +10,56 @@ export function verifyExercises(exercises: AddOrEditExerciseInput[]): {
   }
 
   for (const exercise of exercises) {
-    const { title, weight, weightUnit, startTime, endTime } = exercise;
+    const {
+      title,
+      weight,
+      sets,
+      reps,
+      repsDisplay,
+      weightUnit,
+      startTime,
+      endTime,
+    } = exercise;
+
     if (!title) {
       return {
         result: false,
-        reason: `Exercise title is required. Received ${title}`,
+        reason: `Exercise title is required. Received '${title}'.`,
       };
     }
 
-    if (!weight) {
+    if (!reps && (sets || repsDisplay)) {
       return {
         result: false,
-        reason: `Exercise weight is required. Received ${weight}`,
+        reason: `Exercise Reps is required when Sets or Reps Display is provided.`,
       };
     }
 
-    if (!weightUnit) {
+    if (!sets && (reps || repsDisplay)) {
       return {
         result: false,
-        reason: `Exercise weightUnit is required. Received ${weightUnit}`,
+        reason: `Exercise Sets is required when Reps or Reps Display is provided`,
+      };
+    }
+
+    if (!repsDisplay && (sets || reps)) {
+      return {
+        result: false,
+        reason: `Exercise Reps Display is required when Sets or Reps are provided.`,
+      };
+    }
+
+    if (weight && !weightUnit) {
+      return {
+        result: false,
+        reason: `Exercise Weight Unit is required when Weight is provided`,
+      };
+    }
+
+    if (!weight && weightUnit) {
+      return {
+        result: false,
+        reason: `Exercise Weight is required when Weight Unit is provided.`,
       };
     }
 
@@ -36,7 +67,7 @@ export function verifyExercises(exercises: AddOrEditExerciseInput[]): {
       if (dayjs(startTime).isAfter(endTime)) {
         return {
           result: false,
-          reason: `Exercise startTime must be before endTime. Received ${startTime} and ${endTime}`,
+          reason: `Exercise Start Time must be before End Time.`,
         };
       }
     }
@@ -44,14 +75,14 @@ export function verifyExercises(exercises: AddOrEditExerciseInput[]): {
     if (startTime && !endTime) {
       return {
         result: false,
-        reason: `Exercise endTime is required when startTime is Provided. Received ${startTime} and ${endTime}`,
+        reason: `Exercise End Time is required when Start Time is Provided.`,
       };
     }
 
     if (!startTime && endTime) {
       return {
         result: false,
-        reason: `Exercise startTime is required when endTime is Provided. Received ${startTime} and ${endTime}`,
+        reason: `Exercise Start Time is required when End Time is Provided.`,
       };
     }
   }

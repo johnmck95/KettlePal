@@ -74,6 +74,8 @@ export default function CreateWorkout() {
   const [addWorkoutWithExercises, { loading, error }] = useMutation(
     ADD_WORKOUT_WITH_EXERCISES
   );
+  const [submitted, setSubmitted] = useState<boolean>(false);
+  const [formHasErrors, setFormHasErrors] = useState<boolean>(false);
   const { uid: userUid } = useUser();
 
   const setTime = (newTime: Date, stateName: "startTime" | "endTime") => {
@@ -158,10 +160,15 @@ export default function CreateWorkout() {
   } = useDisclosure();
 
   async function onSaveWorkout(): Promise<void> {
-    // TODO: After confirm modal 'continue' is pressed,
-    // trigger the gql mutation to save the workout wth exercises to DB
+    setSubmitted(true);
     onCloseSaveWorkout();
 
+    // Client-side validation
+    if (formHasErrors) {
+      return;
+    }
+
+    // Try to write to DB
     try {
       await addWorkoutWithExercises({
         variables: {
@@ -187,7 +194,7 @@ export default function CreateWorkout() {
       setShowServerError(true);
       setTimeout(() => {
         setShowServerError(false);
-      }, 4000);
+      }, 5000);
     }
   }, [error]);
 
@@ -196,7 +203,7 @@ export default function CreateWorkout() {
       {loading && <LoadingSpinner />}
       {/* DATE */}
       <HStack justifyContent={"space-around"} pb="0.5rem">
-        <FormControl>
+        <FormControl isRequired isInvalid={submitted && !state.createdAt}>
           <FormLabel fontSize={["sm", "lg"]}>Workout Date</FormLabel>
           <Input
             size={["sm", "lg"]}
@@ -249,6 +256,8 @@ export default function CreateWorkout() {
               handleExercise={handleExercise}
               deleteExercise={deleteExercise}
               exerciseIndex={index}
+              submitted={submitted}
+              setFormHasErrors={setFormHasErrors}
             />
           );
         })}
