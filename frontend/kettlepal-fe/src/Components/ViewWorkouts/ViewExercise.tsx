@@ -8,14 +8,19 @@ export default function ViewExercise({
 }: {
   exercise: Omit<Exercise, "workoutUid">;
 }) {
-  const { title, weight, weightUnit, sets, reps, repsDisplay } = exercise;
+  const { title, weight, weightUnit, sets, reps, repsDisplay, comment } =
+    exercise;
 
   return (
     <HStack w="100%">
-      <Text>{`${title} (${weight}${weightUnit}):   ${sets}x${formatReps(
-        reps,
-        repsDisplay
-      )} `}</Text>
+      {weight && weightUnit && sets && reps && repsDisplay ? (
+        <Text>{`${title} (${weight}${weightUnit}):    ${sets}x${formatReps(
+          reps,
+          repsDisplay
+        )} `}</Text>
+      ) : (
+        <Text>{`${title}:    ${comment}`}</Text>
+      )}
     </HStack>
   );
 }

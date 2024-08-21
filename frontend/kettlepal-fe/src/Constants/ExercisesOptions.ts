@@ -26,10 +26,6 @@ export const WeightOptions = [
     value: "lbs",
     label: "lbs",
   },
-  {
-    value: "",
-    label: "N/A",
-  },
 ];
 
 export const RepsDisplayOptions = [
@@ -56,10 +52,6 @@ export const RepsDisplayOptions = [
   {
     value: "(1,2)",
     label: "(1,2)",
-  },
-  {
-    value: "",
-    label: "N/A",
   },
 ];
 

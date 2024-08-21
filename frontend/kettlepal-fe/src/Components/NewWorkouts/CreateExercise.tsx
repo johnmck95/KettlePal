@@ -124,7 +124,7 @@ export default function CreateExercise({
             <FormLabel size={["xs", "sm", "md"]}>Title</FormLabel>
             <Select
               size={["xs", "sm", "md"]}
-              placeholder="Select option"
+              placeholder="Select Option"
               name="title"
               value={exercise.title}
               onChange={(event) =>
@@ -133,6 +133,9 @@ export default function CreateExercise({
                   event.target.value,
                   exerciseIndex
                 )
+              }
+              color={
+                !!exercise.title ? theme.colors.black : theme.colors.grey[500]
               }
             >
               {ExerciseTitles.map((title) => {
@@ -150,7 +153,7 @@ export default function CreateExercise({
             <FormLabel size={["xs", "", "md"]}>Weight</FormLabel>
             <Select
               size={["xs", "sm", "md"]}
-              placeholder="Select option"
+              placeholder="Select Option"
               name="weight"
               value={exercise.weight}
               onChange={(event) =>
@@ -159,6 +162,9 @@ export default function CreateExercise({
                   event.target.value,
                   exerciseIndex
                 )
+              }
+              color={
+                !!exercise.weight ? theme.colors.black : theme.colors.grey[500]
               }
             >
               {KettlbellWeightsKG.map((weight) => {
@@ -183,6 +189,9 @@ export default function CreateExercise({
               name="sets"
               value={exercise.sets}
               onChange={(event) => handleExercise("sets", event, exerciseIndex)}
+              color={
+                !!exercise.sets ? theme.colors.black : theme.colors.grey[500]
+              }
             >
               <NumberInputField />
               <NumberInputStepper>
@@ -206,6 +215,9 @@ export default function CreateExercise({
               name="reps"
               value={exercise.reps}
               onChange={(event) => handleExercise("reps", event, exerciseIndex)}
+              color={
+                !!exercise.reps ? theme.colors.black : theme.colors.grey[500]
+              }
             >
               <NumberInputField />
               <NumberInputStepper>
@@ -248,7 +260,7 @@ export default function CreateExercise({
                 <FormLabel fontSize={["xs", "sm", "md"]}>Weight Unit</FormLabel>
                 <Select
                   size={["xs", "sm", "md"]}
-                  placeholder="Select option"
+                  placeholder="Select Option"
                   name="weightUnit"
                   value={exercise.weightUnit}
                   onChange={(event) =>
@@ -257,6 +269,11 @@ export default function CreateExercise({
                       event.target.value,
                       exerciseIndex
                     )
+                  }
+                  color={
+                    !!exercise.weightUnit
+                      ? theme.colors.black
+                      : theme.colors.grey[500]
                   }
                 >
                   {WeightOptions.map((option) => {
@@ -278,7 +295,7 @@ export default function CreateExercise({
                 <FormLabel fontSize={["xs", "sm", "md"]}>Rep Type</FormLabel>
                 <Select
                   size={["xs", "sm", "md"]}
-                  placeholder="Select option"
+                  placeholder="Select Option"
                   name="repsDisplay"
                   value={exercise.repsDisplay}
                   onChange={(event) =>
@@ -287,6 +304,11 @@ export default function CreateExercise({
                       event.target.value,
                       exerciseIndex
                     )
+                  }
+                  color={
+                    !!exercise.repsDisplay
+                      ? theme.colors.black
+                      : theme.colors.grey[500]
                   }
                 >
                   {RepsDisplayOptions.map((option) => {
