@@ -8,8 +8,13 @@ import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import { BrowserRouter } from "react-router-dom";
 import UserProvider from "./Contexts/UserContext";
 
+const env = process.env.NODE_ENV;
+
 const client = new ApolloClient({
-  uri: "http://localhost:4000/",
+  uri:
+    process.env.NODE_ENV === "production"
+      ? "https://kettlepal.onrender.com/"
+      : "http://localhost:4000/",
   cache: new InMemoryCache(),
 });
 
