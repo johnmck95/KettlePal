@@ -29,6 +29,7 @@ export default function AddComment({
       borderRadius={"5px"}
       p="0rem 0.5rem"
       maxW={maxWidth}
+      bg="white"
     >
       <Editable
         value={comment}

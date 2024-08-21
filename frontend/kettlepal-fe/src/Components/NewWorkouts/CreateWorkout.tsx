@@ -235,7 +235,7 @@ export default function CreateWorkout() {
       </HStack>
 
       {/* WORKOUT COMMENT */}
-      <FormControl>
+      <FormControl mb="1rem">
         <FormLabel
           as="button"
           variant="link"

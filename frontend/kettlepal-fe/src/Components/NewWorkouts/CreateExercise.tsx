@@ -217,9 +217,13 @@ export default function CreateExercise({
         </HStack>
 
         {/* SEE DETAILS */}
-        <HStack w="100%" justifyContent={seeDetails ? "center" : "flex-start"}>
+        <HStack
+          w="100%"
+          justifyContent={seeDetails ? "space-between" : "flex-start"}
+          my="0.25rem"
+        >
           <Button
-            size="xs"
+            fontSize={["xs", "sm", "md"]}
             variant="link"
             onClick={() => setSeeDetails((prev) => !prev)}
             textAlign="left"
@@ -233,16 +237,17 @@ export default function CreateExercise({
           </Button>
 
           {seeDetails && (
-            <HStack w="calc(100% - 85px)">
+            <HStack w="calc(100% - 85px)" justifyContent="flex-end">
               {/* WEIGHT UNIT */}
               <FormControl
-                ml="20%"
-                w="35%"
+                ml="1rem"
+                w="50%"
+                maxW="160px"
                 isInvalid={submitted && weightUnitIsInvalid}
               >
-                <FormLabel fontSize="xs">Weight Unit</FormLabel>
+                <FormLabel fontSize={["xs", "sm", "md"]}>Weight Unit</FormLabel>
                 <Select
-                  size="xs"
+                  size={["xs", "sm", "md"]}
                   placeholder="Select option"
                   name="weightUnit"
                   value={exercise.weightUnit}
@@ -266,12 +271,13 @@ export default function CreateExercise({
 
               {/* REPS DISPLAY */}
               <FormControl
-                w="30%"
+                w="50%"
+                maxW="160px"
                 isInvalid={submitted && repsDisplayIsInvalid}
               >
-                <FormLabel fontSize="xs">Rep Type</FormLabel>
+                <FormLabel fontSize={["xs", "sm", "md"]}>Rep Type</FormLabel>
                 <Select
-                  size="xs"
+                  size={["xs", "sm", "md"]}
                   placeholder="Select option"
                   name="repsDisplay"
                   value={exercise.repsDisplay}
