@@ -101,7 +101,7 @@ export default function CreateExercise({
   }
 
   useEffect(
-    () => setFormHasErrors(errors.length > 0),
+    () => setFormHasErrors(numErrors > 0),
     [numErrors, setFormHasErrors]
   );
 
