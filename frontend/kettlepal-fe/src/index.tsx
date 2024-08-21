@@ -6,7 +6,6 @@ import reportWebVitals from "./reportWebVitals";
 import * as serviceWorker from "./serviceWorker";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import { BrowserRouter } from "react-router-dom";
-import UserProvider from "./Contexts/UserContext";
 
 const client = new ApolloClient({
   uri:
@@ -22,14 +21,12 @@ const root = ReactDOM.createRoot(container);
 
 root.render(
   <ApolloProvider client={client}>
-    <UserProvider>
-      <React.StrictMode>
-        <BrowserRouter>
-          <ColorModeScript />
-          <App />
-        </BrowserRouter>
-      </React.StrictMode>
-    </UserProvider>
+    <React.StrictMode>
+      <BrowserRouter>
+        <ColorModeScript />
+        <App />
+      </BrowserRouter>
+    </React.StrictMode>
   </ApolloProvider>
 );
 

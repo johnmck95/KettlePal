@@ -1,8 +1,17 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useQuery, gql } from "@apollo/client";
-import { Box, Button, Center, Heading, Text, VStack } from "@chakra-ui/react";
+import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  Box,
+  Button,
+  Center,
+  Heading,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 import { User } from "../Constants/types";
-import theme from "../Constants/theme";
 import LoadingSpinner from "../Components/LoadingSpinner";
 
 /** A TEMPORARY (terrible) WAY OF HANDLING USER LOGIN */
@@ -66,8 +75,8 @@ export default function UserProvider({
         backgroundSize="cover"
         backgroundPosition={"center"}
       >
-        <VStack display="flex" justifyContent={"center"}>
-          <LoadingSpinner size={72} />
+        <VStack display="flex" justifyContent={"flex-start"} mt="2.5rem">
+          <LoadingSpinner size={24} />
         </VStack>
       </Box>
     );
@@ -76,28 +85,21 @@ export default function UserProvider({
   if (error) {
     console.log(error?.message);
     return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        w="100vw"
-        h="100vh"
-      >
-        <Center
-          w="80%"
-          h="80%"
-          borderRadius="10px"
-          boxShadow={`0px 1px 4px ${theme.colors.grey[400]}`}
+      <Box>
+        <Alert
+          status="error"
+          w="calc(100% - 4rem)"
+          m="2rem"
+          borderRadius={"8px"}
         >
-          <Text p="1rem" maxWidth="400px" fontSize="1.2rem" textAlign="justify">
-            An unexpected error has occurred. The team has been notified -
-            please check back soon.
-          </Text>
-        </Center>
+          <AlertIcon />
+          <AlertDescription>
+            An unexpected error has occurred. {error?.message}
+          </AlertDescription>
+        </Alert>
       </Box>
     );
   }
-
   return (
     <UserContext.Provider value={selectedUser}>
       {selectedUser ? (
