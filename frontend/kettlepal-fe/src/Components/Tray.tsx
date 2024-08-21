@@ -1,7 +1,6 @@
 import { HStack, IconButton, Link } from "@chakra-ui/react";
 import React from "react";
 import { FaPlusCircle, FaListAlt } from "react-icons/fa";
-import theme from "../Constants/theme";
 
 export default function Tray() {
   return (

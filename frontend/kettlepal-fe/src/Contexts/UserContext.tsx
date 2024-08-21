@@ -1,14 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useQuery, gql } from "@apollo/client";
-import {
-  Box,
-  Button,
-  Center,
-  Heading,
-  Spinner,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
+import { Box, Button, Center, Heading, Text, VStack } from "@chakra-ui/react";
 import { User } from "../Constants/types";
 import theme from "../Constants/theme";
 import LoadingSpinner from "../Components/LoadingSpinner";

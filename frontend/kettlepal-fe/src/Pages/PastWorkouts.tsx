@@ -2,7 +2,7 @@ import React from "react";
 import { useUser } from "../Contexts/UserContext";
 import { useQuery, gql } from "@apollo/client";
 import LoadingSpinner from "../Components/LoadingSpinner";
-import { VStack, Center, Flex, Text } from "@chakra-ui/react";
+import { VStack, Flex, Text } from "@chakra-ui/react";
 import { UserWithWorkouts, WorkoutWithExercises } from "../Constants/types";
 import ViewWorkout from "../Components/ViewWorkouts/ViewWorkout";
 
