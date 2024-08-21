@@ -87,6 +87,7 @@ export default function CreateExercise({
     repsDisplay = "Rep Type is required when Sets or Reps are provided.",
   }
 
+  const [numErrors, setNumErrors] = useState(0);
   const errors: string[] = [];
   if (titleIsInvalid) errors.push(ExerciseErrors.title);
   if (weightIsInvalid) errors.push(ExerciseErrors.weight);
@@ -95,9 +96,13 @@ export default function CreateExercise({
   if (repsIsInvalid) errors.push(ExerciseErrors.reps);
   if (repsDisplayIsInvalid) errors.push(ExerciseErrors.repsDisplay);
 
+  if (numErrors !== errors.length) {
+    setNumErrors(errors.length);
+  }
+
   useEffect(
     () => setFormHasErrors(errors.length > 0),
-    [errors, setFormHasErrors]
+    [numErrors, setFormHasErrors]
   );
 
   return (
