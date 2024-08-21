@@ -1,6 +1,6 @@
 ## Welcome to KettlePal!
 
-An overbuilt "just-for-me" learning project that is made to keep track of my personal kettlbell workouts.
+An overbuilt "just-for-me" learning project that is made to keep track of my personal kettlbell workouts. Designed primarily for mobile use.
 
 [**Live Deploy Link**](https://main--kettlepal.netlify.app/) (_Very Early Prototype_)
 
