@@ -197,7 +197,6 @@ export default function CreateWorkout() {
     }
   }, [error]);
 
-  console.log(state.exercises);
   return (
     <Box m="0.5rem">
       {loading && <LoadingSpinner />}
