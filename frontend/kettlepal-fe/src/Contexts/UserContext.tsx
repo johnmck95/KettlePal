@@ -1,7 +1,9 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useQuery, gql } from "@apollo/client";
-import { Button, Center, Heading, Text, VStack } from "@chakra-ui/react";
+import { Box, Button, Center, Heading, Text, VStack } from "@chakra-ui/react";
 import { User } from "../Constants/types";
+import theme from "../Constants/theme";
+import LoadingSpinner from "../Components/LoadingSpinner";
 
 /** A TEMPORARY (terrible) WAY OF HANDLING USER LOGIN */
 /** because I want to work on the fun stuff.. */
@@ -51,17 +53,60 @@ export default function UserProvider({
 
   if (loading) {
     return (
-      <Center>
-        <Heading>Loading...</Heading>
-      </Center>
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        w="100vw"
+        h="100vh"
+      >
+        <Center
+          w="80%"
+          h="80%"
+          borderRadius="10px"
+          boxShadow={`0px 1px 4px ${theme.colors.grey[400]}`}
+        >
+          <VStack display="flex" justifyContent={"center"}>
+            <LoadingSpinner />
+            <Text
+              p="1rem"
+              maxWidth="400px"
+              fontSize="1.2rem"
+              textAlign="justify"
+            >
+              KettlePal's backend service automatically spins down after a
+              period of inactivity. This is a cost saving measure. Please be
+              patient while a brand new service is being spun up just for you!
+              This may take a minutes.
+            </Text>
+          </VStack>
+        </Center>
+      </Box>
     );
   }
 
   if (error) {
+    console.log(error.message);
     return (
-      <Center>
-        <Heading>Error: {error.message}</Heading>
-      </Center>
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        w="100vw"
+        h="100vh"
+      >
+        <Center
+          w="80%"
+          h="80%"
+          borderRadius="10px"
+          boxShadow={`0px 1px 4px ${theme.colors.grey[400]}`}
+        >
+          <Text>
+            An unexpected error has occurred. The team has been notified -
+            please check back soon.
+          </Text>
+        </Center>
+      </Box>
     );
   }
 

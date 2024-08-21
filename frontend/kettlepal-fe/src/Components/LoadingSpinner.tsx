@@ -1,12 +1,14 @@
 import { Spinner } from "@chakra-ui/react";
+import theme from "../Constants/theme";
 
 const LoadingSpinner = () => {
   return (
     <Spinner
-      thickness="2rem"
-      speed="0.65s"
-      emptyColor="green.700"
-      color="feldgrau.700"
+      boxSize={72}
+      thickness="0.4rem"
+      speed="1s"
+      emptyColor={theme.colors.grey[200]}
+      color={theme.colors.feldgrau[700]}
     />
   );
 };
