@@ -216,6 +216,7 @@ export default function CreateWorkout() {
             size={["sm", "lg"]}
             name="createdAt"
             type="date"
+            bg="white"
             maxW="180px"
             value={state.createdAt}
             onChange={handleStateChange}
@@ -277,6 +278,7 @@ export default function CreateWorkout() {
           leftIcon={<FaPlusCircle />}
           variant="outline"
           onClick={handleAddExercise}
+          bg="white"
         >
           Add Exercise
         </Button>
@@ -288,6 +290,7 @@ export default function CreateWorkout() {
             variant="outline"
             disabled={true}
             onClick={onOpenSaveWorkout}
+            bg="white"
           >
             Save Workout
           </Button>

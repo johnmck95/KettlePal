@@ -27,6 +27,9 @@ const LoadingSpinner = ({ size }: { size: string | number }) => {
           maxWidth="600px"
           fontSize="1rem"
           textAlign="justify"
+          background="rgba(249, 249, 249, 0.85)"
+          p="1rem"
+          borderRadius="1rem"
         >
           KettlePal's backend service automatically spins down after a period of
           inactivity. This is a cost saving measure. Please be patient while a

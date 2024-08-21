@@ -9,8 +9,7 @@ export default function Tray() {
       w="100%"
       h="3rem"
       justifyContent="space-around"
-      borderTop={`1px solid ${theme.colors.olive[700]}`}
-      boxShadow={"0 -2px 4px rgba(0, 0, 0, 0.1)"}
+      bg="linear-gradient(180deg, rgba(90,114,92,1) 0%, rgba(90,114,92,1) 28%, rgba(81,103,83,1) 94%)"
     >
       <Link href="/">
         <IconButton
@@ -18,13 +17,13 @@ export default function Tray() {
           icon={<FaListAlt />}
           size={["sm", "md"]}
           color="white"
-          backgroundColor="olive.400"
+          variant="ghost"
           sx={{
             _hover: {
-              filter: "brightness(0.9)",
+              backgroundColor: "olive.300",
             },
             _active: {
-              filter: "brightness(0.8)",
+              backgroundColor: "olive.500",
             },
           }}
         />
@@ -35,13 +34,13 @@ export default function Tray() {
           icon={<FaPlusCircle />}
           size={["sm", "md"]}
           color="white"
-          backgroundColor="olive.400"
+          variant="ghost"
           sx={{
             _hover: {
-              filter: "brightness(0.9)",
+              backgroundColor: "olive.300",
             },
             _active: {
-              filter: "brightness(0.8)",
+              backgroundColor: "olive.500",
             },
           }}
         />

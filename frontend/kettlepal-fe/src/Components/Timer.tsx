@@ -74,7 +74,7 @@ export default function Timer({
                   height="1.75rem"
                   variant="outline"
                   color={theme.colors.bole[700]}
-                  backgroundColor={theme.white}
+                  backgroundColor={theme.colors.white}
                   onClick={handleStop}
                 >
                   Stop
@@ -85,7 +85,7 @@ export default function Timer({
                   height="1.75rem"
                   variant="outline"
                   color={theme.colors.green[700]}
-                  backgroundColor={theme.white}
+                  backgroundColor={theme.colors.white}
                   onClick={handleStart}
                 >
                   Start

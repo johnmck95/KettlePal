@@ -1,6 +1,14 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { useQuery, gql } from "@apollo/client";
-import { Box, Button, Center, Heading, Text, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Center,
+  Heading,
+  Spinner,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 import { User } from "../Constants/types";
 import theme from "../Constants/theme";
 import LoadingSpinner from "../Components/LoadingSpinner";
@@ -58,37 +66,23 @@ export default function UserProvider({
       <Box
         display="flex"
         justifyContent="center"
-        alignItems="center"
+        alignItems="space-between"
         w="100vw"
         h="100vh"
+        background="url(https://media.gettyimages.com/id/503416862/photo/man-ready-to-exercise-with-kettle-bell.jpg?s=612x612&w=0&k=20&c=LOP7VZUq1-A7Ct4kMkxXp8UV5hUahetCliwef9tiQoI=)"
+        backgroundRepeat="no-repeat"
+        backgroundSize="cover"
+        backgroundPosition={"center"}
       >
-        <Center
-          w="80%"
-          h="80%"
-          borderRadius="10px"
-          boxShadow={`0px 1px 4px ${theme.colors.grey[400]}`}
-        >
-          <VStack display="flex" justifyContent={"center"}>
-            <LoadingSpinner size={72} />
-            <Text
-              p="1rem"
-              maxWidth="400px"
-              fontSize="1.2rem"
-              textAlign="justify"
-            >
-              KettlePal's backend service automatically spins down after a
-              period of inactivity. This is a cost saving measure. Please be
-              patient while a brand new service is being spun up just for you!
-              This may take a minutes.
-            </Text>
-          </VStack>
-        </Center>
+        <VStack display="flex" justifyContent={"center"}>
+          <LoadingSpinner size={72} />
+        </VStack>
       </Box>
     );
   }
 
   if (error) {
-    console.log(error.message);
+    console.log(error?.message);
     return (
       <Box
         display="flex"

@@ -106,7 +106,7 @@ export default function CreateExercise({
   );
 
   return (
-    <Box mb="1rem">
+    <Box mb="1rem" bg="white">
       <VStack
         w="calc(100%-0.5rem)"
         borderRadius={"5px"}

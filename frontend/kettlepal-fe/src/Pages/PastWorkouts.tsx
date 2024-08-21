@@ -51,7 +51,7 @@ export default function PastWorkouts() {
 
   return (
     <Flex w="100%">
-      {error && <Text>An Unexpected Error has occurred: {error.message}</Text>}
+      {error && <Text>An Unexpected Error has occurred: {error?.message}</Text>}
       {!loading && !error && data && (
         <VStack w="100%" my="0.5rem">
           {data === null ? (
