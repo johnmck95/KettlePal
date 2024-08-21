@@ -106,13 +106,14 @@ export default function CreateExercise({
   );
 
   return (
-    <Box mb="1rem" bg="white">
+    <Box mb="1rem">
       <VStack
         w="calc(100%-0.5rem)"
         borderRadius={"5px"}
         p={["0.5rem", "1rem", "1.5rem"]}
         mb="0.5rem"
         boxShadow={`0px 1px 4px ${theme.colors.grey[400]}`}
+        bg="white"
       >
         <HStack w="100%">
           {/* TITLE */}
