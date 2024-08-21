@@ -8,14 +8,37 @@ const __dirname = path.dirname(__filename);
 // Decode the directory path to handle encoded characters like '%20' (spaces)
 const decodedDirname = decodeURIComponent(__dirname);
 
+console.log("======================================");
+console.log(`|| DETECTED ${process.env.NODE_ENV} ENVIRONMENT ||`);
+console.log("======================================");
+
+const env = process.env.NODE_ENV || "development";
+
 const knexConfig = {
   client: "postgresql",
   connection: {
-    host: "localhost",
+    host:
+      env === "production"
+        ? process.env.NEON_PROD_DB_HOST
+        : process.env.KNEX_LOCAL_DB_HOST,
     database:
-      process.env.NODE_ENV === "staging" ? "kettlepal-stage" : "kettlepal-dev",
-    user: process.env.DB_USER || "",
-    password: process.env.DB_PASSWORD || "",
+      env === "production"
+        ? process.env.NEON_PROD_DB_NAME
+        : process.env.KNEX_LOCAL_DB_NAME,
+    user:
+      env === "production"
+        ? process.env.NEON_PROD_DB_USER
+        : process.env.KNEX_LOCAL_DB_USER,
+    password:
+      env === "production"
+        ? process.env.NEON_PROD_DB_PASSWORD
+        : process.env.KNEX_LOCAL_DB_PASSWORD,
+    port: 5432,
+    ...(env === "production" && {
+      ssl: {
+        rejectUnauthorized: false, // This bypasses the SSL warning for production DB calls
+      },
+    }),
   },
   pool: {
     min: 2,
