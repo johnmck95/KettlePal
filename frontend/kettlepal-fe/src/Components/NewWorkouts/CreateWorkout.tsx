@@ -198,7 +198,7 @@ export default function CreateWorkout() {
   }, [error]);
 
   return (
-    <Box m="0.5rem">
+    <Box m="0.5rem" w={["100%", "100%", "720px"]}>
       {loading && <LoadingSpinner />}
       {/* DATE */}
       <HStack justifyContent={"space-around"} pb="0.5rem">
@@ -301,6 +301,7 @@ export default function CreateWorkout() {
         ModalBodyText="Are you sure your workout is complete, and ready to be saved?"
         CloseText="Cancel"
         ProceedText="Save"
+        variant="confirm"
       />
     </Box>
   );

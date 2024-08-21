@@ -22,6 +22,7 @@ export default function ConfirmModal({
   CloseText,
   ProceedText,
   onConfirmation,
+  variant,
 }: {
   isOpen: boolean;
   onClose: () => void;
@@ -30,6 +31,7 @@ export default function ConfirmModal({
   CloseText: string;
   ProceedText: string;
   onConfirmation: () => void;
+  variant: "warn" | "confirm";
 }) {
   return (
     <>
@@ -41,7 +43,9 @@ export default function ConfirmModal({
       >
         <ModalOverlay />
         <ModalContent margin={"1rem"}>
-          <ModalHeader>{ModalTitle}</ModalHeader>
+          <ModalHeader color={theme.colors.olive[900]}>
+            {ModalTitle}
+          </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <Box>{ModalBodyText}</Box>
@@ -49,13 +53,10 @@ export default function ConfirmModal({
 
           <ModalFooter>
             <Flex w="100%" justifyContent="space-around">
-              <Button
-                color={theme.colors.feldgrau[700]}
-                onClick={onConfirmation}
-              >
+              <Button onClick={onConfirmation} width="100px" variant={variant}>
                 {ProceedText}
               </Button>
-              <Button color={theme.colors.bole[700]} onClick={onClose}>
+              <Button onClick={onClose} width="100px">
                 {CloseText}
               </Button>
             </Flex>

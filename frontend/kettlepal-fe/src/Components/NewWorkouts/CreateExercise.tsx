@@ -109,10 +109,10 @@ export default function CreateExercise({
     <Box mb="1rem">
       <VStack
         w="calc(100%-0.5rem)"
-        border="1px solid grey"
         borderRadius={"5px"}
-        p="0.5rem"
+        p={["0.5rem", "1rem", "1.5rem"]}
         mb="0.5rem"
+        boxShadow={`0px 1px 4px ${theme.colors.grey[400]}`}
       >
         <HStack w="100%">
           {/* TITLE */}
@@ -297,13 +297,14 @@ export default function CreateExercise({
         </HStack>
 
         {/* COMMENT */}
-        <Flex w="100%">
+        <Flex w="100%" position="relative">
           <FormControl>
             <FormLabel
               as="button"
               variant="link"
               fontSize={["sm", "lg"]}
               onClick={() => setAddExerciseComment((prev) => !prev)}
+              mb={addExerciseComment ? "0.25rem" : "0"}
             >
               {addExerciseComment ? "Hide Comment" : "Add Comment"}
             </FormLabel>
@@ -312,16 +313,20 @@ export default function CreateExercise({
                 placeholderText="Add an Exercise Comment"
                 comment={exercise.comment}
                 setComment={setExerciseComment}
+                maxWidth="calc(100% - 40px)"
               />
             )}
           </FormControl>
           <IconButton
-            variant="ghost"
-            colorScheme={theme.colors.green[700]}
+            variant="closeX"
             aria-label="Send email"
             icon={<FaTimes />}
-            size="xs"
+            size="sm"
             onClick={onOpenDeleteExercise}
+            h={addExerciseComment ? "auto" : "100%"}
+            position="absolute"
+            right="0"
+            bottom={addExerciseComment ? "12px" : "0px"}
           />
         </Flex>
 
@@ -338,6 +343,7 @@ export default function CreateExercise({
           ModalBodyText="Are you sure you would like to delete this Exercise? This cannot be undone."
           CloseText="Cancel"
           ProceedText="Delete"
+          variant="warn"
         />
       </VStack>
 

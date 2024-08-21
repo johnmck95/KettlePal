@@ -71,12 +71,12 @@ export default function ViewWorkout({
         maxW="720px"
         p="0.5rem"
         m="0.1rem"
-        borderRadius="4px"
-        boxShadow={`0 0 2px ${theme.colors.olive[900]}`}
         position="relative"
+        borderRadius="8px"
+        boxShadow={`0px 1px 4px ${theme.colors.grey[400]}`}
       >
         <IconButton
-          variant="ghost"
+          variant="closeX"
           colorScheme={theme.colors.green[700]}
           aria-label="Send email"
           icon={<FaTimes />}
@@ -105,6 +105,7 @@ export default function ViewWorkout({
           }?`}
           CloseText="Cancel"
           ProceedText="Delete"
+          variant="warn"
         />
       </HStack>
 
