@@ -65,7 +65,7 @@ export default function ViewWorkout({
 
   return (
     <>
-      {loading && <LoadingSpinner />}
+      {loading && <LoadingSpinner size={24} />}
       <HStack
         w={"calc(100% - 0.6rem)"}
         maxW="720px"

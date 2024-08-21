@@ -38,20 +38,22 @@ export const useUser = () => useContext<User>(UserContext);
 export default function UserProvider({
   children,
 }: UserProviderProps): JSX.Element {
-  const { loading, error, data } = useQuery(GET_USERS);
+  const { loading, error, data } = useQuery(GET_USERS, {
+    fetchPolicy: "cache-first",
+  });
 
-  // Currently, you need to manually delete the user from localStorage to "logout"
+  // Currently, you need to manually delete the user from sessionStorage to "logout"
   const [selectedUser, setSelectedUser] = useState<any | undefined>(() => {
-    const storedUser = localStorage.getItem("selectedUser");
+    const storedUser = sessionStorage.getItem("selectedUser");
     return storedUser ? JSON.parse(storedUser) : undefined;
   });
   useEffect(() => {
     if (selectedUser) {
-      localStorage.setItem("selectedUser", JSON.stringify(selectedUser));
+      sessionStorage.setItem("selectedUser", JSON.stringify(selectedUser));
     }
   }, [selectedUser]);
 
-  if (loading) {
+  if (loading && !selectedUser) {
     return (
       <Box
         display="flex"
@@ -67,7 +69,7 @@ export default function UserProvider({
           boxShadow={`0px 1px 4px ${theme.colors.grey[400]}`}
         >
           <VStack display="flex" justifyContent={"center"}>
-            <LoadingSpinner />
+            <LoadingSpinner size={72} />
             <Text
               p="1rem"
               maxWidth="400px"

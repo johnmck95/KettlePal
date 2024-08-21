@@ -7,6 +7,7 @@ import {
   AlertIcon,
   Box,
   Button,
+  Center,
   Flex,
   FormControl,
   FormLabel,
@@ -199,7 +200,11 @@ export default function CreateWorkout() {
 
   return (
     <Box m="0.5rem" w={["100%", "100%", "720px"]}>
-      {loading && <LoadingSpinner />}
+      {loading && (
+        <Center>
+          <LoadingSpinner size={16} />
+        </Center>
+      )}
       {/* DATE */}
       <HStack justifyContent={"space-around"} pb="0.5rem">
         <FormControl isRequired isInvalid={submitted && !state.createdAt}>

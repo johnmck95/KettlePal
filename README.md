@@ -34,7 +34,7 @@ An overbuilt "just-for-me" learning project that is made to keep track of my per
 
 ### Roadmap
 
-1. Login Flow for Test Account and myself
+1. Login flow with auth tokens for the test account and myself
 2. Make the current UI actually look nice 😂
 3. Get Progressive Web App passing for mobile download
 4. Make past workouts open a modal with full details
