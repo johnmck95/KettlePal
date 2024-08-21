@@ -65,7 +65,6 @@ export default function ViewWorkout({
 
   return (
     <>
-      {loading && <LoadingSpinner size={24} />}
       <HStack
         w={"calc(100% - 0.6rem)"}
         maxW="720px"
@@ -75,38 +74,44 @@ export default function ViewWorkout({
         borderRadius="8px"
         boxShadow={`0px 1px 4px ${theme.colors.grey[400]}`}
       >
-        <IconButton
-          variant="closeX"
-          colorScheme={theme.colors.green[700]}
-          aria-label="Send email"
-          icon={<FaTimes />}
-          size="sm"
-          position="absolute"
-          top="5px"
-          right="5px"
-          onClick={onOpen}
-        />
-        <CalendarWidget date={workoutWithExercises.createdAt} w="4rem" />
-        <VStack mx="1rem">
-          {exercises.map((exercise) => {
-            return <ViewExercise key={exercise.uid} exercise={exercise} />;
-          })}
-        </VStack>
+        {loading ? (
+          <LoadingSpinner size={16} />
+        ) : (
+          <>
+            <IconButton
+              variant="closeX"
+              colorScheme={theme.colors.green[700]}
+              aria-label="Send email"
+              icon={<FaTimes />}
+              size="sm"
+              position="absolute"
+              top="5px"
+              right="5px"
+              onClick={onOpen}
+            />
+            <CalendarWidget date={workoutWithExercises.createdAt} w="4rem" />
+            <VStack mx="1rem">
+              {exercises.map((exercise) => {
+                return <ViewExercise key={exercise.uid} exercise={exercise} />;
+              })}
+            </VStack>
 
-        <ConfirmModal
-          isOpen={isOpen}
-          onClose={onClose}
-          onConfirmation={onDeleteWorkout}
-          ModalTitle="Delete Workout"
-          ModalBodyText={`Are you sure you want to delete this workout, and the ${
-            workoutWithExercises.exercises.length
-          } corresponding exercise${
-            workoutWithExercises.exercises.length > 1 ? "s" : ""
-          }?`}
-          CloseText="Cancel"
-          ProceedText="Delete"
-          variant="warn"
-        />
+            <ConfirmModal
+              isOpen={isOpen}
+              onClose={onClose}
+              onConfirmation={onDeleteWorkout}
+              ModalTitle="Delete Workout"
+              ModalBodyText={`Are you sure you want to delete this workout, and the ${
+                workoutWithExercises.exercises.length
+              } corresponding exercise${
+                workoutWithExercises.exercises.length > 1 ? "s" : ""
+              }?`}
+              CloseText="Cancel"
+              ProceedText="Delete"
+              variant="warn"
+            />
+          </>
+        )}
       </HStack>
 
       {/* MUTATION ERROR */}
@@ -119,7 +124,7 @@ export default function ViewWorkout({
         >
           <AlertIcon />
           <AlertDescription>
-            Error deleting workout: {error.message}
+            Error deleting workout: {error?.message}
           </AlertDescription>
         </Alert>
       )}

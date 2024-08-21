@@ -45,13 +45,12 @@ export default function PastWorkouts() {
 
   const noWorkouts = !data?.user?.workouts;
 
+  if (loading) {
+    return <LoadingSpinner size={24} />;
+  }
+
   return (
     <Flex w="100%">
-      {loading && (
-        <Center w="100%" mt="2rem">
-          <LoadingSpinner size={24} />
-        </Center>
-      )}
       {error && <Text>An Unexpected Error has occurred: {error.message}</Text>}
       {!loading && !error && data && (
         <VStack w="100%" my="0.5rem">

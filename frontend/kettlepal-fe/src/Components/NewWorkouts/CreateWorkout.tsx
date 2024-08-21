@@ -198,13 +198,16 @@ export default function CreateWorkout() {
     }
   }, [error]);
 
+  if (loading) {
+    return (
+      <Center>
+        <LoadingSpinner size={24} />
+      </Center>
+    );
+  }
+
   return (
     <Box m="0.5rem" w={["100%", "100%", "720px"]}>
-      {loading && (
-        <Center>
-          <LoadingSpinner size={16} />
-        </Center>
-      )}
       {/* DATE */}
       <HStack justifyContent={"space-around"} pb="0.5rem">
         <FormControl isRequired isInvalid={submitted && !state.createdAt}>
@@ -294,7 +297,7 @@ export default function CreateWorkout() {
       {error && showServerError && (
         <Alert status="error" mt="2rem" borderRadius={"8px"}>
           <AlertIcon />
-          <AlertDescription>{error.message}</AlertDescription>
+          <AlertDescription>{error?.message}</AlertDescription>
         </Alert>
       )}
 
