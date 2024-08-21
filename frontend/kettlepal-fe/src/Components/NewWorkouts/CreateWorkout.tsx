@@ -19,7 +19,6 @@ import AddComment from "../AddComment";
 import { getCurrentDate } from "../../utils/Time/time";
 import Timer from "../../Components/Timer";
 import { FaPlusCircle, FaSave } from "react-icons/fa";
-import theme from "../../Constants/theme";
 import ConfirmModal from "../ConfirmModal";
 import { gql, useMutation } from "@apollo/client";
 import { useUser } from "../../Contexts/UserContext";

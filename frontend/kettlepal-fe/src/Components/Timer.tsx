@@ -1,6 +1,5 @@
 import { Box, Text, Button, VStack } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
-import theme from "../Constants/theme";
 
 /*
  * Basic implementation. This will only count the ellapsed time.
