@@ -72,9 +72,7 @@ export default function Timer({
                 <Button
                   width="4.25rem"
                   height="1.75rem"
-                  variant="outline"
-                  color={theme.colors.bole[700]}
-                  backgroundColor={theme.colors.white}
+                  variant="stop"
                   onClick={handleStop}
                 >
                   Stop
@@ -83,9 +81,7 @@ export default function Timer({
                 <Button
                   width="4.25rem"
                   height="1.75rem"
-                  variant="outline"
-                  color={theme.colors.green[700]}
-                  backgroundColor={theme.colors.white}
+                  variant="start"
                   onClick={handleStart}
                 >
                   Start

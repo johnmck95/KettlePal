@@ -273,24 +273,18 @@ export default function CreateWorkout() {
 
       <Flex w="100%" justifyContent={"space-between"}>
         <Button
-          color={theme.colors.green[700]}
-          borderColor={theme.colors.green[400]}
-          leftIcon={<FaPlusCircle />}
-          variant="outline"
+          variant="primary"
           onClick={handleAddExercise}
-          bg="white"
+          leftIcon={<FaPlusCircle />}
         >
           Add Exercise
         </Button>
         {state.exercises.length > 0 && (
           <Button
-            color={theme.colors.green[700]}
-            borderColor={theme.colors.green[400]}
+            variant="secondary"
             leftIcon={<FaSave />}
-            variant="outline"
             disabled={true}
             onClick={onOpenSaveWorkout}
-            bg="white"
           >
             Save Workout
           </Button>

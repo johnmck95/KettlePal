@@ -30,6 +30,8 @@ const theme = extendTheme({
       900: "#121713",
     },
     green: {
+      25: "#EEF1EE",
+      50: "#D4DDD5",
       100: "#51906A",
       200: "#4B8562",
       300: "#447959",
@@ -106,6 +108,49 @@ const theme = extendTheme({
           },
           _active: {
             color: "bole.300",
+          },
+        },
+        primary: {
+          bg: "green.400",
+          color: "white",
+          _hover: {
+            bg: "green.600",
+          },
+          _active: {
+            bg: "green.800",
+          },
+        },
+        secondary: {
+          bg: "white",
+          color: "green.700",
+          border: "2px solid #3E6E51",
+          _hover: {
+            bg: "green.25",
+          },
+          _active: {
+            bg: "green.50",
+          },
+        },
+        start: {
+          bg: "white",
+          color: "black",
+          border: "1px solid #516753",
+          _hover: {
+            border: "2px solid #516753",
+          },
+          _active: {
+            border: "2px solid #121713",
+          },
+        },
+        stop: {
+          bg: "white",
+          color: "black",
+          border: "1px solid #C79A66",
+          _hover: {
+            border: "2px solid #C79A66",
+          },
+          _active: {
+            border: "2px solid #BD884C",
           },
         },
       },
