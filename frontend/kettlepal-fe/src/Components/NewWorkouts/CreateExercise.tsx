@@ -319,14 +319,14 @@ export default function CreateExercise({
           </FormControl>
           <IconButton
             variant="closeX"
-            aria-label="Send email"
+            aria-label="Delete Exercise"
             icon={<FaTimes />}
             size="sm"
             onClick={onOpenDeleteExercise}
-            h={addExerciseComment ? "auto" : "100%"}
+            h={addExerciseComment ? "27px" : "100%"}
             position="absolute"
             right="0"
-            bottom={addExerciseComment ? "12px" : "0px"}
+            bottom={addExerciseComment ? "3px" : "0px"}
           />
         </Flex>
 

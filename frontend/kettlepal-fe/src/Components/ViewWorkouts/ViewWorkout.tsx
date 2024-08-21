@@ -81,8 +81,7 @@ export default function ViewWorkout({
           <>
             <IconButton
               variant="closeX"
-              colorScheme={theme.colors.green[700]}
-              aria-label="Send email"
+              aria-label="Delete Workout"
               icon={<FaTimes />}
               size="sm"
               position="absolute"

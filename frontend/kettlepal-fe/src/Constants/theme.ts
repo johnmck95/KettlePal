@@ -79,37 +79,6 @@ const theme = extendTheme({
   components: {
     Button: {
       variants: {
-        confirm: {
-          bg: "green.400",
-          color: "white",
-          boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
-          _hover: {
-            bg: "green.600",
-          },
-          _active: {
-            bg: "green.800",
-          },
-        },
-        warn: {
-          bg: "error",
-          color: "white",
-          boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
-          _hover: {
-            bg: "red.600",
-          },
-          _active: {
-            bg: "red.700",
-          },
-        },
-        closeX: {
-          color: "olive.900",
-          _hover: {
-            color: "bole.700",
-          },
-          _active: {
-            color: "bole.300",
-          },
-        },
         primary: {
           bg: "green.400",
           color: "white",
@@ -129,6 +98,25 @@ const theme = extendTheme({
           },
           _active: {
             bg: "green.50",
+          },
+        },
+        warn: {
+          bg: "error",
+          color: "white",
+          _hover: {
+            bg: "red.600",
+          },
+          _active: {
+            bg: "red.700",
+          },
+        },
+        closeX: {
+          color: "black",
+          _hover: {
+            bg: "rgba(250,249,246,1)",
+          },
+          _active: {
+            filter: "brightness(0.98)",
           },
         },
         start: {

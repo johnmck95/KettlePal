@@ -53,10 +53,19 @@ export default function ConfirmModal({
 
           <ModalFooter>
             <Flex w="100%" justifyContent="space-around">
-              <Button onClick={onConfirmation} width="100px" variant={variant}>
+              <Button
+                onClick={onConfirmation}
+                width="100px"
+                variant={variant === "confirm" ? "primary" : "warn"}
+              >
                 {ProceedText}
               </Button>
-              <Button onClick={onClose} width="100px">
+              <Button
+                onClick={onClose}
+                width="100px"
+                variant="outline"
+                colorScheme="grey"
+              >
                 {CloseText}
               </Button>
             </Flex>
