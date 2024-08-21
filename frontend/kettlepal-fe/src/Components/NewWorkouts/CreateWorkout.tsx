@@ -70,8 +70,17 @@ export default function CreateWorkout() {
     exercises: [],
   });
   const [addWorkoutComment, setAddWorkoutComment] = useState<boolean>(false);
+  const [showUploadSuccess, setShowUploadSuccess] = useState<boolean>(false);
   const [addWorkoutWithExercises, { loading, error }] = useMutation(
-    ADD_WORKOUT_WITH_EXERCISES
+    ADD_WORKOUT_WITH_EXERCISES,
+    {
+      onCompleted() {
+        setShowUploadSuccess(true);
+        setTimeout(() => {
+          setShowUploadSuccess(false);
+        }, 5000);
+      },
+    }
   );
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [formHasErrors, setFormHasErrors] = useState<boolean>(false);
@@ -193,7 +202,7 @@ export default function CreateWorkout() {
       setShowServerError(true);
       setTimeout(() => {
         setShowServerError(false);
-      }, 5000);
+      }, 3000);
     }
   }, [error]);
 
@@ -206,7 +215,7 @@ export default function CreateWorkout() {
   }
 
   return (
-    <Box m="0.5rem" w={["100%", "100%", "720px"]}>
+    <Box m="1rem" w={["100%", "100%", "720px"]}>
       {/* DATE */}
       <HStack justifyContent={"space-around"} pb="0.5rem">
         <FormControl isRequired isInvalid={submitted && !state.createdAt}>
@@ -294,6 +303,13 @@ export default function CreateWorkout() {
         <Alert status="error" mt="2rem" borderRadius={"8px"}>
           <AlertIcon />
           <AlertDescription>{error?.message}</AlertDescription>
+        </Alert>
+      )}
+
+      {showUploadSuccess && (
+        <Alert status="success" mt="2rem" borderRadius={"8px"} bg="green.50">
+          <AlertIcon />
+          Workout Saved Successfully!
         </Alert>
       )}
 
