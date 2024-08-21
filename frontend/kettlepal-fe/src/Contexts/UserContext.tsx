@@ -105,9 +105,24 @@ export default function UserProvider({
       {selectedUser ? (
         children
       ) : (
-        <Center>
-          <VStack>
-            <Heading as="h1" fontSize="xx-large">
+        <Center
+          display="flex"
+          justifyContent="center"
+          alignItems="space-between"
+          w="100vw"
+          h="100vh"
+          background="url(https://media.gettyimages.com/id/503416862/photo/man-ready-to-exercise-with-kettle-bell.jpg?s=612x612&w=0&k=20&c=LOP7VZUq1-A7Ct4kMkxXp8UV5hUahetCliwef9tiQoI=)"
+          backgroundRepeat="no-repeat"
+          backgroundSize="cover"
+          backgroundPosition={"center"}
+        >
+          <VStack alignSelf="center">
+            <Heading
+              as="h1"
+              fontSize="xxx-large"
+              color="white"
+              textShadow="2px 2px 4px rgba(0, 0, 0, 1)"
+            >
               Dev Mode - Login As:
             </Heading>
             {data.users.map((user: any) => (
