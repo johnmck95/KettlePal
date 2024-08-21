@@ -103,7 +103,7 @@ export default function UserProvider({
           borderRadius="10px"
           boxShadow={`0px 1px 4px ${theme.colors.grey[400]}`}
         >
-          <Text>
+          <Text p="1rem" maxWidth="400px" fontSize="1.2rem" textAlign="justify">
             An unexpected error has occurred. The team has been notified -
             please check back soon.
           </Text>
