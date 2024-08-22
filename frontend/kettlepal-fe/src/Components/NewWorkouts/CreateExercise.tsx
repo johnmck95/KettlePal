@@ -349,6 +349,7 @@ export default function CreateExercise({
             variant="link"
             onClick={() => setSeeDetails((prev) => !prev)}
             textAlign="left"
+            mt="0.15rem"
             color={
               submitted && (weightUnitIsInvalid || repsDisplayIsInvalid)
                 ? theme.colors.error
@@ -442,11 +443,10 @@ export default function CreateExercise({
         <Flex w="100%">
           <FormControl>
             <Button
-              my="0px"
               fontSize={["xs", "sm"]}
               variant="link"
               onClick={() => setAddExerciseComment((prev) => !prev)}
-              mb={addExerciseComment ? "0.35rem" : "0"}
+              mb={addExerciseComment ? "0.5rem" : "0.15rem"}
               textAlign="left"
               color={
                 submitted && (weightUnitIsInvalid || repsDisplayIsInvalid)
@@ -470,7 +470,12 @@ export default function CreateExercise({
 
         {/* SETS COMPLETED */}
         {trackWorkout && (
-          <HStack justifyContent={"space-between"} w="100%" my="0px" py="0px">
+          <HStack
+            justifyContent={"space-between"}
+            w="100%"
+            mt="0.5rem"
+            mb="0.25rem"
+          >
             <FormLabel size={["sm", "md", "lg"]}>
               <b>{`Completed ${completedSets} / ${exercise.sets} Sets`}</b>
             </FormLabel>
@@ -478,7 +483,7 @@ export default function CreateExercise({
               <IconButton
                 aria-label="Add Set"
                 icon={<FaPlus />}
-                size={["xs", "sm"]}
+                size={["sm"]}
                 color={theme.colors.white}
                 bg={theme.colors.feldgrau[400]}
                 _hover={{ bg: theme.colors.feldgrau[500] }}
@@ -488,7 +493,7 @@ export default function CreateExercise({
               <IconButton
                 aria-label="Subtract Set"
                 icon={<FaMinus />}
-                size={["xs", "sm"]}
+                size={["sm"]}
                 color={theme.colors.white}
                 bg={
                   completedSets === 0

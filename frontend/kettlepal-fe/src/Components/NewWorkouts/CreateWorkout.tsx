@@ -222,7 +222,9 @@ export default function CreateWorkout() {
       {/* DATE */}
       <HStack justifyContent={"space-around"} pb="0.5rem">
         <FormControl isRequired isInvalid={submitted && !state.createdAt}>
-          <FormLabel fontSize={["sm", "lg"]}>Workout Date</FormLabel>
+          <FormLabel fontSize={["sm", "lg"]}>
+            <b>Workout Date</b>
+          </FormLabel>
           <Input
             size={["sm", "lg"]}
             name="createdAt"
@@ -248,24 +250,26 @@ export default function CreateWorkout() {
 
       {/* ADD COMMENT & TRACK WORKOUT BUTTONS */}
       <HStack w="100%" justifyContent={"space-between"}>
-        <FormLabel
-          as="button"
+        <Button
+          fontSize={["sm", "md"]}
           variant="link"
-          fontSize={["sm", "lg"]}
           onClick={() => setAddWorkoutComment((prev) => !prev)}
+          textAlign="left"
+          color="black"
+          my="0.5rem"
         >
           {addWorkoutComment ? "Hide Comment" : "Add Comment"}
-        </FormLabel>
-
-        {/* TRACK WORKOUT BUTTON */}
-        <FormLabel
-          as="button"
+        </Button>
+        <Button
+          fontSize={["sm", "md"]}
           variant="link"
-          fontSize={["sm", "lg"]}
           onClick={() => setShowTracking((prev) => !prev)}
+          textAlign="left"
+          color="black"
+          my="0.5rem"
         >
           {showTracking ? "Hide Workout Tracking" : "Track Workout"}
-        </FormLabel>
+        </Button>
       </HStack>
 
       {/* WORKOUT COMMENT */}

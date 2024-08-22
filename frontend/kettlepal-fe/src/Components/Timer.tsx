@@ -62,7 +62,7 @@ export default function Timer({
     <Box w="110px" padding="0.25rem">
       <VStack w="100%" justifyContent={"flex-start"} alignItems={"flex-start"}>
         <Text textAlign="left" w="100%">
-          {formatTime(timer)}
+          <b>{formatTime(timer)}</b>
         </Text>
         <Box m="0px">
           {showStartStop && (

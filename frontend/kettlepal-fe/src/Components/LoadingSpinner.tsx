@@ -33,7 +33,7 @@ const LoadingSpinner = ({ size }: { size: string | number }) => {
         >
           KettlePal's backend service automatically spins down after a period of
           inactivity. This is a cost saving measure. Please be patient while a
-          brand new service is being spun up just for you! This may take a
+          brand new service is being spun up just for you! This may take a few
           minutes.
         </Text>
       )}
