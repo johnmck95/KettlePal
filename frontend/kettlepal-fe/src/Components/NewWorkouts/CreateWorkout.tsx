@@ -69,6 +69,7 @@ export default function CreateWorkout() {
     endTime: null,
     exercises: [],
   });
+  const [showTracking, setShowTracking] = useState<boolean>(false);
   const [addWorkoutComment, setAddWorkoutComment] = useState<boolean>(false);
   const [showUploadSuccess, setShowUploadSuccess] = useState<boolean>(false);
   const [addWorkoutWithExercises, { loading, error }] = useMutation(
@@ -243,8 +244,8 @@ export default function CreateWorkout() {
         />
       </HStack>
 
-      {/* WORKOUT COMMENT */}
-      <FormControl mb="1rem">
+      {/* ADD COMMENT & TRACK WORKOUT BUTTONS */}
+      <HStack w="100%" justifyContent={"space-between"}>
         <FormLabel
           as="button"
           variant="link"
@@ -253,6 +254,20 @@ export default function CreateWorkout() {
         >
           {addWorkoutComment ? "Hide Comment" : "Add Comment"}
         </FormLabel>
+
+        {/* TRACK WORKOUT BUTTON */}
+        <FormLabel
+          as="button"
+          variant="link"
+          fontSize={["sm", "lg"]}
+          onClick={() => setShowTracking((prev) => !prev)}
+        >
+          {showTracking ? "Hide Workout Tracking" : "Track Workout"}
+        </FormLabel>
+      </HStack>
+
+      {/* WORKOUT COMMENT */}
+      <FormControl mb="1rem">
         {addWorkoutComment && (
           <AddComment
             placeholderText="Add a Workout Comment"
@@ -274,6 +289,7 @@ export default function CreateWorkout() {
               exerciseIndex={index}
               submitted={submitted}
               setFormHasErrors={setFormHasErrors}
+              trackWorkout={showTracking}
             />
           );
         })}

@@ -25,7 +25,7 @@ import {
   RepsDisplayOptions,
   WeightOptions,
 } from "../../Constants/ExercisesOptions";
-import { FaTimes } from "react-icons/fa";
+import { FaMinus, FaPlus, FaTimes } from "react-icons/fa";
 import ConfirmModal from "../ConfirmModal";
 import theme from "../../Constants/theme";
 
@@ -36,16 +36,25 @@ export default function CreateExercise({
   exerciseIndex,
   submitted,
   setFormHasErrors,
+  trackWorkout,
 }: {
   exercise: CreateWorkoutState["exercises"][number];
-  handleExercise: (name: string, value: any, index: number) => void;
+  handleExercise: (name: string, value: string | number, index: number) => void;
   deleteExercise: (index: number) => void;
   exerciseIndex: number;
   submitted: boolean;
   setFormHasErrors: (value: boolean) => void;
+  trackWorkout: boolean;
 }) {
   const [addExerciseComment, setAddExerciseComment] = useState<boolean>(false);
   const [seeDetails, setSeeDetails] = useState<boolean>(false);
+  const [completedSets, setCompletedSets] = useState<number>(0);
+  // TODO: Session storage for completedSets works, but the exercise data isn't being saved.
+  // Migrate all of the workout + exercise to be saved in session storage before turning this on.
+  // const [completedSets, setCompletedSets] = useState<number>(() => {
+  //   const sessionVal = sessionStorage.getItem(`completedSets-${exerciseIndex}`);
+  //   return sessionVal ? parseInt(sessionVal) : 0;
+  // });
 
   const setExerciseComment = (newComment: string) => {
     handleExercise("comment", newComment, exerciseIndex);
@@ -105,6 +114,37 @@ export default function CreateExercise({
     [numErrors, setFormHasErrors]
   );
 
+  function completedASet() {
+    setCompletedSets((prev) => prev + 1);
+    if (completedSets >= exercise.sets) {
+      handleExercise("sets", completedSets + 1, exerciseIndex);
+    }
+    // TODO: Session storage for completedSets works, but the exercise data isn't being saved.
+    // Migrate all of the workout + exercise to be saved in session storage before turning this on.
+    // sessionStorage.setItem(
+    //   `completedSets-${exerciseIndex}`,
+    //   completedSets.toString()
+    // );
+  }
+  function removedASet() {
+    if (completedSets === 0) {
+      return;
+    }
+    setCompletedSets((prev) => prev - 1);
+    // TODO: Session storage for completedSets works, but the exercise data isn't being saved.
+    // Migrate all of the workout + exercise to be saved in session storage before turning this on.
+    // sessionStorage.setItem(
+    //   `completedSets-${exerciseIndex}`,
+    //   completedSets.toString()
+    // );
+  }
+
+  useEffect(() => {
+    if (completedSets > exercise.sets) {
+      setCompletedSets(exercise.sets);
+    }
+  }, [exercise.sets]);
+
   return (
     <Box mb="1rem">
       <VStack
@@ -115,7 +155,7 @@ export default function CreateExercise({
         boxShadow={`0px 1px 4px ${theme.colors.grey[400]}`}
         bg="white"
       >
-        <HStack w="100%">
+        <HStack w="100%" mb="0.25rem">
           {/* TITLE */}
           <FormControl
             w="40%"
@@ -233,10 +273,10 @@ export default function CreateExercise({
         <HStack
           w="100%"
           justifyContent={seeDetails ? "space-between" : "flex-start"}
-          my="0.25rem"
+          alignItems="flex-start"
         >
           <Button
-            fontSize={["xs", "sm", "md"]}
+            fontSize={["xs", "sm"]}
             variant="link"
             onClick={() => setSeeDetails((prev) => !prev)}
             textAlign="left"
@@ -258,7 +298,9 @@ export default function CreateExercise({
                 maxW="160px"
                 isInvalid={submitted && weightUnitIsInvalid}
               >
-                <FormLabel fontSize={["xs", "sm", "md"]}>Weight Unit</FormLabel>
+                <FormLabel mb="0" fontSize={["xs", "sm", "md"]}>
+                  Weight Unit
+                </FormLabel>
                 <Select
                   size={["xs", "sm", "md"]}
                   placeholder="Select Option"
@@ -293,7 +335,9 @@ export default function CreateExercise({
                 maxW="160px"
                 isInvalid={submitted && repsDisplayIsInvalid}
               >
-                <FormLabel fontSize={["xs", "sm", "md"]}>Rep Type</FormLabel>
+                <FormLabel mb="0" fontSize={["xs", "sm", "md"]}>
+                  Rep Type
+                </FormLabel>
                 <Select
                   size={["xs", "sm", "md"]}
                   placeholder="Select Option"
@@ -328,15 +372,22 @@ export default function CreateExercise({
         {/* COMMENT */}
         <Flex w="100%" position="relative">
           <FormControl>
-            <FormLabel
-              as="button"
+            <Button
+              my="0px"
+              fontSize={["xs", "sm"]}
               variant="link"
-              fontSize={["sm", "lg"]}
               onClick={() => setAddExerciseComment((prev) => !prev)}
-              mb={addExerciseComment ? "0.25rem" : "0"}
+              mb={addExerciseComment ? "0.35rem" : "0"}
+              textAlign="left"
+              color={
+                submitted && (weightUnitIsInvalid || repsDisplayIsInvalid)
+                  ? theme.colors.error
+                  : theme.colors.grey
+              }
             >
               {addExerciseComment ? "Hide Comment" : "Add Comment"}
-            </FormLabel>
+            </Button>
+
             {addExerciseComment && (
               <AddComment
                 placeholderText="Add an Exercise Comment"
@@ -360,6 +411,49 @@ export default function CreateExercise({
         </Flex>
 
         {/* SETS COMPLETED */}
+        {trackWorkout && (
+          <HStack justifyContent={"space-between"} w="100%" my="0px" py="0px">
+            <FormLabel size={["sm", "md", "lg"]}>
+              <b>{`Completed ${completedSets} / ${exercise.sets} Sets`}</b>
+            </FormLabel>
+            <HStack>
+              <IconButton
+                aria-label="Add Set"
+                icon={<FaPlus />}
+                size={["xs", "sm"]}
+                color={theme.colors.white}
+                bg={theme.colors.feldgrau[400]}
+                _hover={{ bg: theme.colors.feldgrau[500] }}
+                _active={{ bg: theme.colors.feldgrau[600] }}
+                onClick={completedASet}
+              />
+              <IconButton
+                aria-label="Subtract Set"
+                icon={<FaMinus />}
+                size={["xs", "sm"]}
+                color={theme.colors.white}
+                bg={
+                  completedSets === 0
+                    ? theme.colors.grey[500]
+                    : theme.colors.bole[500]
+                }
+                _hover={{
+                  bg:
+                    completedSets === 0
+                      ? theme.colors.grey[500]
+                      : theme.colors.bole[500],
+                }}
+                _active={{
+                  bg:
+                    completedSets === 0
+                      ? theme.colors.grey[500]
+                      : theme.colors.bole[600],
+                }}
+                onClick={removedASet}
+              />
+            </HStack>
+          </HStack>
+        )}
 
         {/* STOPWATCH */}
 
