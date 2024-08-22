@@ -18,6 +18,8 @@ export default function ViewExercise({
           reps,
           repsDisplay
         )} `}</Text>
+      ) : title && reps && repsDisplay && sets ? (
+        <Text>{`${title}:    ${sets}x${formatReps(reps, repsDisplay)}`}</Text>
       ) : (
         <Text>{`${title}:    ${comment}`}</Text>
       )}

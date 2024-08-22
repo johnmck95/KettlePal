@@ -62,7 +62,9 @@ export default function UserProvider({
     }
   }, [selectedUser]);
 
-  if (loading && !selectedUser) {
+  // if (loading && !selectedUser) {
+  // NOTE: !selectedUser may have been causing an infinte loading screen on inital fetch after prod server spins down
+  if (loading) {
     return (
       <Box
         display="flex"
