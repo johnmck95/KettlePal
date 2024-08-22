@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
 import CreateExercise from "./CreateExercise";
-
+import { AnimatePresence, motion } from "framer-motion";
 import {
   Alert,
   AlertDescription,
@@ -39,6 +39,7 @@ export type CreateWorkoutState = {
     comment: string;
     startTime: Date | null;
     endTime: Date | null;
+    key: string;
   }>;
 };
 
@@ -124,6 +125,7 @@ export default function CreateWorkout() {
           comment: "",
           startTime: null,
           endTime: null,
+          key: `key-${Date.now()}-${Math.random().toString(36)}`,
         },
       ],
     }));
@@ -279,20 +281,33 @@ export default function CreateWorkout() {
 
       {/* EXERCISES */}
       <Box>
-        {state.exercises.map((exercise, index) => {
-          return (
-            <CreateExercise
-              key={index}
-              exercise={exercise}
-              handleExercise={handleExercise}
-              deleteExercise={deleteExercise}
-              exerciseIndex={index}
-              submitted={submitted}
-              setFormHasErrors={setFormHasErrors}
-              trackWorkout={showTracking}
-            />
-          );
-        })}
+        <AnimatePresence>
+          {state.exercises.map((exercise, index) => {
+            return (
+              <motion.div
+                key={`${exercise.key}`} //
+                initial={{ opacity: 0, x: 200 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -200 }}
+                transition={{
+                  duration: 0.5,
+                  ease: [0.4, 0, 0.2, 1],
+                }}
+              >
+                <CreateExercise
+                  key={index}
+                  exercise={exercise}
+                  handleExercise={handleExercise}
+                  deleteExercise={deleteExercise}
+                  exerciseIndex={index}
+                  submitted={submitted}
+                  setFormHasErrors={setFormHasErrors}
+                  trackWorkout={showTracking}
+                />
+              </motion.div>
+            );
+          })}
+        </AnimatePresence>
       </Box>
 
       <Flex w="100%" justifyContent={"space-between"}>

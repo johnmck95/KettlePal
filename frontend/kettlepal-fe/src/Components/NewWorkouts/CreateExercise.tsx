@@ -17,6 +17,7 @@ import {
   IconButton,
   useDisclosure,
   Box,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import AddComment from "../AddComment";
 import {
@@ -70,6 +71,15 @@ export default function CreateExercise({
   function onDeleteExercise(): void {
     deleteExercise(exerciseIndex);
     onCloseDeleteExercise();
+    setOffset(
+      parseInt(
+        `${
+          !!swipeDistance() && swipeDistance() > minSwipeDistance
+            ? swipeDistance()
+            : offset
+        }px`
+      )
+    );
   }
 
   const titleIsInvalid = !exercise.title;
@@ -143,18 +153,77 @@ export default function CreateExercise({
     if (completedSets > exercise.sets) {
       setCompletedSets(exercise.sets);
     }
-  }, [exercise.sets]);
+  }, [exercise.sets, completedSets, setCompletedSets]);
+
+  /** SWIPE LOGIC **/
+  const [isMobile] = useMediaQuery("(max-width: 420px)");
+  const [offset, setOffset] = useState<number>(0);
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchEnd, setTouchEnd] = useState(null);
+  const minSwipeDistance = 50;
+  const swipeDistance = () => {
+    if (!touchStart || !touchEnd) {
+      return 0;
+    }
+    return touchStart - touchEnd;
+  };
+
+  const onTouchStart = (e: any) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e: any) => setTouchEnd(e.targetTouches[0].clientX);
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) {
+      return;
+    }
+    const distance = swipeDistance();
+    const isLeftSwipe = distance > minSwipeDistance;
+    if (isLeftSwipe) {
+      onOpenDeleteExercise();
+      setOffset(distance);
+    }
+  };
+
+  const customOnCloseDeleteExercise = () => {
+    setOffset(0);
+    onCloseDeleteExercise();
+  };
 
   return (
-    <Box mb="1rem">
+    <Box mb="1rem" position="relative">
       <VStack
-        w="calc(100%-0.5rem)"
+        w={`calc(100%-0.5rem + ${swipeDistance()})`}
         borderRadius={"5px"}
         p={["0.5rem", "1rem", "1.5rem"]}
         mb="0.5rem"
         boxShadow={`0px 1px 4px ${theme.colors.grey[400]}`}
         bg="white"
+        position="relative"
+        transition="right 0.4s ease-in-out"
+        right={`${
+          !!swipeDistance() && swipeDistance() > minSwipeDistance
+            ? swipeDistance()
+            : offset
+        }px`}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
       >
+        {!isMobile && (
+          <IconButton
+            variant="closeX"
+            aria-label="Delete Exercise"
+            icon={<FaTimes />}
+            size="sm"
+            onClick={onOpenDeleteExercise}
+            position="absolute"
+            right="1px"
+            top="1px"
+          />
+        )}
         <HStack w="100%" mb="0.25rem">
           {/* TITLE */}
           <FormControl
@@ -370,7 +439,7 @@ export default function CreateExercise({
         </HStack>
 
         {/* COMMENT */}
-        <Flex w="100%" position="relative">
+        <Flex w="100%">
           <FormControl>
             <Button
               my="0px"
@@ -393,21 +462,10 @@ export default function CreateExercise({
                 placeholderText="Add an Exercise Comment"
                 comment={exercise.comment}
                 setComment={setExerciseComment}
-                maxWidth="calc(100% - 40px)"
+                maxWidth="100%"
               />
             )}
           </FormControl>
-          <IconButton
-            variant="closeX"
-            aria-label="Delete Exercise"
-            icon={<FaTimes />}
-            size="sm"
-            onClick={onOpenDeleteExercise}
-            h={addExerciseComment ? "27px" : "100%"}
-            position="absolute"
-            right="0"
-            bottom={addExerciseComment ? "3px" : "0px"}
-          />
         </Flex>
 
         {/* SETS COMPLETED */}
@@ -460,7 +518,7 @@ export default function CreateExercise({
         {/* DELETE EXERCISE MODAL */}
         <ConfirmModal
           isOpen={isOpenDeleteExercise}
-          onClose={onCloseDeleteExercise}
+          onClose={customOnCloseDeleteExercise}
           onConfirmation={onDeleteExercise}
           ModalTitle="Delete Exercise"
           ModalBodyText="Are you sure you would like to delete this Exercise? This cannot be undone."
