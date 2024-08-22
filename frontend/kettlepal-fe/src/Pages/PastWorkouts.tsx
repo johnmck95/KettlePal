@@ -40,6 +40,7 @@ export default function PastWorkouts() {
     WORKOUTS_WITH_EXERCISES_QUERY,
     {
       variables: { uid: user.uid },
+      fetchPolicy: "cache-first",
     }
   );
 

@@ -47,23 +47,22 @@ export const useUser = () => useContext<User>(UserContext);
 export default function UserProvider({
   children,
 }: UserProviderProps): JSX.Element {
-  const { loading, error, data } = useQuery(GET_USERS, {
-    fetchPolicy: "cache-first",
-  });
-
   // Currently, you need to manually delete the user from sessionStorage to "logout"
   const [selectedUser, setSelectedUser] = useState<any | undefined>(() => {
     const storedUser = sessionStorage.getItem("selectedUser");
     return storedUser ? JSON.parse(storedUser) : undefined;
   });
+  const { loading, error, data } = useQuery(GET_USERS, {
+    fetchPolicy: "cache-first",
+    skip: !!selectedUser,
+  });
+
   useEffect(() => {
     if (selectedUser) {
       sessionStorage.setItem("selectedUser", JSON.stringify(selectedUser));
     }
   }, [selectedUser]);
 
-  // if (loading && !selectedUser) {
-  // NOTE: !selectedUser may have been causing an infinte loading screen on inital fetch after prod server spins down
   if (loading) {
     return (
       <Box
