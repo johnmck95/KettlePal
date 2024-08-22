@@ -2,7 +2,7 @@ import React from "react";
 import { useUser } from "../Contexts/UserContext";
 import { useQuery, gql } from "@apollo/client";
 import LoadingSpinner from "../Components/LoadingSpinner";
-import { VStack, Flex, Text } from "@chakra-ui/react";
+import { VStack, Flex, Text, Center } from "@chakra-ui/react";
 import { UserWithWorkouts, WorkoutWithExercises } from "../Constants/types";
 import ViewWorkout from "../Components/ViewWorkouts/ViewWorkout";
 
@@ -47,7 +47,11 @@ export default function PastWorkouts() {
   const noWorkouts = !data?.user?.workouts;
 
   if (loading) {
-    return <LoadingSpinner size={24} />;
+    return (
+      <Center w="100%" h="100%">
+        <LoadingSpinner size={24} />;
+      </Center>
+    );
   }
 
   return (
