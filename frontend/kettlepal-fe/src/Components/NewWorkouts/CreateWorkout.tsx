@@ -209,6 +209,12 @@ export default function CreateWorkout() {
     }
   }, [error]);
 
+  useEffect(() => {
+    if (state.exercises.length === 0) {
+      setSubmitted(false);
+    }
+  }, [state.exercises.length]);
+
   if (loading) {
     return (
       <Center>
