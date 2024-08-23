@@ -361,7 +361,7 @@ export default function CreateExercise({
                   Weight Unit
                 </FormLabel>
                 <Select
-                  size={["xs", "sm", "md"]}
+                  size={["sm", "sm", "md"]}
                   placeholder="Select Option"
                   name="weightUnit"
                   value={exercise.weightUnit}
@@ -399,7 +399,7 @@ export default function CreateExercise({
                   Rep Type
                 </FormLabel>
                 <Select
-                  size={["xs", "sm", "md"]}
+                  size={["sm", "sm", "md"]}
                   placeholder="Select Option"
                   name="repsDisplay"
                   value={exercise.repsDisplay}
