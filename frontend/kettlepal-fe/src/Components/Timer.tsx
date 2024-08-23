@@ -11,7 +11,6 @@ interface TimerProps {
   autoStart: boolean;
   startTime?: Date | null;
   setTime: (newTime: Date, stateName: "startTime" | "endTime") => void;
-  endTime?: Date | null;
   showAsError?: boolean;
   timerIsActive: boolean;
   setTimerIsActive: (isActive: boolean) => void;
@@ -21,7 +20,6 @@ export default function Timer({
   autoStart,
   startTime,
   setTime,
-  endTime,
   showAsError,
   timerIsActive,
   setTimerIsActive,
@@ -63,6 +61,12 @@ export default function Timer({
 
     return `${getHours}:${getMinutes}:${getSeconds}`;
   };
+
+  useEffect(() => {
+    if (autoStart) {
+      handleStart();
+    }
+  }, []);
 
   return (
     <VStack w="110px" h="100%" justifyContent={"space-between"}>

@@ -277,7 +277,6 @@ export default function CreateWorkout() {
           showStartStop={true}
           autoStart={false}
           startTime={state.startTime}
-          endTime={state.endTime}
           setTime={setTime}
           showAsError={submitted && timerIsInvalid}
           timerIsActive={timerIsActive}

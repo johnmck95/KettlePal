@@ -134,6 +134,7 @@ const resolvers = {
             }
             const newExercises = formatExercisesForDB(workoutWithExercises);
             const newWorkout = formatWorkoutForDB(workoutWithExercises, userUid);
+            return;
             const isWorkoutValid = verifyWorkout(newWorkout);
             if (isWorkoutValid.result === false) {
                 throw new Error(isWorkoutValid.reason);

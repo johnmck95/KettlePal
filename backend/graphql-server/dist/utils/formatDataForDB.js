@@ -23,9 +23,12 @@ export function formatExercisesForDB(workoutWithExercises) {
 }
 export function formatWorkoutForDB(workoutWithExercises, userUid) {
     const { createdAt, startTime, endTime, comment } = workoutWithExercises;
+    console.log("FORMAT WORKOUT FOR DB");
+    console.log("unaltered createdAt", createdAt);
     const currentTime = dayjs().format("HH:mm:ss.SSSZ");
     // Appends Hr/Min/Sec... since created add is a calendar date, only.
     const fullCreatedAt = dayjs(`${createdAt}T${currentTime}`).format("YYYY-MM-DDTHH:mm:ss.SSSZ");
+    console.log("ALTERED createdAt", fullCreatedAt);
     const formattedWorkout = {
         userUid: userUid,
         createdAt: fullCreatedAt,
