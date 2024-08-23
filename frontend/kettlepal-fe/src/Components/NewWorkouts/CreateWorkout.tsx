@@ -8,6 +8,7 @@ import {
   Box,
   Button,
   Center,
+  CloseButton,
   Flex,
   FormControl,
   FormLabel,
@@ -228,9 +229,6 @@ export default function CreateWorkout() {
   useEffect(() => {
     if (error) {
       setShowServerError(true);
-      setTimeout(() => {
-        setShowServerError(false);
-      }, 10000);
     }
   }, [error]);
 
@@ -391,9 +389,20 @@ export default function CreateWorkout() {
       </Flex>
 
       {error && showServerError && (
-        <Alert status="error" mt="2rem" borderRadius={"8px"}>
-          <AlertIcon />
-          <AlertDescription>{error?.message}</AlertDescription>
+        <Alert
+          status="error"
+          mt="2rem"
+          borderRadius={"8px"}
+          justifyContent={"space-between"}
+        >
+          <HStack>
+            <AlertIcon />
+            <AlertDescription>{error?.message}</AlertDescription>
+          </HStack>
+          <CloseButton
+            alignSelf="flex-start"
+            onClick={() => setShowServerError(false)}
+          />
         </Alert>
       )}
 
