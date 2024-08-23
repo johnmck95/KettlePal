@@ -1,5 +1,5 @@
 import { Box, Text, Button, VStack } from "@chakra-ui/react";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import theme from "../Constants/theme";
 
 /*
@@ -40,13 +40,13 @@ export default function Timer({
     return () => clearInterval(interval);
   }, [timerIsActive, timer]);
 
-  const handleStart = () => {
+  const handleStart = useCallback(() => {
     setTimerIsActive(true);
     // Ellapsed time - do not reset the initial start time.
     if (startTime === null) {
       setTime(new Date(), "startTime");
     }
-  };
+  }, [setTimerIsActive, startTime, setTime]);
 
   const handleStop = () => {
     setTimerIsActive(false);
