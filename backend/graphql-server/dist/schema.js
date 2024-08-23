@@ -103,6 +103,7 @@ const typeDefs = `#graphql
         comment: String
         startTime: String
         endTime: String
+        key: String
     }
 
     input EditExerciseInput {

@@ -205,7 +205,7 @@ export default function CreateWorkout() {
       setShowServerError(true);
       setTimeout(() => {
         setShowServerError(false);
-      }, 3000);
+      }, 7000);
     }
   }, [error]);
 
