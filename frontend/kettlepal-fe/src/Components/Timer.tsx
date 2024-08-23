@@ -1,5 +1,6 @@
 import { Box, Text, Button, VStack } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
+import theme from "../Constants/theme";
 
 /*
  * Basic implementation. This will only count the ellapsed time.
@@ -11,6 +12,9 @@ interface TimerProps {
   startTime?: Date | null;
   setTime: (newTime: Date, stateName: "startTime" | "endTime") => void;
   endTime?: Date | null;
+  showAsError?: boolean;
+  timerIsActive: boolean;
+  setTimerIsActive: (isActive: boolean) => void;
 }
 export default function Timer({
   showStartStop,
@@ -18,26 +22,28 @@ export default function Timer({
   startTime,
   setTime,
   endTime,
+  showAsError,
+  timerIsActive,
+  setTimerIsActive,
 }: TimerProps) {
   const [timer, setTimer] = useState<number>(0);
-  const [isActive, setIsActive] = useState<boolean>(autoStart);
 
   useEffect(() => {
     let interval: NodeJS.Timeout | undefined = undefined;
 
-    if (isActive) {
+    if (timerIsActive) {
       interval = setInterval(() => {
         setTimer((prevTime) => prevTime + 1);
       }, 1000);
-    } else if (!isActive && timer !== 0) {
+    } else if (!timerIsActive && timer !== 0) {
       clearInterval(interval);
     }
 
     return () => clearInterval(interval);
-  }, [isActive, timer]);
+  }, [timerIsActive, timer]);
 
   const handleStart = () => {
-    setIsActive(true);
+    setTimerIsActive(true);
     // Ellapsed time - do not reset the initial start time.
     if (startTime === null) {
       setTime(new Date(), "startTime");
@@ -45,7 +51,7 @@ export default function Timer({
   };
 
   const handleStop = () => {
-    setIsActive(false);
+    setTimerIsActive(false);
     setTime(new Date(), "endTime");
   };
 
@@ -59,7 +65,7 @@ export default function Timer({
   };
 
   return (
-    <Box w="110px" padding="0.25rem">
+    <Box w="110px">
       <VStack w="100%" justifyContent={"flex-start"} alignItems={"flex-start"}>
         <Text textAlign="left" w="100%">
           <b>{formatTime(timer)}</b>
@@ -67,20 +73,29 @@ export default function Timer({
         <Box m="0px">
           {showStartStop && (
             <>
-              {isActive ? (
+              {timerIsActive ? (
                 <Button
                   width="4.25rem"
-                  height="1.75rem"
-                  variant="stop"
+                  height="2rem"
+                  variant="secondary"
                   onClick={handleStop}
+                  color="black"
+                  bg={theme.colors.white}
+                  border={
+                    showAsError
+                      ? `1px solid ${theme.colors.error}`
+                      : `1px solid ${theme.colors.black}`
+                  }
                 >
                   Stop
                 </Button>
               ) : (
                 <Button
                   width="4.25rem"
-                  height="1.75rem"
-                  variant="start"
+                  height="2rem"
+                  variant={"secondary"}
+                  color="black"
+                  bg={theme.colors.white}
                   onClick={handleStart}
                 >
                   Start

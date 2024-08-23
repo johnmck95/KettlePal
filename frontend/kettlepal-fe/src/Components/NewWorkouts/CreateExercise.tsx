@@ -470,13 +470,8 @@ export default function CreateExercise({
 
         {/* SETS COMPLETED */}
         {trackWorkout && (
-          <HStack
-            justifyContent={"space-between"}
-            w="100%"
-            mt="0.5rem"
-            mb="0.25rem"
-          >
-            <FormLabel size={["sm", "md", "lg"]}>
+          <HStack justifyContent={"space-between"} w="100%">
+            <FormLabel size={["sm", "md", "lg"]} my="auto">
               <b>{`Completed ${completedSets} / ${exercise.sets} Sets`}</b>
             </FormLabel>
             <HStack>

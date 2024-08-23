@@ -92,7 +92,7 @@ const theme = extendTheme({
         secondary: {
           bg: "white",
           color: "green.700",
-          border: "2px solid #3E6E51",
+          border: "1px solid #3E6E51",
           _hover: {
             bg: "green.25",
           },
@@ -117,28 +117,6 @@ const theme = extendTheme({
           },
           _active: {
             filter: "brightness(0.98)",
-          },
-        },
-        start: {
-          bg: "white",
-          color: "black",
-          border: "1px solid #516753",
-          _hover: {
-            border: "2px solid #516753",
-          },
-          _active: {
-            border: "2px solid #121713",
-          },
-        },
-        stop: {
-          bg: "white",
-          color: "black",
-          border: "1px solid #C79A66",
-          _hover: {
-            border: "2px solid #C79A66",
-          },
-          _active: {
-            border: "2px solid #BD884C",
           },
         },
       },

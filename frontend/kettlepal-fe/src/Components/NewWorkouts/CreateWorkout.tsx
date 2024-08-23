@@ -13,6 +13,7 @@ import {
   FormLabel,
   HStack,
   Input,
+  Text,
   useDisclosure,
 } from "@chakra-ui/react";
 import AddComment from "../AddComment";
@@ -23,6 +24,7 @@ import ConfirmModal from "../ConfirmModal";
 import { gql, useMutation } from "@apollo/client";
 import { useUser } from "../../Contexts/UserContext";
 import LoadingSpinner from "../LoadingSpinner";
+import theme from "../../Constants/theme";
 
 export type CreateWorkoutState = {
   createdAt: string;
@@ -86,6 +88,7 @@ export default function CreateWorkout() {
   );
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [formHasErrors, setFormHasErrors] = useState<boolean>(false);
+  const [timerIsActive, setTimerIsActive] = useState(false);
   const { uid: userUid } = useUser();
 
   const setTime = (newTime: Date, stateName: "startTime" | "endTime") => {
@@ -147,7 +150,7 @@ export default function CreateWorkout() {
       (name === "weight" || name === "sets" || name === "reps") &&
       typeof value === "string"
     ) {
-      value = parseFloat(value);
+      value = value === "" ? 0 : Number(parseFloat(value));
     }
     setState((prevState) => ({
       ...prevState,
@@ -170,10 +173,27 @@ export default function CreateWorkout() {
     onClose: onCloseSaveWorkout,
   } = useDisclosure();
 
+  const dateIsInvalid = !state.createdAt;
+  const timerIsInvalid =
+    (!!state.startTime === true && !!state.endTime === false) || timerIsActive;
+
+  enum WorkoutErrors {
+    date = "Please enter a workout date.",
+    timer = "Please stop the workout timer before saving.",
+  }
+
+  const errors: string[] = [];
+  if (dateIsInvalid) errors.push(WorkoutErrors.date);
+  if (timerIsInvalid) errors.push(WorkoutErrors.timer);
+
   async function onSaveWorkout(): Promise<void> {
     setSubmitted(true);
     onCloseSaveWorkout();
 
+    if (dateIsInvalid || timerIsInvalid) {
+      setFormHasErrors(true);
+      return;
+    }
     // Client-side validation
     if (formHasErrors) {
       return;
@@ -251,8 +271,25 @@ export default function CreateWorkout() {
           startTime={state.startTime}
           endTime={state.endTime}
           setTime={setTime}
+          showAsError={submitted && timerIsInvalid}
+          timerIsActive={timerIsActive}
+          setTimerIsActive={setTimerIsActive}
         />
       </HStack>
+
+      {/* ERROR MESSAGES */}
+      <Box mt="-0.3rem">
+        {errors.map((error) => {
+          if (!submitted) {
+            return null;
+          }
+          return (
+            <Text key={error} color={theme.colors.error} fontSize="xs">
+              {error}
+            </Text>
+          );
+        })}
+      </Box>
 
       {/* ADD COMMENT & TRACK WORKOUT BUTTONS */}
       <HStack w="100%" justifyContent={"space-between"}>
