@@ -214,14 +214,14 @@ export default function CreateWorkout() {
   }
 
   const [showServerError, setShowServerError] = useState<boolean>(true);
-  // useEffect(() => {
-  //   if (error) {
-  //     setShowServerError(true);
-  //     setTimeout(() => {
-  //       setShowServerError(false);
-  //     }, 7000);
-  //   }
-  // }, [error]);
+  useEffect(() => {
+    if (error) {
+      setShowServerError(true);
+      setTimeout(() => {
+        setShowServerError(false);
+      }, 10000);
+    }
+  }, [error]);
 
   useEffect(() => {
     if (state.exercises.length === 0) {

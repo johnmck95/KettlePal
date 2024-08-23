@@ -66,7 +66,7 @@ export default function Timer({
     if (autoStart) {
       handleStart();
     }
-  }, []);
+  }, [autoStart, handleStart]);
 
   return (
     <VStack w="110px" h="100%" justifyContent={"space-between"}>
