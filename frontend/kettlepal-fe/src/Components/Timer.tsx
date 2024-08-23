@@ -65,46 +65,41 @@ export default function Timer({
   };
 
   return (
-    <Box w="110px">
-      <VStack w="100%" justifyContent={"flex-start"} alignItems={"flex-start"}>
-        <Text textAlign="left" w="100%">
-          <b>{formatTime(timer)}</b>
-        </Text>
-        <Box m="0px">
-          {showStartStop && (
-            <>
-              {timerIsActive ? (
-                <Button
-                  width="4.25rem"
-                  height="2rem"
-                  variant="secondary"
-                  onClick={handleStop}
-                  color="black"
-                  bg={theme.colors.white}
-                  border={
-                    showAsError
-                      ? `1px solid ${theme.colors.error}`
-                      : `1px solid ${theme.colors.black}`
-                  }
-                >
-                  Stop
-                </Button>
-              ) : (
-                <Button
-                  width="4.25rem"
-                  height="2rem"
-                  variant={"secondary"}
-                  color="black"
-                  bg={theme.colors.white}
-                  onClick={handleStart}
-                >
-                  Start
-                </Button>
-              )}
-            </>
-          )}
-        </Box>
-      </VStack>
-    </Box>
+    <VStack w="110px" h="100%" justifyContent={"space-between"}>
+      <Text textAlign="left" w="100%" m="0" p="0">
+        <b>{formatTime(timer)}</b>
+      </Text>
+      <Box>
+        {showStartStop && (
+          <>
+            {timerIsActive ? (
+              <Button
+                width="4.25rem"
+                height="2rem"
+                variant="secondary"
+                onClick={handleStop}
+                color={theme.colors.grey[700]}
+                border={
+                  showAsError
+                    ? `1px solid ${theme.colors.error}`
+                    : `1px solid ${theme.colors.grey[500]}`
+                }
+              >
+                Stop
+              </Button>
+            ) : (
+              <Button
+                width="4.25rem"
+                height="2rem"
+                variant={"secondary"}
+                onClick={handleStart}
+              >
+                Start
+              </Button>
+            )}
+          </>
+        )}
+      </Box>
+    </VStack>
   );
 }

@@ -246,8 +246,15 @@ export default function CreateWorkout() {
   return (
     <Box m="1rem" w={["100%", "100%", "720px"]}>
       {/* DATE */}
-      <HStack justifyContent={"space-around"} pb="0.5rem">
-        <FormControl isRequired isInvalid={submitted && !state.createdAt}>
+      <HStack justifyContent={"space-between"} h="70px" mb="0.75rem">
+        <FormControl
+          isRequired
+          isInvalid={submitted && !state.createdAt}
+          h="100%"
+          display="flex"
+          flexDirection="column"
+          justifyContent={"space-between"}
+        >
           <FormLabel fontSize={["sm", "lg"]}>
             <b>Workout Date</b>
           </FormLabel>
@@ -261,6 +268,7 @@ export default function CreateWorkout() {
             onChange={handleStateChange}
             border="1px solid grey"
             borderRadius={"5px"}
+            m="0"
           />
         </FormControl>
 
