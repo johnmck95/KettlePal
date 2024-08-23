@@ -70,7 +70,7 @@ export default function Timer({
 
   return (
     <VStack w="110px" h="100%" justifyContent={"space-between"}>
-      <Text textAlign="left" w="100%" m="0" p="0">
+      <Text textAlign="center" w="100%" m="0" p="0">
         <b>{formatTime(timer)}</b>
       </Text>
       <Box>
