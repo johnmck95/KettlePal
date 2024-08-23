@@ -176,9 +176,19 @@ export default function CreateWorkout() {
     timer = "Please stop the workout timer before saving.",
   }
 
+  const [numErrors, setNumErrors] = useState(0);
   const errors: string[] = [];
   if (dateIsInvalid) errors.push(WorkoutErrors.date);
   if (timerIsInvalid) errors.push(WorkoutErrors.timer);
+
+  if (numErrors !== errors.length) {
+    setNumErrors(errors.length);
+  }
+
+  useEffect(
+    () => setFormHasErrors(numErrors > 0),
+    [numErrors, setFormHasErrors]
+  );
 
   async function onSaveWorkout(): Promise<void> {
     setSubmitted(true);
@@ -188,6 +198,7 @@ export default function CreateWorkout() {
       setFormHasErrors(true);
       return;
     }
+
     // Client-side validation
     if (formHasErrors) {
       return;
