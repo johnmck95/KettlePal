@@ -4,12 +4,7 @@ import {
   FormControl,
   FormLabel,
   HStack,
-  NumberDecrementStepper,
   Text,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
   Select,
   VStack,
   Button,
@@ -18,6 +13,7 @@ import {
   useDisclosure,
   Box,
   useMediaQuery,
+  Input,
 } from "@chakra-ui/react";
 import AddComment from "../AddComment";
 import {
@@ -126,7 +122,7 @@ export default function CreateExercise({
 
   function completedASet() {
     setCompletedSets((prev) => prev + 1);
-    if (completedSets >= exercise.sets) {
+    if (completedSets >= parseInt(exercise.sets)) {
       handleExercise("sets", completedSets + 1, exerciseIndex);
     }
     // TODO: Session storage for completedSets works, but the exercise data isn't being saved.
@@ -150,8 +146,8 @@ export default function CreateExercise({
   }
 
   useEffect(() => {
-    if (completedSets > exercise.sets) {
-      setCompletedSets(exercise.sets);
+    if (completedSets > parseInt(exercise.sets)) {
+      setCompletedSets(parseInt(exercise.sets));
     }
   }, [exercise.sets, completedSets, setCompletedSets]);
 
@@ -227,13 +223,13 @@ export default function CreateExercise({
         <HStack w="100%" mb="0.25rem">
           {/* TITLE */}
           <FormControl
-            w="40%"
+            w="45%"
             isRequired
             isInvalid={submitted && titleIsInvalid}
           >
             <FormLabel size={["xs", "sm", "md"]}>Title</FormLabel>
             <Select
-              size={["xs", "sm", "md"]}
+              size={["sm", "sm", "md"]}
               placeholder="Select Option"
               name="title"
               value={exercise.title}
@@ -244,6 +240,7 @@ export default function CreateExercise({
                   exerciseIndex
                 )
               }
+              focusBorderColor={theme.colors.green[300]}
               color={
                 !!exercise.title ? theme.colors.black : theme.colors.grey[500]
               }
@@ -259,10 +256,10 @@ export default function CreateExercise({
           </FormControl>
 
           {/* WEIGHT */}
-          <FormControl w="21%" isInvalid={submitted && weightIsInvalid}>
+          <FormControl w="22%" isInvalid={submitted && weightIsInvalid}>
             <FormLabel size={["xs", "", "md"]}>Weight</FormLabel>
             <Select
-              size={["xs", "sm", "md"]}
+              size={["sm", "sm", "md"]}
               placeholder="Select Option"
               name="weight"
               value={exercise.weight}
@@ -273,6 +270,7 @@ export default function CreateExercise({
                   exerciseIndex
                 )
               }
+              focusBorderColor={theme.colors.green[300]}
               color={
                 !!exercise.weight ? theme.colors.black : theme.colors.grey[500]
               }
@@ -288,53 +286,44 @@ export default function CreateExercise({
           </FormControl>
 
           {/* SETS */}
-          <FormControl w="18%" isInvalid={submitted && setsIsInvalid}>
+          <FormControl w="15%" isInvalid={submitted && setsIsInvalid}>
             <FormLabel size={["xs", "sm", "md"]}>Sets</FormLabel>
-            <NumberInput
-              size={["xs", "sm", "md"]}
-              step={1}
-              defaultValue={0}
-              min={0}
-              max={50}
+            <Input
+              size={["sm", "sm", "md"]}
+              placeholder="0"
+              autoComplete="off"
+              type="number"
               name="sets"
               value={exercise.sets}
-              onChange={(event) => handleExercise("sets", event, exerciseIndex)}
+              onChange={(event) =>
+                handleExercise("sets", event.target.value, exerciseIndex)
+              }
+              focusBorderColor={theme.colors.green[300]}
               color={
                 !!exercise.sets ? theme.colors.black : theme.colors.grey[500]
               }
-            >
-              <NumberInputField />
-              <NumberInputStepper>
-                <NumberIncrementStepper />
-                <NumberDecrementStepper />
-              </NumberInputStepper>
-            </NumberInput>
+            />
           </FormControl>
 
           {/* REPS */}
-          <FormControl w="18%" isInvalid={submitted && repsIsInvalid}>
+          <FormControl w="15%" isInvalid={submitted && repsIsInvalid}>
             <FormLabel size={["xs", "sm", "md"]}>
               <Text>Reps</Text>
             </FormLabel>
-            <NumberInput
-              size={["xs", "sm", "md"]}
-              step={1}
-              defaultValue={0}
-              min={0}
-              max={50}
+            <Input
+              size={["sm", "sm", "md"]}
+              type="number"
               name="reps"
+              placeholder="0"
               value={exercise.reps}
-              onChange={(event) => handleExercise("reps", event, exerciseIndex)}
+              onChange={(event) =>
+                handleExercise("reps", event.target.value, exerciseIndex)
+              }
+              focusBorderColor={theme.colors.green[300]}
               color={
                 !!exercise.reps ? theme.colors.black : theme.colors.grey[500]
               }
-            >
-              <NumberInputField />
-              <NumberInputStepper>
-                <NumberIncrementStepper />
-                <NumberDecrementStepper />
-              </NumberInputStepper>
-            </NumberInput>
+            />
           </FormControl>
         </HStack>
 
@@ -383,6 +372,7 @@ export default function CreateExercise({
                       exerciseIndex
                     )
                   }
+                  focusBorderColor={theme.colors.green[300]}
                   color={
                     !!exercise.weightUnit
                       ? theme.colors.black
@@ -420,6 +410,7 @@ export default function CreateExercise({
                       exerciseIndex
                     )
                   }
+                  focusBorderColor={theme.colors.green[300]}
                   color={
                     !!exercise.repsDisplay
                       ? theme.colors.black

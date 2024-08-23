@@ -34,8 +34,8 @@ export type Exercise = {
   title: string;
   weight: number;
   weightUnit: string;
-  sets: number;
-  reps: number;
+  sets: string | number;
+  reps: string | number;
   repsDisplay: string;
   comment: string;
   startTime: string;

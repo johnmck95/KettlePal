@@ -96,10 +96,10 @@ const typeDefs = `#graphql
 
     input AddExerciseInput {
         title: String!
-        weight: Float!
+        weight: String
         weightUnit: String!
-        sets: Float
-        reps: Float
+        sets: String
+        reps: String
         repsDisplay: String
         comment: String
         startTime: String

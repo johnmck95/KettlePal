@@ -10,16 +10,19 @@ export function verifyExercises(exercises: AddOrEditExerciseInput[]): {
   }
 
   for (const exercise of exercises) {
-    const {
+    let {
       title,
       weight,
-      sets,
-      reps,
+      sets: setsString,
+      reps: repsString,
       repsDisplay,
       weightUnit,
       startTime,
       endTime,
     } = exercise;
+    // Frontend collects strings, but we store these values as floats in the DB.
+    const reps = parseFloat(repsString as string);
+    const sets = parseFloat(setsString as string);
 
     if (!title) {
       return {

@@ -4,7 +4,10 @@ export function verifyExercises(exercises) {
         return { result: false, reason: "At least 1 exercise is required." };
     }
     for (const exercise of exercises) {
-        const { title, weight, sets, reps, repsDisplay, weightUnit, startTime, endTime, } = exercise;
+        let { title, weight, sets: setsString, reps: repsString, repsDisplay, weightUnit, startTime, endTime, } = exercise;
+        // Frontend collects strings, but we store these values as floats in the DB.
+        const reps = parseFloat(repsString);
+        const sets = parseFloat(setsString);
         if (!title) {
             return {
                 result: false,

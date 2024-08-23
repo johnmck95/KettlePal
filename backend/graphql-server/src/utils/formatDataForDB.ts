@@ -22,8 +22,9 @@ export function formatExercisesForDB(
       title,
       weight,
       weightUnit,
-      sets,
-      reps,
+      // Frontend collects strings, but we store these values as floats in the DB.
+      sets: parseFloat(sets as string),
+      reps: parseFloat(reps as string),
       repsDisplay,
       comment,
       startTime: startTime

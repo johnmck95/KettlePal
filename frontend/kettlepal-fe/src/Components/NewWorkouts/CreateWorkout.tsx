@@ -35,8 +35,8 @@ export type CreateWorkoutState = {
     title: string;
     weight: number;
     weightUnit: string;
-    sets: number;
-    reps: number;
+    sets: string;
+    reps: string;
     repsDisplay: string;
     comment: string;
     startTime: Date | null;
@@ -122,8 +122,8 @@ export default function CreateWorkout() {
           title: "",
           weight: 0,
           weightUnit: "kg",
-          sets: 0,
-          reps: 0,
+          sets: "",
+          reps: "",
           repsDisplay: "std",
           comment: "",
           startTime: null,
@@ -146,12 +146,6 @@ export default function CreateWorkout() {
     value: string | number,
     index: number
   ): void {
-    if (
-      (name === "weight" || name === "sets" || name === "reps") &&
-      typeof value === "string"
-    ) {
-      value = value === "" ? 0 : Number(parseFloat(value));
-    }
     setState((prevState) => ({
       ...prevState,
       exercises: prevState.exercises.map((exercise, i) => {
@@ -219,15 +213,15 @@ export default function CreateWorkout() {
     }
   }
 
-  const [showServerError, setShowServerError] = useState<boolean>(false);
-  useEffect(() => {
-    if (error) {
-      setShowServerError(true);
-      setTimeout(() => {
-        setShowServerError(false);
-      }, 7000);
-    }
-  }, [error]);
+  const [showServerError, setShowServerError] = useState<boolean>(true);
+  // useEffect(() => {
+  //   if (error) {
+  //     setShowServerError(true);
+  //     setTimeout(() => {
+  //       setShowServerError(false);
+  //     }, 7000);
+  //   }
+  // }, [error]);
 
   useEffect(() => {
     if (state.exercises.length === 0) {
@@ -269,6 +263,7 @@ export default function CreateWorkout() {
             border="1px solid grey"
             borderRadius={"5px"}
             m="0"
+            focusBorderColor={theme.colors.green[300]}
           />
         </FormControl>
 
