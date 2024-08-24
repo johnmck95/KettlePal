@@ -250,7 +250,7 @@ export default function CreateWorkout() {
   }
 
   return (
-    <Box m={["0.25rem 1rem 1rem 1rem", "1rem"]} w={["100%", "100%", "720px"]}>
+    <Box m={["0.5rem 1rem 1rem 1rem", "1rem"]} w={["100%", "100%", "720px"]}>
       {/* DATE */}
       <HStack
         justifyContent={"space-between"}
@@ -296,7 +296,7 @@ export default function CreateWorkout() {
           setTimerIsActive={setTimerIsActive}
         /> */}
         {/* TIMER */}
-        <VStack justifyContent={"flex-end"} alignItems={"flex-start"}>
+        <VStack justifyContent={"flex-end"} alignItems={"center"}>
           <FormLabel fontSize={["sm", "lg"]} m="0px">
             <b>Ellapsed Time</b>
           </FormLabel>
