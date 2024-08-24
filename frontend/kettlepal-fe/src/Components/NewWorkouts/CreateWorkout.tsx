@@ -20,7 +20,6 @@ import {
 } from "@chakra-ui/react";
 import AddComment from "../AddComment";
 import { getCurrentDate } from "../../utils/Time/time";
-import Timer from "../../Components/Timer";
 import { FaPlusCircle, FaSave } from "react-icons/fa";
 import ConfirmModal from "../ConfirmModal";
 import { gql, useMutation } from "@apollo/client";
@@ -91,15 +90,17 @@ export default function CreateWorkout() {
   );
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [formHasErrors, setFormHasErrors] = useState<boolean>(false);
-  const [timerIsActive, setTimerIsActive] = useState(false);
+  // TODO: Remove me when you hookup Timer2
+  const [timerIsActive] = useState(false);
   const { uid: userUid } = useUser();
 
-  const setTime = (newTime: Date, stateName: "startTime" | "endTime") => {
-    setState((prevState: CreateWorkoutState) => ({
-      ...prevState,
-      [stateName]: newTime,
-    }));
-  };
+  // TODO: Remove me when you hookup Timer2
+  // const setTime = (newTime: Date, stateName: "startTime" | "endTime") => {
+  //   setState((prevState: CreateWorkoutState) => ({
+  //     ...prevState,
+  //     [stateName]: newTime,
+  //   }));
+  // };
 
   const setComment = (newComment: string) => {
     setState((prevState: CreateWorkoutState) => ({
