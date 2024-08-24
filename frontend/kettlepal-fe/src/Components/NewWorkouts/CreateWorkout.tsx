@@ -319,7 +319,7 @@ export default function CreateWorkout() {
       </Box>
 
       {/* ADD COMMENT & TRACK WORKOUT BUTTONS */}
-      <HStack w="100%" justifyContent={"space-between"}>
+      <HStack w="100%" justifyContent={"space-between"} mt="1rem">
         <Button
           fontSize={["sm", "md"]}
           variant="link"
