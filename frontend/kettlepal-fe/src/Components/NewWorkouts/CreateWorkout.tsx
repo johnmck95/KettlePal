@@ -15,6 +15,7 @@ import {
   HStack,
   Input,
   Text,
+  VStack,
   useDisclosure,
 } from "@chakra-ui/react";
 import AddComment from "../AddComment";
@@ -26,6 +27,7 @@ import { gql, useMutation } from "@apollo/client";
 import { useUser } from "../../Contexts/UserContext";
 import LoadingSpinner from "../LoadingSpinner";
 import theme from "../../Constants/theme";
+import Timer2 from "../../Components/Timer2";
 
 export type CreateWorkoutState = {
   createdAt: string;
@@ -247,16 +249,20 @@ export default function CreateWorkout() {
   }
 
   return (
-    <Box m="1rem" w={["100%", "100%", "720px"]}>
+    <Box m={["0.25rem 1rem 1rem 1rem", "1rem"]} w={["100%", "100%", "720px"]}>
       {/* DATE */}
-      <HStack justifyContent={"space-between"} h="70px" mb="0.75rem">
+      <HStack
+        justifyContent={"space-between"}
+        mb="0.75rem"
+        h={["90px", "120px"]}
+      >
         <FormControl
           isRequired
           isInvalid={submitted && !state.createdAt}
           h="100%"
           display="flex"
           flexDirection="column"
-          justifyContent={"space-between"}
+          justifyContent={"flex-end"}
         >
           <FormLabel fontSize={["sm", "lg"]}>
             <b>Workout Date</b>
@@ -276,8 +282,10 @@ export default function CreateWorkout() {
           />
         </FormControl>
 
-        {/* TIMER */}
-        <Timer
+        {/* TODO NEXT: Remove the old timer, hookup Timer2 to state, migrate to to store
+        ellapsed time rather than starTime and EndTime */}
+
+        {/* <Timer
           showStartStop={true}
           autoStart={false}
           startTime={state.startTime}
@@ -285,7 +293,14 @@ export default function CreateWorkout() {
           showAsError={submitted && timerIsInvalid}
           timerIsActive={timerIsActive}
           setTimerIsActive={setTimerIsActive}
-        />
+        /> */}
+        {/* TIMER */}
+        <VStack justifyContent={"flex-end"} alignItems={"flex-start"}>
+          <FormLabel fontSize={["sm", "lg"]} m="0px">
+            <b>Ellapsed Time</b>
+          </FormLabel>
+          <Timer2 />
+        </VStack>
       </HStack>
 
       {/* ERROR MESSAGES */}
