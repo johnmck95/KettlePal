@@ -14,8 +14,7 @@ export function formatExercisesForDB(
       reps,
       repsDisplay,
       comment,
-      startTime,
-      endTime,
+      elapsedSeconds,
     } = exercise;
 
     return {
@@ -27,12 +26,7 @@ export function formatExercisesForDB(
       reps: parseFloat(reps as string),
       repsDisplay,
       comment,
-      startTime: startTime
-        ? dayjs(startTime).format("YYYY-MM-DDTHH:mm:ss.SSSZ")
-        : null,
-      endTime: endTime
-        ? dayjs(endTime).format("YYYY-MM-DDTHH:mm:ss.SSSZ")
-        : null,
+      elapsedSeconds,
     };
   });
 
@@ -43,21 +37,18 @@ export function formatWorkoutForDB(
   workoutWithExercises: AddWorkoutWithExercisesInput,
   userUid: string
 ): AddOrEditWorkoutInput & { userUid: string } {
-  const { createdAt, startTime, endTime, comment } = workoutWithExercises;
+  const { createdAt, elapsedSeconds, comment } = workoutWithExercises;
 
   const currentTime = dayjs().format("HH:mm:ss.SSSZ");
   // Appends Hr/Min/Sec... since created add is a calendar date, only.
-  const fullCreatedAt = dayjs(`${createdAt}T${currentTime}`).format(
-    "YYYY-MM-DDTHH:mm:ss.SSSZ"
-  );
+  const fullCreatedAt = dayjs(`${createdAt}T${currentTime}`)
+    .subtract(elapsedSeconds, "seconds")
+    .format("YYYY-MM-DDTHH:mm:ss.SSSZ");
 
   const formattedWorkout = {
     userUid: userUid,
     createdAt: fullCreatedAt,
-    startTime: startTime
-      ? dayjs(startTime).format("YYYY-MM-DDTHH:mm:ss.SSSZ")
-      : null,
-    endTime: endTime ? dayjs(endTime).format("YYYY-MM-DDTHH:mm:ss.SSSZ") : null,
+    elapsedSeconds,
     comment,
   };
 

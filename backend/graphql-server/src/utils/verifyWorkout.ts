@@ -5,30 +5,14 @@ export function verifyWorkout(workout: AddOrEditWorkoutInput): {
   result: boolean;
   reason: string;
 } {
-  if (!workout.createdAt)
-    return { result: false, reason: "createdAt is required" };
+  const { createdAt, elapsedSeconds } = workout;
 
-  const { startTime, endTime } = workout;
-  if (startTime && endTime) {
-    if (dayjs(startTime).isAfter(endTime)) {
-      return {
-        result: false,
-        reason: `Workout Start Time must be before End Time.`,
-      };
-    }
-  }
+  if (!createdAt) return { result: false, reason: "createdAt is required" };
 
-  if (startTime && !endTime) {
+  if (elapsedSeconds < 0 || typeof elapsedSeconds !== "number") {
     return {
       result: false,
-      reason: `Workout End Time is required when Start Time is provided.`,
-    };
-  }
-
-  if (!startTime && endTime) {
-    return {
-      result: false,
-      reason: `Workout Start Time is required when End Time is provided.`,
+      reason: `Workout Elapsed Seconds must be a numerical value greater than or equal to 0.`,
     };
   }
 

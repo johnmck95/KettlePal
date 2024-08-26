@@ -1,6 +1,5 @@
 import knexConfig from "../knexfile.js";
 import knex from "knex";
-import dayjs from "dayjs";
 import { verifyExercises } from "./utils/verifyExercises.js";
 import { verifyWorkout } from "./utils/verifyWorkout.js";
 import { formatExercisesForDB, formatWorkoutForDB, } from "./utils/formatDataForDB.js";
@@ -96,8 +95,7 @@ const resolvers = {
             try {
                 return await knexInstance("exercises")
                     .select("*")
-                    .where({ workoutUid: parent.uid })
-                    .orderBy("startTime", "desc");
+                    .where({ workoutUid: parent.uid });
             }
             catch (error) {
                 console.error("Error fetching exercises:", error);
@@ -179,12 +177,9 @@ const resolvers = {
         },
         async addWorkout(_, { userUid, workout, }) {
             try {
-                // TODO: Implement a way of adding start and end times based on user input
                 let newWorkout = {
                     ...workout,
                     userUid: userUid,
-                    startTime: dayjs().format("YYYY-MM-DDTHH:mm:ss.SSSZ"),
-                    endTime: dayjs().add(1, "hour").format("YYYY-MM-DDTHH:mm:ss.SSSZ"),
                 };
                 await knexInstance("workouts").insert(newWorkout);
                 const insertedWorkout = await knexInstance("workouts")
@@ -202,14 +197,9 @@ const resolvers = {
         },
         async addExercise(_, { workoutUid, exercise, }) {
             try {
-                // TODO: Implement a way of adding start and end times based on user input
                 let newExercise = {
                     ...exercise,
                     workoutUid: workoutUid,
-                    startTime: dayjs().format("YYYY-MM-DDTHH:mm:ss.SSSZ"),
-                    endTime: dayjs()
-                        .add(10, "minutes")
-                        .format("YYYY-MM-DDTHH:mm:ss.SSSZ"),
                 };
                 await knexInstance("exercises").insert(newExercise);
                 const insertedExercise = await knexInstance("exercises")

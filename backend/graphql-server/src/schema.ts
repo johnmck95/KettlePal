@@ -15,8 +15,7 @@ const typeDefs = `#graphql
     type Workout {
         uid: ID!
         createdAt: String!
-        startTime: String
-        endTime: String
+        elapsedSeconds: Int
         comment: String
         userUid: ID!
         exercises: [Exercise!]
@@ -26,14 +25,14 @@ const typeDefs = `#graphql
         uid: ID!
         workoutUid: ID!
         title: String!
+        createdAt: String!
         weight: Float
         weightUnit: String
         sets: Int
         reps: Int
         repsDisplay: String
         comment: String
-        startTime: String
-        endTime: String
+        elapsedSeconds: Int
     }
 
     # Required: Defines the entry points to the graph
@@ -81,15 +80,13 @@ const typeDefs = `#graphql
 
     input AddOrEditWorkoutInput {
         createdAt: String
-        startTime: String
-        endTime: String
+        elapsedSeconds: Int
         comment: String
     }
 
     input AddWorkoutWithExercisesInput {
         createdAt: String
-        startTime: String
-        endTime: String
+        elapsedSeconds: Int
         comment: String
         exercises: [AddExerciseInput]!
     }
@@ -102,8 +99,7 @@ const typeDefs = `#graphql
         reps: String
         repsDisplay: String
         comment: String
-        startTime: String
-        endTime: String
+        elapsedSeconds: Int
         key: String
     }
 
@@ -115,8 +111,7 @@ const typeDefs = `#graphql
         reps: String
         repsDisplay: String
         comment: String
-        startTime: String
-        endTime: String
+        elapsedSeconds: Int
     }
 
 `;

@@ -1,10 +1,9 @@
-import dayjs from "dayjs";
 export function verifyExercises(exercises) {
     if (exercises.length < 1) {
         return { result: false, reason: "At least 1 exercise is required." };
     }
     for (const exercise of exercises) {
-        let { title, weight, sets: setsString, reps: repsString, repsDisplay, weightUnit, startTime, endTime, } = exercise;
+        let { title, weight, sets: setsString, reps: repsString, repsDisplay, weightUnit, elapsedSeconds, } = exercise;
         // Frontend collects strings, but we store these values as floats in the DB.
         const reps = parseFloat(repsString);
         const sets = parseFloat(setsString);
@@ -44,24 +43,10 @@ export function verifyExercises(exercises) {
                 reason: `Exercise Weight is required when Weight Unit is provided.`,
             };
         }
-        if (startTime && endTime) {
-            if (dayjs(startTime).isAfter(endTime)) {
-                return {
-                    result: false,
-                    reason: `Exercise Start Time must be before End Time.`,
-                };
-            }
-        }
-        if (startTime && !endTime) {
+        if (elapsedSeconds < 0 || typeof elapsedSeconds !== "number") {
             return {
                 result: false,
-                reason: `Exercise End Time is required when Start Time is Provided.`,
-            };
-        }
-        if (!startTime && endTime) {
-            return {
-                result: false,
-                reason: `Exercise Start Time is required when End Time is Provided.`,
+                reason: `Exercise Elapsed Seconds must be a numerical value greater than or equal to 0.`,
             };
         }
         const validRepsDisplayed = [

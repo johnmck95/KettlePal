@@ -1,57 +1,31 @@
-import { Box, Text, Button, VStack } from "@chakra-ui/react";
-import React, { useState, useEffect, useCallback } from "react";
+import { Text, Button, Box, Stack } from "@chakra-ui/react";
+import React, { useState, useEffect } from "react";
 import theme from "../Constants/theme";
 
-/*
- * Basic implementation. This will only count the ellapsed time.
- * When a user stops the timer, DB records will not know about this, it is only for the UI.
- */
 interface TimerProps {
-  showStartStop: boolean;
-  autoStart: boolean;
-  startTime?: Date | null;
-  setTime: (newTime: Date, stateName: "startTime" | "endTime") => void;
-  showAsError?: boolean;
-  timerIsActive: boolean;
-  setTimerIsActive: (isActive: boolean) => void;
+  isActive: boolean;
+  setIsActive: (value: boolean) => void;
+  setTime: (elapsedSeconds: number) => void;
 }
-export default function Timer({
-  showStartStop,
-  autoStart,
-  startTime,
-  setTime,
-  showAsError,
-  timerIsActive,
-  setTimerIsActive,
-}: TimerProps) {
-  const [timer, setTimer] = useState<number>(0);
 
-  useEffect(() => {
-    let interval: NodeJS.Timeout | undefined = undefined;
+export default function Timer({ isActive, setIsActive, setTime }: TimerProps) {
+  const [seconds, setSeconds] = useState(0);
 
-    if (timerIsActive) {
-      interval = setInterval(() => {
-        setTimer((prevTime) => prevTime + 1);
-      }, 1000);
-    } else if (!timerIsActive && timer !== 0) {
-      clearInterval(interval);
-    }
+  function startOrResume() {
+    setIsActive(true);
+    setTime(seconds);
+  }
 
-    return () => clearInterval(interval);
-  }, [timerIsActive, timer]);
+  function reset() {
+    setSeconds(0);
+    setIsActive(false);
+    setTime(0);
+  }
 
-  const handleStart = useCallback(() => {
-    setTimerIsActive(true);
-    // Ellapsed time - do not reset the initial start time.
-    if (startTime === null) {
-      setTime(new Date(), "startTime");
-    }
-  }, [setTimerIsActive, startTime, setTime]);
-
-  const handleStop = () => {
-    setTimerIsActive(false);
-    setTime(new Date(), "endTime");
-  };
+  function pause() {
+    setIsActive(false);
+    setTime(seconds);
+  }
 
   const formatTime = (seconds: number) => {
     const getSeconds = `0${seconds % 60}`.slice(-2);
@@ -59,51 +33,97 @@ export default function Timer({
     const getMinutes = `0${minutes % 60}`.slice(-2);
     const getHours = `0${Math.floor(seconds / 3600)}`.slice(-2);
 
-    return `${getHours}:${getMinutes}:${getSeconds}`;
+    if (getHours === "00") {
+      return `${getMinutes}:${getSeconds}`;
+    } else {
+      return `${getHours}:${getMinutes}:${getSeconds}`;
+    }
   };
 
+  // Every 1s, update the elapsed time
   useEffect(() => {
-    if (autoStart) {
-      handleStart();
+    let interval: NodeJS.Timeout | undefined = undefined;
+    if (isActive) {
+      interval = setInterval(() => {
+        setSeconds((prevTime) => prevTime + 1);
+      }, 1000);
+    } else if (!isActive && seconds !== 0) {
+      clearInterval(interval);
     }
-  }, [autoStart, handleStart]);
+    return () => clearInterval(interval);
+  }, [isActive, seconds]);
 
   return (
-    <VStack w="110px" h="100%" justifyContent={"space-between"}>
-      <Text textAlign="center" w="100%" m="0" p="0">
-        <b>{formatTime(timer)}</b>
-      </Text>
-      <Box>
-        {showStartStop && (
-          <>
-            {timerIsActive ? (
-              <Button
-                width="4.25rem"
-                height="2rem"
-                variant="secondary"
-                onClick={handleStop}
-                color={theme.colors.grey[700]}
-                border={
-                  showAsError
-                    ? `1px solid ${theme.colors.error}`
-                    : `1px solid ${theme.colors.grey[500]}`
-                }
-              >
-                Stop
-              </Button>
-            ) : (
-              <Button
-                width="4.25rem"
-                height="2rem"
-                variant={"secondary"}
-                onClick={handleStart}
-              >
-                Start
-              </Button>
-            )}
-          </>
-        )}
+    <Stack
+      direction={["row", "column"]}
+      justifyContent={"center"}
+      alignItems="center"
+    >
+      <Box position="relative" width="60px" height="60px">
+        {/* Background Circle */}
+        <Box
+          position="absolute"
+          top="0"
+          left="0"
+          width="100%"
+          height="100%"
+          borderRadius="50%"
+          bg={theme.colors.feldgrau[100]}
+        />
+
+        {/* Inner "Donut" of the Timer */}
+        <Box
+          position="absolute"
+          top="10%"
+          left="10%"
+          width="80%"
+          height="80%"
+          zIndex={2}
+          borderRadius="50%"
+          bg="rgba(250,249,246,1)"
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+        >
+          <Text
+            textAlign="center"
+            w="100%"
+            m="0"
+            p="0"
+            fontSize={seconds > 3600 ? "8px" : "xs"}
+          >
+            <b>{formatTime(seconds)}</b>
+          </Text>
+        </Box>
+
+        {/* Progress Circle */}
+        <Box
+          position="absolute"
+          top="0"
+          left="0"
+          width="100%"
+          height="100%"
+          borderRadius="50%"
+          sx={{
+            background: `conic-gradient(${theme.colors.green[500]} ${
+              (seconds % 60) * 6
+            }deg, transparent ${(seconds % 60) * 6}deg)`,
+          }}
+        />
       </Box>
-    </VStack>
+      <Stack direction={["column", "row"]}>
+        <Button size="xs" onClick={reset} variant="secondary" w="60px">
+          Reset
+        </Button>
+        <Button
+          size="xs"
+          variant="primary"
+          onClick={isActive ? pause : startOrResume}
+          w="60px"
+        >
+          {isActive ? "Pause" : seconds === 0 ? "Start" : "Resume"}
+        </Button>
+      </Stack>
+    </Stack>
   );
 }

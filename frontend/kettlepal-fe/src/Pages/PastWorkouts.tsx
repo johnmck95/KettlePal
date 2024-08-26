@@ -14,8 +14,7 @@ const WORKOUTS_WITH_EXERCISES_QUERY = gql`
       workouts {
         uid
         comment
-        startTime
-        endTime
+        elapsedSeconds
         createdAt
         exercises {
           uid
@@ -26,8 +25,8 @@ const WORKOUTS_WITH_EXERCISES_QUERY = gql`
           reps
           repsDisplay
           comment
-          startTime
-          endTime
+          elapsedSeconds
+          createdAt
         }
       }
     }

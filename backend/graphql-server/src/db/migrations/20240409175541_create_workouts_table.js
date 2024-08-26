@@ -3,8 +3,7 @@ export async function up(knex) {
     table.uuid("uid").primary().defaultTo(knex.raw("uuid_generate_v4()"));
     table.uuid("userUid").notNullable().references("uid").inTable("users");
     table.timestamp("createdAt").defaultTo(knex.fn.now()).notNullable();
-    table.timestamp("startTime").defaultTo(knex.fn.now());
-    table.timestamp("endTime").defaultTo(knex.fn.now());
+    table.integer("elapsedSeconds");
     table.string("comment", 512);
   });
 }

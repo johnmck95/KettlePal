@@ -21,8 +21,7 @@ export type Workout = {
   uid: string;
   userUid: string;
   createdAt: string;
-  startTime: string;
-  endTime: string;
+  elapsedSeconds: number;
   comment: string;
 };
 
@@ -38,8 +37,7 @@ export type Exercise = {
   reps: string | number;
   repsDisplay: string;
   comment: string;
-  startTime: string;
-  endTime: string;
+  elapsedSeconds: number;
 };
 
 export type AddOrEditExerciseInput = Omit<Exercise, "uid" | "workoutUid">;

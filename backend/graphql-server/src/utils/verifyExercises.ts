@@ -17,8 +17,7 @@ export function verifyExercises(exercises: AddOrEditExerciseInput[]): {
       reps: repsString,
       repsDisplay,
       weightUnit,
-      startTime,
-      endTime,
+      elapsedSeconds,
     } = exercise;
     // Frontend collects strings, but we store these values as floats in the DB.
     const reps = parseFloat(repsString as string);
@@ -66,26 +65,10 @@ export function verifyExercises(exercises: AddOrEditExerciseInput[]): {
       };
     }
 
-    if (startTime && endTime) {
-      if (dayjs(startTime).isAfter(endTime)) {
-        return {
-          result: false,
-          reason: `Exercise Start Time must be before End Time.`,
-        };
-      }
-    }
-
-    if (startTime && !endTime) {
+    if (elapsedSeconds < 0 || typeof elapsedSeconds !== "number") {
       return {
         result: false,
-        reason: `Exercise End Time is required when Start Time is Provided.`,
-      };
-    }
-
-    if (!startTime && endTime) {
-      return {
-        result: false,
-        reason: `Exercise Start Time is required when End Time is Provided.`,
+        reason: `Exercise Elapsed Seconds must be a numerical value greater than or equal to 0.`,
       };
     }
 

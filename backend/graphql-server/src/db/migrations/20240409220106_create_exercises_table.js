@@ -7,14 +7,14 @@ export async function up(knex) {
       .references("uid")
       .inTable("workouts");
     table.string("title", 255).notNullable();
+    table.timestamp("createdAt").defaultTo(knex.fn.now()).notNullable();
     table.float("weight");
     table.string("weightUnit", 255);
     table.integer("sets");
     table.integer("reps");
     table.string("repsDisplay", 255);
+    table.integer("elapsedSeconds");
     table.string("comment", 512);
-    table.timestamp("startTime").defaultTo(knex.fn.now());
-    table.timestamp("endTime").defaultTo(knex.fn.now());
   });
 }
 

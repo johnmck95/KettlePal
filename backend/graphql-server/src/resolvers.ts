@@ -108,8 +108,7 @@ const resolvers = {
       try {
         return await knexInstance("exercises")
           .select("*")
-          .where({ workoutUid: parent.uid })
-          .orderBy("startTime", "desc");
+          .where({ workoutUid: parent.uid });
       } catch (error) {
         console.error("Error fetching exercises:", error);
         throw error;
@@ -219,12 +218,9 @@ const resolvers = {
       }
     ) {
       try {
-        // TODO: Implement a way of adding start and end times based on user input
         let newWorkout = {
           ...workout,
           userUid: userUid,
-          startTime: dayjs().format("YYYY-MM-DDTHH:mm:ss.SSSZ"),
-          endTime: dayjs().add(1, "hour").format("YYYY-MM-DDTHH:mm:ss.SSSZ"),
         };
         await knexInstance("workouts").insert(newWorkout);
 
@@ -250,14 +246,9 @@ const resolvers = {
       }: { workoutUid: String; exercise: AddOrEditExerciseInput }
     ) {
       try {
-        // TODO: Implement a way of adding start and end times based on user input
         let newExercise = {
           ...exercise,
           workoutUid: workoutUid,
-          startTime: dayjs().format("YYYY-MM-DDTHH:mm:ss.SSSZ"),
-          endTime: dayjs()
-            .add(10, "minutes")
-            .format("YYYY-MM-DDTHH:mm:ss.SSSZ"),
         };
         await knexInstance("exercises").insert(newExercise);
 

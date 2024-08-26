@@ -26,13 +26,12 @@ import { gql, useMutation } from "@apollo/client";
 import { useUser } from "../../Contexts/UserContext";
 import LoadingSpinner from "../LoadingSpinner";
 import theme from "../../Constants/theme";
-import Timer2 from "../../Components/Timer2";
+import Timer from "../Timer";
 
 export type CreateWorkoutState = {
   createdAt: string;
   comment: string;
-  startTime: Date | null;
-  endTime: Date | null;
+  elapsedSeconds: number;
   exercises: Array<{
     title: string;
     weight: number;
@@ -41,8 +40,7 @@ export type CreateWorkoutState = {
     reps: string;
     repsDisplay: string;
     comment: string;
-    startTime: Date | null;
-    endTime: Date | null;
+    elapsedSeconds: number;
     key: string;
   }>;
 };
@@ -70,8 +68,7 @@ export default function CreateWorkout() {
   const [state, setState] = useState<CreateWorkoutState>({
     createdAt: getCurrentDate(),
     comment: "",
-    startTime: null,
-    endTime: null,
+    elapsedSeconds: 0,
     exercises: [],
   });
   const [showTracking, setShowTracking] = useState<boolean>(false);
@@ -91,16 +88,16 @@ export default function CreateWorkout() {
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [formHasErrors, setFormHasErrors] = useState<boolean>(false);
   // TODO: Remove me when you hookup Timer2
-  const [timerIsActive] = useState(false);
+  const [timerIsActive, setTimerIsActive] = useState(false);
   const { uid: userUid } = useUser();
 
   // TODO: Remove me when you hookup Timer2
-  // const setTime = (newTime: Date, stateName: "startTime" | "endTime") => {
-  //   setState((prevState: CreateWorkoutState) => ({
-  //     ...prevState,
-  //     [stateName]: newTime,
-  //   }));
-  // };
+  const setTime = (elapsedSeconds: number) => {
+    setState((prevState: CreateWorkoutState) => ({
+      ...prevState,
+      ["elapsedSeconds"]: elapsedSeconds,
+    }));
+  };
 
   const setComment = (newComment: string) => {
     setState((prevState: CreateWorkoutState) => ({
@@ -130,8 +127,7 @@ export default function CreateWorkout() {
           reps: "",
           repsDisplay: "std",
           comment: "",
-          startTime: null,
-          endTime: null,
+          elapsedSeconds: 0,
           key: `key-${Date.now()}-${Math.random().toString(36)}`,
         },
       ],
@@ -172,8 +168,7 @@ export default function CreateWorkout() {
   } = useDisclosure();
 
   const dateIsInvalid = !state.createdAt;
-  const timerIsInvalid =
-    (!!state.startTime === true && !!state.endTime === false) || timerIsActive;
+  const timerIsInvalid = timerIsActive;
 
   enum WorkoutErrors {
     date = "Please enter a workout date.",
@@ -219,8 +214,7 @@ export default function CreateWorkout() {
       setState({
         createdAt: getCurrentDate(),
         comment: "",
-        startTime: null,
-        endTime: null,
+        elapsedSeconds: 0,
         exercises: [],
       });
     } catch (err) {
@@ -286,21 +280,16 @@ export default function CreateWorkout() {
         {/* TODO NEXT: Remove the old timer, hookup Timer2 to state, migrate to to store
         ellapsed time rather than starTime and EndTime */}
 
-        {/* <Timer
-          showStartStop={true}
-          autoStart={false}
-          startTime={state.startTime}
-          setTime={setTime}
-          showAsError={submitted && timerIsInvalid}
-          timerIsActive={timerIsActive}
-          setTimerIsActive={setTimerIsActive}
-        /> */}
         {/* TIMER */}
         <VStack justifyContent={"flex-end"} alignItems={"center"}>
           <FormLabel fontSize={["sm", "lg"]} m="0px">
-            <b>Ellapsed Time</b>
+            <b>Elapsed Time</b>
           </FormLabel>
-          <Timer2 />
+          <Timer
+            isActive={timerIsActive}
+            setIsActive={setTimerIsActive}
+            setTime={setTime}
+          />
         </VStack>
       </HStack>
 
