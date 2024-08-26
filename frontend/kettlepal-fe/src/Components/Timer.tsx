@@ -1,6 +1,7 @@
-import { Text, Button, Box, Stack } from "@chakra-ui/react";
+import { Text, Button, Box, Stack, useDisclosure } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import theme from "../Constants/theme";
+import ConfirmModal from "./ConfirmModal";
 
 interface TimerProps {
   isActive: boolean;
@@ -16,9 +17,10 @@ export default function Timer({ isActive, setIsActive, setTime }: TimerProps) {
     setTime(seconds);
   }
 
-  function reset() {
+  function onReset() {
     setSeconds(0);
     setIsActive(false);
+    onClose();
     setTime(0);
   }
 
@@ -52,6 +54,8 @@ export default function Timer({ isActive, setIsActive, setTime }: TimerProps) {
     }
     return () => clearInterval(interval);
   }, [isActive, seconds]);
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <Stack
@@ -112,7 +116,7 @@ export default function Timer({ isActive, setIsActive, setTime }: TimerProps) {
         />
       </Box>
       <Stack direction={["column", "row"]}>
-        <Button size="xs" onClick={reset} variant="secondary" w="60px">
+        <Button size="xs" onClick={onOpen} variant="secondary" w="60px">
           Reset
         </Button>
         <Button
@@ -124,6 +128,17 @@ export default function Timer({ isActive, setIsActive, setTime }: TimerProps) {
           {isActive ? "Pause" : seconds === 0 ? "Start" : "Resume"}
         </Button>
       </Stack>
+
+      <ConfirmModal
+        isOpen={isOpen}
+        onClose={onClose}
+        onConfirmation={onReset}
+        ModalTitle="Reset Timer"
+        ModalBodyText="Are you sure you would like to Reset the timer? This cannot be undone."
+        CloseText="Cancel"
+        ProceedText="Reset"
+        variant="warn"
+      />
     </Stack>
   );
 }
