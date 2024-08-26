@@ -95,7 +95,7 @@ export default function CreateWorkout() {
   const setTime = (elapsedSeconds: number) => {
     setState((prevState: CreateWorkoutState) => ({
       ...prevState,
-      ["elapsedSeconds"]: elapsedSeconds,
+      elapsedSeconds,
     }));
   };
 
