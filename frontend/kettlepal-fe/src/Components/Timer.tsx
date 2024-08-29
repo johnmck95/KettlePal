@@ -9,6 +9,7 @@ interface TimerProps {
   setTime: (elapsedSeconds: number) => void;
 }
 
+// BUG: when you "hide details" or "See details" of a workout, 'seconds' is reset.
 export default function Timer({ isActive, setIsActive, setTime }: TimerProps) {
   const [seconds, setSeconds] = useState(0);
 

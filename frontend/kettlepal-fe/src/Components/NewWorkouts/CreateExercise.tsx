@@ -8,7 +8,6 @@ import {
   Select,
   VStack,
   Button,
-  Flex,
   IconButton,
   useDisclosure,
   Box,
@@ -25,6 +24,7 @@ import {
 import { FaMinus, FaPlus, FaTimes } from "react-icons/fa";
 import ConfirmModal from "../ConfirmModal";
 import theme from "../../Constants/theme";
+import Timer from "../Timer";
 
 export default function CreateExercise({
   exercise,
@@ -43,9 +43,9 @@ export default function CreateExercise({
   setFormHasErrors: (value: boolean) => void;
   trackWorkout: boolean;
 }) {
-  const [addExerciseComment, setAddExerciseComment] = useState<boolean>(false);
   const [seeDetails, setSeeDetails] = useState<boolean>(false);
   const [completedSets, setCompletedSets] = useState<number>(0);
+
   // TODO: Session storage for completedSets works, but the exercise data isn't being saved.
   // Migrate all of the workout + exercise to be saved in session storage before turning this on.
   // const [completedSets, setCompletedSets] = useState<number>(() => {
@@ -78,6 +78,11 @@ export default function CreateExercise({
     );
   }
 
+  const [timerIsActive, setTimerIsActive] = useState(false);
+  const setTime = (elapsedSeconds: number) => {
+    handleExercise("elapsedSeconds", elapsedSeconds, exerciseIndex);
+  };
+
   const titleIsInvalid = !exercise.title;
   const weightIsInvalid =
     !!exercise.weight === false && !!exercise.weightUnit === true;
@@ -92,6 +97,7 @@ export default function CreateExercise({
   const repsDisplayIsInvalid =
     (!!exercise.reps === true || !!exercise.sets === true) &&
     !!exercise.repsDisplay === false;
+  const timerIsInvalid = timerIsActive;
 
   enum ExerciseErrors {
     title = "Title is required.",
@@ -100,6 +106,7 @@ export default function CreateExercise({
     sets = "Sets are required when Reps or Rep Type are provided.",
     reps = "Reps are required when Sets or Rep Type are provided.",
     repsDisplay = "Rep Type is required when Sets or Reps are provided.",
+    timer = "Please stop the exercise timer before saving.",
   }
 
   const [numErrors, setNumErrors] = useState(0);
@@ -110,6 +117,7 @@ export default function CreateExercise({
   if (setsIsInvalid) errors.push(ExerciseErrors.sets);
   if (repsIsInvalid) errors.push(ExerciseErrors.reps);
   if (repsDisplayIsInvalid) errors.push(ExerciseErrors.repsDisplay);
+  if (timerIsInvalid) errors.push(ExerciseErrors.timer);
 
   if (numErrors !== errors.length) {
     setNumErrors(errors.length);
@@ -122,7 +130,9 @@ export default function CreateExercise({
 
   function completedASet() {
     setCompletedSets((prev) => prev + 1);
-    if (completedSets >= parseInt(exercise.sets)) {
+    if (exercise.sets === "") {
+      handleExercise("sets", "1", exerciseIndex);
+    } else if (completedSets >= parseInt(exercise.sets)) {
       handleExercise("sets", completedSets + 1, exerciseIndex);
     }
     // TODO: Session storage for completedSets works, but the exercise data isn't being saved.
@@ -328,32 +338,36 @@ export default function CreateExercise({
         </HStack>
 
         {/* SEE DETAILS */}
+        <Button
+          fontSize={["xs", "sm"]}
+          alignSelf={"flex-start"}
+          variant="link"
+          onClick={() => setSeeDetails((prev) => !prev)}
+          textAlign="left"
+          mt="0.15rem"
+          color={
+            submitted &&
+            (weightUnitIsInvalid || repsDisplayIsInvalid || timerIsInvalid)
+              ? theme.colors.error
+              : theme.colors.grey
+          }
+        >
+          {seeDetails ? "Hide Details" : "More Details"}
+        </Button>
         <HStack
           w="100%"
           justifyContent={seeDetails ? "space-between" : "flex-start"}
           alignItems="flex-start"
         >
-          <Button
-            fontSize={["xs", "sm"]}
-            variant="link"
-            onClick={() => setSeeDetails((prev) => !prev)}
-            textAlign="left"
-            mt="0.15rem"
-            color={
-              submitted && (weightUnitIsInvalid || repsDisplayIsInvalid)
-                ? theme.colors.error
-                : theme.colors.grey
-            }
-          >
-            {seeDetails ? "Hide Details" : "See Details"}
-          </Button>
-
           {seeDetails && (
-            <HStack w="calc(100% - 85px)" justifyContent="flex-end">
+            <HStack
+              w="100%"
+              justifyContent="space-between"
+              alignItems="flex-end"
+              mt="-1.5rem"
+            >
               {/* WEIGHT UNIT */}
               <FormControl
-                ml="1rem"
-                w="50%"
                 maxW="160px"
                 isInvalid={submitted && weightUnitIsInvalid}
               >
@@ -364,6 +378,7 @@ export default function CreateExercise({
                   size={["sm", "sm", "md"]}
                   placeholder="Select Option"
                   name="weightUnit"
+                  maxWidth="150px"
                   value={exercise.weightUnit}
                   onChange={(event) =>
                     handleExercise(
@@ -391,8 +406,8 @@ export default function CreateExercise({
 
               {/* REPS DISPLAY */}
               <FormControl
-                w="50%"
-                maxW="160px"
+                minWidth="100px"
+                maxWidth="150px"
                 isInvalid={submitted && repsDisplayIsInvalid}
               >
                 <FormLabel mb="0" fontSize={["xs", "sm", "md"]}>
@@ -426,56 +441,41 @@ export default function CreateExercise({
                   })}
                 </Select>
               </FormControl>
+
+              {/* EXERCISE TIMER */}
+              <VStack justifyContent={"flex-end"} alignItems={"center"}>
+                <FormLabel fontSize={["xs", "sm", "md"]} m="0px">
+                  Elapsed Time
+                </FormLabel>
+                <Timer
+                  isActive={timerIsActive}
+                  setIsActive={setTimerIsActive}
+                  setTime={setTime}
+                />
+              </VStack>
             </HStack>
           )}
         </HStack>
 
-        {/* COMMENT */}
-        <Flex w="100%">
-          <FormControl>
-            <Button
-              fontSize={["xs", "sm"]}
-              variant="link"
-              onClick={() => setAddExerciseComment((prev) => !prev)}
-              mb={addExerciseComment ? "0.5rem" : "0.15rem"}
-              textAlign="left"
-              color={
-                submitted && (weightUnitIsInvalid || repsDisplayIsInvalid)
-                  ? theme.colors.error
-                  : theme.colors.grey
-              }
-            >
-              {addExerciseComment ? "Hide Comment" : "Add Comment"}
-            </Button>
-
-            {addExerciseComment && (
-              <AddComment
-                placeholderText="Add an Exercise Comment"
-                comment={exercise.comment}
-                setComment={setExerciseComment}
-                maxWidth="100%"
-              />
-            )}
-          </FormControl>
-        </Flex>
+        {/* EXERCISE COMMENT */}
+        {seeDetails && (
+          <AddComment
+            placeholderText="Add an Exercise Comment"
+            comment={exercise.comment}
+            setComment={setExerciseComment}
+            maxWidth="100%"
+          />
+        )}
 
         {/* SETS COMPLETED */}
         {trackWorkout && (
           <HStack justifyContent={"space-between"} w="100%">
             <FormLabel size={["sm", "md", "lg"]} my="auto">
-              <b>{`Completed ${completedSets} / ${exercise.sets} Sets`}</b>
+              <b>{`Completed ${completedSets} / ${
+                exercise.sets === "" ? "0" : exercise.sets
+              } Sets`}</b>
             </FormLabel>
             <HStack>
-              <IconButton
-                aria-label="Add Set"
-                icon={<FaPlus />}
-                size={["sm"]}
-                color={theme.colors.white}
-                bg={theme.colors.feldgrau[400]}
-                _hover={{ bg: theme.colors.feldgrau[500] }}
-                _active={{ bg: theme.colors.feldgrau[600] }}
-                onClick={completedASet}
-              />
               <IconButton
                 aria-label="Subtract Set"
                 icon={<FaMinus />}
@@ -499,6 +499,16 @@ export default function CreateExercise({
                       : theme.colors.bole[600],
                 }}
                 onClick={removedASet}
+              />
+              <IconButton
+                aria-label="Add Set"
+                icon={<FaPlus />}
+                size={["sm"]}
+                color={theme.colors.white}
+                bg={theme.colors.feldgrau[400]}
+                _hover={{ bg: theme.colors.feldgrau[500] }}
+                _active={{ bg: theme.colors.feldgrau[600] }}
+                onClick={completedASet}
               />
             </HStack>
           </HStack>
