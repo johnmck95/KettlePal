@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { CreateWorkoutState } from "./CreateWorkout";
 import {
   FormControl,
@@ -79,9 +79,12 @@ export default function CreateExercise({
   }
 
   const [timerIsActive, setTimerIsActive] = useState(false);
-  const setTime = (elapsedSeconds: number) => {
-    handleExercise("elapsedSeconds", elapsedSeconds, exerciseIndex);
-  };
+  const setTime = useCallback(
+    (elapsedSeconds: number) => {
+      handleExercise("elapsedSeconds", elapsedSeconds, exerciseIndex);
+    },
+    [exerciseIndex, handleExercise]
+  );
 
   // Update exercise timer every 1s
   useEffect(() => {
@@ -465,6 +468,7 @@ export default function CreateExercise({
                   isActive={timerIsActive}
                   setIsActive={setTimerIsActive}
                   setTime={setTime}
+                  size="sm"
                 />
               </VStack>
             </HStack>

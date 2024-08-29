@@ -298,6 +298,7 @@ export default function CreateWorkout() {
             isActive={timerIsActive}
             setIsActive={setTimerIsActive}
             setTime={setTime}
+            size="md"
           />
         </VStack>
       </HStack>

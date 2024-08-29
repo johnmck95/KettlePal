@@ -8,6 +8,7 @@ interface TimerProps {
   isActive: boolean;
   setIsActive: (value: boolean) => void;
   setTime: (elapsedSeconds: number) => void;
+  size?: "sm" | "md";
 }
 
 // NOTE: The parent component is responsible for setting the interval.
@@ -17,6 +18,7 @@ export default function Timer({
   isActive,
   setIsActive,
   setTime,
+  size = "md",
 }: TimerProps) {
   function startOrResume() {
     setIsActive(true);
@@ -50,12 +52,12 @@ export default function Timer({
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
-    <Stack
-      direction={["row", "column"]}
-      justifyContent={"center"}
-      alignItems="center"
-    >
-      <Box position="relative" width="60px" height="60px">
+    <Stack direction="row" justifyContent={"center"} alignItems="center">
+      <Box
+        position="relative"
+        width={size === "sm" ? "50px" : "60px"}
+        height={size === "sm" ? "50px" : "60px"}
+      >
         {/* Background Circle */}
         <Box
           position="absolute"
@@ -86,7 +88,15 @@ export default function Timer({
             w="100%"
             m="0"
             p="0"
-            fontSize={seconds > 3600 ? "8px" : "xs"}
+            fontSize={
+              size === "sm"
+                ? seconds >= 3600
+                  ? "7px"
+                  : "10px"
+                : seconds >= 3600
+                ? "9px"
+                : "sm"
+            }
           >
             <b>{formatTime(seconds)}</b>
           </Text>
@@ -107,7 +117,7 @@ export default function Timer({
           }}
         />
       </Box>
-      <Stack direction={["column", "row"]}>
+      <Stack direction={"column"}>
         <Button size="xs" onClick={onOpen} variant="secondary" w="60px">
           Reset
         </Button>
