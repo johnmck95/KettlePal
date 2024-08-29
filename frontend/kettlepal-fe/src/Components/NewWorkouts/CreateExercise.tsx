@@ -94,7 +94,7 @@ export default function CreateExercise({
       clearInterval(interval);
     }
     return () => clearInterval(interval);
-  }, [timerIsActive, exercise.elapsedSeconds]);
+  }, [timerIsActive, exercise.elapsedSeconds, setTime]);
 
   const titleIsInvalid = !exercise.title;
   const weightIsInvalid =
