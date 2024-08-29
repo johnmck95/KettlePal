@@ -87,11 +87,22 @@ export default function CreateWorkout() {
   );
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [formHasErrors, setFormHasErrors] = useState<boolean>(false);
-  // TODO: Remove me when you hookup Timer2
   const [timerIsActive, setTimerIsActive] = useState(false);
   const { uid: userUid } = useUser();
 
-  // TODO: Remove me when you hookup Timer2
+  // Update workout timer every 1s
+  useEffect(() => {
+    let interval: NodeJS.Timeout | undefined = undefined;
+    if (timerIsActive) {
+      interval = setInterval(() => {
+        setTime(state.elapsedSeconds + 1);
+      }, 1000);
+    } else if (!timerIsActive && state.elapsedSeconds !== 0) {
+      clearInterval(interval);
+    }
+    return () => clearInterval(interval);
+  }, [timerIsActive, state.elapsedSeconds]);
+
   const setTime = (elapsedSeconds: number) => {
     setState((prevState: CreateWorkoutState) => ({
       ...prevState,
@@ -277,15 +288,13 @@ export default function CreateWorkout() {
           />
         </FormControl>
 
-        {/* TODO NEXT: Remove the old timer, hookup Timer2 to state, migrate to to store
-        ellapsed time rather than starTime and EndTime */}
-
         {/* TIMER */}
         <VStack justifyContent={"flex-end"} alignItems={"center"}>
           <FormLabel fontSize={["sm", "lg"]} m="0px">
             <b>Elapsed Time</b>
           </FormLabel>
           <Timer
+            seconds={state.elapsedSeconds}
             isActive={timerIsActive}
             setIsActive={setTimerIsActive}
             setTime={setTime}

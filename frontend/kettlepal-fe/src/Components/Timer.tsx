@@ -1,25 +1,29 @@
 import { Text, Button, Box, Stack, useDisclosure } from "@chakra-ui/react";
-import React, { useState, useEffect } from "react";
+import React from "react";
 import theme from "../Constants/theme";
 import ConfirmModal from "./ConfirmModal";
 
 interface TimerProps {
+  seconds: number;
   isActive: boolean;
   setIsActive: (value: boolean) => void;
   setTime: (elapsedSeconds: number) => void;
 }
 
-// BUG: when you "hide details" or "See details" of a workout, 'seconds' is reset.
-export default function Timer({ isActive, setIsActive, setTime }: TimerProps) {
-  const [seconds, setSeconds] = useState(0);
-
+// NOTE: The parent component is responsible for setting the interval.
+// This enables the timer to continue working even when removed from the DOM.
+export default function Timer({
+  seconds,
+  isActive,
+  setIsActive,
+  setTime,
+}: TimerProps) {
   function startOrResume() {
     setIsActive(true);
     setTime(seconds);
   }
 
   function onReset() {
-    setSeconds(0);
     setIsActive(false);
     onClose();
     setTime(0);
@@ -42,19 +46,6 @@ export default function Timer({ isActive, setIsActive, setTime }: TimerProps) {
       return `${getHours}:${getMinutes}:${getSeconds}`;
     }
   };
-
-  // Every 1s, update the elapsed time
-  useEffect(() => {
-    let interval: NodeJS.Timeout | undefined = undefined;
-    if (isActive) {
-      interval = setInterval(() => {
-        setSeconds((prevTime) => prevTime + 1);
-      }, 1000);
-    } else if (!isActive && seconds !== 0) {
-      clearInterval(interval);
-    }
-    return () => clearInterval(interval);
-  }, [isActive, seconds]);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 

@@ -83,6 +83,19 @@ export default function CreateExercise({
     handleExercise("elapsedSeconds", elapsedSeconds, exerciseIndex);
   };
 
+  // Update exercise timer every 1s
+  useEffect(() => {
+    let interval: NodeJS.Timeout | undefined = undefined;
+    if (timerIsActive) {
+      interval = setInterval(() => {
+        setTime(exercise.elapsedSeconds + 1);
+      }, 1000);
+    } else if (!timerIsActive && exercise.elapsedSeconds !== 0) {
+      clearInterval(interval);
+    }
+    return () => clearInterval(interval);
+  }, [timerIsActive, exercise.elapsedSeconds]);
+
   const titleIsInvalid = !exercise.title;
   const weightIsInvalid =
     !!exercise.weight === false && !!exercise.weightUnit === true;
@@ -448,6 +461,7 @@ export default function CreateExercise({
                   Elapsed Time
                 </FormLabel>
                 <Timer
+                  seconds={exercise.elapsedSeconds}
                   isActive={timerIsActive}
                   setIsActive={setTimerIsActive}
                   setTime={setTime}
