@@ -85,12 +85,15 @@ function ViewDetailedExercise({
             />
           )}
           {!!sets && !!reps && (
-            <Detail title={"Total Reps"} value={`${sets * reps}`} />
+            <Detail
+              title={"Total Reps"}
+              value={`${(sets * reps).toLocaleString()}`}
+            />
           )}
           {!!sets && !!reps && !!weight && !!weightUnit && (
             <Detail
               title={"Work Capacity"}
-              value={`${sets * reps * weight} ${weightUnit}`}
+              value={`${(sets * reps * weight).toLocaleString()} ${weightUnit}`}
             />
           )}
         </Flex>
