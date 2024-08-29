@@ -25,7 +25,7 @@ export default function AddComment({
   return (
     <Box
       w="100%"
-      border="1px solid grey"
+      border={`1px solid ${theme.colors.gray[300]}`}
       borderRadius={"5px"}
       p="0rem 0.5rem"
       maxW={maxWidth}
