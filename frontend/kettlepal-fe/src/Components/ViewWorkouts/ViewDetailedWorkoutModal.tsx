@@ -31,12 +31,12 @@ function Detail({
   return (
     <VStack gap={0} minWidth={variant === "sm" ? "80px" : "120px"}>
       <Text
-        fontSize={variant === "sm" ? "8px" : "xs"}
+        fontSize={variant === "sm" ? ["8px", "12px"] : ["xs", "sm"]}
         color={theme.colors.grey[700]}
       >
         {title}
       </Text>
-      <Text fontSize={variant === "sm" ? "14px" : "lg"}>
+      <Text fontSize={variant === "sm" ? ["14px", "18px"] : ["lg", "xl"]}>
         <b>{value}</b>
       </Text>
     </VStack>
