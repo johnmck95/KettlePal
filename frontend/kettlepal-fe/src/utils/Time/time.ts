@@ -17,3 +17,39 @@ export function getCurrentDate(): string {
 
   return `${year}-${month}-${day}`;
 }
+
+export function formatDurationLong(seconds: number): string {
+  const hrs = Math.floor(seconds / 3600);
+  const mins = Math.floor((seconds % 3600) / 60);
+  const secs = seconds % 60;
+
+  let result = "";
+
+  if (hrs > 0) {
+    result += `${hrs} hour${hrs > 1 ? "s" : ""} `;
+  }
+
+  if (mins > 0 || hrs > 0) {
+    result += `${mins} minute${mins > 1 ? "s" : ""} `;
+  }
+
+  if (secs > 0) {
+    result += `${secs} second${secs > 1 ? "s" : ""}`;
+  }
+
+  return result;
+}
+
+export function formatDurationShort(seconds: number): string {
+  const hrs = Math.floor(seconds / 3600);
+  const mins = Math.floor((seconds % 3600) / 60);
+  const secs = seconds % 60;
+
+  const formattedHours = hrs > 0 ? `${hrs.toString().padStart(2, "0")}:` : "";
+  const formattedMinutes = mins.toString().padStart(2, "0");
+  const formattedSeconds = secs.toString().padStart(2, "0");
+
+  let result = formattedHours + `${formattedMinutes}:${formattedSeconds}`;
+
+  return result;
+}

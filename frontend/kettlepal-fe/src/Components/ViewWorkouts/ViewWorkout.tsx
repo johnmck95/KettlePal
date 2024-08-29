@@ -16,6 +16,7 @@ import { FaTimes } from "react-icons/fa";
 import { gql, useMutation } from "@apollo/client";
 import ConfirmModal from "../ConfirmModal";
 import LoadingSpinner from "../LoadingSpinner";
+import ViewDetailedWorkoutModal from "./ViewDetailedWorkoutModal";
 
 const DELETE_WORKOUT_WITH_EXERCISES = gql`
   mutation deleteWorkoutWithExercises($workoutUid: ID!) {
@@ -63,6 +64,12 @@ export default function ViewWorkout({
     }
   }, [error]);
 
+  const {
+    isOpen: isOpenDetailedWorkout,
+    onOpen: onOpenDetailedWorkout,
+    onClose: onCloseDetailedWorkout,
+  } = useDisclosure();
+
   return (
     <>
       <HStack
@@ -74,6 +81,7 @@ export default function ViewWorkout({
         borderRadius="8px"
         bg="white"
         boxShadow={`0px 1px 4px ${theme.colors.grey[400]}`}
+        onClick={onOpenDetailedWorkout}
       >
         {loading ? (
           <LoadingSpinner size={16} />
@@ -112,6 +120,12 @@ export default function ViewWorkout({
             />
           </>
         )}
+
+        <ViewDetailedWorkoutModal
+          workoutWithExercises={workoutWithExercises}
+          isOpen={isOpenDetailedWorkout}
+          onClose={onCloseDetailedWorkout}
+        />
       </HStack>
 
       {/* MUTATION ERROR */}

@@ -1,3 +1,5 @@
+import { Exercise } from "../../Constants/types";
+
 export function formatReps(
   reps: number,
   repsDisplay: string // l/r | std | (1,2) | (1,2,3) | (1,2,3,4) | (1,2,3,4,5)
@@ -59,5 +61,24 @@ export function formatReps(
         `formatReps was not able to recognice the ${repsDisplay} string. Exiting gracefully..`
       );
       return "----";
+  }
+}
+
+export function formatExerciseString(exercise: Exercise) {
+  const { title, weight, weightUnit, sets, reps, repsDisplay, comment } =
+    exercise;
+
+  // EX: Swing(32kg): 10x5/5
+  if (title && weight && weightUnit && sets && reps && repsDisplay) {
+    return `${title} (${weight}${weightUnit}): ${sets}x${formatReps(
+      reps,
+      repsDisplay
+    )} `;
+  } // EX: Pistol Squat: 5x6/6
+  else if (title && reps && repsDisplay && sets) {
+    return `${title}: ${sets}x${formatReps(reps, repsDisplay)}`;
+  } // EX: Plank: 45/45/45
+  else {
+    return `${title}: ${comment}`;
   }
 }
