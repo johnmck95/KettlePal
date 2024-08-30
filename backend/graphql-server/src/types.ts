@@ -31,7 +31,7 @@ export type Exercise = {
   uid: string;
   workoutUid: string;
   title: string;
-  weight: number;
+  weight: string | number;
   weightUnit: string;
   sets: string | number;
   reps: string | number;

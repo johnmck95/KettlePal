@@ -15,7 +15,7 @@ export const ExerciseTitles = [
   "Plank",
 ];
 
-export const KettlbellWeightsKG = [14, 20, 24, 28, 32];
+export const KettlbellWeightsKG = ["14", "20", "24", "28", "32"];
 
 export const WeightOptions = [
   {

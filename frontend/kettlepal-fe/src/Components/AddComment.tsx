@@ -27,7 +27,7 @@ export default function AddComment({
       w="100%"
       border={`1px solid ${theme.colors.gray[300]}`}
       borderRadius={"5px"}
-      p="0rem 0.5rem"
+      p="0.15rem 0.5rem"
       maxW={maxWidth}
       bg="white"
     >

@@ -34,7 +34,7 @@ export type CreateWorkoutState = {
   elapsedSeconds: number;
   exercises: Array<{
     title: string;
-    weight: number;
+    weight: string;
     weightUnit: string;
     sets: string;
     reps: string;
@@ -132,7 +132,7 @@ export default function CreateWorkout() {
         ...prevState.exercises,
         {
           title: "",
-          weight: 0,
+          weight: "",
           weightUnit: "kg",
           sets: "",
           reps: "",

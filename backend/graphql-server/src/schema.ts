@@ -94,7 +94,7 @@ const typeDefs = `#graphql
     input AddExerciseInput {
         title: String!
         weight: String
-        weightUnit: String!
+        weightUnit: String
         sets: String
         reps: String
         repsDisplay: String

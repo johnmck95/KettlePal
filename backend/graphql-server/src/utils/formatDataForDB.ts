@@ -17,9 +17,13 @@ export function formatExercisesForDB(
       elapsedSeconds,
     } = exercise;
 
+    const convertedWeight = isNaN(parseFloat(weight as string))
+      ? null
+      : parseFloat(weight as string);
+
     return {
       title,
-      weight,
+      weight: convertedWeight,
       weightUnit,
       // Frontend collects strings, but we store these values as floats in the DB.
       sets: parseFloat(sets as string),

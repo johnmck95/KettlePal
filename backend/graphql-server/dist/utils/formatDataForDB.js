@@ -3,9 +3,12 @@ export function formatExercisesForDB(workoutWithExercises) {
     const { exercises } = workoutWithExercises;
     const formattedExercises = exercises.map((exercise) => {
         const { title, weight, weightUnit, sets, reps, repsDisplay, comment, elapsedSeconds, } = exercise;
+        const convertedWeight = isNaN(parseFloat(weight))
+            ? null
+            : parseFloat(weight);
         return {
             title,
-            weight,
+            weight: convertedWeight,
             weightUnit,
             // Frontend collects strings, but we store these values as floats in the DB.
             sets: parseFloat(sets),
