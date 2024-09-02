@@ -162,7 +162,7 @@ export default function ViewDetailedWorkoutModal({
                 margin="0"
                 padding="0"
                 sx={{
-                  "& > *:not(:first-child)": {
+                  "& > *:not(:first-of-type)": {
                     borderTop: showDetails
                       ? `1px solid ${theme.colors.feldgrau[100]}`
                       : "none",
@@ -172,6 +172,7 @@ export default function ViewDetailedWorkoutModal({
                 {/* EXERCISES */}
                 {exercises.map((exercise) => (
                   <ViewDetailedExercise
+                    key={exercise.uid}
                     exercise={exercise}
                     showDetails={showDetails}
                   />
