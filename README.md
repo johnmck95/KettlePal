@@ -21,24 +21,25 @@ An overbuilt "just-for-me" learning project that is made to keep track of my per
 - Backend
   - [x] Design relational DB structure
   - [x] Knex/Apollo configuration
-  - [x] Create DB migration files
-  - [x] Create DB seed script
+  - [x] DB migration files
+  - [x] DB seed scripts
   - [x] Create Apollo/GQL Server
   - [x] Make basic CRUD Resolvers/Mutations
+  - [x] Server-side validation for adding new workouts & exercises
 - Frontend
   - [x] React/TypeScript/Chakra/Apollo Configuration
-  - [x] Build the page structure
   - [x] Themeing/colors
-  - [x] Setup a page for viewing past workouts/exercises
-  - [x] Setup a page for entering new workouts/exercises
-  - [x] Allow mid-workout progressd tracking
+  - [x] Create a form for entering new workouts/exercises with client side validation
+  - [x] Create new-workout progress tracking while entering new workouts
+  - [x] Create a modal to show details on a specific workout
   - [x] Get Progressive Web App downloadable for mobile.
   - [x] Implement swipable deletion for new exercises
 
 ### Roadmap
 
-1. Login flow with auth tokens for the test account and myself
-2. Make the current UI actually look nice 😂
-3. Make past workouts open a modal with full details
-4. Create mutation to edit a posted workout
-5. Use D3 to create visualzation that provide genuine exercise insights
+1. Login flow with JWT for the test account and myself
+2. Allow editing of a past workout/exercise
+3. Use D3 to create visualzations that provide genuine exercise insights
+   - New page dedicated to progress tracking
+   - Link relevant visualization in the workout modal for tracking
+4. Integrate with Strava API to get data from bike rides and runs
