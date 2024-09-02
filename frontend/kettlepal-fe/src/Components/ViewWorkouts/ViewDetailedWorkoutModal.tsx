@@ -14,9 +14,8 @@ import {
 import React from "react";
 import theme from "../../Constants/theme";
 import { WorkoutWithExercises } from "../../Constants/types";
-import CalendarWidget from "../CalendarWidget";
 import { formatExerciseString } from "../../utils/Exercises/exercises";
-import { formatDurationShort } from "../../utils/Time/time";
+import { formatDurationShort, postgresToDayJs } from "../../utils/Time/time";
 import { totalWorkoutWorkCapacity } from "../../utils/Workouts/workouts";
 
 function Detail({
@@ -122,18 +121,17 @@ export default function ViewDetailedWorkoutModal({
         <ModalContent padding="1rem 0.5rem" m="1rem">
           <ModalCloseButton />
           <ModalBody p="1rem" overflow="scroll">
-            <VStack alignItems="flex-start">
-              {/* CALENDAR AND WORKOUT COMMENT */}
-              <HStack
-                w="100%"
-                justifyContent={"space-between"}
-                alignItems="flex-end"
-              >
-                <CalendarWidget date={createdAt} w="4rem" />
-                <Text ml="0.5rem" color={theme.colors.grey[700]}>
-                  <i>{comment}</i>
-                </Text>
-              </HStack>
+            <VStack alignItems="flex-start" gap={0}>
+              {/* DATE */}
+              <Text fontSize={["lg", "2xl"]}>
+                <b>
+                  {postgresToDayJs(createdAt).format("dddd, MMMM DD, YYYY")}
+                </b>
+              </Text>
+              {/* WORKOUT COMMENT */}
+              <Text fontSize={["sm", "md"]} color={theme.colors.grey[700]}>
+                <i>{comment}</i>
+              </Text>
               {/* ELAPSED TIME AND TOTAL WORK CAPACITY */}
               <HStack w="100%" justifyContent="space-evenly" my="1rem">
                 <Detail
@@ -166,7 +164,7 @@ export default function ViewDetailedWorkoutModal({
                 sx={{
                   "& > *:not(:first-child)": {
                     borderTop: showDetails
-                      ? `1px solid ${theme.colors.lion[100]}`
+                      ? `1px solid ${theme.colors.feldgrau[100]}`
                       : "none",
                   },
                 }}
