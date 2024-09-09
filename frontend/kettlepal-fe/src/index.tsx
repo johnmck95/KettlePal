@@ -4,15 +4,29 @@ import * as ReactDOM from "react-dom/client";
 import { App } from "./App";
 import reportWebVitals from "./reportWebVitals";
 import * as serviceWorker from "./serviceWorker";
-import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+import {
+  ApolloClient,
+  InMemoryCache,
+  ApolloProvider,
+  createHttpLink,
+} from "@apollo/client";
 import { BrowserRouter } from "react-router-dom";
+
+const httpLink = createHttpLink({
+  uri:
+    process.env.NODE_ENV === "production"
+      ? "https://kettlepal.onrender.com/"
+      : "http://localhost:4000/graphql",
+  credentials: "include", // This is crucial
+});
 
 const client = new ApolloClient({
   uri:
     process.env.NODE_ENV === "production"
       ? "https://kettlepal.onrender.com/"
-      : "http://localhost:4000/",
+      : "http://localhost:4000/graphql",
   cache: new InMemoryCache(),
+  link: httpLink,
 });
 
 const container = document.getElementById("root");
