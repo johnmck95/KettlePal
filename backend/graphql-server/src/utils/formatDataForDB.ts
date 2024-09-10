@@ -17,19 +17,21 @@ export function formatExercisesForDB(
       elapsedSeconds,
     } = exercise;
 
-    const convertedWeight = isNaN(parseFloat(weight as string))
-      ? null
-      : parseFloat(weight as string);
-
     return {
       title,
-      weight: convertedWeight,
-      weightUnit,
+      weight: isNaN(parseFloat(weight as string))
+        ? null
+        : parseFloat(weight as string),
+      weightUnit: weightUnit !== "" ? weightUnit : null,
       // Frontend collects strings, but we store these values as floats in the DB.
-      sets: parseFloat(sets as string),
-      reps: parseFloat(reps as string),
-      repsDisplay,
-      comment,
+      sets: isNaN(parseFloat(sets as string))
+        ? null
+        : parseFloat(sets as string),
+      reps: isNaN(parseFloat(reps as string))
+        ? null
+        : parseFloat(reps as string),
+      repsDisplay: repsDisplay !== "" ? repsDisplay : null,
+      comment: comment !== "" ? comment : null,
       elapsedSeconds,
     };
   });

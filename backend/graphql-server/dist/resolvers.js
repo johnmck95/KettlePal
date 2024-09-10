@@ -171,6 +171,8 @@ const resolvers = {
             }
             const newExercises = formatExercisesForDB(workoutWithExercises);
             const newWorkout = formatWorkoutForDB(workoutWithExercises, userUid);
+            console.log("newExercises: ", newExercises);
+            console.log("newWorkout: ", newWorkout);
             const isWorkoutValid = verifyWorkout(newWorkout);
             if (isWorkoutValid.result === false) {
                 throw new Error(isWorkoutValid.reason);
@@ -186,7 +188,9 @@ const resolvers = {
                         const [workout] = (await trx("workouts")
                             .returning("*")
                             .insert(newWorkout));
+                        // Failing in this block
                         const [exercises] = (await Promise.all(newExercises.map((exercise) => {
+                            // console.log(exercise);
                             return trx("exercises")
                                 .returning("*")
                                 .insert({
@@ -194,6 +198,7 @@ const resolvers = {
                                 workoutUid: workout.uid,
                             });
                         })));
+                        console.log("MADE IT");
                         await trx.commit();
                         if (trx.isCompleted()) {
                             addedWorkoutWithExercises = {
@@ -204,6 +209,7 @@ const resolvers = {
                         return addedWorkoutWithExercises;
                     }
                     catch (error) {
+                        console.log(error);
                         await trx.rollback();
                         throw new Error("Failed to create workout with exercises.");
                     }

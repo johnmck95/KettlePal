@@ -1,5 +1,5 @@
 import React from "react";
-import { Box, Center } from "@chakra-ui/react";
+import { Box, Center, Text } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import theme from "../Constants/theme";
 import { postgresToDayJs } from "../utils/Time/time";
@@ -13,7 +13,7 @@ export default function CalendarWidget({
   w?: string;
   h?: string;
 }) {
-  const covnertedDate: dayjs.Dayjs = postgresToDayJs(date);
+  const convertedDate: dayjs.Dayjs = postgresToDayJs(date);
 
   return (
     <Box
@@ -27,14 +27,22 @@ export default function CalendarWidget({
         h="35%"
         bg={theme.colors.feldgrau[500]}
         color={theme.colors.white}
+        overflow="hidden"
+        whiteSpace="nowrap"
       >
-        {covnertedDate.format("MMMM")}
+        <Text overflow="hidden" textOverflow={"ellipsis"}>
+          {convertedDate.format("MMM")}
+        </Text>
       </Center>
       <Center fontSize="x-large" h="50%">
-        {covnertedDate.format("DD")}
+        <Text overflow="hidden" textOverflow={"ellipsis"}>
+          {convertedDate.format("DD")}
+        </Text>
       </Center>
       <Center fontSize={"xx-small"} h="15%">
-        {covnertedDate.format("YYYY")}
+        <Text overflow="hidden" textOverflow={"ellipsis"}>
+          {convertedDate.format("YYYY")}
+        </Text>
       </Center>
     </Box>
   );
