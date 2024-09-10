@@ -46,13 +46,6 @@ export default function Login() {
     }));
   }
 
-  /**
-   * WHEN YOU COME BACK TO THIS
-   * You made a pretty Login.tsx component, and just started hooking it up to the backend.
-   * - hash passwords
-   * - https
-   */
-
   const { user, login } = useUser();
   const navigate = useNavigate();
 
@@ -60,15 +53,15 @@ export default function Login() {
     onCompleted: (data) => {
       if (data.login) {
         login(data.login);
-        navigate("/new-workout"); // Redirect after successful login
+        navigate("/new-workout");
       } else {
-        // Handle login failure
         console.error("Login failed: ", error);
       }
     },
   });
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
     setState((prevState) => ({ ...prevState, submitted: true }));
     try {
       await loginMutation({
@@ -157,7 +150,7 @@ export default function Login() {
             w="100%"
             mt="2rem"
             type="submit"
-            isLoading={loading} // TODO: Add loading state when Query is setup
+            isLoading={loading}
             _hover={{ bg: theme.colors.green[100] }}
             onClick={handleSubmit}
           >

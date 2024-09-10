@@ -19,9 +19,12 @@ export default function Tray() {
       navigate("/");
     },
   });
+
   const handleLogout = async () => {
     try {
+      // Updates the UserContext
       logout();
+      // Invalidates tokens on the server
       await logoutMutation();
     } catch (e) {
       console.log("Error logging out: ", e);

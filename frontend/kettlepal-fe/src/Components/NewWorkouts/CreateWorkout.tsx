@@ -249,7 +249,7 @@ export default function CreateWorkout() {
   if (loading) {
     return (
       <Center>
-        <LoadingSpinner size={24} />
+        <LoadingSpinner />
       </Center>
     );
   }

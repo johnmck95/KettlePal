@@ -35,14 +35,17 @@ const corsOptions = {
   methods: ["GET", "POST", "OPTIONS", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
 };
-
 app.use(cors(corsOptions));
-app.options("*", cors(corsOptions)); // Enable pre-flight requests for all routes
+
+// Enable pre-flight requests for all routes
+app.options("*", cors(corsOptions));
 
 const httpServer = http.createServer(app);
 
 // Add cookie-parser middleware
 app.use(cookieParser());
+
+// Add JSON-parsing middleware
 app.use(bodyParser.json());
 
 // JWT verification middleware
@@ -61,7 +64,7 @@ app.use(async (req: any, res, next) => {
         .where({ uid: data.userUid })
         .first();
 
-      // token has been invalidated
+      // Token has been invalidated
       if (!user || user.tokenCount !== data.tokenCount) {
         throw new Error("Invalid token");
       }
@@ -78,7 +81,6 @@ app.use(async (req: any, res, next) => {
       console.log(`Error refreshing tokens: ${e}`);
     }
   }
-  // }
   next();
 });
 
@@ -91,6 +93,7 @@ const server = new ApolloServer({
 async function startApolloServer() {
   await server.start();
 
+  // Set up GraphQL endpoint with CORS, Apollo middleware, and user context
   app.use(
     "/graphql",
     cors(corsOptions),
@@ -104,6 +107,7 @@ async function startApolloServer() {
     })
   );
 
+  // Finally, start the server
   await new Promise<void>((resolve) =>
     httpServer.listen({ port: 4000 }, resolve)
   );

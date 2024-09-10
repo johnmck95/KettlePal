@@ -11,8 +11,7 @@ const PrivateRoute: React.FC<PrivateRouteProps> = ({ children }) => {
   const location = useLocation();
 
   if (!user) {
-    // Redirect to the login page if there's no user
-    // Save the current location they were trying to go to
+    // Redirect to the login page, save the current location they were trying to go to.
     return <Navigate to="/" state={{ from: location }} replace />;
   }
 

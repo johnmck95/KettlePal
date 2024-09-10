@@ -10,14 +10,14 @@ export function createTokens(user: User) {
     { userUid: user.uid, tokenCount: user.tokenCount },
     process.env.REFRESH_TOKEN_SECRET,
     {
-      expiresIn: "15min",
+      expiresIn: "30days",
     }
   );
   const accessToken = sign(
     { userUid: user.uid },
     process.env.ACCESS_TOKEN_SECRET,
     {
-      expiresIn: "30days",
+      expiresIn: "15mins",
     }
   );
 
