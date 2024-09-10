@@ -11,20 +11,15 @@ import {
   createHttpLink,
 } from "@apollo/client";
 import { BrowserRouter } from "react-router-dom";
+import { backendURL } from "./utils/urls";
 
 const httpLink = createHttpLink({
-  uri:
-    process.env.NODE_ENV === "production"
-      ? "https://kettlepal.onrender.com/"
-      : "http://localhost:4000/graphql",
-  credentials: "include", // This is crucial
+  uri: backendURL(),
+  credentials: "include",
 });
 
 const client = new ApolloClient({
-  uri:
-    process.env.NODE_ENV === "production"
-      ? "https://kettlepal.onrender.com/"
-      : "http://localhost:4000/graphql",
+  uri: backendURL(),
   cache: new InMemoryCache(),
   link: httpLink,
 });

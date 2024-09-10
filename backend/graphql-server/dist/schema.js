@@ -37,7 +37,6 @@ const typeDefs = `#graphql
 
     # Required: Defines the entry points to the graph
     type Query {
-        me: User
         users: [User]
         user(uid: ID!): User
         workouts: [Workout]

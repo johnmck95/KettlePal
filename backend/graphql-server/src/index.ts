@@ -12,15 +12,9 @@ import { refreshTokens } from "./utils/auth.js";
 const { verify } = pkg;
 import knexConfig from "../knexfile.js";
 import knex from "knex";
+import { allowedOrigins, backendURL } from "./utils/urls.js";
 
 const app = express();
-
-const allowedOrigins = [
-  "http://localhost:3000",
-  "http://localhost:4000",
-  "https://kettlepal.netlify.app",
-  "https://kettlepal.onrender.com",
-];
 
 // CORS configuration
 const corsOptions = {
@@ -111,7 +105,7 @@ async function startApolloServer() {
   await new Promise<void>((resolve) =>
     httpServer.listen({ port: 4000 }, resolve)
   );
-  console.log(`🚀 Server ready at http://localhost:4000/graphql`);
+  console.log(`🚀 Server ready at ${backendURL()}`);
 }
 
 startApolloServer().catch((err) => {

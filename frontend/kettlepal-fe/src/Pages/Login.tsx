@@ -13,6 +13,7 @@ import {
   AlertDescription,
   InputRightElement,
   InputGroup,
+  CloseButton,
 } from "@chakra-ui/react";
 import react, { ChangeEvent, useEffect, useState } from "react";
 import theme from "../Constants/theme";
@@ -212,6 +213,10 @@ export default function Login() {
             <AlertIcon />
             <AlertDescription>{error?.message}</AlertDescription>
           </HStack>
+          <CloseButton
+            alignSelf="flex-start"
+            onClick={() => setShowServerError(false)}
+          />
         </Alert>
       )}
     </Center>

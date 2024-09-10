@@ -1,8 +1,6 @@
 import knexConfig from "../knexfile.js";
 import knex from "knex";
 import * as bcrypt from "bcrypt";
-import pkg from "jsonwebtoken";
-const { sign, verify } = pkg;
 import { verifyExercises } from "./utils/verifyExercises.js";
 import { verifyWorkout } from "./utils/verifyWorkout.js";
 import { formatExercisesForDB, formatWorkoutForDB, } from "./utils/formatDataForDB.js";
@@ -13,13 +11,6 @@ const knexInstance = knex(knexConfig);
 const resolvers = {
     // The top-level resolvers inside Query are the entry point resolvers for the graph, not nested queries like workout{ exercises{...} }
     Query: {
-        async me(_, __, { req }) {
-            // JWT Auth - If the user is authenticated, their UID will be on the request
-            if (!req.userUid) {
-                throw new NotAuthorizedError();
-            }
-            return await knexInstance("users").where({ uid: req.userUid }).first();
-        },
         async users(_, __, { req }) {
             if (!req.userUid) {
                 throw new NotAuthorizedError();
@@ -171,8 +162,6 @@ const resolvers = {
             }
             const newExercises = formatExercisesForDB(workoutWithExercises);
             const newWorkout = formatWorkoutForDB(workoutWithExercises, userUid);
-            console.log("newExercises: ", newExercises);
-            console.log("newWorkout: ", newWorkout);
             const isWorkoutValid = verifyWorkout(newWorkout);
             if (isWorkoutValid.result === false) {
                 throw new Error(isWorkoutValid.reason);
@@ -188,9 +177,7 @@ const resolvers = {
                         const [workout] = (await trx("workouts")
                             .returning("*")
                             .insert(newWorkout));
-                        // Failing in this block
                         const [exercises] = (await Promise.all(newExercises.map((exercise) => {
-                            // console.log(exercise);
                             return trx("exercises")
                                 .returning("*")
                                 .insert({
@@ -198,7 +185,6 @@ const resolvers = {
                                 workoutUid: workout.uid,
                             });
                         })));
-                        console.log("MADE IT");
                         await trx.commit();
                         if (trx.isCompleted()) {
                             addedWorkoutWithExercises = {
@@ -209,7 +195,6 @@ const resolvers = {
                         return addedWorkoutWithExercises;
                     }
                     catch (error) {
-                        console.log(error);
                         await trx.rollback();
                         throw new Error("Failed to create workout with exercises.");
                     }
@@ -220,62 +205,55 @@ const resolvers = {
                 throw new Error("Failed to create workout with exercises.");
             }
         },
-        // async addWorkout(
-        //   _,
-        //   {
-        //     userUid,
-        //     workout,
-        //   }: {
-        //     userUid: String;
-        //     workout: AddOrEditWorkoutInput;
-        //   }
-        // ) {
-        //   try {
-        //     let newWorkout = {
-        //       ...workout,
-        //       userUid: userUid,
-        //     };
-        //     await knexInstance("workouts").insert(newWorkout);
-        //     const insertedWorkout = await knexInstance("workouts")
-        //       .where({
-        //         comment: workout.comment,
-        //         userUid: userUid,
-        //       })
-        //       .first();
-        //     return insertedWorkout;
-        //   } catch (error) {
-        //     console.error("Error adding workout:", error);
-        //     throw error;
-        //   }
-        // },
-        // async addExercise(
-        //   _,
-        //   {
-        //     workoutUid,
-        //     exercise,
-        //   }: { workoutUid: String; exercise: AddOrEditExerciseInput }
-        // ) {
-        //   try {
-        //     let newExercise = {
-        //       ...exercise,
-        //       workoutUid: workoutUid,
-        //     };
-        //     await knexInstance("exercises").insert(newExercise);
-        //     const insertedExercise = await knexInstance("exercises")
-        //       .where({
-        //         title: exercise.title,
-        //         weight: exercise.weight,
-        //         sets: exercise.sets,
-        //         reps: exercise.reps,
-        //         workoutUid: workoutUid,
-        //       })
-        //       .first();
-        //     return insertedExercise;
-        //   } catch (error) {
-        //     console.error("Error adding exercise:", error);
-        //     throw error;
-        //   }
-        // },
+        async addWorkout(_, { userUid, workout, }, { req }) {
+            if (!req.userUid || req.userUid !== userUid) {
+                throw new NotAuthorizedError();
+            }
+            try {
+                let newWorkout = {
+                    ...workout,
+                    userUid: userUid,
+                };
+                await knexInstance("workouts").insert(newWorkout);
+                const insertedWorkout = await knexInstance("workouts")
+                    .where({
+                    comment: workout.comment,
+                    userUid: userUid,
+                })
+                    .first();
+                return insertedWorkout;
+            }
+            catch (error) {
+                console.error("Error adding workout:", error);
+                throw error;
+            }
+        },
+        async addExercise(_, { workoutUid, exercise, }, { req }) {
+            if (!req.userUid) {
+                throw new NotAuthorizedError();
+            }
+            try {
+                let newExercise = {
+                    ...exercise,
+                    workoutUid: workoutUid,
+                };
+                await knexInstance("exercises").insert(newExercise);
+                const insertedExercise = await knexInstance("exercises")
+                    .where({
+                    title: exercise.title,
+                    weight: exercise.weight,
+                    sets: exercise.sets,
+                    reps: exercise.reps,
+                    workoutUid: workoutUid,
+                })
+                    .first();
+                return insertedExercise;
+            }
+            catch (error) {
+                console.error("Error adding exercise:", error);
+                throw error;
+            }
+        },
         async updateUser(_, args, { req }) {
             if (!req.userUid || req.userUid !== args.uid) {
                 throw new NotAuthorizedError();
