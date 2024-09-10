@@ -11,6 +11,8 @@ import {
   HStack,
   AlertIcon,
   AlertDescription,
+  InputRightElement,
+  InputGroup,
 } from "@chakra-ui/react";
 import react, { ChangeEvent, useEffect, useState } from "react";
 import theme from "../Constants/theme";
@@ -37,6 +39,7 @@ export default function Login() {
     password: "",
     submitted: false,
   });
+  const [showPassword, setShowPassword] = react.useState(false);
 
   function handleChange(event: ChangeEvent<HTMLInputElement>): void {
     const { name, value } = event.target;
@@ -134,13 +137,32 @@ export default function Login() {
           {/* PASSWORD */}
           <FormControl isRequired isInvalid={passwordIsInvalid}>
             <FormLabel fontSize="xs">Password</FormLabel>
-            <Input
-              name="password"
-              value={state.password}
-              onChange={handleChange}
-              type="password"
-              focusBorderColor={theme.colors.green[300]}
-            />
+            <InputGroup>
+              <Input
+                name="password"
+                value={state.password}
+                onChange={handleChange}
+                type={showPassword ? "text" : "password"}
+                focusBorderColor={theme.colors.green[300]}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") handleSubmit(event);
+                }}
+              />
+              <InputRightElement width="4.5rem">
+                <Button
+                  w="75px"
+                  h="80%"
+                  mr="0.25rem"
+                  variant="secondary"
+                  size="sm"
+                  onClick={() =>
+                    setShowPassword((prevShowPassword) => !prevShowPassword)
+                  }
+                >
+                  {showPassword ? "Hide" : "Show"}
+                </Button>
+              </InputRightElement>
+            </InputGroup>
             <FormErrorMessage>Password is required.</FormErrorMessage>
           </FormControl>
 
