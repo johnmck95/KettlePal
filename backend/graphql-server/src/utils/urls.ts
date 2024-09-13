@@ -13,6 +13,6 @@ export function frontendURL() {
 
 export function backendURL() {
   return process.env.NODE_ENV === "production"
-    ? "https://kettlepal.onrender.com/"
+    ? "https://kettlepal.onrender.com/graphql"
     : "http://localhost:4000/graphql";
 }
