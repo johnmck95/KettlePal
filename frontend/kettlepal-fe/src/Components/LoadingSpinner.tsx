@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Spinner, VStack, Text } from "@chakra-ui/react";
 import theme from "../Constants/theme";
 
-const LoadingSpinner = ({ size }: { size: string | number }) => {
+const LoadingSpinner = ({ size = 24 }: { size?: string | number }) => {
   const [showMessage, setShowMessage] = useState(false);
 
   useEffect(() => {

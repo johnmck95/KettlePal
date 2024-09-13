@@ -2,28 +2,24 @@ export type UserWithWorkouts = {
   user: {
     firstName: string;
     lastName: string;
-    workouts: [
-      {
+    workouts: {
+      uid: string;
+      comment: string;
+      elapsedSeconds: number;
+      createdAt: string;
+      exercises: {
         uid: string;
+        title: string;
+        weight: number;
+        weightUnit: string;
+        sets: number;
+        reps: number;
+        repsDisplay: string;
         comment: string;
         elapsedSeconds: number;
         createdAt: string;
-        exercises: [
-          {
-            uid: string;
-            title: string;
-            weight: number;
-            weightUnit: string;
-            sets: number;
-            reps: number;
-            repsDisplay: string;
-            comment: string;
-            elapsedSeconds: number;
-            createdAt: string;
-          }
-        ];
-      }
-    ];
+      }[];
+    }[];
   };
 };
 

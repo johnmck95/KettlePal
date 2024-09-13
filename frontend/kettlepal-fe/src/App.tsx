@@ -4,8 +4,10 @@ import theme from "./Constants/theme";
 import { Routes, Route } from "react-router-dom";
 import PastWorkouts from "./Pages/PastWorkouts";
 import NewWorkout from "./Pages/NewWorkout";
+import Login from "./Pages/Login";
 import Tray from "./Components/Tray";
-import UserProvider from "./Contexts/UserContext";
+import { UserProvider } from "./Contexts/UserContext";
+import PrivateRoute from "./Components/Auth/PrivateRoute";
 
 export const App = () => (
   <ChakraProvider theme={theme}>
@@ -16,8 +18,23 @@ export const App = () => (
         bg="radial-gradient(circle, rgba(242,242,242,1) 35%, rgba(247,247,245,1) 52%, rgba(250,249,246,1) 76%)"
       >
         <Routes>
-          <Route path="/" element={<PastWorkouts />} />
-          <Route path="/new-workout" element={<NewWorkout />} />
+          <Route path="/" element={<Login />} />
+          <Route
+            path="/workouts"
+            element={
+              <PrivateRoute>
+                <PastWorkouts />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/new-workout"
+            element={
+              <PrivateRoute>
+                <NewWorkout />
+              </PrivateRoute>
+            }
+          />
         </Routes>
       </Box>
       <Tray />

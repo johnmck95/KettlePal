@@ -88,7 +88,7 @@ export default function CreateWorkout() {
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [formHasErrors, setFormHasErrors] = useState<boolean>(false);
   const [timerIsActive, setTimerIsActive] = useState(false);
-  const { uid: userUid } = useUser();
+  const userUid = useUser().user?.uid ?? null;
 
   // Update workout timer every 1s
   useEffect(() => {
@@ -249,7 +249,7 @@ export default function CreateWorkout() {
   if (loading) {
     return (
       <Center>
-        <LoadingSpinner size={24} />
+        <LoadingSpinner />
       </Center>
     );
   }

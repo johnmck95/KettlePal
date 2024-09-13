@@ -3,18 +3,21 @@ export function formatExercisesForDB(workoutWithExercises) {
     const { exercises } = workoutWithExercises;
     const formattedExercises = exercises.map((exercise) => {
         const { title, weight, weightUnit, sets, reps, repsDisplay, comment, elapsedSeconds, } = exercise;
-        const convertedWeight = isNaN(parseFloat(weight))
-            ? null
-            : parseFloat(weight);
         return {
             title,
-            weight: convertedWeight,
-            weightUnit,
+            weight: isNaN(parseFloat(weight))
+                ? null
+                : parseFloat(weight),
+            weightUnit: weightUnit !== "" ? weightUnit : null,
             // Frontend collects strings, but we store these values as floats in the DB.
-            sets: parseFloat(sets),
-            reps: parseFloat(reps),
-            repsDisplay,
-            comment,
+            sets: isNaN(parseFloat(sets))
+                ? null
+                : parseFloat(sets),
+            reps: isNaN(parseFloat(reps))
+                ? null
+                : parseFloat(reps),
+            repsDisplay: repsDisplay !== "" ? repsDisplay : null,
+            comment: comment !== "" ? comment : null,
             elapsedSeconds,
         };
     });

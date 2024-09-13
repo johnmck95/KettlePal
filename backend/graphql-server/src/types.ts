@@ -8,6 +8,7 @@ export type User = {
   password: string;
   isAuthorized: boolean;
   createdAt: string;
+  tokenCount: number;
 };
 
 export type AddOrEditUserInput = Omit<

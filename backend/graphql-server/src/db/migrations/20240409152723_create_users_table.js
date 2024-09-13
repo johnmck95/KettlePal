@@ -7,6 +7,7 @@ export async function up(knex) {
     table.string("password", 255).notNullable();
     table.boolean("isAuthorized").defaultTo(false);
     table.timestamp("createdAt").defaultTo(knex.fn.now());
+    table.integer("tokenCount").defaultTo(0).notNullable();
   });
 }
 

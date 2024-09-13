@@ -1,10 +1,10 @@
 import React from "react";
-import { useUser } from "../Contexts/UserContext";
 import { useQuery, gql } from "@apollo/client";
 import LoadingSpinner from "../Components/LoadingSpinner";
 import { VStack, Flex, Text, Center } from "@chakra-ui/react";
 import { UserWithWorkouts, WorkoutWithExercises } from "../Constants/types";
 import ViewWorkout from "../Components/ViewWorkouts/ViewWorkout";
+import { useUser } from "../Contexts/UserContext";
 
 const WORKOUTS_WITH_EXERCISES_QUERY = gql`
   query UserWithWorkouts($uid: ID!) {
@@ -34,16 +34,16 @@ const WORKOUTS_WITH_EXERCISES_QUERY = gql`
 `;
 
 export default function PastWorkouts() {
-  const user = useUser();
+  const { user } = useUser();
   const { loading, error, data, refetch } = useQuery<UserWithWorkouts>(
     WORKOUTS_WITH_EXERCISES_QUERY,
     {
-      variables: { uid: user.uid },
+      variables: { uid: user?.uid },
       fetchPolicy: "cache-first",
     }
   );
 
-  const noWorkouts = !data?.user?.workouts;
+  const noWorkouts = !data?.user?.workouts || data?.user?.workouts.length === 0;
 
   if (loading) {
     return (

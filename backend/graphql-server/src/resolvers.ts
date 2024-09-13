@@ -1,6 +1,6 @@
 import knexConfig from "../knexfile.js";
 import knex from "knex";
-import dayjs from "dayjs";
+import * as bcrypt from "bcrypt";
 import {
   UpdateUserArgs,
   AddOrEditUserInput,
@@ -17,6 +17,15 @@ import {
   formatExercisesForDB,
   formatWorkoutForDB,
 } from "./utils/formatDataForDB.js";
+import {
+  ACCESS_TOKEN_COOKIE_NAME,
+  REFRESH_TOKEN_COOKIE_NAME,
+  createTokens,
+  refreshTokens,
+  setAccessToken,
+  setRefreshToken,
+} from "./utils/auth.js";
+import { NotAuthorizedError } from "./utils/Errors/NotAuthorizedError.js";
 
 // Incoming Resolver Properties are: (parent, args, context)
 const knexInstance = knex(knexConfig);
@@ -24,7 +33,10 @@ const knexInstance = knex(knexConfig);
 const resolvers = {
   // The top-level resolvers inside Query are the entry point resolvers for the graph, not nested queries like workout{ exercises{...} }
   Query: {
-    async users() {
+    async users(_, __, { req }: any) {
+      if (!req.userUid) {
+        throw new NotAuthorizedError();
+      }
       try {
         return await knexInstance("users").select("*");
       } catch (error) {
@@ -32,7 +44,10 @@ const resolvers = {
         throw error;
       }
     },
-    async user(_, { uid }: { uid: String }) {
+    async user(_, { uid }: { uid: String }, { req }: any) {
+      if (!req.userUid || req.userUid !== uid) {
+        throw new NotAuthorizedError();
+      }
       try {
         return await knexInstance("users")
           .select("*")
@@ -44,7 +59,10 @@ const resolvers = {
       }
     },
 
-    async workouts() {
+    async workouts(_, __, { req }: any) {
+      if (!req.userUid) {
+        throw new NotAuthorizedError();
+      }
       try {
         return await knexInstance("workouts")
           .select("*")
@@ -54,7 +72,10 @@ const resolvers = {
         throw error;
       }
     },
-    async workout(_, { uid }: { uid: String }) {
+    async workout(_, { uid }: { uid: String }, { req }: any) {
+      if (!req.userUid) {
+        throw new NotAuthorizedError();
+      }
       try {
         return await knexInstance("workouts")
           .select("*")
@@ -66,7 +87,10 @@ const resolvers = {
       }
     },
 
-    async exercises() {
+    async exercises(_, __, { req }: any) {
+      if (!req.userUid) {
+        throw new NotAuthorizedError();
+      }
       try {
         return await knexInstance("exercises").select("*");
       } catch (error) {
@@ -74,7 +98,10 @@ const resolvers = {
         throw error;
       }
     },
-    async exercise(_, { uid }: { uid: String }) {
+    async exercise(_, { uid }: { uid: String }, { req }: any) {
+      if (!req.userUid) {
+        throw new NotAuthorizedError();
+      }
       try {
         return await knexInstance("exercises")
           .select("*")
@@ -104,7 +131,10 @@ const resolvers = {
 
   // This is the resolver for returning all exercises within a workout
   Workout: {
-    async exercises(parent: Workout) {
+    async exercises(parent: Workout, __: any, { req }: any) {
+      if (!req.userUid || req.userUid !== parent.userUid) {
+        throw new NotAuthorizedError();
+      }
       try {
         return await knexInstance("exercises")
           .select("*")
@@ -118,7 +148,10 @@ const resolvers = {
 
   // Takes in the same args as our query resolvers
   Mutation: {
-    async addUser(_, { user }: { user: AddOrEditUserInput }) {
+    async addUser(_, { user }: { user: AddOrEditUserInput }, { req }: any) {
+      if (!req.userUid) {
+        throw new NotAuthorizedError();
+      }
       try {
         let newUser = {
           ...user,
@@ -149,10 +182,14 @@ const resolvers = {
       }: {
         userUid: string;
         workoutWithExercises: AddWorkoutWithExercisesInput;
-      }
+      },
+      { req }: any
     ) {
       if (!userUid) {
         throw new Error("userUid required to addWorkoutWithExercises");
+      }
+      if (!req.userUid || req.userUid !== userUid) {
+        throw new NotAuthorizedError();
       }
       const newExercises = formatExercisesForDB(workoutWithExercises);
       const newWorkout = formatWorkoutForDB(workoutWithExercises, userUid);
@@ -215,8 +252,12 @@ const resolvers = {
       }: {
         userUid: String;
         workout: AddOrEditWorkoutInput;
-      }
+      },
+      { req }: any
     ) {
+      if (!req.userUid || req.userUid !== userUid) {
+        throw new NotAuthorizedError();
+      }
       try {
         let newWorkout = {
           ...workout,
@@ -243,8 +284,12 @@ const resolvers = {
       {
         workoutUid,
         exercise,
-      }: { workoutUid: String; exercise: AddOrEditExerciseInput }
+      }: { workoutUid: String; exercise: AddOrEditExerciseInput },
+      { req }: any
     ) {
+      if (!req.userUid) {
+        throw new NotAuthorizedError();
+      }
       try {
         let newExercise = {
           ...exercise,
@@ -269,7 +314,11 @@ const resolvers = {
       }
     },
 
-    async updateUser(_, args: UpdateUserArgs) {
+    async updateUser(_, args: UpdateUserArgs, { req }: any) {
+      if (!req.userUid || req.userUid !== args.uid) {
+        throw new NotAuthorizedError();
+      }
+
       const { edits, uid } = args;
 
       try {
@@ -283,8 +332,13 @@ const resolvers = {
 
     async updateWorkout(
       _,
-      { uid, edits }: { uid: String; edits: AddOrEditWorkoutInput }
+      { uid, edits }: { uid: String; edits: AddOrEditWorkoutInput },
+      { req }: any
     ) {
+      if (!req.userUid) {
+        throw new NotAuthorizedError();
+      }
+
       try {
         await knexInstance("workouts").where({ uid: uid }).update(edits);
         return await knexInstance("workouts").where({ uid: uid }).first();
@@ -296,8 +350,12 @@ const resolvers = {
 
     async updateExercise(
       _,
-      { uid, edits }: { uid: String; edits: AddOrEditExerciseInput }
+      { uid, edits }: { uid: String; edits: AddOrEditExerciseInput },
+      { req }: any
     ) {
+      if (!req.userUid) {
+        throw new NotAuthorizedError();
+      }
       try {
         await knexInstance("exercises").where({ uid: uid }).update(edits);
         return await knexInstance("exercises").where({ uid: uid }).first();
@@ -307,7 +365,10 @@ const resolvers = {
       }
     },
 
-    async deleteUser(_, { uid }: { uid: String }) {
+    async deleteUser(_, { uid }: { uid: String }, { req }: any) {
+      if (!req.userUid) {
+        throw new NotAuthorizedError();
+      }
       try {
         const workoutsCount = Number(
           (
@@ -340,9 +401,18 @@ const resolvers = {
     // TODO: This is safely deleting workout & exercises, but the exercises returned is an empty array
     async deleteWorkoutWithExercises(
       _,
-      { workoutUid }: { workoutUid: String }
+      { workoutUid }: { workoutUid: String },
+      { req }: any
     ) {
+      if (!req.userUid) {
+        throw new NotAuthorizedError();
+      }
       const workout = await knexInstance("workouts").where({ uid: workoutUid });
+
+      if (workout[0].userUid !== req.userUid) {
+        throw new NotAuthorizedError();
+      }
+
       if (!workout) {
         throw new Error("Workout not found.");
       }
@@ -380,39 +450,42 @@ const resolvers = {
       }
     },
 
-    async deleteWorkout(_, { uid }: { uid: String }) {
-      try {
-        const exercisesCount = Number(
-          (
-            await knexInstance("exercises")
-              .count("*")
-              .where({ workoutUid: uid })
-              .first()
-          ).count
-        );
+    // async deleteWorkout(_, { uid }: { uid: String }) {
+    //   try {
+    //     const exercisesCount = Number(
+    //       (
+    //         await knexInstance("exercises")
+    //           .count("*")
+    //           .where({ workoutUid: uid })
+    //           .first()
+    //       ).count
+    //     );
 
-        if (exercisesCount > 0) {
-          throw new Error(
-            `Please delete the ${exercisesCount} exercises associated with this workout before deleting the workout. Exiting without deleting workout.`
-          );
-        }
+    //     if (exercisesCount > 0) {
+    //       throw new Error(
+    //         `Please delete the ${exercisesCount} exercises associated with this workout before deleting the workout. Exiting without deleting workout.`
+    //       );
+    //     }
 
-        const numAffectedRows = await knexInstance("workouts")
-          .where({ uid: uid })
-          .del();
+    //     const numAffectedRows = await knexInstance("workouts")
+    //       .where({ uid: uid })
+    //       .del();
 
-        console.log(
-          `${numAffectedRows} rows affected in deleteWorkout mutation.`
-        );
+    //     console.log(
+    //       `${numAffectedRows} rows affected in deleteWorkout mutation.`
+    //     );
 
-        return await knexInstance("workouts").select("*");
-      } catch (error) {
-        console.error("Error deleting workout:", error);
-        throw error;
+    //     return await knexInstance("workouts").select("*");
+    //   } catch (error) {
+    //     console.error("Error deleting workout:", error);
+    //     throw error;
+    //   }
+    // },
+
+    async deleteExercise(_, { uid }: { uid: String }, { req }: any) {
+      if (!req.userUid) {
+        throw new NotAuthorizedError();
       }
-    },
-
-    async deleteExercise(_, { uid }: { uid: String }) {
       try {
         const numAffectedRows = await knexInstance("exercises")
           .where({ uid: uid })
@@ -425,6 +498,86 @@ const resolvers = {
         return await knexInstance("exercises").select("*");
       } catch (error) {
         console.error("Error deleting exercise:", error);
+        throw error;
+      }
+    },
+
+    async signUp(_, { user }: { user: AddOrEditUserInput }) {
+      const hashedPassword = await bcrypt.hash(user.password, 12);
+      const newUser = {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        password: hashedPassword,
+        isAuthorized: false,
+      };
+      try {
+        const emailTaken = await knexInstance("users")
+          .where({ email: user.email })
+          .first();
+        if (emailTaken) {
+          throw new Error("Email is already in use.");
+        }
+
+        // await knexInstance("users").insert(newUser);
+        const [insertedUser] = await knexInstance("users")
+          .insert(newUser)
+          .returning("*");
+
+        console.log("insertedUser: ", insertedUser);
+        return insertedUser;
+      } catch (error) {}
+    },
+
+    async login(
+      _,
+      { email, password }: { email: string; password: string },
+      { res }
+    ) {
+      const user = await knexInstance("users").where({ email: email }).first();
+
+      if (!user) {
+        throw new Error("Invalid email address, please try again.");
+      }
+
+      const validPassword = await bcrypt.compare(password, user.password);
+
+      if (!validPassword) {
+        throw new Error("Invalid credentials, please try again.");
+      }
+
+      const { refreshToken, accessToken } = createTokens(user);
+
+      // Set refresh token in HTTP-only cookie
+      setAccessToken(res, accessToken);
+      setRefreshToken(res, refreshToken);
+
+      return user;
+    },
+
+    async refreshToken(_, __, { req, res }) {
+      return await refreshTokens(req, res);
+    },
+
+    async invalidateToken(_, __, { req, res }) {
+      // No user, cannot invalidate their refresh token
+      if (!req.userUid) {
+        throw new Error("No user found to invalidate token.");
+      }
+
+      try {
+        await knexInstance("users")
+          .where({ uid: req.userUid })
+          .increment("tokenCount", 1);
+
+        // If you don't clear cookies, access-token will be valid until it times out
+        res.clearCookie(ACCESS_TOKEN_COOKIE_NAME);
+        res.clearCookie(REFRESH_TOKEN_COOKIE_NAME);
+
+        console.log(`Token count updated for user.`);
+        return true;
+      } catch (error) {
+        console.error(`Error updating token count for user:`, error);
         throw error;
       }
     },

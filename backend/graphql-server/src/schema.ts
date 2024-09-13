@@ -10,6 +10,7 @@ const typeDefs = `#graphql
         isAuthorized: Boolean!
         workouts: [Workout!]
         createdAt: String!
+        tokenCount: Int!
     }
 
     type Workout {
@@ -45,6 +46,11 @@ const typeDefs = `#graphql
         exercise(uid: ID!): Exercise
     }
 
+    type RefreshTokenResponse {
+        success: Boolean!
+        message: String
+    }
+
     type Mutation {
         deleteUser(uid: ID!): [User]!
         deleteWorkout(uid: ID!): [Workout]!
@@ -60,6 +66,10 @@ const typeDefs = `#graphql
         updateWorkout(uid: ID!, edits: AddOrEditWorkoutInput!): Workout
         updateExercise(uid: ID!, edits: EditExerciseInput!): Exercise
 
+        signUp(user: AddUserInput!): User
+        login(email: String!, password: String!): User
+        refreshToken: RefreshTokenResponse!
+        invalidateToken: Boolean!
     }
 
     # Input types omit data fields we want the system to generate (like uids)

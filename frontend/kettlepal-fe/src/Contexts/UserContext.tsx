@@ -1,148 +1,69 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
-import { useQuery, gql } from "@apollo/client";
-import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  Box,
-  Button,
-  Center,
-  Heading,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
+import React, {
+  createContext,
+  useState,
+  useContext,
+  ReactNode,
+  useEffect,
+} from "react";
 import { User } from "../Constants/types";
-import LoadingSpinner from "../Components/LoadingSpinner";
 
-/** A TEMPORARY (terrible) WAY OF HANDLING USER LOGIN */
-/** because I want to work on the fun stuff.. */
-
-const GET_USERS = gql`
-  query {
-    users {
-      uid
-      firstName
-      lastName
-      email
-      isAuthorized
-      createdAt
-    }
-  }
-`;
+const LOCAL_STORAGE_USER_KEY = "user";
 
 interface UserProviderProps {
-  children: React.ReactNode;
+  user: User | null;
+  login: (userData: User) => void;
+  logout: () => void;
 }
 
-const UserContext = createContext<User>({
-  uid: "",
-  firstName: "",
-  lastName: "",
-  email: "",
-  isAuthorized: false,
-  createdAt: 0,
-});
-export const useUser = () => useContext<User>(UserContext);
+const defaultContextValue: UserProviderProps = {
+  user: null,
+  login: () => {},
+  logout: () => {},
+};
 
-export default function UserProvider({
+const UserContext = createContext<UserProviderProps>(defaultContextValue);
+
+export const UserProvider: React.FC<{ children: ReactNode }> = ({
   children,
-}: UserProviderProps): JSX.Element {
-  // Currently, you need to manually delete the user from sessionStorage to "logout"
-  const [selectedUser, setSelectedUser] = useState<any | undefined>(() => {
-    const storedUser = sessionStorage.getItem("selectedUser");
-    return storedUser ? JSON.parse(storedUser) : undefined;
-  });
-  const { loading, error, data } = useQuery(GET_USERS, {
-    fetchPolicy: "cache-first",
-    skip: !!selectedUser,
+}) => {
+  const [user, setUser] = useState<User | null>(() => {
+    const savedUser = localStorage.getItem(LOCAL_STORAGE_USER_KEY);
+    return savedUser ? JSON.parse(savedUser) : null;
   });
 
   useEffect(() => {
-    if (selectedUser) {
-      sessionStorage.setItem("selectedUser", JSON.stringify(selectedUser));
+    if (user) {
+      localStorage.setItem("user", JSON.stringify(user));
+    } else {
+      localStorage.removeItem("user");
     }
-  }, [selectedUser]);
+  }, [user]);
 
-  if (loading) {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="space-between"
-        w="100vw"
-        h="100vh"
-        background="url(https://media.gettyimages.com/id/503416862/photo/man-ready-to-exercise-with-kettle-bell.jpg?s=612x612&w=0&k=20&c=LOP7VZUq1-A7Ct4kMkxXp8UV5hUahetCliwef9tiQoI=)"
-        backgroundRepeat="no-repeat"
-        backgroundSize="cover"
-        backgroundPosition={"center"}
-      >
-        <VStack display="flex" justifyContent={"flex-start"} mt="2.5rem">
-          <LoadingSpinner size={24} />
-        </VStack>
-      </Box>
-    );
-  }
+  // Callers responsibility to hit the login endpoint
+  const login = (userData: User) => {
+    setUser(userData);
+  };
 
-  if (error) {
-    console.log(error?.message);
-    return (
-      <Box>
-        <Alert
-          status="error"
-          w="calc(100% - 4rem)"
-          m="2rem"
-          borderRadius={"8px"}
-        >
-          <AlertIcon />
-          <AlertDescription>
-            An unexpected error has occurred. {error?.message}
-          </AlertDescription>
-        </Alert>
-      </Box>
-    );
+  // Callers responsibility to hit the invalidateToken endpoint
+  const logout = () => {
+    setUser(null);
+    localStorage.removeItem(LOCAL_STORAGE_USER_KEY);
+  };
+
+  const value: UserProviderProps = {
+    user,
+    login,
+    logout,
+  };
+
+  return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
+};
+
+// Use a custom hook to access the context
+export const useUser = (): UserProviderProps => {
+  const context = useContext(UserContext);
+  if (context === undefined) {
+    throw new Error("useUser must be used within a UserProvider");
   }
-  return (
-    <UserContext.Provider value={selectedUser}>
-      {selectedUser ? (
-        children
-      ) : (
-        <Center
-          display="flex"
-          justifyContent="center"
-          alignItems="space-between"
-          w="100vw"
-          h="100vh"
-          background="url(https://media.gettyimages.com/id/503416862/photo/man-ready-to-exercise-with-kettle-bell.jpg?s=612x612&w=0&k=20&c=LOP7VZUq1-A7Ct4kMkxXp8UV5hUahetCliwef9tiQoI=)"
-          backgroundRepeat="no-repeat"
-          backgroundSize="cover"
-          backgroundPosition={"center"}
-        >
-          <VStack alignSelf="center">
-            <Heading
-              as="h1"
-              fontSize="xxx-large"
-              color="white"
-              textShadow="2px 2px 4px rgba(0, 0, 0, 1)"
-            >
-              Dev Mode - Login As:
-            </Heading>
-            {data.users.map((user: any) => (
-              <Button
-                key={user.uid}
-                border="1px solid grey"
-                padding="0.5rem 1rem"
-                margin="1rem"
-                borderRadius={"0.25rem"}
-                onClick={() => setSelectedUser(user)}
-              >
-                <Text>
-                  {user.firstName} {user.lastName}
-                </Text>
-              </Button>
-            ))}
-          </VStack>
-        </Center>
-      )}
-    </UserContext.Provider>
-  );
-}
+  return context;
+};
