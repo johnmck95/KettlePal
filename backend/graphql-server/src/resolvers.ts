@@ -546,7 +546,6 @@ const resolvers = {
         throw new Error("Invalid credentials, please try again.");
       }
 
-      // TODO: Validate username and password before granting an access token
       const { refreshToken, accessToken } = createTokens(user);
 
       // Set refresh token in HTTP-only cookie
