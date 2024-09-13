@@ -78,6 +78,12 @@ export default function CreateWorkout() {
     ADD_WORKOUT_WITH_EXERCISES,
     {
       onCompleted() {
+        setState({
+          createdAt: getCurrentDate(),
+          comment: "",
+          elapsedSeconds: 0,
+          exercises: [],
+        });
         setShowUploadSuccess(true);
         setTimeout(() => {
           setShowUploadSuccess(false);
@@ -221,12 +227,6 @@ export default function CreateWorkout() {
           userUid,
           workoutWithExercises: state,
         },
-      });
-      setState({
-        createdAt: getCurrentDate(),
-        comment: "",
-        elapsedSeconds: 0,
-        exercises: [],
       });
     } catch (err) {
       console.error("Error submitting workout with exercises: ", err);

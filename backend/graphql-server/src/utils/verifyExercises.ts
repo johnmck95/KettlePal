@@ -73,6 +73,7 @@ export function verifyExercises(exercises: AddOrEditExerciseInput[]): {
     }
 
     const validRepsDisplayed = [
+      null,
       "",
       "l/r",
       "std",

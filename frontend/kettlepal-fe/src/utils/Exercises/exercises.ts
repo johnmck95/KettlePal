@@ -79,6 +79,6 @@ export function formatExerciseString(exercise: Exercise) {
     return `${title}: ${sets}x${formatReps(reps, repsDisplay)}`;
   } // EX: Plank: 45/45/45
   else {
-    return `${title}: ${comment}`;
+    return `${title}: ${comment ?? ""}`;
   }
 }

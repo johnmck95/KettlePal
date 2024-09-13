@@ -95,7 +95,10 @@ export default function ViewWorkout({
               position="absolute"
               top="5px"
               right="5px"
-              onClick={onOpen}
+              onClick={(e) => {
+                e.stopPropagation();
+                onOpen();
+              }}
             />
             <CalendarWidget date={workoutWithExercises.createdAt} w="4rem" />
             <VStack mx="1rem">

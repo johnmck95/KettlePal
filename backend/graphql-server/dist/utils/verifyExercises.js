@@ -49,7 +49,9 @@ export function verifyExercises(exercises) {
                 reason: `Exercise Elapsed Seconds must be a numerical value greater than or equal to 0.`,
             };
         }
+        console.log(repsDisplay);
         const validRepsDisplayed = [
+            // null,
             "",
             "l/r",
             "std",
