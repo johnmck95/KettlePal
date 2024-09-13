@@ -31,7 +31,7 @@ export function setAccessToken(res: any, accessToken: string) {
   res.cookie(ACCESS_TOKEN_COOKIE_NAME, accessToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
     path: "/",
     maxAge: 15 * 60 * 1000, // 15 minutes
   });
@@ -41,7 +41,7 @@ export function setRefreshToken(res: any, refreshToken: string) {
   res.cookie(REFRESH_TOKEN_COOKIE_NAME, refreshToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
     path: "/",
     maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
   });

@@ -61,12 +61,11 @@ const jwtMiddleware = async (req, res, next) => {
             console.log("Throwing invalid token");
             throw new Error("Invalid token");
         }
-        // Issue a new access token. Can't do this in the outer catch block because
-        // you need to set the GQL context for the current request
+        // Issue a new tokens immediately and provide GQL context for current request.
         if (accessToken === undefined) {
             try {
                 const result = await refreshTokens(req, res);
-                if (result.success) {
+                if (result.success && user.uid) {
                     // Place the userUid on the request so we can access it in GQL
                     req.userUid = user?.uid;
                 }
@@ -79,11 +78,11 @@ const jwtMiddleware = async (req, res, next) => {
         else {
             req.userUid = accessTokenData?.userUid ?? refreshTokenData?.userUid;
         }
-        // A token is invalid, there has to be a refresh token to make it here
+        // Token was tampered with, or refresh token expired.
     }
     catch (e) {
         console.log(`JWT Authentication Error: ${e}`);
-        // Clear the tokens immediately rather than waiting for timeout
+        // Clear the tokens immediately rather than waiting for token timeout
         res.clearCookie("access-token");
         res.clearCookie("refresh-token");
     }
@@ -95,7 +94,6 @@ const server = new ApolloServer({
     typeDefs,
     resolvers,
     formatError: (error) => {
-        // console.error("GraphQL Error:", error);
         return error;
     },
 });
