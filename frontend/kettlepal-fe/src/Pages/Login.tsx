@@ -108,6 +108,7 @@ export default function Login() {
   return (
     <Center h="100%" w="100%" flexDirection="column">
       <Center
+        bg="white"
         maxW="600px"
         maxH="450px"
         w="calc(100% - 2rem)"

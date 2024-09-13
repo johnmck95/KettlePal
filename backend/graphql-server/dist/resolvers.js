@@ -449,11 +449,10 @@ const resolvers = {
             return await refreshTokens(req, res);
         },
         async invalidateToken(_, __, { req, res }) {
+            throw new Error("I better work");
             // No user, cannot invalidate their refresh token
-            console.log(req.userUid);
             if (!req.userUid) {
-                console.log("No user found to invalidate token.");
-                return false;
+                throw new Error("No user found to invalidate token.");
             }
             try {
                 await knexInstance("users")

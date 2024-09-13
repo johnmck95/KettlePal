@@ -562,10 +562,8 @@ const resolvers = {
 
     async invalidateToken(_, __, { req, res }) {
       // No user, cannot invalidate their refresh token
-      console.log(req.userUid);
       if (!req.userUid) {
-        console.log("No user found to invalidate token.");
-        return false;
+        throw new Error("No user found to invalidate token.");
       }
 
       try {

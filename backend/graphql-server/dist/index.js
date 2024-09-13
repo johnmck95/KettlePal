@@ -37,20 +37,22 @@ app.use(cookieParser());
 // Add JSON-parsing middleware
 app.use(bodyParser.json());
 // JWT verification middleware
-app.use(async (req, res, next) => {
+const jwtMiddleware = async (req, res, next) => {
     try {
         const accessToken = req.cookies["access-token"];
+        const refreshToken = req.cookies["refresh-token"];
         if (accessToken) {
-            // Verify the access token from the client is valid with secret
-            const data = verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
-            req.userUid = data.userUid;
+            // verify the tokens being received from client have not been tampered with
+            const accessTokenData = verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
+            const refreshTokenData = verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
             // Place the userUid from the access token on the request so we can access it in GQL
+            req.userUid = accessTokenData.userUid;
             const knexInstance = knex(knexConfig);
             const user = await knexInstance("users")
-                .where({ uid: data.userUid })
+                .where({ uid: accessTokenData.userUid })
                 .first();
-            // Token has been invalidated
-            if (!user || user.tokenCount !== data.tokenCount) {
+            // If tokenCount doesn't match, we've expired the token. Need to refresh/re-authenticate.
+            if (!user || user.tokenCount !== refreshTokenData.tokenCount) {
                 throw new Error("Invalid token");
             }
         }
@@ -69,11 +71,16 @@ app.use(async (req, res, next) => {
         }
     }
     next();
-});
+};
+app.use(jwtMiddleware);
 // Extend Express server with Apollo Server
 const server = new ApolloServer({
     typeDefs,
     resolvers,
+    formatError: (error) => {
+        console.error("GraphQL Error:", error);
+        return error;
+    },
 });
 async function startApolloServer() {
     await server.start();

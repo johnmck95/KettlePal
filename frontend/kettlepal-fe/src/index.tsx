@@ -22,6 +22,19 @@ const client = new ApolloClient({
   uri: backendURL(),
   cache: new InMemoryCache(),
   link: httpLink,
+  defaultOptions: {
+    watchQuery: {
+      fetchPolicy: "network-only",
+      errorPolicy: "all",
+    },
+    query: {
+      fetchPolicy: "network-only",
+      errorPolicy: "all",
+    },
+    mutate: {
+      errorPolicy: "all",
+    },
+  },
 });
 
 const container = document.getElementById("root");
