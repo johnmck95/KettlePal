@@ -93,9 +93,9 @@ app.use(jwtMiddleware);
 const server = new ApolloServer({
     typeDefs,
     resolvers,
-    // formatError: (error) => {
-    //   return error;
-    // },
+    formatError: (error) => {
+        return error;
+    },
 });
 async function startApolloServer() {
     await server.start();
