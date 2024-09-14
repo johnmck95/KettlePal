@@ -116,13 +116,12 @@ export default function Login() {
   }, [loading]);
 
   return (
-    <Center h="calc(100%-2rem)" w="100%" flexDirection="column">
+    <Center minH="100%" p="1rem" flexWrap="wrap">
       <Center
+        my="auto"
         bg="white"
         maxW="600px"
-        h="auto"
         w="calc(100% - 2rem)"
-        m="1rem"
         p="2rem 1rem 1rem 1rem"
         borderRadius="8px"
         boxShadow={`0px 1px 4px ${theme.colors.grey[400]}`}
