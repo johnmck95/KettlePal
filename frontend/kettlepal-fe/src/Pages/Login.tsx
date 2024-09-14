@@ -105,15 +105,25 @@ export default function Login() {
     }
   }, [user, navigate]);
 
+  const [excessLoading, setExcessLoading] = useState<boolean>(false);
+  useEffect(() => {
+    if (loading) {
+      const timeout = setTimeout(() => {
+        setExcessLoading(true);
+      }, 5000);
+      return () => clearTimeout(timeout);
+    }
+  }, [loading]);
+
   return (
-    <Center h="100%" w="100%" flexDirection="column">
+    <Center h="calc(100%-2rem)" w="100%" flexDirection="column">
       <Center
         bg="white"
         maxW="600px"
-        maxH="450px"
+        h="auto"
         w="calc(100% - 2rem)"
         m="1rem"
-        p="4rem 1rem 4rem 1rem"
+        p="2rem 1rem 1rem 1rem"
         borderRadius="8px"
         boxShadow={`0px 1px 4px ${theme.colors.grey[400]}`}
       >
@@ -180,6 +190,16 @@ export default function Login() {
           >
             Log In
           </Button>
+          {excessLoading && (
+            <Text fontSize="xs" color={theme.colors.grey[500]}>
+              <i>
+                KettlePal's backend service automatically spins down after a
+                period of inactivity. This is a cost saving measure. Please be
+                patient while a brand new service is being spun up just for you!
+                This may take a few minutes.
+              </i>
+            </Text>
+          )}
 
           {/* CONTINUE AS GUEST */}
           <Text w="100%" mt="1rem" fontSize="xs" color={theme.colors.grey[700]}>
@@ -204,7 +224,7 @@ export default function Login() {
       {error && showServerError && (
         <Alert
           status="error"
-          mt="2rem"
+          my="1rem"
           maxW="600px"
           w="calc(100% - 2rem)"
           borderRadius={"8px"}
