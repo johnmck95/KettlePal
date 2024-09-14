@@ -71,7 +71,6 @@ const jwtMiddleware = async (req, res, next) => {
       .where({ uid: refreshTokenData.userUid })
       .first();
     if (!user || user.tokenCount !== refreshTokenData.tokenCount) {
-      console.log("Throwing invalid token");
       throw new Error("Invalid token");
     }
 
