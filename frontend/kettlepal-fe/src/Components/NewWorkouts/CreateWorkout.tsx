@@ -28,6 +28,7 @@ import LoadingSpinner from "../LoadingSpinner";
 import theme from "../../Constants/theme";
 import Timer from "../Timer";
 import { formatExerciseString } from "../../utils/Exercises/exercises";
+import dayjs from "dayjs";
 
 export type CreateWorkoutState = {
   createdAt: string;
@@ -437,15 +438,25 @@ export default function CreateWorkout() {
         ModalBodyText={
           <Box mb="1rem">
             Are you sure your workout is complete, and ready to be saved?
-            <br />
-            <br />
-            {state.exercises.map((exercise) => {
-              return (
-                <>
-                  {formatExerciseString(exercise)} <br />
-                </>
-              );
-            })}
+            {state.exercises.length > 0 && (
+              <>
+                <br />
+                <br />
+                {state.createdAt && (
+                  <>
+                    {dayjs(state.createdAt).format("dddd, MMMM DD, YYYY")}
+                    <br />
+                  </>
+                )}
+                {state.exercises.map((exercise) => {
+                  return (
+                    <>
+                      {formatExerciseString(exercise)} <br />
+                    </>
+                  );
+                })}
+              </>
+            )}
           </Box>
         }
         CloseText="Cancel"

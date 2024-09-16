@@ -125,7 +125,6 @@ export default function ViewWorkout({
         )}
 
         <ViewDetailedWorkoutModal
-          // key={workoutWithExercises.uid}
           workoutWithExercises={workoutWithExercises}
           isOpen={isOpenDetailedWorkout}
           onClose={onCloseDetailedWorkout}
