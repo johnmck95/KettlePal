@@ -1,3 +1,4 @@
+import { CreateWorkoutState } from "../../Components/NewWorkouts/CreateWorkout";
 import { Exercise } from "../../Constants/types";
 
 export function formatReps(
@@ -64,19 +65,21 @@ export function formatReps(
   }
 }
 
-export function formatExerciseString(exercise: Exercise) {
+export function formatExerciseString(
+  exercise: Exercise | CreateWorkoutState["exercises"][0]
+): string {
   const { title, weight, weightUnit, sets, reps, repsDisplay, comment } =
     exercise;
 
   // EX: Swing(32kg): 10x5/5
   if (title && weight && weightUnit && sets && reps && repsDisplay) {
     return `${title} (${weight}${weightUnit}): ${sets}x${formatReps(
-      reps,
+      Number(reps),
       repsDisplay
     )} `;
   } // EX: Pistol Squat: 5x6/6
   else if (title && reps && repsDisplay && sets) {
-    return `${title}: ${sets}x${formatReps(reps, repsDisplay)}`;
+    return `${title}: ${sets}x${formatReps(Number(reps), repsDisplay)}`;
   } // EX: Plank: 45/45/45
   else {
     return `${title}: ${comment ?? ""}`;

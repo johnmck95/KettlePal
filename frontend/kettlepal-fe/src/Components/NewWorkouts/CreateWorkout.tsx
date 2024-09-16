@@ -27,6 +27,7 @@ import { useUser } from "../../Contexts/UserContext";
 import LoadingSpinner from "../LoadingSpinner";
 import theme from "../../Constants/theme";
 import Timer from "../Timer";
+import { formatExerciseString } from "../../utils/Exercises/exercises";
 
 export type CreateWorkoutState = {
   createdAt: string;
@@ -433,7 +434,20 @@ export default function CreateWorkout() {
         onClose={onCloseSaveWorkout}
         onConfirmation={onSaveWorkout}
         ModalTitle="Save Workout"
-        ModalBodyText="Are you sure your workout is complete, and ready to be saved?"
+        ModalBodyText={
+          <Box mb="1rem">
+            Are you sure your workout is complete, and ready to be saved?
+            <br />
+            <br />
+            {state.exercises.map((exercise) => {
+              return (
+                <>
+                  {formatExerciseString(exercise)} <br />
+                </>
+              );
+            })}
+          </Box>
+        }
         CloseText="Cancel"
         ProceedText="Save"
         variant="confirm"

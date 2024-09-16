@@ -27,7 +27,7 @@ export default function ConfirmModal({
   isOpen: boolean;
   onClose: () => void;
   ModalTitle: string;
-  ModalBodyText: string;
+  ModalBodyText: string | JSX.Element;
   CloseText: string;
   ProceedText: string;
   onConfirmation: () => void;
