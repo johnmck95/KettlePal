@@ -80,8 +80,13 @@ export function formatExerciseString(
   } // EX: Pistol Squat: 5x6/6
   else if (title && reps && repsDisplay && sets) {
     return `${title}: ${sets}x${formatReps(Number(reps), repsDisplay)}`;
-  } // EX: Plank: 45/45/45
-  else {
+    // EX: Plank: 45/45/45
+  } else if (title && comment) {
     return `${title}: ${comment ?? ""}`;
+    // EX: Climb
+  } else if (title) {
+    return title;
+  } else {
+    return "";
   }
 }
