@@ -1,7 +1,15 @@
-import dayjs from "dayjs";
-import { AddOrEditExerciseInput, AddOrEditWorkoutInput } from "../types";
+export type ExerciseFromClient = {
+  title: string;
+  weight: string | number;
+  weightUnit: string;
+  sets: string | number;
+  reps: string | number;
+  repsDisplay: string;
+  comment: string;
+  elapsedSeconds: number;
+};
 
-export function verifyExercises(exercises: AddOrEditExerciseInput[]): {
+export function verifyExercises(exercises: ExerciseFromClient[]): {
   result: boolean;
   reason: string;
 } {

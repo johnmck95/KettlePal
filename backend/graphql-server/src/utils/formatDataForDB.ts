@@ -1,5 +1,8 @@
 import dayjs from "dayjs";
-import { AddOrEditWorkoutInput, AddWorkoutWithExercisesInput } from "../types";
+import {
+  AddOrEditWorkoutInput,
+  AddWorkoutWithExercisesInput,
+} from "../generated/resolvers-types";
 
 export function formatExercisesForDB(
   workoutWithExercises: AddWorkoutWithExercisesInput

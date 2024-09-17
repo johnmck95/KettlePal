@@ -5,7 +5,6 @@ import http from "http";
 import cors from "cors";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
-import typeDefs from "./schema.js";
 import resolvers from "./resolvers.js";
 import pkg from "jsonwebtoken";
 import { refreshTokens } from "./utils/auth.js";
@@ -13,6 +12,7 @@ const { verify } = pkg;
 import knexConfig from "../knexfile.js";
 import knex from "knex";
 import { allowedOrigins, backendURL } from "./utils/urls.js";
+import { readFileSync } from "fs";
 
 const app = express();
 
@@ -101,6 +101,8 @@ const jwtMiddleware = async (req, res, next) => {
 };
 
 app.use(jwtMiddleware);
+
+const typeDefs = readFileSync("./src/schema.graphql", { encoding: "utf-8" });
 
 // Extend Express server with Apollo Server
 const server = new ApolloServer({

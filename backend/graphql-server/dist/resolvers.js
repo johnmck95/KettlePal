@@ -281,7 +281,7 @@ const resolvers = {
                 throw error;
             }
         },
-        async updateExercise(_, { uid, edits }, { req }) {
+        async updateExercise(_, { uid, edits, }, { req }) {
             if (!req.userUid) {
                 throw new NotAuthorizedError();
             }

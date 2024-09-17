@@ -1,7 +1,10 @@
-import dayjs from "dayjs";
-import { AddOrEditWorkoutInput } from "../types";
+type WorkoutfromClient = {
+  createdAt?: string;
+  elapsedSeconds?: number;
+  comment?: string;
+};
 
-export function verifyWorkout(workout: AddOrEditWorkoutInput): {
+export function verifyWorkout(workout: WorkoutfromClient): {
   result: boolean;
   reason: string;
 } {
