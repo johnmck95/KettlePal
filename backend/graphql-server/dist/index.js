@@ -58,7 +58,6 @@ const jwtMiddleware = async (req, res, next) => {
             .where({ uid: refreshTokenData.userUid })
             .first();
         if (!user || user.tokenCount !== refreshTokenData.tokenCount) {
-            console.log("Throwing invalid token");
             throw new Error("Invalid token");
         }
         // Issue a new tokens immediately and provide GQL context for current request.
@@ -93,9 +92,9 @@ app.use(jwtMiddleware);
 const server = new ApolloServer({
     typeDefs,
     resolvers,
-    // formatError: (error) => {
-    //   return error;
-    // },
+    formatError: (error) => {
+        return error;
+    },
 });
 async function startApolloServer() {
     await server.start();
