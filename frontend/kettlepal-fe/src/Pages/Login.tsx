@@ -116,7 +116,7 @@ export default function Login() {
   }, [loading]);
 
   return (
-    <Center minH="100%" p="1rem" flexWrap="wrap">
+    <Center minH="100%" p="1rem" flexWrap="wrap" flexDirection="column">
       <Center
         my="auto"
         bg="white"
