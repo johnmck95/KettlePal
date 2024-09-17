@@ -120,7 +120,7 @@ export default function Login() {
       <Center
         my="auto"
         bg="white"
-        maxW="600px"
+        maxW="500px"
         w="calc(100% - 2rem)"
         p="2rem 1rem 1rem 1rem"
         borderRadius="8px"
@@ -224,7 +224,7 @@ export default function Login() {
         <Alert
           status="error"
           my="1rem"
-          maxW="600px"
+          maxW="500px"
           w="calc(100% - 2rem)"
           borderRadius={"8px"}
           justifyContent={"space-between"}

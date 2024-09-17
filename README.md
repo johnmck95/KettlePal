@@ -1,48 +1,46 @@
 ## Welcome to KettlePal!
 
-An overbuilt "just-for-me" learning project that is made to keep track of my personal kettlbell workouts. Designed primarily for mobile use.
+An overbuilt "just-for-me" learning project that is made to keep track of my personal kettlbell workouts. Designed primarily for mobile use, with desktop support.
 
-[**Live Deploy Link**](https://main--kettlepal.netlify.app/) (_Very Early Prototype_)
+[**Live Deploy Link**](https://kettlepal.netlify.app/)
 
-## Languages and Tools
+## Tech Stack
 
-- Postgres
+- PostgreSQL
+- GraphQL
+- Express
+- Apollo
+- React
+- TypeScript
+- ChakraUI
+
+## Feature List
+
+- JWT Authentication, Login/Logout, Hashing. (Sign Up is intentionally witheld until further securtiy testing is done.)
+- Design new workouts, track progress, and save to the database.
+  - Client-side and server-side validation.
+- View historical workout data.
+- View specific workouts in greater detail with computed information, like work capacity.
+
+## Road Map
+
+- Edit a saved workout.
+- Use D3.js to show trends from your workout data.
+- Integrate with Strava API to get data from bike rides and runs.
+
+## Deployment
+
+Development and production environments.
+
+- Database
   - Hosted on Neon
-- Apollo, GraphQL, TypeScript Backend Server
+- Backend Server
   - Hosted on Render
-- React, TypeScript, ChakraUI Frontend
+- Frontend
   - Hosted on Netlify
 
-### Completed
+## Overview
 
-- Infra
-  - [x] Deployed DB, GQL Server & Frontend App
-  - [x] Environment aware prod & local configurations
-- Backend
-  - [x] Design relational DB structure
-  - [x] Knex/Apollo integration
-  - [x] DB migration files
-  - [x] DB seed scripts
-  - [x] Create Apollo/GQL Server
-  - [x] Make basic CRUD Resolvers/Mutations
-  - [x] Server-side validation for adding new workouts & exercises
-  - [x] JWT Token Authentication
-- Frontend
-  - [x] React/TypeScript/Chakra/Apollo Configuration
-  - [x] Themeing/colors
-  - [x] Create a form for entering new workouts/exercises with client side validation
-  - [x] Create new-workout progress tracking while entering new workouts
-  - [x] Create a modal to show details on a specific workout
-  - [x] Get Progressive Web App downloadable for mobile.
-  - [x] Implement swipable deletion for new exercises
-  - [x] JWT Authentication, protected routes.
-  - [x] Login form
-
-### Roadmap
-
-1. Allow editing of a past workout/exercise
-2. Signup UI / password reset.
-3. Use D3 to create visualzations that provide genuine exercise insights
-   - New page dedicated to progress tracking
-   - Link relevant visualization in the workout modal for tracking
-4. Integrate with Strava API to get data from bike rides and runs
+| Login                                             | View Workouts                                       | View Detailed Workout                               | Create Workout                                      |
+| ------------------------------------------------- | --------------------------------------------------- | --------------------------------------------------- | --------------------------------------------------- |
+| <img src="image.png" alt="alt text" width="200" > | <img src="image-1.png" alt="alt text" width="200" > | <img src="image-2.png" alt="alt text" width="200" > | <img src="image-3.png" alt="alt text" width="200" > |
