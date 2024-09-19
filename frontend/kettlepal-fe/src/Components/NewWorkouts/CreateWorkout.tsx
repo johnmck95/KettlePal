@@ -22,13 +22,13 @@ import AddComment from "../AddComment";
 import { getCurrentDate } from "../../utils/Time/time";
 import { FaPlusCircle, FaSave } from "react-icons/fa";
 import ConfirmModal from "../ConfirmModal";
-import { gql, useMutation } from "@apollo/client";
 import { useUser } from "../../Contexts/UserContext";
 import LoadingSpinner from "../LoadingSpinner";
 import theme from "../../Constants/theme";
 import Timer from "../Timer";
 import { formatExerciseString } from "../../utils/Exercises/exercises";
 import dayjs from "dayjs";
+import { useAddWorkoutWithExercisesMutation } from "../../generated/frontend-types";
 
 export type CreateWorkoutState = {
   createdAt: string;
@@ -47,25 +47,6 @@ export type CreateWorkoutState = {
   }>;
 };
 
-const ADD_WORKOUT_WITH_EXERCISES = gql`
-  mutation addWorkoutWithExercises(
-    $userUid: ID!
-    $workoutWithExercises: AddWorkoutWithExercisesInput!
-  ) {
-    addWorkoutWithExercises(
-      userUid: $userUid
-      workoutWithExercises: $workoutWithExercises
-    ) {
-      uid
-      userUid
-      exercises {
-        uid
-        title
-      }
-    }
-  }
-`;
-
 export default function CreateWorkout() {
   const [state, setState] = useState<CreateWorkoutState>({
     createdAt: getCurrentDate(),
@@ -76,9 +57,8 @@ export default function CreateWorkout() {
   const [showTracking, setShowTracking] = useState<boolean>(false);
   const [addWorkoutComment, setAddWorkoutComment] = useState<boolean>(false);
   const [showUploadSuccess, setShowUploadSuccess] = useState<boolean>(false);
-  const [addWorkoutWithExercises, { loading, error }] = useMutation(
-    ADD_WORKOUT_WITH_EXERCISES,
-    {
+  const [addWorkoutWithExercises, { loading, error }] =
+    useAddWorkoutWithExercisesMutation({
       onCompleted() {
         setState({
           createdAt: getCurrentDate(),
@@ -91,8 +71,7 @@ export default function CreateWorkout() {
           setShowUploadSuccess(false);
         }, 5000);
       },
-    }
-  );
+    });
   const [submitted, setSubmitted] = useState<boolean>(false);
   const [formHasErrors, setFormHasErrors] = useState<boolean>(false);
   const [timerIsActive, setTimerIsActive] = useState(false);
@@ -226,7 +205,7 @@ export default function CreateWorkout() {
     try {
       await addWorkoutWithExercises({
         variables: {
-          userUid,
+          userUid: userUid ?? "",
           workoutWithExercises: state,
         },
       });

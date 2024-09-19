@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { useQuery, gql } from "@apollo/client";
 import LoadingSpinner from "../Components/LoadingSpinner";
 import {
   VStack,
@@ -14,44 +13,11 @@ import {
 } from "@chakra-ui/react";
 import ViewWorkout from "../Components/ViewWorkouts/ViewWorkout";
 import { useUser } from "../Contexts/UserContext";
-import {
-  UserWithWorkoutsQuery,
-  UserWithWorkoutsQueryVariables,
-} from "../generated/frontend-types";
-
-const WORKOUTS_WITH_EXERCISES_QUERY = gql`
-  query UserWithWorkouts($uid: ID!) {
-    user(uid: $uid) {
-      firstName
-      lastName
-      workouts {
-        uid
-        comment
-        elapsedSeconds
-        createdAt
-        exercises {
-          uid
-          title
-          weight
-          weightUnit
-          sets
-          reps
-          repsDisplay
-          comment
-          elapsedSeconds
-          createdAt
-        }
-      }
-    }
-  }
-`;
+import { useUserWithWorkoutsQuery } from "../generated/frontend-types";
 
 export default function PastWorkouts() {
   const { user } = useUser();
-  const { loading, error, data, refetch } = useQuery<
-    UserWithWorkoutsQuery,
-    UserWithWorkoutsQueryVariables
-  >(WORKOUTS_WITH_EXERCISES_QUERY, {
+  const { loading, error, data, refetch } = useUserWithWorkoutsQuery({
     variables: { uid: user?.uid ?? "" },
     fetchPolicy: "cache-first",
   });

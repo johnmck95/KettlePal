@@ -13,19 +13,13 @@ import {
 import React from "react";
 import { FaPlusCircle, FaListAlt, FaSignOutAlt } from "react-icons/fa";
 import { useUser } from "../Contexts/UserContext";
-import { gql, useMutation } from "@apollo/client";
 import LoadingSpinner from "./LoadingSpinner";
-
-const LOGOUT_MUTATION = gql`
-  mutation Logout {
-    invalidateToken
-  }
-`;
+import { useLogoutMutation } from "../generated/frontend-types";
 
 export default function Tray() {
   const { user, logout } = useUser();
   const [showError, setShowError] = React.useState(false);
-  const [logoutMutation, { loading, error }] = useMutation(LOGOUT_MUTATION, {
+  const [logoutMutation, { loading, error }] = useLogoutMutation({
     fetchPolicy: "no-cache",
     onCompleted() {
       // Only update the UserContext state if the token is successfully invalidated

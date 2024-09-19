@@ -1,0 +1,51 @@
+import { gql } from "@apollo/client";
+
+/** The GQL codemon type generator is configured to create custom hooks for each
+ query and mutatation is sees. Create the Query here, then call useYourQueryName 
+ in the desired .tsx file. */
+
+const LOGIN_MUTATION = gql`
+  mutation Login($email: String!, $password: String!) {
+    login(email: $email, password: $password) {
+      uid
+      firstName
+      lastName
+      email
+      isAuthorized
+      createdAt
+    }
+  }
+`;
+
+const LOGOUT_MUTATION = gql`
+  mutation Logout {
+    invalidateToken
+  }
+`;
+
+const ADD_WORKOUT_WITH_EXERCISES = gql`
+  mutation addWorkoutWithExercises(
+    $userUid: ID!
+    $workoutWithExercises: AddWorkoutWithExercisesInput!
+  ) {
+    addWorkoutWithExercises(
+      userUid: $userUid
+      workoutWithExercises: $workoutWithExercises
+    ) {
+      uid
+      userUid
+      exercises {
+        uid
+        title
+      }
+    }
+  }
+`;
+
+const DELETE_WORKOUT_WITH_EXERCISES = gql`
+  mutation deleteWorkoutWithExercises($workoutUid: ID!) {
+    deleteWorkoutWithExercises(workoutUid: $workoutUid) {
+      uid
+    }
+  }
+`;

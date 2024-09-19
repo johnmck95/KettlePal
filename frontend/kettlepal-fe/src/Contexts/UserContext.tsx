@@ -11,7 +11,8 @@ const LOCAL_STORAGE_USER_KEY = "user";
 
 interface UserProviderProps {
   user: User | null;
-  login: (userData: User) => void;
+  login: (userData: any) => void; // TODO: Make typesafe when you update to use cookies
+  // login: (userData: User) => void;
   logout: () => void;
 }
 
@@ -39,8 +40,9 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
     }
   }, [user]);
 
+  // TODO: Make type safe when you update this to use cookeis rather than local Storage.
   // Callers responsibility to hit the login endpoint
-  const login = (userData: User) => {
+  const login = (userData: any) => {
     setUser(userData);
   };
 

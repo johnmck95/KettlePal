@@ -12,19 +12,14 @@ import ViewExercise from "./ViewExercise";
 import theme from "../../Constants/theme";
 import CalendarWidget from "../CalendarWidget";
 import { FaTimes } from "react-icons/fa";
-import { gql, useMutation } from "@apollo/client";
 import ConfirmModal from "../ConfirmModal";
 import LoadingSpinner from "../LoadingSpinner";
 import ViewDetailedWorkoutModal from "./ViewDetailedWorkoutModal";
-import { UserWithWorkoutsQuery } from "../../generated/frontend-types";
+import {
+  UserWithWorkoutsQuery,
+  useDeleteWorkoutWithExercisesMutation,
+} from "../../generated/frontend-types";
 
-const DELETE_WORKOUT_WITH_EXERCISES = gql`
-  mutation deleteWorkoutWithExercises($workoutUid: ID!) {
-    deleteWorkoutWithExercises(workoutUid: $workoutUid) {
-      uid
-    }
-  }
-`;
 export default function ViewWorkout({
   workoutWithExercises,
   refetchPastWorkouts,
@@ -34,14 +29,12 @@ export default function ViewWorkout({
   >[0];
   refetchPastWorkouts: () => void;
 }) {
-  const [deleteWorkoutWithExercises, { loading, error }] = useMutation(
-    DELETE_WORKOUT_WITH_EXERCISES,
-    {
+  const [deleteWorkoutWithExercises, { loading, error }] =
+    useDeleteWorkoutWithExercisesMutation({
       onCompleted() {
         refetchPastWorkouts();
       },
-    }
-  );
+    });
   const exercises = workoutWithExercises?.exercises;
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -50,7 +43,7 @@ export default function ViewWorkout({
     onClose();
     deleteWorkoutWithExercises({
       variables: {
-        workoutUid: workoutWithExercises?.uid,
+        workoutUid: workoutWithExercises?.uid ?? "",
       },
     });
   }
