@@ -83,7 +83,7 @@ export default function Login() {
     if (error || contextError) {
       setShowServerError(true);
     }
-  }, [error]);
+  }, [error, contextError]);
 
   // Redirect to workouts page if user is already logged in
   useEffect(() => {
