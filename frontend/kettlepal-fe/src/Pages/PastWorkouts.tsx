@@ -1,7 +1,17 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery, gql } from "@apollo/client";
 import LoadingSpinner from "../Components/LoadingSpinner";
-import { VStack, Flex, Text, Center } from "@chakra-ui/react";
+import {
+  VStack,
+  Flex,
+  Text,
+  Center,
+  HStack,
+  Alert,
+  AlertIcon,
+  AlertDescription,
+  CloseButton,
+} from "@chakra-ui/react";
 import { UserWithWorkouts, WorkoutWithExercises } from "../Constants/types";
 import ViewWorkout from "../Components/ViewWorkouts/ViewWorkout";
 import { useUser } from "../Contexts/UserContext";
@@ -45,6 +55,13 @@ export default function PastWorkouts() {
 
   const noWorkouts = !data?.user?.workouts || data?.user?.workouts.length === 0;
 
+  const [showServerError, setShowServerError] = useState<boolean>(false);
+  useEffect(() => {
+    if (error) {
+      setShowServerError(true);
+    }
+  }, [error]);
+
   if (loading) {
     return (
       <Center w="100%" h="100%">
@@ -54,8 +71,27 @@ export default function PastWorkouts() {
   }
 
   return (
-    <Flex w="100%">
-      {error && <Text>An Unexpected Error has occurred: {error?.message}</Text>}
+    <Flex w="100%" flexDirection="column" alignItems={"center"}>
+      {showServerError && (
+        <Alert
+          status="error"
+          m="3rem 1rem 1rem 1rem"
+          maxW="720px"
+          w="calc(100% - 2rem)"
+          borderRadius={"8px"}
+          justifyContent={"space-between"}
+        >
+          <HStack>
+            <AlertIcon />
+            <AlertDescription>{error?.message}</AlertDescription>
+          </HStack>
+          <CloseButton
+            alignSelf="flex-start"
+            onClick={() => setShowServerError(false)}
+          />
+        </Alert>
+      )}
+
       {!loading && !error && data && (
         <VStack w="100%" my="0.5rem">
           {data === null ? (
