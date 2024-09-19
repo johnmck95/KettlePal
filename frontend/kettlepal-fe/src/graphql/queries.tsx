@@ -30,3 +30,20 @@ const USER_WITH_WORKOUTS_QUERY = gql`
     }
   }
 `;
+
+const CHECK_SESSION_QUERY = gql`
+  query CheckSession {
+    checkSession {
+      isValid
+      user {
+        uid
+        firstName
+        lastName
+        email
+        isAuthorized
+        createdAt
+        tokenCount
+      }
+    }
+  }
+`;

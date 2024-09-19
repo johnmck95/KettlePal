@@ -33,6 +33,11 @@ type Exercise {
   elapsedSeconds: Int
 }
 
+type CheckSessionResponse {
+  isValid: Boolean!
+  user: User
+}
+
 # Required: Defines the entry points to the graph
 type Query {
   users: [User]
@@ -41,6 +46,8 @@ type Query {
   workout(uid: ID!): Workout
   exercises: [Exercise]
   exercise(uid: ID!): Exercise
+
+  checkSession: CheckSessionResponse!
 }
 
 type RefreshTokenResponse {

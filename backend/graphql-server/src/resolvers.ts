@@ -110,6 +110,19 @@ const resolvers = {
         throw error;
       }
     },
+
+    checkSession(_, __, { req }) {
+      // Middleware is responsible for validating JWTs
+      if (req.userUid) {
+        const user = knexInstance("users").where({ uid: req.userUid }).first();
+        return {
+          isValid: true,
+          user,
+        };
+      } else {
+        return { isValid: false };
+      }
+    },
   },
 
   // Resolvers to gather nested fields within a User query (EX: User{ workouts{...} })
@@ -457,38 +470,6 @@ const resolvers = {
         throw error;
       }
     },
-
-    // async deleteWorkout(_, { uid }: { uid: String }) {
-    //   try {
-    //     const exercisesCount = Number(
-    //       (
-    //         await knexInstance("exercises")
-    //           .count("*")
-    //           .where({ workoutUid: uid })
-    //           .first()
-    //       ).count
-    //     );
-
-    //     if (exercisesCount > 0) {
-    //       throw new Error(
-    //         `Please delete the ${exercisesCount} exercises associated with this workout before deleting the workout. Exiting without deleting workout.`
-    //       );
-    //     }
-
-    //     const numAffectedRows = await knexInstance("workouts")
-    //       .where({ uid: uid })
-    //       .del();
-
-    //     console.log(
-    //       `${numAffectedRows} rows affected in deleteWorkout mutation.`
-    //     );
-
-    //     return await knexInstance("workouts").select("*");
-    //   } catch (error) {
-    //     console.error("Error deleting workout:", error);
-    //     throw error;
-    //   }
-    // },
 
     async deleteExercise(_, { uid }: { uid: String }, { req }: any) {
       if (!req.userUid) {

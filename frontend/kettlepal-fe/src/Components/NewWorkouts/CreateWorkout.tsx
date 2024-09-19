@@ -339,7 +339,7 @@ export default function CreateWorkout() {
           {state.exercises.map((exercise, index) => {
             return (
               <motion.div
-                key={`${exercise.key}`} //
+                key={`${exercise.key}`}
                 initial={{ opacity: 0, x: 200 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -200 }}
@@ -427,11 +427,11 @@ export default function CreateWorkout() {
                     <br />
                   </>
                 )}
-                {state.exercises.map((exercise) => {
+                {state.exercises.map((exercise, index) => {
                   return (
-                    <>
+                    <React.Fragment key={index}>
                       {formatExerciseString(exercise)} <br />
-                    </>
+                    </React.Fragment>
                   );
                 })}
               </>
