@@ -61,6 +61,8 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   const logout = () => {
+    sessionStorage.removeItem(SESSION_STORAGE_USER_KEY);
+    setUser(null);
     // Verify tokens were invalidated, then remove user from state
     refetch();
   };
