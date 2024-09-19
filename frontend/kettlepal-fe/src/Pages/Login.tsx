@@ -42,8 +42,8 @@ export default function Login() {
 
   const [loginMutation, { loading, error }] = useLoginMutation({
     onCompleted: (data) => {
-      if (data.login) {
-        login(data.login);
+      if (data?.login) {
+        login();
         navigate("/new-workout");
       } else {
         console.error("Login failed: ", error);

@@ -56,6 +56,12 @@ export type AddWorkoutWithExercisesInput = {
   exercises: Array<InputMaybe<AddExerciseInput>>;
 };
 
+export type CheckSessionResponse = {
+  __typename?: 'CheckSessionResponse';
+  isValid: Scalars['Boolean']['output'];
+  user?: Maybe<User>;
+};
+
 export type EditExerciseInput = {
   comment?: InputMaybe<Scalars['String']['input']>;
   elapsedSeconds?: InputMaybe<Scalars['Int']['input']>;
@@ -182,6 +188,7 @@ export type MutationUpdateWorkoutArgs = {
 
 export type Query = {
   __typename?: 'Query';
+  checkSession: CheckSessionResponse;
   exercise?: Maybe<Exercise>;
   exercises?: Maybe<Array<Maybe<Exercise>>>;
   user?: Maybe<User>;
@@ -312,6 +319,7 @@ export type ResolversTypes = ResolversObject<{
   AddUserInput: AddUserInput;
   AddWorkoutWithExercisesInput: AddWorkoutWithExercisesInput;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
+  CheckSessionResponse: ResolverTypeWrapper<CheckSessionResponse>;
   EditExerciseInput: EditExerciseInput;
   EditUserInput: EditUserInput;
   Exercise: ResolverTypeWrapper<Exercise>;
@@ -334,6 +342,7 @@ export type ResolversParentTypes = ResolversObject<{
   AddUserInput: AddUserInput;
   AddWorkoutWithExercisesInput: AddWorkoutWithExercisesInput;
   Boolean: Scalars['Boolean']['output'];
+  CheckSessionResponse: CheckSessionResponse;
   EditExerciseInput: EditExerciseInput;
   EditUserInput: EditUserInput;
   Exercise: Exercise;
@@ -346,6 +355,12 @@ export type ResolversParentTypes = ResolversObject<{
   String: Scalars['String']['output'];
   User: User;
   Workout: Workout;
+}>;
+
+export type CheckSessionResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['CheckSessionResponse'] = ResolversParentTypes['CheckSessionResponse']> = ResolversObject<{
+  isValid?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type ExerciseResolvers<ContextType = any, ParentType extends ResolversParentTypes['Exercise'] = ResolversParentTypes['Exercise']> = ResolversObject<{
@@ -382,6 +397,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 }>;
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = ResolversObject<{
+  checkSession?: Resolver<ResolversTypes['CheckSessionResponse'], ParentType, ContextType>;
   exercise?: Resolver<Maybe<ResolversTypes['Exercise']>, ParentType, ContextType, RequireFields<QueryExerciseArgs, 'uid'>>;
   exercises?: Resolver<Maybe<Array<Maybe<ResolversTypes['Exercise']>>>, ParentType, ContextType>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'uid'>>;
@@ -420,6 +436,7 @@ export type WorkoutResolvers<ContextType = any, ParentType extends ResolversPare
 }>;
 
 export type Resolvers<ContextType = any> = ResolversObject<{
+  CheckSessionResponse?: CheckSessionResponseResolvers<ContextType>;
   Exercise?: ExerciseResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;

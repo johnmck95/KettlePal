@@ -8,10 +8,12 @@ import Login from "./Pages/Login";
 import Tray from "./Components/Tray";
 import { UserProvider } from "./Contexts/UserContext";
 import PrivateRoute from "./Components/Auth/PrivateRoute";
+import SessionChecker from "./Components/Auth/SessionChecker";
 
 export const App = () => (
   <ChakraProvider theme={theme}>
     <UserProvider>
+      <SessionChecker />
       <Box
         h="calc(100vh - 3rem)"
         overflowY={"scroll"}

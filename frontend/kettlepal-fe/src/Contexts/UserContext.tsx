@@ -6,20 +6,24 @@ import React, {
   useEffect,
 } from "react";
 import { User } from "../generated/frontend-types";
+import { useCheckSession } from "../Hooks/useCheckSession";
 
-const LOCAL_STORAGE_USER_KEY = "user";
+const SESSION_STORAGE_USER_KEY = "user";
+
+type UserInContext = Omit<User, "password" | "workouts"> | undefined | null;
 
 interface UserProviderProps {
-  user: User | null;
-  login: (userData: any) => void; // TODO: Make typesafe when you update to use cookies
-  // login: (userData: User) => void;
+  user: UserInContext;
+  login: () => void;
   logout: () => void;
+  isLoading: boolean;
 }
 
 const defaultContextValue: UserProviderProps = {
   user: null,
   login: () => {},
   logout: () => {},
+  isLoading: true,
 };
 
 const UserContext = createContext<UserProviderProps>(defaultContextValue);
@@ -27,41 +31,49 @@ const UserContext = createContext<UserProviderProps>(defaultContextValue);
 export const UserProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const [user, setUser] = useState<User | null>(() => {
-    const savedUser = localStorage.getItem(LOCAL_STORAGE_USER_KEY);
+  const [user, setUser] = useState<UserInContext | null>(() => {
+    const savedUser = sessionStorage.getItem(SESSION_STORAGE_USER_KEY);
     return savedUser ? JSON.parse(savedUser) : null;
   });
+  // Since the server validates the HTTP-only tokens, we need to poll just in case
+  // the user deletes their cookies. Logout will keep this in sync.
+  const { data, loading, refetch } = useCheckSession();
 
   useEffect(() => {
-    if (user) {
-      localStorage.setItem("user", JSON.stringify(user));
-    } else {
-      localStorage.removeItem("user");
+    if (data) {
+      if (data.checkSession.isValid) {
+        sessionStorage.setItem(
+          SESSION_STORAGE_USER_KEY,
+          JSON.stringify(data.checkSession.user)
+        );
+        setUser(data.checkSession.user);
+      } else {
+        console.log("JWT is not valid, logging out.");
+        setUser(null);
+      }
     }
-  }, [user]);
+  }, [data]);
 
-  // TODO: Make type safe when you update this to use cookeis rather than local Storage.
-  // Callers responsibility to hit the login endpoint
-  const login = (userData: any) => {
-    setUser(userData);
+  const login = () => {
+    // Verify tokens were created, then store user in state
+    refetch();
   };
 
-  // Callers responsibility to hit the invalidateToken endpoint
   const logout = () => {
-    setUser(null);
-    localStorage.removeItem(LOCAL_STORAGE_USER_KEY);
+    // Verify tokens were invalidated, then remove user from state
+    refetch();
   };
 
   const value: UserProviderProps = {
     user,
     login,
     logout,
+    isLoading: loading,
   };
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 };
 
-// Use a custom hook to access the context
 export const useUser = (): UserProviderProps => {
   const context = useContext(UserContext);
   if (context === undefined) {
