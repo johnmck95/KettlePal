@@ -41,7 +41,6 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
   // the user deletes their cookies. Logout will keep this in sync.
   const { data, loading, error, refetch } = useCheckSession();
 
-  console.log("Error in userContext: ", error);
   useEffect(() => {
     if (data) {
       if (data.checkSession.isValid) {
@@ -51,7 +50,6 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
         );
         setUser(data.checkSession.user);
       } else {
-        console.log("JWT is not valid, logging out.");
         setUser(null);
       }
     }
@@ -72,7 +70,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
     login,
     logout,
     isLoading: loading,
-    error: new Error("Testing"),
+    error,
   };
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;

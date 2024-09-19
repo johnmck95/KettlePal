@@ -207,7 +207,7 @@ export default function Login() {
       </Center>
 
       {/* LOGIN ERROR */}
-      {error && showServerError && (
+      {(error || contextError) && showServerError && (
         <Alert
           status="error"
           my="1rem"
@@ -218,12 +218,14 @@ export default function Login() {
         >
           <HStack>
             <AlertIcon />
-            {error.message && (
-              <AlertDescription>{error?.message}</AlertDescription>
-            )}
-            {contextError.message && (
-              <AlertDescription>{contextError?.message}</AlertDescription>
-            )}
+            <VStack alignItems={"flex-start"}>
+              {error?.message && (
+                <AlertDescription>{error?.message}</AlertDescription>
+              )}
+              {contextError?.message && (
+                <AlertDescription>{contextError?.message}</AlertDescription>
+              )}
+            </VStack>
           </HStack>
           <CloseButton
             alignSelf="flex-start"
