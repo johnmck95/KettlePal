@@ -8,7 +8,7 @@
     "compile": "npm run generate-types && tsc",
     "start": "npm run compile && node ./dist/index.js",
     "restore_kettlepal-dev": "./bin/prod_to_dev_migration.sh",
-    "generate-types": "graphql-codegen --config ./src/codegen.yml"
+    "generate-types": "npx graphql-codegen --config ./src/codegen.yml"
   },
   "keywords": [],
   "author": "",
