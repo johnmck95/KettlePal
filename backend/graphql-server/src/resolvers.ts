@@ -1,16 +1,6 @@
 import knexConfig from "../knexfile.js";
 import knex from "knex";
 import * as bcrypt from "bcrypt";
-import {
-  UpdateUserArgs,
-  AddOrEditUserInput,
-  User,
-  Workout,
-  AddOrEditWorkoutInput,
-  AddOrEditExerciseInput,
-  Exercise,
-  AddWorkoutWithExercisesInput,
-} from "./types";
 import { verifyExercises } from "./utils/verifyExercises.js";
 import { verifyWorkout } from "./utils/verifyWorkout.js";
 import {
@@ -26,6 +16,14 @@ import {
   setRefreshToken,
 } from "./utils/auth.js";
 import { NotAuthorizedError } from "./utils/Errors/NotAuthorizedError.js";
+import {
+  AddOrEditUserInput,
+  AddOrEditWorkoutInput,
+  AddWorkoutWithExercisesInput,
+  Exercise,
+  User,
+  Workout,
+} from "./generated/backend-types.js";
 
 // Incoming Resolver Properties are: (parent, args, context)
 const knexInstance = knex(knexConfig);
@@ -284,7 +282,7 @@ const resolvers = {
       {
         workoutUid,
         exercise,
-      }: { workoutUid: String; exercise: AddOrEditExerciseInput },
+      }: { workoutUid: String; exercise: Omit<Exercise, "uid" | "workoutUid"> },
       { req }: any
     ) {
       if (!req.userUid) {
@@ -314,7 +312,14 @@ const resolvers = {
       }
     },
 
-    async updateUser(_, args: UpdateUserArgs, { req }: any) {
+    async updateUser(
+      _,
+      args: {
+        uid: string;
+        edits: AddOrEditUserInput;
+      },
+      { req }: any
+    ) {
       if (!req.userUid || req.userUid !== args.uid) {
         throw new NotAuthorizedError();
       }
@@ -350,7 +355,10 @@ const resolvers = {
 
     async updateExercise(
       _,
-      { uid, edits }: { uid: String; edits: AddOrEditExerciseInput },
+      {
+        uid,
+        edits,
+      }: { uid: String; edits: Omit<Exercise, "uid" | "workoutUid"> },
       { req }: any
     ) {
       if (!req.userUid) {
@@ -519,7 +527,6 @@ const resolvers = {
           throw new Error("Email is already in use.");
         }
 
-        // await knexInstance("users").insert(newUser);
         const [insertedUser] = await knexInstance("users")
           .insert(newUser)
           .returning("*");

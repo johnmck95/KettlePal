@@ -5,9 +5,10 @@
   "main": "index.ts",
   "type": "module",
   "scripts": {
-    "compile": "tsc",
+    "compile": "npm run generate-types && tsc",
     "start": "npm run compile && node ./dist/index.js",
-    "restore_kettlepal-dev": "./bin/prod_to_dev_migration.sh"
+    "restore_kettlepal-dev": "./bin/prod_to_dev_migration.sh",
+    "generate-types": "graphql-codegen --config ./src/codegen.yml"
   },
   "keywords": [],
   "author": "",
@@ -22,6 +23,9 @@
     "ts-node": "^10.9.2"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.2",
+    "@graphql-codegen/typescript": "^4.0.9",
+    "@graphql-codegen/typescript-resolvers": "^4.2.1",
     "@types/node": "^20.12.6",
     "typescript": "^5.4.3"
   }

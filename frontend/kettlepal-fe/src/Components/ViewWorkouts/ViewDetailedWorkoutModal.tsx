@@ -13,10 +13,10 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import theme from "../../Constants/theme";
-import { WorkoutWithExercises } from "../../Constants/types";
 import { formatExerciseString } from "../../utils/Exercises/exercises";
 import { formatDurationShort, postgresToDayJs } from "../../utils/Time/time";
 import { totalWorkoutWorkCapacity } from "../../utils/Workouts/workouts";
+import { UserWithWorkoutsQuery } from "../../generated/frontend-types";
 
 function Detail({
   title,
@@ -46,7 +46,11 @@ function ViewDetailedExercise({
   exercise,
   showDetails,
 }: {
-  exercise: WorkoutWithExercises["exercises"][0];
+  exercise: NonNullable<
+    NonNullable<
+      NonNullable<UserWithWorkoutsQuery["user"]>["workouts"][0]
+    >["exercises"]
+  >[0];
   showDetails: boolean;
 }) {
   const { elapsedSeconds, sets, reps, weight, weightUnit, comment } = exercise;
@@ -106,13 +110,15 @@ export default function ViewDetailedWorkoutModal({
   isOpen,
   onClose,
 }: {
-  workoutWithExercises: WorkoutWithExercises;
+  workoutWithExercises: NonNullable<
+    NonNullable<UserWithWorkoutsQuery["user"]>["workouts"]
+  >[0];
   isOpen: boolean;
   onClose: () => void;
 }) {
   const [showDetails, setShowDetails] = React.useState(false);
   const { comment, createdAt, exercises, elapsedSeconds } =
-    workoutWithExercises;
+    workoutWithExercises ?? {};
 
   return (
     <>
@@ -125,7 +131,9 @@ export default function ViewDetailedWorkoutModal({
               {/* DATE */}
               <Text fontSize={["lg", "2xl"]}>
                 <b>
-                  {postgresToDayJs(createdAt).format("dddd, MMMM DD, YYYY")}
+                  {postgresToDayJs(createdAt ?? "").format(
+                    "dddd, MMMM DD, YYYY"
+                  )}
                 </b>
               </Text>
               {/* WORKOUT COMMENT */}
@@ -170,7 +178,7 @@ export default function ViewDetailedWorkoutModal({
                 }}
               >
                 {/* EXERCISES */}
-                {exercises.map((exercise) => (
+                {exercises?.map((exercise) => (
                   <ViewDetailedExercise
                     key={exercise.uid}
                     exercise={exercise}

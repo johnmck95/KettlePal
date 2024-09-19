@@ -17,22 +17,9 @@ import {
 } from "@chakra-ui/react";
 import react, { ChangeEvent, useEffect, useState } from "react";
 import theme from "../Constants/theme";
-import { gql, useMutation } from "@apollo/client";
 import { useUser } from "../Contexts/UserContext";
 import { useNavigate } from "react-router-dom";
-
-const LOGIN_MUTATION = gql`
-  mutation Login($email: String!, $password: String!) {
-    login(email: $email, password: $password) {
-      uid
-      firstName
-      lastName
-      email
-      isAuthorized
-      createdAt
-    }
-  }
-`;
+import { useLoginMutation } from "../generated/frontend-types";
 
 export default function Login() {
   const [state, setState] = react.useState({
@@ -53,7 +40,7 @@ export default function Login() {
   const { user, login } = useUser();
   const navigate = useNavigate();
 
-  const [loginMutation, { loading, error }] = useMutation(LOGIN_MUTATION, {
+  const [loginMutation, { loading, error }] = useLoginMutation({
     onCompleted: (data) => {
       if (data.login) {
         login(data.login);

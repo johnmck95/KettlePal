@@ -1,7 +1,7 @@
-import { User } from "../types";
 import pkg from "jsonwebtoken";
 import knexConfig from "../../knexfile.js";
 import knex from "knex";
+import { User } from "../generated/backend-types.js";
 
 const { sign, verify } = pkg;
 

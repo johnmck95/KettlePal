@@ -1,5 +1,5 @@
 import { CreateWorkoutState } from "../../Components/NewWorkouts/CreateWorkout";
-import { Exercise } from "../../Constants/types";
+import { Exercise } from "../../generated/frontend-types";
 
 export function formatReps(
   reps: number,
@@ -66,7 +66,7 @@ export function formatReps(
 }
 
 export function formatExerciseString(
-  exercise: Exercise | CreateWorkoutState["exercises"][0]
+  exercise: Omit<Exercise, "workoutUid"> | CreateWorkoutState["exercises"][0]
 ): string {
   const { title, weight, weightUnit, sets, reps, repsDisplay, comment } =
     exercise;

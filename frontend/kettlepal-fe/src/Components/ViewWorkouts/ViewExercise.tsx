@@ -1,7 +1,7 @@
 import React from "react";
-import { Exercise } from "../../Constants/types";
 import { HStack, Text } from "@chakra-ui/react";
 import { formatExerciseString } from "../../utils/Exercises/exercises";
+import { Exercise } from "../../generated/frontend-types";
 
 export default function ViewExercise({
   exercise,
