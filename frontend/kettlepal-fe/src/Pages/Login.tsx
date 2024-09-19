@@ -37,7 +37,7 @@ export default function Login() {
     }));
   }
 
-  const { user, login } = useUser();
+  const { user, login, error: contextError } = useUser();
   const navigate = useNavigate();
 
   const [loginMutation, { loading, error }] = useLoginMutation({
@@ -80,7 +80,7 @@ export default function Login() {
 
   const [showServerError, setShowServerError] = useState<boolean>(true);
   useEffect(() => {
-    if (error) {
+    if (error || contextError) {
       setShowServerError(true);
     }
   }, [error]);
@@ -218,7 +218,12 @@ export default function Login() {
         >
           <HStack>
             <AlertIcon />
-            <AlertDescription>{error?.message}</AlertDescription>
+            {error.message && (
+              <AlertDescription>{error?.message}</AlertDescription>
+            )}
+            {contextError.message && (
+              <AlertDescription>{contextError?.message}</AlertDescription>
+            )}
           </HStack>
           <CloseButton
             alignSelf="flex-start"

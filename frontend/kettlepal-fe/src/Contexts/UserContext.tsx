@@ -17,6 +17,7 @@ interface UserProviderProps {
   login: () => void;
   logout: () => void;
   isLoading: boolean;
+  error: any;
 }
 
 const defaultContextValue: UserProviderProps = {
@@ -24,6 +25,7 @@ const defaultContextValue: UserProviderProps = {
   login: () => {},
   logout: () => {},
   isLoading: true,
+  error: null,
 };
 
 const UserContext = createContext<UserProviderProps>(defaultContextValue);
@@ -37,8 +39,9 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
   });
   // Since the server validates the HTTP-only tokens, we need to poll just in case
   // the user deletes their cookies. Logout will keep this in sync.
-  const { data, loading, refetch } = useCheckSession();
+  const { data, loading, error, refetch } = useCheckSession();
 
+  console.log("Error in userContext: ", error);
   useEffect(() => {
     if (data) {
       if (data.checkSession.isValid) {
@@ -69,6 +72,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
     login,
     logout,
     isLoading: loading,
+    error: new Error("Testing"),
   };
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
