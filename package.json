@@ -5,7 +5,7 @@
     "bcrypt": "^5.1.1",
     "dayjs": "^1.11.10",
     "framer-motion": "^11.3.29",
-    "graphql": "^16.8.1",
+    "graphql": "^16.9.0",
     "js-cookie": "^3.0.5",
     "jsonwebtoken": "^9.0.2",
     "knex": "^3.1.0",
