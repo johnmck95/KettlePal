@@ -23,7 +23,7 @@ import {
   Exercise,
   User,
   Workout,
-} from "./generated/resolvers-types.js";
+} from "./generated/backend-types.js";
 
 // Incoming Resolver Properties are: (parent, args, context)
 const knexInstance = knex(knexConfig);

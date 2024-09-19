@@ -12,9 +12,12 @@ import {
   AlertDescription,
   CloseButton,
 } from "@chakra-ui/react";
-import { UserWithWorkouts, WorkoutWithExercises } from "../Constants/types";
 import ViewWorkout from "../Components/ViewWorkouts/ViewWorkout";
 import { useUser } from "../Contexts/UserContext";
+import {
+  UserWithWorkoutsQuery,
+  UserWithWorkoutsQueryVariables,
+} from "../generated/frontend-types";
 
 const WORKOUTS_WITH_EXERCISES_QUERY = gql`
   query UserWithWorkouts($uid: ID!) {
@@ -45,13 +48,13 @@ const WORKOUTS_WITH_EXERCISES_QUERY = gql`
 
 export default function PastWorkouts() {
   const { user } = useUser();
-  const { loading, error, data, refetch } = useQuery<UserWithWorkouts>(
-    WORKOUTS_WITH_EXERCISES_QUERY,
-    {
-      variables: { uid: user?.uid },
-      fetchPolicy: "cache-first",
-    }
-  );
+  const { loading, error, data, refetch } = useQuery<
+    UserWithWorkoutsQuery,
+    UserWithWorkoutsQueryVariables
+  >(WORKOUTS_WITH_EXERCISES_QUERY, {
+    variables: { uid: user?.uid ?? "" },
+    fetchPolicy: "cache-first",
+  });
 
   const noWorkouts = !data?.user?.workouts || data?.user?.workouts.length === 0;
 
@@ -99,14 +102,14 @@ export default function PastWorkouts() {
           ) : (
             <>
               {noWorkouts && <Text> Record your first workout!</Text>}
-              {data?.user?.workouts?.map(
-                (workoutWithExercises: WorkoutWithExercises) => (
+              {data?.user?.workouts?.map((workoutWithExercises) =>
+                workoutWithExercises ? (
                   <ViewWorkout
                     key={workoutWithExercises.uid}
                     workoutWithExercises={workoutWithExercises}
                     refetchPastWorkouts={refetch}
                   />
-                )
+                ) : null
               )}
             </>
           )}

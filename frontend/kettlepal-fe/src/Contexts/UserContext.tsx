@@ -5,7 +5,7 @@ import React, {
   ReactNode,
   useEffect,
 } from "react";
-import { User } from "../Constants/types";
+import { User } from "../generated/frontend-types";
 
 const LOCAL_STORAGE_USER_KEY = "user";
 

@@ -1,0 +1,15 @@
+# This configuration file tells GraphQL Code Generator how
+# to generate types based on our schema.
+overwrite: true
+schema: "http://localhost:4000/graphql"
+documents: ["src/**/*.tsx", "src/**/*.ts"]
+generates:
+  src/generated/frontend-types.ts:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-react-apollo"
+    config:
+      withHooks: true
+      withHOC: false
+      withComponent: false

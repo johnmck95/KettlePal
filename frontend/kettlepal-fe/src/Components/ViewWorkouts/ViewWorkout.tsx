@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { WorkoutWithExercises } from "../../Constants/types";
 import {
   Alert,
   AlertDescription,
@@ -17,6 +16,7 @@ import { gql, useMutation } from "@apollo/client";
 import ConfirmModal from "../ConfirmModal";
 import LoadingSpinner from "../LoadingSpinner";
 import ViewDetailedWorkoutModal from "./ViewDetailedWorkoutModal";
+import { UserWithWorkoutsQuery } from "../../generated/frontend-types";
 
 const DELETE_WORKOUT_WITH_EXERCISES = gql`
   mutation deleteWorkoutWithExercises($workoutUid: ID!) {
@@ -29,7 +29,9 @@ export default function ViewWorkout({
   workoutWithExercises,
   refetchPastWorkouts,
 }: {
-  workoutWithExercises: WorkoutWithExercises;
+  workoutWithExercises: NonNullable<
+    NonNullable<UserWithWorkoutsQuery["user"]>["workouts"]
+  >[0];
   refetchPastWorkouts: () => void;
 }) {
   const [deleteWorkoutWithExercises, { loading, error }] = useMutation(
@@ -40,8 +42,7 @@ export default function ViewWorkout({
       },
     }
   );
-  const exercises: WorkoutWithExercises["exercises"] =
-    workoutWithExercises.exercises;
+  const exercises = workoutWithExercises?.exercises;
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -49,7 +50,7 @@ export default function ViewWorkout({
     onClose();
     deleteWorkoutWithExercises({
       variables: {
-        workoutUid: workoutWithExercises.uid,
+        workoutUid: workoutWithExercises?.uid,
       },
     });
   }
@@ -100,9 +101,12 @@ export default function ViewWorkout({
                 onOpen();
               }}
             />
-            <CalendarWidget date={workoutWithExercises.createdAt} w="4rem" />
+            <CalendarWidget
+              date={workoutWithExercises?.createdAt ?? ""}
+              w="4rem"
+            />
             <VStack mx="1rem">
-              {exercises.map((exercise) => {
+              {exercises?.map((exercise) => {
                 return <ViewExercise key={exercise.uid} exercise={exercise} />;
               })}
             </VStack>
@@ -113,9 +117,9 @@ export default function ViewWorkout({
               onConfirmation={onDeleteWorkout}
               ModalTitle="Delete Workout"
               ModalBodyText={`Are you sure you want to delete this workout, and the ${
-                workoutWithExercises.exercises.length
+                workoutWithExercises?.exercises?.length
               } corresponding exercise${
-                workoutWithExercises.exercises.length > 1 ? "s" : ""
+                workoutWithExercises?.exercises?.length ?? 0 > 1 ? "s" : ""
               }?`}
               CloseText="Cancel"
               ProceedText="Delete"

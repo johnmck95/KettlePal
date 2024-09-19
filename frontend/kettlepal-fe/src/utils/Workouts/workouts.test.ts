@@ -1,8 +1,10 @@
-import { WorkoutWithExercises } from "../../Constants/types";
+import { UserWithWorkoutsQuery } from "../../generated/frontend-types";
 import { totalWorkoutWorkCapacity } from "./workouts";
 
 describe("totalWorkoutWorkCapacity", () => {
-  let workoutWithExercises: WorkoutWithExercises;
+  let workoutWithExercises: NonNullable<
+    NonNullable<UserWithWorkoutsQuery["user"]>["workouts"]
+  >[0];
 
   beforeEach(() => {
     workoutWithExercises = {
@@ -20,7 +22,7 @@ describe("totalWorkoutWorkCapacity", () => {
   });
 
   it("correctly calculates work capacity with one exercise in kg", () => {
-    workoutWithExercises.exercises.push({
+    workoutWithExercises?.exercises?.push({
       uid: "123",
       title: "Test Exercise",
       weight: 24,
@@ -37,7 +39,7 @@ describe("totalWorkoutWorkCapacity", () => {
   });
 
   it("correctly calculates work capacity with one exercise in lb", () => {
-    workoutWithExercises.exercises.push({
+    workoutWithExercises?.exercises?.push({
       uid: "123",
       title: "Test Exercise",
       weight: 50,
@@ -54,7 +56,7 @@ describe("totalWorkoutWorkCapacity", () => {
   });
 
   it("correctly calculates work capacity with multiple exercises in kg", () => {
-    workoutWithExercises.exercises.push({
+    workoutWithExercises?.exercises?.push({
       uid: "123",
       title: "Test Exercise",
       weight: 24,
@@ -66,7 +68,7 @@ describe("totalWorkoutWorkCapacity", () => {
       elapsedSeconds: 123,
       createdAt: "2024-08-29",
     });
-    workoutWithExercises.exercises.push({
+    workoutWithExercises?.exercises?.push({
       uid: "123",
       title: "Test Exercise",
       weight: 32,
@@ -83,7 +85,7 @@ describe("totalWorkoutWorkCapacity", () => {
   });
 
   it("correctly calculates work capacity with multiple exercises in lb", () => {
-    workoutWithExercises.exercises.push({
+    workoutWithExercises?.exercises?.push({
       uid: "123",
       title: "Test Exercise",
       weight: 30,
@@ -95,7 +97,7 @@ describe("totalWorkoutWorkCapacity", () => {
       elapsedSeconds: 123,
       createdAt: "2024-08-29",
     });
-    workoutWithExercises.exercises.push({
+    workoutWithExercises?.exercises?.push({
       uid: "123",
       title: "Test Exercise",
       weight: 55,
@@ -112,7 +114,7 @@ describe("totalWorkoutWorkCapacity", () => {
   });
 
   it("correctly calculates work capacity with one exercise in kg and one in lb", () => {
-    workoutWithExercises.exercises.push({
+    workoutWithExercises?.exercises?.push({
       uid: "123",
       title: "Test Exercise",
       weight: 30,
@@ -124,7 +126,7 @@ describe("totalWorkoutWorkCapacity", () => {
       elapsedSeconds: 123,
       createdAt: "2024-08-29",
     });
-    workoutWithExercises.exercises.push({
+    workoutWithExercises?.exercises?.push({
       uid: "123",
       title: "Test Exercise",
       weight: 28,
@@ -141,7 +143,7 @@ describe("totalWorkoutWorkCapacity", () => {
   });
 
   it("correctly calculates work capacity when there are more exercises in lb than kg", () => {
-    workoutWithExercises.exercises.push({
+    workoutWithExercises?.exercises?.push({
       uid: "123",
       title: "Test Exercise",
       weight: 30,
@@ -153,7 +155,7 @@ describe("totalWorkoutWorkCapacity", () => {
       elapsedSeconds: 123,
       createdAt: "2024-08-29",
     });
-    workoutWithExercises.exercises.push({
+    workoutWithExercises?.exercises?.push({
       uid: "123",
       title: "Test Exercise",
       weight: 80,
@@ -165,7 +167,7 @@ describe("totalWorkoutWorkCapacity", () => {
       elapsedSeconds: 123,
       createdAt: "2024-08-29",
     });
-    workoutWithExercises.exercises.push({
+    workoutWithExercises?.exercises?.push({
       uid: "123",
       title: "Test Exercise",
       weight: 28,
@@ -182,7 +184,7 @@ describe("totalWorkoutWorkCapacity", () => {
   });
 
   it("correctly calculates work capacity when there are more exercises in kg than lb", () => {
-    workoutWithExercises.exercises.push({
+    workoutWithExercises?.exercises?.push({
       uid: "123",
       title: "Test Exercise",
       weight: 30,
@@ -194,7 +196,7 @@ describe("totalWorkoutWorkCapacity", () => {
       elapsedSeconds: 123,
       createdAt: "2024-08-29",
     });
-    workoutWithExercises.exercises.push({
+    workoutWithExercises?.exercises?.push({
       uid: "123",
       title: "Test Exercise",
       weight: 32,
@@ -206,7 +208,7 @@ describe("totalWorkoutWorkCapacity", () => {
       elapsedSeconds: 123,
       createdAt: "2024-08-29",
     });
-    workoutWithExercises.exercises.push({
+    workoutWithExercises?.exercises?.push({
       uid: "123",
       title: "Test Exercise",
       weight: 28,

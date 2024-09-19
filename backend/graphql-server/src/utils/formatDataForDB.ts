@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import {
   AddOrEditWorkoutInput,
   AddWorkoutWithExercisesInput,
-} from "../generated/resolvers-types";
+} from "../generated/backend-types";
 
 export function formatExercisesForDB(
   workoutWithExercises: AddWorkoutWithExercisesInput

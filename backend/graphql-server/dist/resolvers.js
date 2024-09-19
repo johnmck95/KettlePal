@@ -420,7 +420,6 @@ const resolvers = {
                 if (emailTaken) {
                     throw new Error("Email is already in use.");
                 }
-                // await knexInstance("users").insert(newUser);
                 const [insertedUser] = await knexInstance("users")
                     .insert(newUser)
                     .returning("*");
