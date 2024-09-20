@@ -101,7 +101,7 @@ export type Mutation = {
   addUser?: Maybe<User>;
   addWorkout?: Maybe<Workout>;
   addWorkoutWithExercises: Workout;
-  deleteExercise: Array<Maybe<Exercise>>;
+  deleteExercise: Exercise;
   deleteUser: Array<Maybe<User>>;
   deleteWorkout: Array<Maybe<Workout>>;
   deleteWorkoutWithExercises: Workout;
@@ -383,7 +383,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   addUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationAddUserArgs, 'user'>>;
   addWorkout?: Resolver<Maybe<ResolversTypes['Workout']>, ParentType, ContextType, RequireFields<MutationAddWorkoutArgs, 'userUid' | 'workout'>>;
   addWorkoutWithExercises?: Resolver<ResolversTypes['Workout'], ParentType, ContextType, RequireFields<MutationAddWorkoutWithExercisesArgs, 'userUid' | 'workoutWithExercises'>>;
-  deleteExercise?: Resolver<Array<Maybe<ResolversTypes['Exercise']>>, ParentType, ContextType, RequireFields<MutationDeleteExerciseArgs, 'uid'>>;
+  deleteExercise?: Resolver<ResolversTypes['Exercise'], ParentType, ContextType, RequireFields<MutationDeleteExerciseArgs, 'uid'>>;
   deleteUser?: Resolver<Array<Maybe<ResolversTypes['User']>>, ParentType, ContextType, RequireFields<MutationDeleteUserArgs, 'uid'>>;
   deleteWorkout?: Resolver<Array<Maybe<ResolversTypes['Workout']>>, ParentType, ContextType, RequireFields<MutationDeleteWorkoutArgs, 'uid'>>;
   deleteWorkoutWithExercises?: Resolver<ResolversTypes['Workout'], ParentType, ContextType, RequireFields<MutationDeleteWorkoutWithExercisesArgs, 'workoutUid'>>;

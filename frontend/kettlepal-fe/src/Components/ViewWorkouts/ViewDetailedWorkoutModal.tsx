@@ -24,6 +24,7 @@ import { formatDurationShort, postgresToDayJs } from "../../utils/Time/time";
 import { totalWorkoutWorkCapacity } from "../../utils/Workouts/workouts";
 import {
   UserWithWorkoutsQuery,
+  useDeleteExerciseMutation,
   useUpdateExerciseMutation,
 } from "../../generated/frontend-types";
 import { FaMinus, FaPencilAlt, FaSave } from "react-icons/fa";
@@ -102,10 +103,6 @@ function ViewDetailedExercise({
     }));
   }
 
-  function deleteExercise() {
-    console.log("TODO: delete exercise");
-  }
-
   // Save Exercise Modal Controls
   const {
     isOpen: isOpenExercise,
@@ -118,21 +115,23 @@ function ViewDetailedExercise({
   const [showServerError, setShowServerError] = useState<boolean>(false);
   const [showUploadSuccess, setShowUploadSuccess] = useState<boolean>(false);
 
-  const [updateExerciseMutation, { loading, error }] =
-    useUpdateExerciseMutation({
-      onCompleted: () => {
-        refetchPastWorkouts();
-        setShowUploadSuccess(true);
-        setTimeout(() => {
-          setShowUploadSuccess(false);
-        }, 5000);
-        setEditExercise(false);
-      },
-      onError: (error) => {
-        setShowServerError(true);
-        console.error("Error updating exercise: ", error.message);
-      },
-    });
+  const [
+    updateExerciseMutation,
+    { loading: updateExerciseIsLoading, error: updateExerciseError },
+  ] = useUpdateExerciseMutation({
+    onCompleted: () => {
+      refetchPastWorkouts();
+      setShowUploadSuccess(true);
+      setTimeout(() => {
+        setShowUploadSuccess(false);
+      }, 5000);
+      setEditExercise(false);
+    },
+    onError: (error) => {
+      setShowServerError(true);
+      console.error("Error updating exercise: ", error.message);
+    },
+  });
 
   async function onSaveExercise() {
     setSubmitted(true);
@@ -149,8 +148,34 @@ function ViewDetailedExercise({
           edits: editableExercise,
         },
       });
-    } catch (err) {
-      console.error("Error submitting workout with exercises: ", err);
+    } catch (error) {
+      console.error("Error updating exercise: ", error);
+    }
+  }
+
+  const [
+    deleteExerciseMutation,
+    { loading: deleteExerciseIsLoading, error: deleteExerciseError },
+  ] = useDeleteExerciseMutation({
+    onCompleted: () => {
+      refetchPastWorkouts();
+      setEditExercise(false);
+    },
+    onError: (error) => {
+      setShowServerError(true);
+      console.error("Error deleting exercise: ", error.message);
+    },
+  });
+
+  async function deleteExercise() {
+    try {
+      await deleteExerciseMutation({
+        variables: {
+          uid,
+        },
+      });
+    } catch (error) {
+      console.error("Error deleting exercise: ", error);
     }
   }
 
@@ -201,7 +226,7 @@ function ViewDetailedExercise({
       )}
 
       {/* ERROR WHILE UPDATING EXERCISE */}
-      {showServerError && !!error && (
+      {showServerError && (!!updateExerciseError || !!deleteExerciseError) && (
         <Alert
           status="error"
           my="1rem"
@@ -213,8 +238,15 @@ function ViewDetailedExercise({
           <HStack>
             <AlertIcon />
             <VStack alignItems={"flex-start"}>
-              {error?.message && (
-                <AlertDescription>{error?.message}</AlertDescription>
+              {updateExerciseError?.message && (
+                <AlertDescription>
+                  {updateExerciseError?.message}
+                </AlertDescription>
+              )}
+              {deleteExerciseError?.message && (
+                <AlertDescription>
+                  {deleteExerciseError?.message}
+                </AlertDescription>
               )}
             </VStack>
           </HStack>
@@ -225,9 +257,9 @@ function ViewDetailedExercise({
         </Alert>
       )}
 
-      {editExercise || loading ? (
+      {editExercise || updateExerciseIsLoading || deleteExerciseIsLoading ? (
         <>
-          {loading ? (
+          {updateExerciseIsLoading || deleteExerciseIsLoading ? (
             <LoadingSpinner />
           ) : (
             <Box p="0" m="0.75rem 0 0 0">

@@ -1,6 +1,5 @@
 import dayjs from "dayjs";
 export function formatExercisesForDB(exercises) {
-    // const { exercises } = workoutWithExercises;
     const formattedExercises = exercises.map((exercise) => {
         const { title, weight, weightUnit, sets, reps, repsDisplay, comment, elapsedSeconds, } = exercise;
         return {

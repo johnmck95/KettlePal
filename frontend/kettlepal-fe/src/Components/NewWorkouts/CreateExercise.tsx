@@ -37,7 +37,7 @@ export default function CreateExercise({
 }: {
   exercise: Omit<CreateWorkoutState["exercises"][number], "key">;
   handleExercise: (name: string, value: string | number, index: number) => void;
-  deleteExercise: (index: number) => void | (() => void);
+  deleteExercise: ((index: number) => void) | (() => Promise<void>);
   exerciseIndex: number;
   submitted: boolean;
   setFormHasErrors: (value: boolean) => void;

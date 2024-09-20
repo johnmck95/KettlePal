@@ -308,7 +308,7 @@ const resolvers = {
             if (userUidOfExercise !== req.userUid) {
                 throw new NotAuthorizedError();
             }
-            // Merge old exercise with new edits, the verify the new exercise
+            // Merge old exercise with new edits, then verify the new exercise
             // for any errors before writing to the database
             let oldExercise = (await knexInstance("exercises").where({ uid: uid }))[0];
             const mergedExercise = { ...oldExercise, ...edits };
@@ -401,15 +401,24 @@ const resolvers = {
             if (!req.userUid) {
                 throw new NotAuthorizedError();
             }
+            const [exercisePlus] = await knexInstance("exercises as e")
+                .join("workouts as w", "w.uid", "e.workoutUid")
+                .join("users as u", "w.userUid", "u.uid")
+                .select("e.*", "u.uid as userUid")
+                .where("e.uid", "=", uid);
+            if (!!exercisePlus === false) {
+                throw new Error("Exercise not found.");
+            }
+            const { userUid, ...exercise } = exercisePlus;
+            if (userUid !== req.userUid) {
+                throw new NotAuthorizedError();
+            }
             try {
-                const numAffectedRows = await knexInstance("exercises")
-                    .where({ uid: uid })
-                    .del();
-                console.log(`${numAffectedRows} rows affected in deleteExercise mutation.`);
-                return await knexInstance("exercises").select("*");
+                await knexInstance("exercises").where({ uid: uid }).del();
+                return exercise;
             }
             catch (error) {
-                console.error("Error deleting exercise:", error);
+                console.error("Error deleting exercise:", error.message);
                 throw error;
             }
         },

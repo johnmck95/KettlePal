@@ -62,3 +62,11 @@ const UPDATE_EXERCISE = gql`
     }
   }
 `;
+
+const DELETE_EXERCISE = gql`
+  mutation deleteExercise($uid: ID!) {
+    deleteExercise(uid: $uid) {
+      uid
+    }
+  }
+`;
