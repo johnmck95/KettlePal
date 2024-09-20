@@ -166,7 +166,7 @@ function ViewDetailedExercise({
         w="100%"
         justifyContent="space-between"
         alignContent="center"
-        my="0.5rem"
+        my={showDetails ? "0.5rem" : 0}
       >
         <Text fontSize={showDetails ? "xl" : "md"} color={theme.colors.black}>
           <b>{formatExerciseString(exercise)}</b>
@@ -230,15 +230,17 @@ function ViewDetailedExercise({
           {loading ? (
             <LoadingSpinner />
           ) : (
-            <CreateExercise
-              exercise={editableExercise}
-              handleExercise={handleExercise}
-              deleteExercise={deleteExercise}
-              exerciseIndex={0}
-              submitted={submitted}
-              setFormHasErrors={setFormHasErrors}
-              trackWorkout={false}
-            />
+            <Box p="0" m="0.75rem 0 0 0">
+              <CreateExercise
+                exercise={editableExercise}
+                handleExercise={handleExercise}
+                deleteExercise={deleteExercise}
+                exerciseIndex={0}
+                submitted={submitted}
+                setFormHasErrors={setFormHasErrors}
+                trackWorkout={false}
+              />
+            </Box>
           )}
         </>
       ) : (
