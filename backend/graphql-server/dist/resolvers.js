@@ -173,7 +173,7 @@ const resolvers = {
             if (!req.userUid || req.userUid !== userUid) {
                 throw new NotAuthorizedError();
             }
-            const newExercises = formatExercisesForDB(workoutWithExercises);
+            const newExercises = formatExercisesForDB(workoutWithExercises.exercises);
             const newWorkout = formatWorkoutForDB(workoutWithExercises, userUid);
             const isWorkoutValid = verifyWorkout(newWorkout);
             if (isWorkoutValid.result === false) {
@@ -298,9 +298,32 @@ const resolvers = {
             if (!req.userUid) {
                 throw new NotAuthorizedError();
             }
+            // You may only edit your own exercises
+            const userUidOfExercise = (await knexInstance("exercises as e")
+                .join("workouts as w", "w.uid", "=", "e.workoutUid")
+                .join("users as u", "w.userUid", "=", "u.uid")
+                .select("u.uid")
+                .where("e.uid", "=", uid)
+                .first()).uid;
+            if (userUidOfExercise !== req.userUid) {
+                throw new NotAuthorizedError();
+            }
+            // Merge old exercise with new edits, the verify the new exercise
+            // for any errors before writing to the database
+            let oldExercise = (await knexInstance("exercises").where({ uid: uid }))[0];
+            const mergedExercise = { ...oldExercise, ...edits };
+            const newExercises = formatExercisesForDB([mergedExercise]);
+            const areExercisesValid = verifyExercises(newExercises);
+            if (areExercisesValid.result === false) {
+                throw new Error(areExercisesValid.reason);
+            }
+            // Format has been verified, now update the exercise in the DB
             try {
-                await knexInstance("exercises").where({ uid: uid }).update(edits);
-                return await knexInstance("exercises").where({ uid: uid }).first();
+                const updatedExercise = await knexInstance("exercises")
+                    .where({ uid: uid })
+                    .update(edits)
+                    .returning("*");
+                return updatedExercise[0];
             }
             catch (error) {
                 console.error("Error updating exercise:", error);

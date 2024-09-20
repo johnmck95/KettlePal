@@ -72,8 +72,8 @@ export default function CreateWorkout() {
         }, 5000);
       },
     });
-  const [submitted, setSubmitted] = useState<boolean>(false);
-  const [formHasErrors, setFormHasErrors] = useState<boolean>(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [formHasErrors, setFormHasErrors] = useState(false);
   const [timerIsActive, setTimerIsActive] = useState(false);
   const userUid = useUser().user?.uid ?? null;
 
@@ -301,8 +301,8 @@ export default function CreateWorkout() {
       {/* ADD COMMENT & TRACK WORKOUT BUTTONS */}
       <HStack w="100%" justifyContent={"space-between"} mt="1rem">
         <Button
-          fontSize={["sm", "md"]}
-          variant="link"
+          size="sm"
+          variant="secondary"
           onClick={() => setAddWorkoutComment((prev) => !prev)}
           textAlign="left"
           color="black"
@@ -311,8 +311,8 @@ export default function CreateWorkout() {
           {addWorkoutComment ? "Hide Comment" : "Add Comment"}
         </Button>
         <Button
-          fontSize={["sm", "md"]}
-          variant="link"
+          size="sm"
+          variant="secondary"
           onClick={() => setShowTracking((prev) => !prev)}
           textAlign="left"
           color="black"

@@ -10,13 +10,27 @@ import {
   HStack,
   Button,
   Flex,
+  IconButton,
+  useDisclosure,
+  Alert,
+  AlertIcon,
+  AlertDescription,
+  CloseButton,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
 import theme from "../../Constants/theme";
 import { formatExerciseString } from "../../utils/Exercises/exercises";
 import { formatDurationShort, postgresToDayJs } from "../../utils/Time/time";
 import { totalWorkoutWorkCapacity } from "../../utils/Workouts/workouts";
-import { UserWithWorkoutsQuery } from "../../generated/frontend-types";
+import {
+  UserWithWorkoutsQuery,
+  useUpdateExerciseMutation,
+} from "../../generated/frontend-types";
+import { FaMinus, FaPencilAlt, FaSave } from "react-icons/fa";
+import CreateExercise from "../NewWorkouts/CreateExercise";
+import { CreateWorkoutState } from "../NewWorkouts/CreateWorkout";
+import ConfirmModal from "../ConfirmModal";
+import LoadingSpinner from "../LoadingSpinner";
 
 function Detail({
   title,
@@ -45,6 +59,7 @@ function Detail({
 function ViewDetailedExercise({
   exercise,
   showDetails,
+  refetchPastWorkouts,
 }: {
   exercise: NonNullable<
     NonNullable<
@@ -52,8 +67,93 @@ function ViewDetailedExercise({
     >["exercises"]
   >[0];
   showDetails: boolean;
+  refetchPastWorkouts: () => void;
 }) {
-  const { elapsedSeconds, sets, reps, weight, weightUnit, comment } = exercise;
+  const [editExercise, setEditExercise] = React.useState(false);
+  const {
+    uid,
+    title,
+    elapsedSeconds,
+    sets,
+    reps,
+    repsDisplay,
+    weight,
+    weightUnit,
+    comment,
+  } = exercise;
+
+  const [editableExercise, setEditableExercise] = useState<
+    Omit<CreateWorkoutState["exercises"][0], "key">
+  >({
+    title,
+    weight: weight?.toString() ?? "",
+    weightUnit: weightUnit ?? "",
+    sets: sets?.toString() ?? "",
+    reps: reps?.toString() ?? "",
+    repsDisplay: repsDisplay ?? "",
+    comment: comment ?? "",
+    elapsedSeconds: elapsedSeconds ?? 0,
+  });
+
+  function handleExercise(name: string, value: string | number): void {
+    setEditableExercise((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  }
+
+  function deleteExercise() {
+    console.log("TODO: delete exercise");
+  }
+
+  // Save Exercise Modal Controls
+  const {
+    isOpen: isOpenExercise,
+    onOpen: onOpenExercise,
+    onClose: onCloseExercise,
+  } = useDisclosure();
+
+  const [submitted, setSubmitted] = useState(false);
+  const [formHasErrors, setFormHasErrors] = useState<boolean>(false);
+  const [showServerError, setShowServerError] = useState<boolean>(false);
+  const [showUploadSuccess, setShowUploadSuccess] = useState<boolean>(false);
+
+  const [updateExerciseMutation, { loading, error }] =
+    useUpdateExerciseMutation({
+      onCompleted: () => {
+        refetchPastWorkouts();
+        setShowUploadSuccess(true);
+        setTimeout(() => {
+          setShowUploadSuccess(false);
+        }, 5000);
+        setEditExercise(false);
+      },
+      onError: (error) => {
+        setShowServerError(true);
+        console.error("Error updating exercise: ", error.message);
+      },
+    });
+
+  async function onSaveExercise() {
+    setSubmitted(true);
+    onCloseExercise();
+    // Client-side validation
+    if (formHasErrors) {
+      return;
+    }
+    // Try to write to DB
+    try {
+      await updateExerciseMutation({
+        variables: {
+          uid,
+          edits: editableExercise,
+        },
+      });
+    } catch (err) {
+      console.error("Error submitting workout with exercises: ", err);
+    }
+  }
+
   return (
     <VStack
       w="100%"
@@ -62,45 +162,159 @@ function ViewDetailedExercise({
       color={theme.colors.grey[800]}
       my="0.5rem"
     >
-      <Text
-        fontSize={showDetails ? "xl" : "md"}
-        mt={showDetails ? "0.5rem" : "0"}
-        color={theme.colors.black}
+      <HStack
+        w="100%"
+        justifyContent="space-between"
+        alignContent="center"
+        my="0.5rem"
       >
-        <b>{formatExerciseString(exercise)}</b>
-      </Text>
-      {!!comment && showDetails && (
-        <Text ml="0.5rem" fontSize="sm" color={theme.colors.grey[700]}>
-          <i>{comment}</i>
+        <Text fontSize={showDetails ? "xl" : "md"} color={theme.colors.black}>
+          <b>{formatExerciseString(exercise)}</b>
         </Text>
+        <HStack>
+          {editExercise && (
+            <IconButton
+              variant="primary"
+              aria-label="Save Exercise"
+              size="xs"
+              icon={<FaSave />}
+              onClick={onOpenExercise}
+            />
+          )}
+
+          <IconButton
+            variant="secondary"
+            aria-label="Eedit Exercise"
+            size="xs"
+            icon={editExercise ? <FaMinus /> : <FaPencilAlt />}
+            onClick={() => setEditExercise((prev) => !prev)}
+          />
+        </HStack>
+      </HStack>
+
+      {/* SUCCESSFULLY UPDATED EXERCISE */}
+      {showUploadSuccess && (
+        <Alert status="success" my="1rem" borderRadius={"8px"} bg="green.50">
+          <AlertIcon />
+          Exercise Updated Successfully!
+        </Alert>
       )}
-      {showDetails && (
-        <Flex
-          justifyContent="space-evenly"
-          flexWrap="wrap"
-          mt="0.5rem"
+
+      {/* ERROR WHILE UPDATING EXERCISE */}
+      {showServerError && !!error && (
+        <Alert
+          status="error"
+          my="1rem"
+          maxW="500px"
           w="100%"
+          borderRadius={"8px"}
+          justifyContent={"space-between"}
         >
-          {!!elapsedSeconds && (
-            <Detail
-              title={"Elapsed Time"}
-              value={formatDurationShort(elapsedSeconds ?? 0)}
-            />
-          )}
-          {!!sets && !!reps && (
-            <Detail
-              title={"Total Reps"}
-              value={`${(sets * reps).toLocaleString()}`}
-            />
-          )}
-          {!!sets && !!reps && !!weight && !!weightUnit && (
-            <Detail
-              title={"Work Capacity"}
-              value={`${(sets * reps * weight).toLocaleString()} ${weightUnit}`}
-            />
-          )}
-        </Flex>
+          <HStack>
+            <AlertIcon />
+            <VStack alignItems={"flex-start"}>
+              {error?.message && (
+                <AlertDescription>{error?.message}</AlertDescription>
+              )}
+            </VStack>
+          </HStack>
+          <CloseButton
+            alignSelf="flex-start"
+            onClick={() => setShowServerError(false)}
+          />
+        </Alert>
       )}
+
+      {editExercise || loading ? (
+        <>
+          {loading ? (
+            <LoadingSpinner />
+          ) : (
+            <CreateExercise
+              exercise={editableExercise}
+              handleExercise={handleExercise}
+              deleteExercise={deleteExercise}
+              exerciseIndex={0}
+              submitted={submitted}
+              setFormHasErrors={setFormHasErrors}
+              trackWorkout={false}
+            />
+          )}
+        </>
+      ) : (
+        <>
+          {!!comment && showDetails && (
+            <Text ml="0.5rem" fontSize="sm" color={theme.colors.grey[700]}>
+              <i>{comment}</i>
+            </Text>
+          )}
+          {showDetails && (
+            <Flex
+              justifyContent="space-evenly"
+              flexWrap="wrap"
+              mt="0.5rem"
+              w="100%"
+            >
+              {!!elapsedSeconds && (
+                <Detail
+                  title={"Elapsed Time"}
+                  value={formatDurationShort(elapsedSeconds ?? 0)}
+                />
+              )}
+              {!!sets && !!reps && (
+                <Detail
+                  title={"Total Reps"}
+                  value={`${(sets * reps).toLocaleString()}`}
+                />
+              )}
+              {!!sets && !!reps && !!weight && !!weightUnit && (
+                <Detail
+                  title={"Work Capacity"}
+                  value={`${(
+                    sets *
+                    reps *
+                    weight
+                  ).toLocaleString()} ${weightUnit}`}
+                />
+              )}
+            </Flex>
+          )}
+        </>
+      )}
+      {/* CONFIRM SAVE EXERCISE MODAL */}
+      <ConfirmModal
+        isOpen={isOpenExercise}
+        onClose={onCloseExercise}
+        onConfirmation={onSaveExercise}
+        ModalTitle="Save Workout"
+        ModalBodyText={
+          <Box mb="1rem">
+            Are you sure your exercise is complete, and ready to be saved?
+            <br />
+            <br />
+            <>
+              <Text color={theme.colors.green[600]}>
+                <b>
+                  <i>New Exercise</i>
+                </b>
+              </Text>
+              {formatExerciseString(editableExercise)} <br />
+            </>
+            <br />
+            <>
+              <Text color={theme.colors.grey[600]}>
+                <b>
+                  <i>Old Exercise</i>
+                </b>
+              </Text>
+              {formatExerciseString(exercise)} <br />
+            </>
+          </Box>
+        }
+        CloseText="Cancel"
+        ProceedText="Save"
+        variant="confirm"
+      />
     </VStack>
   );
 }
@@ -109,12 +323,14 @@ export default function ViewDetailedWorkoutModal({
   workoutWithExercises,
   isOpen,
   onClose,
+  refetchPastWorkouts,
 }: {
   workoutWithExercises: NonNullable<
     NonNullable<UserWithWorkoutsQuery["user"]>["workouts"]
   >[0];
   isOpen: boolean;
   onClose: () => void;
+  refetchPastWorkouts: () => void;
 }) {
   const [showDetails, setShowDetails] = React.useState(false);
   const { comment, createdAt, exercises, elapsedSeconds } =
@@ -183,6 +399,7 @@ export default function ViewDetailedWorkoutModal({
                     key={exercise.uid}
                     exercise={exercise}
                     showDetails={showDetails}
+                    refetchPastWorkouts={refetchPastWorkouts}
                   />
                 ))}
               </Box>

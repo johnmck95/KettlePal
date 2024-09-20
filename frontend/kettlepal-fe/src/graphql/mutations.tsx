@@ -44,3 +44,21 @@ const DELETE_WORKOUT_WITH_EXERCISES = gql`
     }
   }
 `;
+
+const UPDATE_EXERCISE = gql`
+  mutation updateExercise($uid: ID!, $edits: EditExerciseInput!) {
+    updateExercise(uid: $uid, edits: $edits) {
+      uid
+      title
+      weight
+      weightUnit
+      sets
+      reps
+      repsDisplay
+      comment
+      elapsedSeconds
+      createdAt
+      workoutUid
+    }
+  }
+`;

@@ -35,9 +35,9 @@ export default function CreateExercise({
   setFormHasErrors,
   trackWorkout,
 }: {
-  exercise: CreateWorkoutState["exercises"][number];
+  exercise: Omit<CreateWorkoutState["exercises"][number], "key">;
   handleExercise: (name: string, value: string | number, index: number) => void;
-  deleteExercise: (index: number) => void;
+  deleteExercise: (index: number) => void | (() => void);
   exerciseIndex: number;
   submitted: boolean;
   setFormHasErrors: (value: boolean) => void;
@@ -357,7 +357,8 @@ export default function CreateExercise({
         <Button
           fontSize={["xs", "sm"]}
           alignSelf={"flex-start"}
-          variant="link"
+          size="xs"
+          variant="secondary"
           onClick={() => setSeeDetails((prev) => !prev)}
           textAlign="left"
           mt="0.15rem"

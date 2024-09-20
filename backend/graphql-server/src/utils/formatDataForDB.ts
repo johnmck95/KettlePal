@@ -5,9 +5,8 @@ import {
 } from "../generated/backend-types";
 
 export function formatExercisesForDB(
-  workoutWithExercises: AddWorkoutWithExercisesInput
+  exercises: AddWorkoutWithExercisesInput["exercises"]
 ) {
-  const { exercises } = workoutWithExercises;
   const formattedExercises = exercises.map((exercise) => {
     const {
       title,
