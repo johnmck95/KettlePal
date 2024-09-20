@@ -125,6 +125,7 @@ export default function ViewWorkout({
           workoutWithExercises={workoutWithExercises}
           isOpen={isOpenDetailedWorkout}
           onClose={onCloseDetailedWorkout}
+          refetchPastWorkouts={refetchPastWorkouts}
         />
       </HStack>
 

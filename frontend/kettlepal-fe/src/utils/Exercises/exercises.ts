@@ -66,7 +66,9 @@ export function formatReps(
 }
 
 export function formatExerciseString(
-  exercise: Omit<Exercise, "workoutUid"> | CreateWorkoutState["exercises"][0]
+  exercise:
+    | Omit<Exercise, "workoutUid">
+    | Omit<CreateWorkoutState["exercises"][number], "key">
 ): string {
   const { title, weight, weightUnit, sets, reps, repsDisplay, comment } =
     exercise;

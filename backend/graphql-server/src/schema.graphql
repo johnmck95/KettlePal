@@ -58,7 +58,7 @@ type RefreshTokenResponse {
 type Mutation {
   deleteUser(uid: ID!): [User]!
   deleteWorkout(uid: ID!): [Workout]!
-  deleteExercise(uid: ID!): [Exercise]!
+  deleteExercise(uid: ID!): Exercise!
   deleteWorkoutWithExercises(workoutUid: ID!): Workout!
 
   addUser(user: AddUserInput!): User
