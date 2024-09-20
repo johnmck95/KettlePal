@@ -249,7 +249,7 @@ export default function CreateExercise({
         <HStack w="100%" mb="0.25rem">
           {/* TITLE */}
           <FormControl
-            w="45%"
+            w="42%"
             isRequired
             isInvalid={submitted && titleIsInvalid}
           >
@@ -282,7 +282,7 @@ export default function CreateExercise({
           </FormControl>
 
           {/* WEIGHT */}
-          <FormControl w="22%" isInvalid={submitted && weightIsInvalid}>
+          <FormControl w="23%" isInvalid={submitted && weightIsInvalid}>
             <FormLabel size={["xs", "", "md"]}>Weight</FormLabel>
             <Select
               size={["sm", "sm", "md"]}
@@ -312,7 +312,7 @@ export default function CreateExercise({
           </FormControl>
 
           {/* SETS */}
-          <FormControl w="15%" isInvalid={submitted && setsIsInvalid}>
+          <FormControl w="16%" isInvalid={submitted && setsIsInvalid}>
             <FormLabel size={["xs", "sm", "md"]}>Sets</FormLabel>
             <Input
               size={["sm", "sm", "md"]}
@@ -332,7 +332,7 @@ export default function CreateExercise({
           </FormControl>
 
           {/* REPS */}
-          <FormControl w="15%" isInvalid={submitted && repsIsInvalid}>
+          <FormControl w="16%" isInvalid={submitted && repsIsInvalid}>
             <FormLabel size={["xs", "sm", "md"]}>
               <Text>Reps</Text>
             </FormLabel>

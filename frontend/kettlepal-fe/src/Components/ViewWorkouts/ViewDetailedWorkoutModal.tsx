@@ -340,9 +340,12 @@ export default function ViewDetailedWorkoutModal({
     <>
       <Modal isOpen={isOpen} onClose={onClose} motionPreset="slideInBottom">
         <ModalOverlay />
-        <ModalContent padding="1rem 0.5rem" m="1rem">
+        <ModalContent
+          padding={["0.75rem 0.25rem", "1rem 0.5rem"]}
+          m={["0.5rem"]}
+        >
           <ModalCloseButton />
-          <ModalBody p="1rem" overflow="scroll">
+          <ModalBody p={["0.5rem", "1rem"]} overflow="scroll">
             <VStack alignItems="flex-start" gap={0}>
               {/* DATE */}
               <Text fontSize={["lg", "2xl"]}>
