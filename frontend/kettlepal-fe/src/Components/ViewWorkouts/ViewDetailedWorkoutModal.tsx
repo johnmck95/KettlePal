@@ -196,12 +196,12 @@ function ViewDetailedExercise({
         <Text fontSize={showDetails ? "xl" : "md"} color={theme.colors.black}>
           <b>{formatExerciseString(exercise)}</b>
         </Text>
-        <HStack>
+        <HStack my="0.15rem">
           {editExercise && (
             <IconButton
               variant="primary"
               aria-label="Save Exercise"
-              size="xs"
+              size="sm"
               icon={<FaSave />}
               onClick={onOpenExercise}
             />
@@ -210,7 +210,7 @@ function ViewDetailedExercise({
           <IconButton
             variant="secondary"
             aria-label="Eedit Exercise"
-            size="xs"
+            size="sm"
             icon={editExercise ? <FaMinus /> : <FaPencilAlt />}
             onClick={() => setEditExercise((prev) => !prev)}
           />

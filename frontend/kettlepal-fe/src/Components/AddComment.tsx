@@ -27,9 +27,10 @@ export default function AddComment({
       w="100%"
       border={`1px solid ${theme.colors.gray[300]}`}
       borderRadius={"5px"}
-      p="0.15rem 0.5rem"
+      px="0.5rem"
       maxW={maxWidth}
       bg="white"
+      fontSize={["12px", "14px", "16px"]}
     >
       <Editable
         value={comment}

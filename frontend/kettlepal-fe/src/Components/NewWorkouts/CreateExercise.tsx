@@ -249,13 +249,16 @@ export default function CreateExercise({
         <HStack w="100%" mb="0.25rem">
           {/* TITLE */}
           <FormControl
-            w="42%"
+            w="50%"
             isRequired
             isInvalid={submitted && titleIsInvalid}
           >
-            <FormLabel size={["xs", "sm", "md"]}>Title</FormLabel>
+            <FormLabel fontSize={["12px", "14px", "16px"]} m="0">
+              Title
+            </FormLabel>
             <Select
               size={["sm", "sm", "md"]}
+              fontSize={["12px", "14px", "16px"]}
               placeholder="Select Option"
               name="title"
               value={exercise.title}
@@ -283,9 +286,12 @@ export default function CreateExercise({
 
           {/* WEIGHT */}
           <FormControl w="23%" isInvalid={submitted && weightIsInvalid}>
-            <FormLabel size={["xs", "", "md"]}>Weight</FormLabel>
+            <FormLabel fontSize={["12px", "14px", "16px"]} m="0">
+              Weight
+            </FormLabel>
             <Select
               size={["sm", "sm", "md"]}
+              fontSize={["12px", "14px", "16px"]}
               placeholder="Select Option"
               name="weight"
               value={exercise.weight}
@@ -312,10 +318,13 @@ export default function CreateExercise({
           </FormControl>
 
           {/* SETS */}
-          <FormControl w="16%" isInvalid={submitted && setsIsInvalid}>
-            <FormLabel size={["xs", "sm", "md"]}>Sets</FormLabel>
+          <FormControl w="15%" isInvalid={submitted && setsIsInvalid}>
+            <FormLabel fontSize={["12px", "14px", "16px"]} m="0">
+              Sets
+            </FormLabel>
             <Input
               size={["sm", "sm", "md"]}
+              fontSize={["12px", "14px", "16px"]}
               placeholder="0"
               autoComplete="off"
               type="number"
@@ -332,11 +341,12 @@ export default function CreateExercise({
           </FormControl>
 
           {/* REPS */}
-          <FormControl w="16%" isInvalid={submitted && repsIsInvalid}>
-            <FormLabel size={["xs", "sm", "md"]}>
+          <FormControl w="15%" isInvalid={submitted && repsIsInvalid}>
+            <FormLabel fontSize={["12px", "14px", "16px"]} m="0">
               <Text>Reps</Text>
             </FormLabel>
             <Input
+              fontSize={["12px", "14px", "16px"]}
               size={["sm", "sm", "md"]}
               type="number"
               name="reps"
@@ -355,13 +365,12 @@ export default function CreateExercise({
 
         {/* SEE DETAILS */}
         <Button
-          fontSize={["xs", "sm"]}
+          fontSize={[12, 14, 16]}
           alignSelf={"flex-start"}
-          size="xs"
+          size={["xs", "sm", "md"]}
           variant="secondary"
           onClick={() => setSeeDetails((prev) => !prev)}
           textAlign="left"
-          mt="0.15rem"
           color={
             submitted &&
             (weightUnitIsInvalid || repsDisplayIsInvalid || timerIsInvalid)
@@ -381,87 +390,97 @@ export default function CreateExercise({
               w="100%"
               justifyContent="space-between"
               alignItems="flex-end"
-              mt="-1.5rem"
+              mt="-0.75rem"
             >
-              {/* WEIGHT UNIT */}
-              <FormControl
-                maxW="160px"
-                isInvalid={submitted && weightUnitIsInvalid}
-              >
-                <FormLabel mb="0" fontSize={["xs", "sm", "md"]}>
-                  Weight Unit
-                </FormLabel>
-                <Select
-                  size={["sm", "sm", "md"]}
-                  placeholder="Select Option"
-                  name="weightUnit"
-                  maxWidth="150px"
-                  value={exercise.weightUnit}
-                  onChange={(event) =>
-                    handleExercise(
-                      event.target.name,
-                      event.target.value,
-                      exerciseIndex
-                    )
-                  }
-                  focusBorderColor={theme.colors.green[300]}
-                  color={
-                    !!exercise.weightUnit
-                      ? theme.colors.black
-                      : theme.colors.grey[500]
-                  }
+              <HStack>
+                {/* REPS DISPLAY */}
+                <FormControl
+                  minWidth="70px"
+                  maxWidth={["90px", "110px", "130px"]}
+                  isInvalid={submitted && repsDisplayIsInvalid}
                 >
-                  {WeightOptions.map((option) => {
-                    return (
-                      <option key={option.label} value={option.value}>
-                        {option.label}
-                      </option>
-                    );
-                  })}
-                </Select>
-              </FormControl>
+                  <FormLabel fontSize={["12px", "14px", "16px"]} m="0">
+                    Rep Type
+                  </FormLabel>
+                  <Select
+                    fontSize={["12px", "14px", "16px"]}
+                    size={["sm", "sm", "md"]}
+                    placeholder="Select Option"
+                    name="repsDisplay"
+                    value={exercise.repsDisplay}
+                    onChange={(event) =>
+                      handleExercise(
+                        event.target.name,
+                        event.target.value,
+                        exerciseIndex
+                      )
+                    }
+                    focusBorderColor={theme.colors.green[300]}
+                    color={
+                      !!exercise.repsDisplay
+                        ? theme.colors.black
+                        : theme.colors.grey[500]
+                    }
+                  >
+                    {RepsDisplayOptions.map((option) => {
+                      return (
+                        <option key={option.label} value={option.value}>
+                          {option.label}
+                        </option>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
 
-              {/* REPS DISPLAY */}
-              <FormControl
-                minWidth="100px"
-                maxWidth="150px"
-                isInvalid={submitted && repsDisplayIsInvalid}
-              >
-                <FormLabel mb="0" fontSize={["xs", "sm", "md"]}>
-                  Rep Type
-                </FormLabel>
-                <Select
-                  size={["sm", "sm", "md"]}
-                  placeholder="Select Option"
-                  name="repsDisplay"
-                  value={exercise.repsDisplay}
-                  onChange={(event) =>
-                    handleExercise(
-                      event.target.name,
-                      event.target.value,
-                      exerciseIndex
-                    )
-                  }
-                  focusBorderColor={theme.colors.green[300]}
-                  color={
-                    !!exercise.repsDisplay
-                      ? theme.colors.black
-                      : theme.colors.grey[500]
-                  }
+                {/* WEIGHT UNIT */}
+                <FormControl
+                  minWidth="50px"
+                  maxWidth={["90px", "110px", "130px"]}
+                  isInvalid={submitted && weightUnitIsInvalid}
                 >
-                  {RepsDisplayOptions.map((option) => {
-                    return (
-                      <option key={option.label} value={option.value}>
-                        {option.label}
-                      </option>
-                    );
-                  })}
-                </Select>
-              </FormControl>
+                  <FormLabel fontSize={["12px", "14px", "16px"]} m="0">
+                    Weight Unit
+                  </FormLabel>
+                  <Select
+                    fontSize={["12px", "14px", "16px"]}
+                    size={["sm", "sm", "md"]}
+                    placeholder="Select Option"
+                    name="weightUnit"
+                    maxWidth="150px"
+                    value={exercise.weightUnit}
+                    onChange={(event) =>
+                      handleExercise(
+                        event.target.name,
+                        event.target.value,
+                        exerciseIndex
+                      )
+                    }
+                    focusBorderColor={theme.colors.green[300]}
+                    color={
+                      !!exercise.weightUnit
+                        ? theme.colors.black
+                        : theme.colors.grey[500]
+                    }
+                  >
+                    {WeightOptions.map((option) => {
+                      return (
+                        <option key={option.label} value={option.value}>
+                          {option.label}
+                        </option>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+              </HStack>
 
               {/* EXERCISE TIMER */}
-              <VStack justifyContent={"flex-end"} alignItems={"center"}>
-                <FormLabel fontSize={["xs", "sm", "md"]} m="0px">
+              <VStack
+                justifyContent={"flex-end"}
+                alignItems={"center"}
+                minWidth="130px"
+                spacing={0}
+              >
+                <FormLabel fontSize={["12px", "14px", "16px"]} m="0">
                   Elapsed Time
                 </FormLabel>
                 <Timer
@@ -470,6 +489,7 @@ export default function CreateExercise({
                   setIsActive={setTimerIsActive}
                   setTime={setTime}
                   size="sm"
+                  variant="digital"
                 />
               </VStack>
             </HStack>
@@ -532,8 +552,6 @@ export default function CreateExercise({
             </HStack>
           </HStack>
         )}
-
-        {/* STOPWATCH */}
 
         {/* DELETE EXERCISE MODAL */}
         <ConfirmModal
