@@ -18,6 +18,7 @@ An overbuilt "just-for-me" learning project that is made to keep track of my per
 
 - JWT Authentication, Login/Logout, Hashing. (Sign Up is intentionally witheld until further securtiy testing is done.)
 - Design new workouts, track progress, and save to the database.
+  - Edit saved exercises
   - Client-side and server-side validation.
 - View historical workout data.
 - View specific workouts in greater detail with computed information, like work capacity.
