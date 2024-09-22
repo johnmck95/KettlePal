@@ -47,12 +47,19 @@ export type CreateWorkoutState = {
   }>;
 };
 
+const SESSION_STATE_KEY = "createWorkoutState";
+
 export default function CreateWorkout() {
-  const [state, setState] = useState<CreateWorkoutState>({
-    createdAt: getCurrentDate(),
-    comment: "",
-    elapsedSeconds: 0,
-    exercises: [],
+  const [state, setState] = useState<CreateWorkoutState>(() => {
+    const fromStorage = sessionStorage.getItem(SESSION_STATE_KEY);
+    return fromStorage
+      ? JSON.parse(fromStorage)
+      : {
+          createdAt: getCurrentDate(),
+          comment: "",
+          elapsedSeconds: 0,
+          exercises: [],
+        };
   });
   const [showTracking, setShowTracking] = useState<boolean>(false);
   const [addWorkoutComment, setAddWorkoutComment] = useState<boolean>(false);
@@ -66,6 +73,7 @@ export default function CreateWorkout() {
           elapsedSeconds: 0,
           exercises: [],
         });
+        sessionStorage.removeItem(SESSION_STATE_KEY);
         setShowUploadSuccess(true);
         setTimeout(() => {
           setShowUploadSuccess(false);
@@ -76,6 +84,10 @@ export default function CreateWorkout() {
   const [formHasErrors, setFormHasErrors] = useState(false);
   const [timerIsActive, setTimerIsActive] = useState(false);
   const userUid = useUser().user?.uid ?? null;
+
+  useEffect(() => {
+    sessionStorage.setItem(SESSION_STATE_KEY, JSON.stringify(state));
+  }, [state]);
 
   // Update workout timer every 1s
   useEffect(() => {

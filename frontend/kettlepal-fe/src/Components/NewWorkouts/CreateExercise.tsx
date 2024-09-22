@@ -43,15 +43,12 @@ export default function CreateExercise({
   setFormHasErrors: (value: boolean) => void;
   trackWorkout: boolean;
 }) {
+  const SESSION_STORAGE_KEY = `completedSets-${exerciseIndex}`;
   const [seeDetails, setSeeDetails] = useState<boolean>(false);
-  const [completedSets, setCompletedSets] = useState<number>(0);
-
-  // TODO: Session storage for completedSets works, but the exercise data isn't being saved.
-  // Migrate all of the workout + exercise to be saved in session storage before turning this on.
-  // const [completedSets, setCompletedSets] = useState<number>(() => {
-  //   const sessionVal = sessionStorage.getItem(`completedSets-${exerciseIndex}`);
-  //   return sessionVal ? parseInt(sessionVal) : 0;
-  // });
+  const [completedSets, setCompletedSets] = useState<number>(() => {
+    const sessionVal = sessionStorage.getItem(SESSION_STORAGE_KEY);
+    return sessionVal ? parseInt(sessionVal) : 0;
+  });
 
   const setExerciseComment = (newComment: string) => {
     handleExercise("comment", newComment, exerciseIndex);
@@ -144,31 +141,23 @@ export default function CreateExercise({
     [numErrors, setFormHasErrors]
   );
 
+  useEffect(() => {
+    sessionStorage.setItem(SESSION_STORAGE_KEY, completedSets.toString());
+  }, [completedSets]);
+
   function completedASet() {
     setCompletedSets((prev) => prev + 1);
     if (exercise.sets === "") {
       handleExercise("sets", "1", exerciseIndex);
     } else if (completedSets >= parseInt(exercise.sets)) {
-      handleExercise("sets", completedSets + 1, exerciseIndex);
+      handleExercise("sets", (completedSets + 1).toString(), exerciseIndex);
     }
-    // TODO: Session storage for completedSets works, but the exercise data isn't being saved.
-    // Migrate all of the workout + exercise to be saved in session storage before turning this on.
-    // sessionStorage.setItem(
-    //   `completedSets-${exerciseIndex}`,
-    //   completedSets.toString()
-    // );
   }
   function removedASet() {
     if (completedSets === 0) {
       return;
     }
     setCompletedSets((prev) => prev - 1);
-    // TODO: Session storage for completedSets works, but the exercise data isn't being saved.
-    // Migrate all of the workout + exercise to be saved in session storage before turning this on.
-    // sessionStorage.setItem(
-    //   `completedSets-${exerciseIndex}`,
-    //   completedSets.toString()
-    // );
   }
 
   useEffect(() => {
