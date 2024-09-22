@@ -202,7 +202,11 @@ const resolvers = {
       if (!req.userUid || req.userUid !== userUid) {
         throw new NotAuthorizedError();
       }
-      const newExercises = formatExercisesForDB(workoutWithExercises.exercises);
+      const newExercises = formatExercisesForDB({
+        exercises: workoutWithExercises.exercises,
+        createdAt: workoutWithExercises.createdAt,
+        workoutElapsedSeconds: workoutWithExercises.elapsedSeconds,
+      });
       const newWorkout = formatWorkoutForDB(workoutWithExercises, userUid);
 
       const isWorkoutValid = verifyWorkout(newWorkout);
@@ -397,7 +401,11 @@ const resolvers = {
         await knexInstance("exercises").where({ uid: uid })
       )[0];
       const mergedExercise = { ...oldExercise, ...edits };
-      const newExercises = formatExercisesForDB([mergedExercise]);
+      const newExercises = formatExercisesForDB({
+        exercises: [mergedExercise],
+        createdAt: null, // Don't update createdAt when exercise already exists
+        workoutElapsedSeconds: null,
+      });
       const areExercisesValid = verifyExercises(newExercises);
       if (areExercisesValid.result === false) {
         throw new Error(areExercisesValid.reason);

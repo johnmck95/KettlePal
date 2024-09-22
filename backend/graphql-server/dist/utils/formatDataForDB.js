@@ -1,5 +1,14 @@
 import dayjs from "dayjs";
-export function formatExercisesForDB(exercises) {
+// Frontend collects YYYY-MM-DD.
+// This adds the current HH:MM:SS:SSSZ less the elapsed seconds.
+function formatCreatedAt(createdAt, elapsedSeconds) {
+    const currentTime = dayjs().format("HH:mm:ss.SSSZ");
+    const fullCreatedAt = dayjs(`${createdAt}T${currentTime}`)
+        .subtract(elapsedSeconds, "seconds")
+        .format("YYYY-MM-DDTHH:mm:ss.SSSZ");
+    return fullCreatedAt;
+}
+export function formatExercisesForDB({ exercises, createdAt, workoutElapsedSeconds, }) {
     const formattedExercises = exercises.map((exercise) => {
         const { title, weight, weightUnit, sets, reps, repsDisplay, comment, elapsedSeconds, } = exercise;
         return {
@@ -18,20 +27,18 @@ export function formatExercisesForDB(exercises) {
             repsDisplay: repsDisplay !== "" ? repsDisplay : null,
             comment: comment !== "" ? comment : null,
             elapsedSeconds,
+            createdAt: createdAt !== null && workoutElapsedSeconds !== null
+                ? formatCreatedAt(createdAt, workoutElapsedSeconds)
+                : null,
         };
     });
     return formattedExercises;
 }
 export function formatWorkoutForDB(workoutWithExercises, userUid) {
     const { createdAt, elapsedSeconds, comment } = workoutWithExercises;
-    const currentTime = dayjs().format("HH:mm:ss.SSSZ");
-    // Appends Hr/Min/Sec... since created add is a calendar date, only.
-    const fullCreatedAt = dayjs(`${createdAt}T${currentTime}`)
-        .subtract(elapsedSeconds, "seconds")
-        .format("YYYY-MM-DDTHH:mm:ss.SSSZ");
     const formattedWorkout = {
         userUid: userUid,
-        createdAt: fullCreatedAt,
+        createdAt: formatCreatedAt(createdAt, elapsedSeconds),
         elapsedSeconds,
         comment,
     };

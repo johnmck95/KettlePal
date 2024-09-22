@@ -1,12 +1,22 @@
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+// Postgres timestamps are in UTC
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 /**
  * Converts a postgres timestamp to a dayJs object considering unix timestamp conventions.
+ * Tries to convert to the users locale timezone.
  * @param timestamp the unedited postgres timestamp.
  * @returns a dayJs object that correctly handles unix conversions
  */
+
 export function postgresToDayJs(timestamp: string): dayjs.Dayjs {
-  return dayjs.unix(Number(timestamp) / 1000);
+  const utcTime = dayjs.utc(dayjs.unix(Number(timestamp) / 1000));
+  const localTime = utcTime.tz(dayjs.tz.guess() ?? "America/Vancouver");
+  return localTime;
 }
 
 export function getCurrentDate(): string {

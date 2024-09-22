@@ -4,9 +4,26 @@ import {
   AddWorkoutWithExercisesInput,
 } from "../generated/backend-types";
 
-export function formatExercisesForDB(
-  exercises: AddWorkoutWithExercisesInput["exercises"]
-) {
+// Frontend collects YYYY-MM-DD.
+// This adds the current HH:MM:SS:SSSZ less the elapsed seconds.
+function formatCreatedAt(createdAt: string, elapsedSeconds: number) {
+  const currentTime = dayjs().format("HH:mm:ss.SSSZ");
+  const fullCreatedAt = dayjs(`${createdAt}T${currentTime}`)
+    .subtract(elapsedSeconds, "seconds")
+    .format("YYYY-MM-DDTHH:mm:ss.SSSZ");
+
+  return fullCreatedAt;
+}
+
+export function formatExercisesForDB({
+  exercises,
+  createdAt,
+  workoutElapsedSeconds,
+}: {
+  exercises: AddWorkoutWithExercisesInput["exercises"];
+  createdAt: string | null;
+  workoutElapsedSeconds: number | null;
+}) {
   const formattedExercises = exercises.map((exercise) => {
     const {
       title,
@@ -35,6 +52,10 @@ export function formatExercisesForDB(
       repsDisplay: repsDisplay !== "" ? repsDisplay : null,
       comment: comment !== "" ? comment : null,
       elapsedSeconds,
+      createdAt:
+        createdAt !== null && workoutElapsedSeconds !== null
+          ? formatCreatedAt(createdAt, workoutElapsedSeconds)
+          : null,
     };
   });
 
@@ -47,15 +68,9 @@ export function formatWorkoutForDB(
 ): AddOrEditWorkoutInput & { userUid: string } {
   const { createdAt, elapsedSeconds, comment } = workoutWithExercises;
 
-  const currentTime = dayjs().format("HH:mm:ss.SSSZ");
-  // Appends Hr/Min/Sec... since created add is a calendar date, only.
-  const fullCreatedAt = dayjs(`${createdAt}T${currentTime}`)
-    .subtract(elapsedSeconds, "seconds")
-    .format("YYYY-MM-DDTHH:mm:ss.SSSZ");
-
   const formattedWorkout = {
     userUid: userUid,
-    createdAt: fullCreatedAt,
+    createdAt: formatCreatedAt(createdAt, elapsedSeconds),
     elapsedSeconds,
     comment,
   };
