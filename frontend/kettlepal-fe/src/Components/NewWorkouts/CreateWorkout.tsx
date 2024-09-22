@@ -64,6 +64,13 @@ export default function CreateWorkout() {
   const [showTracking, setShowTracking] = useState<boolean>(false);
   const [addWorkoutComment, setAddWorkoutComment] = useState<boolean>(false);
   const [showUploadSuccess, setShowUploadSuccess] = useState<boolean>(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [formHasErrors, setFormHasErrors] = useState(false);
+  const [timerIsActive, setTimerIsActive] = useState(false);
+  const [showServerError, setShowServerError] = useState<boolean>(true);
+  const userUid = useUser().user?.uid ?? null;
+
+  // Submit workoutWithExercises
   const [addWorkoutWithExercises, { loading, error }] =
     useAddWorkoutWithExercisesMutation({
       onCompleted() {
@@ -79,12 +86,12 @@ export default function CreateWorkout() {
           setShowUploadSuccess(false);
         }, 5000);
       },
+      onError() {
+        setShowServerError(true);
+      },
     });
-  const [submitted, setSubmitted] = useState(false);
-  const [formHasErrors, setFormHasErrors] = useState(false);
-  const [timerIsActive, setTimerIsActive] = useState(false);
-  const userUid = useUser().user?.uid ?? null;
 
+  // Save state to session storage
   useEffect(() => {
     sessionStorage.setItem(SESSION_STATE_KEY, JSON.stringify(state));
   }, [state]);
@@ -170,21 +177,13 @@ export default function CreateWorkout() {
     }));
   }
 
-  // Save Workout Modal Controls
-  const {
-    isOpen: isOpenSaveWorkout,
-    onOpen: onOpenSaveWorkout,
-    onClose: onCloseSaveWorkout,
-  } = useDisclosure();
-
+  // Workout Validation
   const dateIsInvalid = !state.createdAt;
   const timerIsInvalid = timerIsActive;
-
   enum WorkoutErrors {
     date = "Please enter a workout date.",
     timer = "Please stop the workout timer before saving.",
   }
-
   const [numErrors, setNumErrors] = useState(0);
   const errors: string[] = [];
   if (dateIsInvalid) errors.push(WorkoutErrors.date);
@@ -199,21 +198,17 @@ export default function CreateWorkout() {
     [numErrors, setFormHasErrors]
   );
 
+  // Show client-side errors, if clear, try to post to DB
   async function onSaveWorkout(): Promise<void> {
     setSubmitted(true);
     onCloseSaveWorkout();
-
     if (dateIsInvalid || timerIsInvalid) {
       setFormHasErrors(true);
       return;
     }
-
-    // Client-side validation
     if (formHasErrors) {
       return;
     }
-
-    // Try to write to DB
     try {
       await addWorkoutWithExercises({
         variables: {
@@ -226,18 +221,19 @@ export default function CreateWorkout() {
     }
   }
 
-  const [showServerError, setShowServerError] = useState<boolean>(true);
-  useEffect(() => {
-    if (error) {
-      setShowServerError(true);
-    }
-  }, [error]);
-
+  // Stop showing client-side errors when all exercises are deleted.
   useEffect(() => {
     if (state.exercises.length === 0) {
       setSubmitted(false);
     }
   }, [state.exercises.length]);
+
+  // Save Workout Modal Controls
+  const {
+    isOpen: isOpenSaveWorkout,
+    onOpen: onOpenSaveWorkout,
+    onClose: onCloseSaveWorkout,
+  } = useDisclosure();
 
   if (loading) {
     return (

@@ -44,22 +44,16 @@ export default function CreateExercise({
   trackWorkout: boolean;
 }) {
   const SESSION_STORAGE_KEY = `completedSets-${exerciseIndex}`;
-  const [seeDetails, setSeeDetails] = useState<boolean>(false);
   const [completedSets, setCompletedSets] = useState<number>(() => {
     const sessionVal = sessionStorage.getItem(SESSION_STORAGE_KEY);
     return sessionVal ? parseInt(sessionVal) : 0;
   });
+  const [seeDetails, setSeeDetails] = useState<boolean>(false);
+  const [timerIsActive, setTimerIsActive] = useState(false);
 
   const setExerciseComment = (newComment: string) => {
     handleExercise("comment", newComment, exerciseIndex);
   };
-
-  // Delete Exercise Modal Controls
-  const {
-    isOpen: isOpenDeleteExercise,
-    onOpen: onOpenDeleteExercise,
-    onClose: onCloseDeleteExercise,
-  } = useDisclosure();
 
   function onDeleteExercise(): void {
     deleteExercise(exerciseIndex);
@@ -75,7 +69,6 @@ export default function CreateExercise({
     );
   }
 
-  const [timerIsActive, setTimerIsActive] = useState(false);
   const setTime = useCallback(
     (elapsedSeconds: number) => {
       handleExercise("elapsedSeconds", elapsedSeconds, exerciseIndex);
@@ -96,6 +89,7 @@ export default function CreateExercise({
     return () => clearInterval(interval);
   }, [timerIsActive, exercise.elapsedSeconds, setTime]);
 
+  // ERROR VALIDATION
   const titleIsInvalid = !exercise.title;
   const weightIsInvalid =
     !!exercise.weight === false && !!exercise.weightUnit === true;
@@ -141,9 +135,10 @@ export default function CreateExercise({
     [numErrors, setFormHasErrors]
   );
 
+  // Keep track of completed sets in session storage
   useEffect(() => {
     sessionStorage.setItem(SESSION_STORAGE_KEY, completedSets.toString());
-  }, [completedSets]);
+  }, [completedSets, SESSION_STORAGE_KEY]);
 
   function completedASet() {
     setCompletedSets((prev) => prev + 1);
@@ -160,6 +155,7 @@ export default function CreateExercise({
     setCompletedSets((prev) => prev - 1);
   }
 
+  // Bump the number of sets if your go above the limt while tracking
   useEffect(() => {
     if (completedSets > parseInt(exercise.sets)) {
       setCompletedSets(parseInt(exercise.sets));
@@ -178,14 +174,11 @@ export default function CreateExercise({
     }
     return touchStart - touchEnd;
   };
-
   const onTouchStart = (e: any) => {
     setTouchEnd(null);
     setTouchStart(e.targetTouches[0].clientX);
   };
-
   const onTouchMove = (e: any) => setTouchEnd(e.targetTouches[0].clientX);
-
   const onTouchEnd = () => {
     if (!touchStart || !touchEnd) {
       return;
@@ -197,11 +190,17 @@ export default function CreateExercise({
       setOffset(distance);
     }
   };
-
   const customOnCloseDeleteExercise = () => {
     setOffset(0);
     onCloseDeleteExercise();
   };
+
+  // Delete Exercise Modal Controls
+  const {
+    isOpen: isOpenDeleteExercise,
+    onOpen: onOpenDeleteExercise,
+    onClose: onCloseDeleteExercise,
+  } = useDisclosure();
 
   return (
     <Box mb="1rem" position="relative">
