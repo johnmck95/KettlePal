@@ -48,6 +48,7 @@ export type CreateWorkoutState = {
 };
 
 const SESSION_STATE_KEY = "createWorkoutState";
+const WORKOUT_TIMER_KEY = "workoutTimerIsActive";
 
 export default function CreateWorkout() {
   const [state, setState] = useState<CreateWorkoutState>(() => {
@@ -66,9 +67,21 @@ export default function CreateWorkout() {
   const [showUploadSuccess, setShowUploadSuccess] = useState<boolean>(false);
   const [submitted, setSubmitted] = useState(false);
   const [formHasErrors, setFormHasErrors] = useState(false);
-  const [timerIsActive, setTimerIsActive] = useState(false);
   const [showServerError, setShowServerError] = useState<boolean>(true);
   const userUid = useUser().user?.uid ?? null;
+  const [timerIsActive, setTimerIsActive] = useState(() => {
+    const fromStorage = sessionStorage.getItem(WORKOUT_TIMER_KEY);
+    return fromStorage ? true : false;
+  });
+
+  const handleTimerIsActive = (newState: boolean) => {
+    setTimerIsActive(newState);
+    if (newState) {
+      sessionStorage.setItem(WORKOUT_TIMER_KEY, "true");
+    } else {
+      sessionStorage.removeItem(WORKOUT_TIMER_KEY);
+    }
+  };
 
   // Submit workoutWithExercises
   const [addWorkoutWithExercises, { loading, error }] =
@@ -285,7 +298,7 @@ export default function CreateWorkout() {
           <Timer
             seconds={state.elapsedSeconds}
             isActive={timerIsActive}
-            setIsActive={setTimerIsActive}
+            handleIsActive={handleTimerIsActive}
             setTime={setTime}
             size="md"
           />

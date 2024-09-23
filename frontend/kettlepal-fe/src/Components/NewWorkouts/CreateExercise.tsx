@@ -44,13 +44,26 @@ export default function CreateExercise({
   trackWorkout: boolean;
 }) {
   const SESSION_STORAGE_KEY = `completedSets-${exerciseIndex}`;
+  const EXERCISE_TIMER_KEY = `exerciseTimerIsActive-${exerciseIndex}`;
+
   const [completedSets, setCompletedSets] = useState<number>(() => {
     const sessionVal = sessionStorage.getItem(SESSION_STORAGE_KEY);
     return sessionVal ? parseInt(sessionVal) : 0;
   });
   const [seeDetails, setSeeDetails] = useState<boolean>(false);
-  const [timerIsActive, setTimerIsActive] = useState(false);
+  const [timerIsActive, setTimerIsActive] = useState(() => {
+    const fromStorage = sessionStorage.getItem(EXERCISE_TIMER_KEY);
+    return fromStorage ? true : false;
+  });
 
+  const handleTimerIsActive = (newState: boolean) => {
+    setTimerIsActive(newState);
+    if (newState) {
+      sessionStorage.setItem(EXERCISE_TIMER_KEY, "true");
+    } else {
+      sessionStorage.removeItem(EXERCISE_TIMER_KEY);
+    }
+  };
   const setExerciseComment = (newComment: string) => {
     handleExercise("comment", newComment, exerciseIndex);
   };
@@ -474,7 +487,7 @@ export default function CreateExercise({
                 <Timer
                   seconds={exercise.elapsedSeconds}
                   isActive={timerIsActive}
-                  setIsActive={setTimerIsActive}
+                  handleIsActive={handleTimerIsActive}
                   setTime={setTime}
                   size="sm"
                   variant="digital"

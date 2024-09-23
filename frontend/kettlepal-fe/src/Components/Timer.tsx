@@ -106,7 +106,7 @@ function Digital({ seconds }: { seconds: number }) {
 interface TimerProps {
   seconds: number;
   isActive: boolean;
-  setIsActive: (value: boolean) => void;
+  handleIsActive: (value: boolean) => void;
   setTime: (elapsedSeconds: number) => void;
   size?: "sm" | "md";
   variant?: "analog" | "digital";
@@ -117,24 +117,24 @@ interface TimerProps {
 export default function Timer({
   seconds,
   isActive,
-  setIsActive,
+  handleIsActive,
   setTime,
   size = "md",
   variant = "analog",
 }: TimerProps) {
   function startOrResume() {
-    setIsActive(true);
+    handleIsActive(true);
     setTime(seconds);
   }
 
   function onReset() {
-    setIsActive(false);
+    handleIsActive(false);
     onClose();
     setTime(0);
   }
 
   function pause() {
-    setIsActive(false);
+    handleIsActive(false);
     setTime(seconds);
   }
 
