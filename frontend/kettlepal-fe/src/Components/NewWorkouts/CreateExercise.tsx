@@ -241,6 +241,7 @@ export default function CreateExercise({
             aria-label="Delete Exercise"
             icon={<FaTimes />}
             size="sm"
+            zIndex={2}
             onClick={onOpenDeleteExercise}
             position="absolute"
             right="1px"
