@@ -84,6 +84,7 @@ const theme = extendTheme({
           color: "white",
           _hover: {
             bg: "green.600",
+            boxShadow: `0px 1px 2px #315740`,
           },
           _active: {
             bg: "green.800",
@@ -94,7 +95,7 @@ const theme = extendTheme({
           color: "green.700",
           border: "1px solid #3E6E51",
           _hover: {
-            bg: "green.25",
+            boxShadow: `0px 1px 2px #315740`,
           },
           _active: {
             bg: "green.50",

@@ -1,22 +1,60 @@
-import { Text, Button, Box, Stack, useDisclosure } from "@chakra-ui/react";
-import React from "react";
+import {
+  Text,
+  Button,
+  Box,
+  Stack,
+  useDisclosure,
+  Editable,
+  EditablePreview,
+  EditableInput,
+} from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
 import theme from "../Constants/theme";
 import ConfirmModal from "./ConfirmModal";
+import {
+  computeSeconds,
+  formatTime,
+  formatTimeInput,
+} from "../utils/Time/time";
 
-const formatTime = (seconds: number) => {
-  const getSeconds = `0${seconds % 60}`.slice(-2);
-  const minutes = Math.floor(seconds / 60);
-  const getMinutes = `0${minutes % 60}`.slice(-2);
-  const getHours = `0${Math.floor(seconds / 3600)}`.slice(-2);
+function Analog({
+  size,
+  seconds,
+  updateTo,
+  setUpdateTo,
+  setTime,
+  pause,
+}: {
+  size: "sm" | "md";
+  seconds: number;
+  updateTo: string;
+  setUpdateTo: (value: string) => void;
+  setTime: (elapsedSeconds: number) => void;
+  pause: () => void;
+}) {
+  const [beingEdited, setBeingEdited] = React.useState(false);
 
-  if (getHours === "00") {
-    return `${getMinutes}:${getSeconds}`;
-  } else {
-    return `${getHours}:${getMinutes}:${getSeconds}`;
+  const handleChange = (value: string) => {
+    let formattedValue = formatTimeInput(value);
+    setUpdateTo(value);
+    setTime(computeSeconds(formattedValue));
+  };
+
+  function handleClick() {
+    setBeingEdited(true);
+    pause();
+    setUpdateTo(formatTime(seconds));
   }
-};
 
-function Analog({ size, seconds }: { size: "sm" | "md"; seconds: number }) {
+  // Update state when the user clicks outside the input or finishes editing
+  const handleBlur = () => {
+    setBeingEdited(false);
+
+    const formattedValue = formatTimeInput(updateTo);
+    setUpdateTo(formattedValue);
+    setTime(computeSeconds(formattedValue));
+  };
+
   return (
     <Box
       position="relative"
@@ -43,14 +81,21 @@ function Analog({ size, seconds }: { size: "sm" | "md"; seconds: number }) {
         height="80%"
         zIndex={2}
         borderRadius="50%"
-        bg="rgba(250,249,246,1)"
+        bg="white"
         display="flex"
         justifyContent="center"
         alignItems="center"
       >
-        <Text
+        <Editable
+          value={beingEdited ? updateTo : formatTime(seconds)}
+          color={beingEdited ? theme.colors.gray[500] : theme.colors.black}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          onClick={handleClick}
+          placeholder={"00:00"}
           textAlign="center"
           w="100%"
+          fontFamily="monospace"
           m="0"
           p="0"
           fontSize={
@@ -63,8 +108,19 @@ function Analog({ size, seconds }: { size: "sm" | "md"; seconds: number }) {
               : "sm"
           }
         >
-          <b>{formatTime(seconds)}</b>
-        </Text>
+          <EditablePreview
+            w="100%"
+            sx={{
+              color: true ? theme.colors.black : theme.colors.gray[500],
+            }}
+          />
+          <EditableInput
+            w="100%"
+            sx={{
+              _placeholder: { color: theme.colors.gray[500] },
+            }}
+          />
+        </Editable>
       </Box>
 
       {/* Progress Circle */}
@@ -122,14 +178,20 @@ export default function Timer({
   size = "md",
   variant = "analog",
 }: TimerProps) {
+  // updateTo is an unformatted user-input string. It's a temporary
+  // location before formatting and saving to the form state.
+  const [updateTo, setUpdateTo] = React.useState(formatTime(seconds));
+
   function startOrResume() {
     handleIsActive(true);
     setTime(seconds);
+    setUpdateTo(formatTime(seconds));
   }
 
   function onReset() {
     handleIsActive(false);
     onClose();
+    setUpdateTo("00:00");
     setTime(0);
   }
 
@@ -150,7 +212,14 @@ export default function Timer({
       {variant === "digital" ? (
         <Digital seconds={seconds} />
       ) : (
-        <Analog size={size} seconds={seconds} />
+        <Analog
+          size={size}
+          seconds={seconds}
+          updateTo={updateTo}
+          setUpdateTo={setUpdateTo}
+          setTime={setTime}
+          pause={pause}
+        />
       )}
       <Stack direction={"column"} spacing={1}>
         <Button
