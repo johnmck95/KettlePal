@@ -275,7 +275,11 @@ export default function Timer({
           pause={pause}
         />
       )}
-      <Stack direction={"column"} spacing={1}>
+      <Stack
+        direction={"column"}
+        spacing={variant === "digital" ? 1 : 1.5}
+        alignSelf="center"
+      >
         <Button
           w="55px"
           h="20px"
