@@ -377,7 +377,7 @@ export default function CreateExercise({
             submitted &&
             (weightUnitIsInvalid || repsDisplayIsInvalid || timerIsInvalid)
               ? theme.colors.error
-              : theme.colors.grey
+              : theme.colors.feldgrau[700]
           }
         >
           {seeDetails ? "Hide Details" : "More Details"}

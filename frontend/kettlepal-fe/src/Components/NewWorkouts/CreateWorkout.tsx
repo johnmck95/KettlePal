@@ -326,7 +326,6 @@ export default function CreateWorkout() {
           variant="secondary"
           onClick={() => setAddWorkoutComment((prev) => !prev)}
           textAlign="left"
-          color="black"
           my="0.5rem"
         >
           {addWorkoutComment ? "Hide Comment" : "Add Comment"}
@@ -336,7 +335,6 @@ export default function CreateWorkout() {
           variant="secondary"
           onClick={() => setShowTracking((prev) => !prev)}
           textAlign="left"
-          color="black"
           my="0.5rem"
         >
           {showTracking ? "Hide Workout Tracking" : "Track Workout"}
