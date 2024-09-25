@@ -8,7 +8,7 @@ import {
   EditablePreview,
   EditableInput,
 } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import theme from "../Constants/theme";
 import ConfirmModal from "./ConfirmModal";
 import {
@@ -17,15 +17,15 @@ import {
   formatTimeInput,
 } from "../utils/Time/time";
 
-function Analog({
-  size,
+function EditableTimerText({
+  fontSize,
   seconds,
   updateTo,
   setUpdateTo,
   setTime,
   pause,
 }: {
-  size: "sm" | "md";
+  fontSize: string;
   seconds: number;
   updateTo: string;
   setUpdateTo: (value: string) => void;
@@ -54,7 +54,52 @@ function Analog({
     setUpdateTo(formattedValue);
     setTime(computeSeconds(formattedValue));
   };
+  return (
+    <Editable
+      value={beingEdited ? updateTo : formatTime(seconds)}
+      color={beingEdited ? theme.colors.gray[500] : theme.colors.black}
+      onChange={handleChange}
+      onBlur={handleBlur}
+      onClick={handleClick}
+      placeholder={"00:00"}
+      textAlign="center"
+      w="100%"
+      fontFamily="monospace"
+      m="0"
+      p="0"
+      fontSize={fontSize}
+    >
+      <EditablePreview
+        w="100%"
+        sx={{
+          color: true ? theme.colors.black : theme.colors.gray[500],
+        }}
+      />
+      <EditableInput
+        w="100%"
+        sx={{
+          _placeholder: { color: theme.colors.gray[500] },
+        }}
+      />
+    </Editable>
+  );
+}
 
+function Analog({
+  size,
+  seconds,
+  updateTo,
+  setUpdateTo,
+  setTime,
+  pause,
+}: {
+  size: "sm" | "md";
+  seconds: number;
+  updateTo: string;
+  setUpdateTo: (value: string) => void;
+  setTime: (elapsedSeconds: number) => void;
+  pause: () => void;
+}) {
   return (
     <Box
       position="relative"
@@ -86,18 +131,12 @@ function Analog({
         justifyContent="center"
         alignItems="center"
       >
-        <Editable
-          value={beingEdited ? updateTo : formatTime(seconds)}
-          color={beingEdited ? theme.colors.gray[500] : theme.colors.black}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          onClick={handleClick}
-          placeholder={"00:00"}
-          textAlign="center"
-          w="100%"
-          fontFamily="monospace"
-          m="0"
-          p="0"
+        <EditableTimerText
+          seconds={seconds}
+          updateTo={updateTo}
+          setUpdateTo={setUpdateTo}
+          setTime={setTime}
+          pause={pause}
           fontSize={
             size === "sm"
               ? seconds >= 3600
@@ -107,20 +146,7 @@ function Analog({
               ? "9px"
               : "sm"
           }
-        >
-          <EditablePreview
-            w="100%"
-            sx={{
-              color: true ? theme.colors.black : theme.colors.gray[500],
-            }}
-          />
-          <EditableInput
-            w="100%"
-            sx={{
-              _placeholder: { color: theme.colors.gray[500] },
-            }}
-          />
-        </Editable>
+        />
       </Box>
 
       {/* Progress Circle */}
@@ -141,7 +167,21 @@ function Analog({
   );
 }
 
-function Digital({ seconds }: { seconds: number }) {
+function Digital({
+  size,
+  seconds,
+  updateTo,
+  setUpdateTo,
+  setTime,
+  pause,
+}: {
+  size: "sm" | "md";
+  seconds: number;
+  updateTo: string;
+  setUpdateTo: (value: string) => void;
+  setTime: (elapsedSeconds: number) => void;
+  pause: () => void;
+}) {
   return (
     <Text
       border={`1px solid ${theme.colors.gray[200]}`}
@@ -154,7 +194,14 @@ function Digital({ seconds }: { seconds: number }) {
       justifyContent="center"
       alignItems="center"
     >
-      {formatTime(seconds)}
+      <EditableTimerText
+        fontSize={"11px"}
+        seconds={seconds}
+        updateTo={updateTo}
+        setUpdateTo={setUpdateTo}
+        setTime={setTime}
+        pause={pause}
+      />
     </Text>
   );
 }
@@ -179,7 +226,7 @@ export default function Timer({
   variant = "analog",
 }: TimerProps) {
   // updateTo is an unformatted user-input string. It's a temporary
-  // location before formatting and saving to the form state.
+  // variable before formatting and saving to the form state.
   const [updateTo, setUpdateTo] = React.useState(formatTime(seconds));
 
   function startOrResume() {
@@ -210,7 +257,14 @@ export default function Timer({
       alignItems="flex-end"
     >
       {variant === "digital" ? (
-        <Digital seconds={seconds} />
+        <Digital
+          size={size}
+          seconds={seconds}
+          updateTo={updateTo}
+          setUpdateTo={setUpdateTo}
+          setTime={setTime}
+          pause={pause}
+        />
       ) : (
         <Analog
           size={size}
