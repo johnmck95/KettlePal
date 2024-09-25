@@ -209,7 +209,7 @@ function ViewDetailedExercise({
 
           <IconButton
             variant="secondary"
-            aria-label="Eedit Exercise"
+            aria-label="Edit Exercise"
             size="sm"
             icon={editExercise ? <FaMinus /> : <FaPencilAlt />}
             onClick={() => setEditExercise((prev) => !prev)}
