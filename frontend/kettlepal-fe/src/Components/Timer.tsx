@@ -168,14 +168,12 @@ function Analog({
 }
 
 function Digital({
-  size,
   seconds,
   updateTo,
   setUpdateTo,
   setTime,
   pause,
 }: {
-  size: "sm" | "md";
   seconds: number;
   updateTo: string;
   setUpdateTo: (value: string) => void;
@@ -184,6 +182,7 @@ function Digital({
 }) {
   return (
     <Text
+      as="div"
       border={`1px solid ${theme.colors.gray[200]}`}
       borderRadius={["2px", "3px", "6px"]}
       w="70px"
@@ -258,7 +257,6 @@ export default function Timer({
     >
       {variant === "digital" ? (
         <Digital
-          size={size}
           seconds={seconds}
           updateTo={updateTo}
           setUpdateTo={setUpdateTo}
