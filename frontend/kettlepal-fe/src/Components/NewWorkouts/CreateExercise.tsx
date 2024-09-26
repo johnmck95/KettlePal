@@ -215,6 +215,12 @@ export default function CreateExercise({
     onClose: onCloseDeleteExercise,
   } = useDisclosure();
 
+  const [customTitle, setCustomTitle] = useState(
+    exercise.title !== "" && !ExerciseTitles.includes(exercise.title)
+  );
+  const [customWeight, setCustomWeight] = useState(
+    exercise.weight !== "" && !KettlbellWeightsKG.includes(exercise.weight)
+  );
   return (
     <Box mb="1rem" position="relative">
       <VStack
@@ -258,32 +264,55 @@ export default function CreateExercise({
             <FormLabel fontSize={["12px", "14px", "16px"]} m="0">
               Title
             </FormLabel>
-            <Select
-              size={["sm", "sm", "md"]}
-              fontSize={["12px", "14px", "16px"]}
-              placeholder="Select Option"
-              name="title"
-              value={exercise.title}
-              onChange={(event) =>
-                handleExercise(
-                  event.target.name,
-                  event.target.value,
-                  exerciseIndex
-                )
-              }
-              focusBorderColor={theme.colors.green[300]}
-              color={
-                !!exercise.title ? theme.colors.black : theme.colors.grey[500]
-              }
-            >
-              {ExerciseTitles.map((title) => {
-                return (
-                  <option key={title} value={title}>
-                    {title}
-                  </option>
-                );
-              })}
-            </Select>
+            {customTitle ? (
+              <Input
+                size={["sm", "sm", "md"]}
+                fontSize={["12px", "14px", "16px"]}
+                placeholder="Enter Title"
+                name="title"
+                value={exercise.title}
+                onChange={(event) =>
+                  handleExercise(
+                    event.target.name,
+                    event.target.value,
+                    exerciseIndex
+                  )
+                }
+                color={
+                  !!exercise.title ? theme.colors.black : theme.colors.grey[500]
+                }
+                focusBorderColor={theme.colors.green[300]}
+              />
+            ) : (
+              <Select
+                size={["sm", "sm", "md"]}
+                fontSize={["12px", "14px", "16px"]}
+                placeholder="Select Option"
+                name="title"
+                value={exercise.title}
+                onChange={(event) =>
+                  event.target.value === "Custom"
+                    ? setCustomTitle(true)
+                    : handleExercise(
+                        event.target.name,
+                        event.target.value,
+                        exerciseIndex
+                      )
+                }
+                focusBorderColor={theme.colors.green[300]}
+                color={
+                  !!exercise.title ? theme.colors.black : theme.colors.grey[500]
+                }
+              >
+                {ExerciseTitles.map((title) => {
+                  return (
+                    <option key={title} value={title}>
+                      {title}
+                    </option>
+                  );
+                })}
+              </Select>
+            )}
           </FormControl>
 
           {/* WEIGHT */}
@@ -291,32 +320,59 @@ export default function CreateExercise({
             <FormLabel fontSize={["12px", "14px", "16px"]} m="0">
               Weight
             </FormLabel>
-            <Select
-              size={["sm", "sm", "md"]}
-              fontSize={["12px", "14px", "16px"]}
-              placeholder="Select Option"
-              name="weight"
-              value={exercise.weight}
-              onChange={(event) =>
-                handleExercise(
-                  event.target.name,
-                  event.target.value,
-                  exerciseIndex
-                )
-              }
-              focusBorderColor={theme.colors.green[300]}
-              color={
-                !!exercise.weight ? theme.colors.black : theme.colors.grey[500]
-              }
-            >
-              {KettlbellWeightsKG.map((weight) => {
-                return (
-                  <option key={weight} value={weight}>
-                    {weight}
-                  </option>
-                );
-              })}
-            </Select>
+            {customWeight ? (
+              <Input
+                size={["sm", "sm", "md"]}
+                fontSize={["12px", "14px", "16px"]}
+                placeholder="0"
+                name="weight"
+                value={exercise.weight}
+                onChange={(event) =>
+                  handleExercise(
+                    event.target.name,
+                    event.target.value,
+                    exerciseIndex
+                  )
+                }
+                focusBorderColor={theme.colors.green[300]}
+                color={
+                  !!exercise.weight
+                    ? theme.colors.black
+                    : theme.colors.grey[500]
+                }
+              />
+            ) : (
+              <Select
+                size={["sm", "sm", "md"]}
+                fontSize={["12px", "14px", "16px"]}
+                placeholder="Select Option"
+                name="weight"
+                value={exercise.weight}
+                onChange={(event) =>
+                  event.target.value === "Custom"
+                    ? setCustomWeight(true)
+                    : handleExercise(
+                        event.target.name,
+                        event.target.value,
+                        exerciseIndex
+                      )
+                }
+                focusBorderColor={theme.colors.green[300]}
+                color={
+                  !!exercise.weight
+                    ? theme.colors.black
+                    : theme.colors.grey[500]
+                }
+              >
+                {KettlbellWeightsKG.map((weight) => {
+                  return (
+                    <option key={weight} value={weight}>
+                      {weight}
+                    </option>
+                  );
+                })}
+              </Select>
+            )}
           </FormControl>
 
           {/* SETS */}
@@ -375,6 +431,7 @@ export default function CreateExercise({
           textAlign="left"
           color={
             submitted &&
+            !seeDetails &&
             (weightUnitIsInvalid || repsDisplayIsInvalid || timerIsInvalid)
               ? theme.colors.error
               : theme.colors.feldgrau[700]
@@ -443,6 +500,7 @@ export default function CreateExercise({
                   <FormLabel fontSize={["12px", "14px", "16px"]} m="0">
                     Weight Unit
                   </FormLabel>
+
                   <Select
                     fontSize={["12px", "14px", "16px"]}
                     size={["sm", "sm", "md"]}
