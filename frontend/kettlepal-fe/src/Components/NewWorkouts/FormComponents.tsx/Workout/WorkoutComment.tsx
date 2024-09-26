@@ -1,4 +1,3 @@
-import { ChangeEvent } from "react";
 import { CreateWorkoutState } from "../../CreateWorkout";
 import { FormControl } from "@chakra-ui/react";
 import AddComment from "../Generic/AddComment";

@@ -10,22 +10,16 @@ import {
   Center,
   CloseButton,
   Flex,
-  FormControl,
-  FormLabel,
   HStack,
-  Input,
   Text,
-  VStack,
   useDisclosure,
 } from "@chakra-ui/react";
-import AddComment from "./FormComponents.tsx/Generic/AddComment";
 import { getCurrentDate } from "../../utils/Time/time";
 import { FaPlusCircle, FaSave } from "react-icons/fa";
 import ConfirmModal from "../ConfirmModal";
 import { useUser } from "../../Contexts/UserContext";
 import LoadingSpinner from "../LoadingSpinner";
 import theme from "../../Constants/theme";
-import Timer from "./FormComponents.tsx/Generic/Timer";
 import { formatExerciseString } from "../../utils/Exercises/exercises";
 import dayjs from "dayjs";
 import { useAddWorkoutWithExercisesMutation } from "../../generated/frontend-types";

@@ -2,7 +2,7 @@ import { FormControl, FormLabel, Input } from "@chakra-ui/react";
 import { CreateWorkoutState } from "../../CreateWorkout";
 import theme from "../../../../Constants/theme";
 
-interface ExerciseSets {
+interface ExerciseSetsProps {
   submitted: boolean;
   setsIsInvalid: boolean;
   exercise: Omit<CreateWorkoutState["exercises"][number], "key">;
@@ -16,7 +16,7 @@ export default function ExerciseSets({
   exercise,
   exerciseIndex,
   handleExercise,
-}: ExerciseSets) {
+}: ExerciseSetsProps) {
   return (
     <FormControl w="15%" isInvalid={submitted && setsIsInvalid}>
       <FormLabel fontSize={["12px", "14px", "16px"]} m="0">
