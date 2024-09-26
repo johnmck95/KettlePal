@@ -1,30 +1,22 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { CreateWorkoutState } from "./CreateWorkout";
-import {
-  FormControl,
-  FormLabel,
-  HStack,
-  Text,
-  Select,
-  VStack,
-  Button,
-  IconButton,
-  useDisclosure,
-  Box,
-  useMediaQuery,
-  Input,
-} from "@chakra-ui/react";
-import AddComment from "../AddComment";
+import { HStack, Button, useDisclosure } from "@chakra-ui/react";
+import AddComment from "./FormComponents.tsx/Generic/AddComment";
 import {
   ExerciseTitles,
   KettlbellWeightsKG,
-  RepsDisplayOptions,
-  WeightOptions,
 } from "../../Constants/ExercisesOptions";
-import { FaMinus, FaPlus, FaTimes } from "react-icons/fa";
 import ConfirmModal from "../ConfirmModal";
 import theme from "../../Constants/theme";
-import Timer from "../Timer";
+import ExerciseTitle from "./FormComponents.tsx/Exercise/ExerciseTitle";
+import ExerciseWeight from "./FormComponents.tsx/Exercise/ExerciseWeight";
+import ExerciseSets from "./FormComponents.tsx/Exercise/ExerciseSets";
+import ExerciseReps from "./FormComponents.tsx/Exercise/ExerciseReps";
+import ExerciseRepsDisplay from "./FormComponents.tsx/Exercise/ExerciseRepsDisplay";
+import ExerciseWeightUnit from "./FormComponents.tsx/Exercise/ExerciseWeightUnit";
+import ExerciseTimer from "./FormComponents.tsx/Exercise/ExerciseTimer";
+import TrackExercise from "./FormComponents.tsx/TrackWorkout/TrackExercise";
+import { ExerciseContainer } from "./FormComponents.tsx/Exercise/ExerciseContainer";
 
 export default function CreateExercise({
   exercise,
@@ -55,6 +47,12 @@ export default function CreateExercise({
     const fromStorage = sessionStorage.getItem(EXERCISE_TIMER_KEY);
     return fromStorage ? true : false;
   });
+  const [customTitle, setCustomTitle] = useState(
+    exercise.title !== "" && !ExerciseTitles.includes(exercise.title)
+  );
+  const [customWeight, setCustomWeight] = useState(
+    exercise.weight !== "" && !KettlbellWeightsKG.includes(exercise.weight)
+  );
 
   const handleTimerIsActive = (newState: boolean) => {
     setTimerIsActive(newState);
@@ -176,7 +174,6 @@ export default function CreateExercise({
   }, [exercise.sets, completedSets, setCompletedSets]);
 
   /** SWIPE LOGIC **/
-  const [isMobile] = useMediaQuery("(max-width: 420px)");
   const [offset, setOffset] = useState<number>(0);
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
@@ -215,428 +212,152 @@ export default function CreateExercise({
     onClose: onCloseDeleteExercise,
   } = useDisclosure();
 
-  const [customTitle, setCustomTitle] = useState(
-    exercise.title !== "" && !ExerciseTitles.includes(exercise.title)
-  );
-  const [customWeight, setCustomWeight] = useState(
-    exercise.weight !== "" && !KettlbellWeightsKG.includes(exercise.weight)
-  );
   return (
-    <Box mb="1rem" position="relative">
-      <VStack
-        w={`calc(100%-0.5rem + ${swipeDistance()})`}
-        borderRadius={"5px"}
-        p={["0.5rem", "1rem", "1.5rem"]}
-        mb="0.5rem"
-        boxShadow={`0px 1px 4px ${theme.colors.grey[400]}`}
-        bg="white"
-        position="relative"
-        transition="right 0.4s ease-in-out"
-        right={`${
-          !!swipeDistance() && swipeDistance() > minSwipeDistance
-            ? swipeDistance()
-            : offset
-        }px`}
-        onTouchStart={onTouchStart}
-        onTouchMove={onTouchMove}
-        onTouchEnd={onTouchEnd}
+    <ExerciseContainer
+      errors={errors}
+      submitted={submitted}
+      offset={offset}
+      setOffset={setOffset}
+      minSwipeDistance={minSwipeDistance}
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
+      swipeDistance={swipeDistance}
+      onOpenDeleteExercise={onOpenDeleteExercise}
+    >
+      <HStack w="100%" mb="0.25rem">
+        {/* TITLE */}
+        <ExerciseTitle
+          submitted={submitted}
+          titleIsInvalid={titleIsInvalid}
+          customTitle={customTitle}
+          exercise={exercise}
+          exerciseIndex={exerciseIndex}
+          setCustomTitle={setCustomTitle}
+          handleExercise={handleExercise}
+        />
+
+        {/* WEIGHT */}
+        <ExerciseWeight
+          submitted={submitted}
+          weightIsInvalid={weightIsInvalid}
+          customWeight={customWeight}
+          exercise={exercise}
+          exerciseIndex={exerciseIndex}
+          setCustomWeight={setCustomWeight}
+          handleExercise={handleExercise}
+        />
+
+        {/* SETS */}
+        <ExerciseSets
+          submitted={submitted}
+          setsIsInvalid={setsIsInvalid}
+          exercise={exercise}
+          exerciseIndex={exerciseIndex}
+          handleExercise={handleExercise}
+        />
+
+        {/* REPS */}
+        <ExerciseReps
+          submitted={submitted}
+          repsIsInvalid={repsIsInvalid}
+          exercise={exercise}
+          exerciseIndex={exerciseIndex}
+          handleExercise={handleExercise}
+        />
+      </HStack>
+
+      {/* SEE DETAILS */}
+      <Button
+        fontSize={[12, 14, 16]}
+        alignSelf={"flex-start"}
+        size={["xs", "sm", "md"]}
+        variant="secondary"
+        onClick={() => setSeeDetails((prev) => !prev)}
+        textAlign="left"
+        color={
+          submitted &&
+          !seeDetails &&
+          (weightUnitIsInvalid || repsDisplayIsInvalid || timerIsInvalid)
+            ? theme.colors.error
+            : theme.colors.feldgrau[700]
+        }
       >
-        {!isMobile && (
-          <IconButton
-            variant="closeX"
-            aria-label="Delete Exercise"
-            icon={<FaTimes />}
-            size="sm"
-            zIndex={2}
-            onClick={onOpenDeleteExercise}
-            position="absolute"
-            right="1px"
-            top="1px"
-          />
-        )}
-        <HStack w="100%" mb="0.25rem">
-          {/* TITLE */}
-          <FormControl
-            w="50%"
-            isRequired
-            isInvalid={submitted && titleIsInvalid}
-          >
-            <FormLabel fontSize={["12px", "14px", "16px"]} m="0">
-              Title
-            </FormLabel>
-            {customTitle ? (
-              <Input
-                size={["sm", "sm", "md"]}
-                fontSize={["12px", "14px", "16px"]}
-                placeholder="Enter Title"
-                name="title"
-                value={exercise.title}
-                onChange={(event) =>
-                  handleExercise(
-                    event.target.name,
-                    event.target.value,
-                    exerciseIndex
-                  )
-                }
-                color={
-                  !!exercise.title ? theme.colors.black : theme.colors.grey[500]
-                }
-                focusBorderColor={theme.colors.green[300]}
-              />
-            ) : (
-              <Select
-                size={["sm", "sm", "md"]}
-                fontSize={["12px", "14px", "16px"]}
-                placeholder="Select Option"
-                name="title"
-                value={exercise.title}
-                onChange={(event) =>
-                  event.target.value === "Custom"
-                    ? setCustomTitle(true)
-                    : handleExercise(
-                        event.target.name,
-                        event.target.value,
-                        exerciseIndex
-                      )
-                }
-                focusBorderColor={theme.colors.green[300]}
-                color={
-                  !!exercise.title ? theme.colors.black : theme.colors.grey[500]
-                }
-              >
-                {ExerciseTitles.map((title) => {
-                  return (
-                    <option key={title} value={title}>
-                      {title}
-                    </option>
-                  );
-                })}
-              </Select>
-            )}
-          </FormControl>
-
-          {/* WEIGHT */}
-          <FormControl w="23%" isInvalid={submitted && weightIsInvalid}>
-            <FormLabel fontSize={["12px", "14px", "16px"]} m="0">
-              Weight
-            </FormLabel>
-            {customWeight ? (
-              <Input
-                size={["sm", "sm", "md"]}
-                fontSize={["12px", "14px", "16px"]}
-                placeholder="0"
-                name="weight"
-                value={exercise.weight}
-                onChange={(event) =>
-                  handleExercise(
-                    event.target.name,
-                    event.target.value,
-                    exerciseIndex
-                  )
-                }
-                focusBorderColor={theme.colors.green[300]}
-                color={
-                  !!exercise.weight
-                    ? theme.colors.black
-                    : theme.colors.grey[500]
-                }
-              />
-            ) : (
-              <Select
-                size={["sm", "sm", "md"]}
-                fontSize={["12px", "14px", "16px"]}
-                placeholder="Select Option"
-                name="weight"
-                value={exercise.weight}
-                onChange={(event) =>
-                  event.target.value === "Custom"
-                    ? setCustomWeight(true)
-                    : handleExercise(
-                        event.target.name,
-                        event.target.value,
-                        exerciseIndex
-                      )
-                }
-                focusBorderColor={theme.colors.green[300]}
-                color={
-                  !!exercise.weight
-                    ? theme.colors.black
-                    : theme.colors.grey[500]
-                }
-              >
-                {KettlbellWeightsKG.map((weight) => {
-                  return (
-                    <option key={weight} value={weight}>
-                      {weight}
-                    </option>
-                  );
-                })}
-              </Select>
-            )}
-          </FormControl>
-
-          {/* SETS */}
-          <FormControl w="15%" isInvalid={submitted && setsIsInvalid}>
-            <FormLabel fontSize={["12px", "14px", "16px"]} m="0">
-              Sets
-            </FormLabel>
-            <Input
-              size={["sm", "sm", "md"]}
-              fontSize={["12px", "14px", "16px"]}
-              placeholder="0"
-              autoComplete="off"
-              type="number"
-              name="sets"
-              value={exercise.sets}
-              onChange={(event) =>
-                handleExercise("sets", event.target.value, exerciseIndex)
-              }
-              focusBorderColor={theme.colors.green[300]}
-              color={
-                !!exercise.sets ? theme.colors.black : theme.colors.grey[500]
-              }
-            />
-          </FormControl>
-
-          {/* REPS */}
-          <FormControl w="15%" isInvalid={submitted && repsIsInvalid}>
-            <FormLabel fontSize={["12px", "14px", "16px"]} m="0">
-              <Text>Reps</Text>
-            </FormLabel>
-            <Input
-              fontSize={["12px", "14px", "16px"]}
-              size={["sm", "sm", "md"]}
-              type="number"
-              name="reps"
-              placeholder="0"
-              value={exercise.reps}
-              onChange={(event) =>
-                handleExercise("reps", event.target.value, exerciseIndex)
-              }
-              focusBorderColor={theme.colors.green[300]}
-              color={
-                !!exercise.reps ? theme.colors.black : theme.colors.grey[500]
-              }
-            />
-          </FormControl>
-        </HStack>
-
-        {/* SEE DETAILS */}
-        <Button
-          fontSize={[12, 14, 16]}
-          alignSelf={"flex-start"}
-          size={["xs", "sm", "md"]}
-          variant="secondary"
-          onClick={() => setSeeDetails((prev) => !prev)}
-          textAlign="left"
-          color={
-            submitted &&
-            !seeDetails &&
-            (weightUnitIsInvalid || repsDisplayIsInvalid || timerIsInvalid)
-              ? theme.colors.error
-              : theme.colors.feldgrau[700]
-          }
-        >
-          {seeDetails ? "Hide Details" : "More Details"}
-        </Button>
-        <HStack
-          w="100%"
-          justifyContent={seeDetails ? "space-between" : "flex-start"}
-          alignItems="flex-start"
-        >
-          {seeDetails && (
-            <HStack
-              w="100%"
-              justifyContent="space-between"
-              alignItems="flex-end"
-              mt="-0.75rem"
-            >
-              <HStack>
-                {/* REPS DISPLAY */}
-                <FormControl
-                  minWidth="70px"
-                  maxWidth={["90px", "110px", "130px"]}
-                  isInvalid={submitted && repsDisplayIsInvalid}
-                >
-                  <FormLabel fontSize={["12px", "14px", "16px"]} m="0">
-                    Rep Type
-                  </FormLabel>
-                  <Select
-                    fontSize={["12px", "14px", "16px"]}
-                    size={["sm", "sm", "md"]}
-                    placeholder="Select Option"
-                    name="repsDisplay"
-                    value={exercise.repsDisplay}
-                    onChange={(event) =>
-                      handleExercise(
-                        event.target.name,
-                        event.target.value,
-                        exerciseIndex
-                      )
-                    }
-                    focusBorderColor={theme.colors.green[300]}
-                    color={
-                      !!exercise.repsDisplay
-                        ? theme.colors.black
-                        : theme.colors.grey[500]
-                    }
-                  >
-                    {RepsDisplayOptions.map((option) => {
-                      return (
-                        <option key={option.label} value={option.value}>
-                          {option.label}
-                        </option>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
-
-                {/* WEIGHT UNIT */}
-                <FormControl
-                  minWidth="50px"
-                  maxWidth={["90px", "110px", "130px"]}
-                  isInvalid={submitted && weightUnitIsInvalid}
-                >
-                  <FormLabel fontSize={["12px", "14px", "16px"]} m="0">
-                    Weight Unit
-                  </FormLabel>
-
-                  <Select
-                    fontSize={["12px", "14px", "16px"]}
-                    size={["sm", "sm", "md"]}
-                    placeholder="Select Option"
-                    name="weightUnit"
-                    maxWidth="150px"
-                    value={exercise.weightUnit}
-                    onChange={(event) =>
-                      handleExercise(
-                        event.target.name,
-                        event.target.value,
-                        exerciseIndex
-                      )
-                    }
-                    focusBorderColor={theme.colors.green[300]}
-                    color={
-                      !!exercise.weightUnit
-                        ? theme.colors.black
-                        : theme.colors.grey[500]
-                    }
-                  >
-                    {WeightOptions.map((option) => {
-                      return (
-                        <option key={option.label} value={option.value}>
-                          {option.label}
-                        </option>
-                      );
-                    })}
-                  </Select>
-                </FormControl>
-              </HStack>
-
-              {/* EXERCISE TIMER */}
-              <VStack
-                justifyContent={"flex-end"}
-                alignItems={"center"}
-                minWidth="130px"
-                spacing={0}
-              >
-                <FormLabel fontSize={["12px", "14px", "16px"]} m="0">
-                  Elapsed Time
-                </FormLabel>
-                <Timer
-                  seconds={exercise.elapsedSeconds}
-                  isActive={timerIsActive}
-                  handleIsActive={handleTimerIsActive}
-                  setTime={setTime}
-                  size="sm"
-                  variant="digital"
-                />
-              </VStack>
-            </HStack>
-          )}
-        </HStack>
-
-        {/* EXERCISE COMMENT */}
+        {seeDetails ? "Hide Details" : "More Details"}
+      </Button>
+      <HStack
+        w="100%"
+        justifyContent={seeDetails ? "space-between" : "flex-start"}
+        alignItems="flex-start"
+      >
         {seeDetails && (
-          <AddComment
-            placeholderText="Add an Exercise Comment"
-            comment={exercise.comment}
-            setComment={setExerciseComment}
-            maxWidth="100%"
-          />
-        )}
-
-        {/* SETS COMPLETED */}
-        {trackWorkout && (
-          <HStack justifyContent={"space-between"} w="100%">
-            <FormLabel size={["sm", "md", "lg"]} my="auto">
-              <b>{`Completed ${completedSets} / ${
-                exercise.sets === "" ? "0" : exercise.sets
-              } Sets`}</b>
-            </FormLabel>
+          <HStack
+            w="100%"
+            justifyContent="space-between"
+            alignItems="flex-end"
+            mt="-0.75rem"
+          >
             <HStack>
-              <IconButton
-                aria-label="Subtract Set"
-                icon={<FaMinus />}
-                size={["sm"]}
-                color={theme.colors.white}
-                bg={
-                  completedSets === 0
-                    ? theme.colors.grey[500]
-                    : theme.colors.bole[500]
-                }
-                _hover={{
-                  bg:
-                    completedSets === 0
-                      ? theme.colors.grey[500]
-                      : theme.colors.bole[500],
-                }}
-                _active={{
-                  bg:
-                    completedSets === 0
-                      ? theme.colors.grey[500]
-                      : theme.colors.bole[600],
-                }}
-                onClick={removedASet}
+              {/* REPS DISPLAY */}
+              <ExerciseRepsDisplay
+                submitted={submitted}
+                repsDisplayIsInvalid={repsDisplayIsInvalid}
+                exercise={exercise}
+                exerciseIndex={exerciseIndex}
+                handleExercise={handleExercise}
               />
-              <IconButton
-                aria-label="Add Set"
-                icon={<FaPlus />}
-                size={["sm"]}
-                color={theme.colors.white}
-                bg={theme.colors.feldgrau[400]}
-                _hover={{ bg: theme.colors.feldgrau[500] }}
-                _active={{ bg: theme.colors.feldgrau[600] }}
-                onClick={completedASet}
+
+              {/* WEIGHT UNIT */}
+              <ExerciseWeightUnit
+                submitted={submitted}
+                weightUnitIsInvalid={weightUnitIsInvalid}
+                exercise={exercise}
+                exerciseIndex={exerciseIndex}
+                handleExercise={handleExercise}
               />
             </HStack>
+
+            {/* EXERCISE TIMER */}
+            <ExerciseTimer
+              exercise={exercise}
+              timerIsActive={timerIsActive}
+              handleTimerIsActive={handleTimerIsActive}
+              setTime={setTime}
+            />
           </HStack>
         )}
+      </HStack>
 
-        {/* DELETE EXERCISE MODAL */}
-        <ConfirmModal
-          isOpen={isOpenDeleteExercise}
-          onClose={customOnCloseDeleteExercise}
-          onConfirmation={onDeleteExercise}
-          ModalTitle="Delete Exercise"
-          ModalBodyText="Are you sure you would like to delete this Exercise? This cannot be undone."
-          CloseText="Cancel"
-          ProceedText="Delete"
-          variant="warn"
+      {/* EXERCISE COMMENT */}
+      {seeDetails && (
+        <AddComment
+          placeholderText="Add an Exercise Comment"
+          comment={exercise.comment}
+          setComment={setExerciseComment}
+          maxWidth="100%"
         />
-      </VStack>
+      )}
 
-      {/* ERROR MESSAGES */}
-      {errors.map((error) => {
-        if (!submitted) {
-          return null;
-        }
-        return (
-          <Text key={error} color={theme.colors.error} fontSize="xs">
-            {error}
-          </Text>
-        );
-      })}
-    </Box>
+      {/* SETS COMPLETED */}
+      <TrackExercise
+        trackWorkout={trackWorkout}
+        completedSets={completedSets}
+        exercise={exercise}
+        removedASet={removedASet}
+        completedASet={completedASet}
+      />
+
+      {/* DELETE EXERCISE MODAL */}
+      <ConfirmModal
+        isOpen={isOpenDeleteExercise}
+        onClose={customOnCloseDeleteExercise}
+        onConfirmation={onDeleteExercise}
+        ModalTitle="Delete Exercise"
+        ModalBodyText="Are you sure you would like to delete this Exercise? This cannot be undone."
+        CloseText="Cancel"
+        ProceedText="Delete"
+        variant="warn"
+      />
+    </ExerciseContainer>
   );
 }

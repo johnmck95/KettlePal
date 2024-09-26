@@ -1,14 +1,8 @@
 import {
   Box,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
   Text,
-  ModalOverlay,
   VStack,
   HStack,
-  Button,
   Flex,
   IconButton,
   useDisclosure,
@@ -18,46 +12,22 @@ import {
   CloseButton,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
-import theme from "../../Constants/theme";
-import { formatExerciseString } from "../../utils/Exercises/exercises";
-import { formatDurationShort, postgresToDayJs } from "../../utils/Time/time";
-import { totalWorkoutWorkCapacity } from "../../utils/Workouts/workouts";
+import theme from "../../../Constants/theme";
+import { formatExerciseString } from "../../../utils/Exercises/exercises";
+import { formatDurationShort } from "../../../utils/Time/time";
 import {
   UserWithWorkoutsQuery,
   useDeleteExerciseMutation,
   useUpdateExerciseMutation,
-} from "../../generated/frontend-types";
+} from "../../../generated/frontend-types";
 import { FaMinus, FaPencilAlt, FaSave } from "react-icons/fa";
-import CreateExercise from "../NewWorkouts/CreateExercise";
-import { CreateWorkoutState } from "../NewWorkouts/CreateWorkout";
-import ConfirmModal from "../ConfirmModal";
-import LoadingSpinner from "../LoadingSpinner";
+import CreateExercise from "../../NewWorkouts/CreateExercise";
+import { CreateWorkoutState } from "../../NewWorkouts/CreateWorkout";
+import ConfirmModal from "../../ConfirmModal";
+import LoadingSpinner from "../../LoadingSpinner";
+import Detail from "./Detail";
 
-function Detail({
-  title,
-  value,
-  variant = "sm",
-}: {
-  title: string;
-  value: string;
-  variant?: "sm" | "md";
-}) {
-  return (
-    <VStack gap={0} minWidth={variant === "sm" ? "80px" : "120px"}>
-      <Text
-        fontSize={variant === "sm" ? ["8px", "12px"] : ["xs", "sm"]}
-        color={theme.colors.grey[700]}
-      >
-        {title}
-      </Text>
-      <Text fontSize={variant === "sm" ? ["14px", "18px"] : ["lg", "xl"]}>
-        <b>{value}</b>
-      </Text>
-    </VStack>
-  );
-}
-
-function ViewDetailedExercise({
+export default function ViewDetailedExercise({
   exercise,
   showDetails,
   refetchPastWorkouts,
@@ -350,100 +320,5 @@ function ViewDetailedExercise({
         variant="confirm"
       />
     </VStack>
-  );
-}
-
-export default function ViewDetailedWorkoutModal({
-  workoutWithExercises,
-  isOpen,
-  onClose,
-  refetchPastWorkouts,
-}: {
-  workoutWithExercises: NonNullable<
-    NonNullable<UserWithWorkoutsQuery["user"]>["workouts"]
-  >[0];
-  isOpen: boolean;
-  onClose: () => void;
-  refetchPastWorkouts: () => void;
-}) {
-  const [showDetails, setShowDetails] = React.useState(false);
-  const { comment, createdAt, exercises, elapsedSeconds } =
-    workoutWithExercises ?? {};
-
-  return (
-    <>
-      <Modal isOpen={isOpen} onClose={onClose} motionPreset="slideInBottom">
-        <ModalOverlay />
-        <ModalContent
-          padding={["0.75rem 0.25rem", "1rem 0.5rem"]}
-          m={["0.5rem"]}
-        >
-          <ModalCloseButton />
-          <ModalBody p={["0.5rem", "1rem"]} overflow="scroll">
-            <VStack alignItems="flex-start" gap={0}>
-              {/* DATE */}
-              <Text fontSize={["lg", "2xl"]}>
-                <b>
-                  {postgresToDayJs(createdAt ?? "").format(
-                    "dddd, MMMM DD, YYYY"
-                  )}
-                </b>
-              </Text>
-              {/* WORKOUT COMMENT */}
-              <Text fontSize={["sm", "md"]} color={theme.colors.grey[700]}>
-                <i>{comment}</i>
-              </Text>
-              {/* ELAPSED TIME AND TOTAL WORK CAPACITY */}
-              <HStack w="100%" justifyContent="space-evenly" my="1rem">
-                <Detail
-                  title={"Elapsed Time"}
-                  value={formatDurationShort(elapsedSeconds ?? 0)}
-                  variant="md"
-                />
-                <Detail
-                  title={"Work Capacity"}
-                  value={totalWorkoutWorkCapacity(workoutWithExercises)}
-                  variant="md"
-                />
-              </HStack>
-              {/* SHOW DETAILS BUTTON */}
-              <Button
-                fontSize={["xs", "sm"]}
-                width="100%"
-                variant="primary"
-                onClick={() =>
-                  setShowDetails((prevShowDetails) => !prevShowDetails)
-                }
-                mb="0.5rem"
-              >
-                {showDetails ? "Hide" : "Show"} Details
-              </Button>
-              <Box
-                width="100%"
-                margin="0"
-                padding="0"
-                sx={{
-                  "& > *:not(:first-of-type)": {
-                    borderTop: showDetails
-                      ? `1px solid ${theme.colors.feldgrau[100]}`
-                      : "none",
-                  },
-                }}
-              >
-                {/* EXERCISES */}
-                {exercises?.map((exercise) => (
-                  <ViewDetailedExercise
-                    key={exercise.uid}
-                    exercise={exercise}
-                    showDetails={showDetails}
-                    refetchPastWorkouts={refetchPastWorkouts}
-                  />
-                ))}
-              </Box>
-            </VStack>
-          </ModalBody>
-        </ModalContent>
-      </Modal>
-    </>
   );
 }

@@ -9,13 +9,13 @@ import {
   EditableInput,
 } from "@chakra-ui/react";
 import React from "react";
-import theme from "../Constants/theme";
-import ConfirmModal from "./ConfirmModal";
+import theme from "../../../../Constants/theme";
+import ConfirmModal from "../../../ConfirmModal";
 import {
   computeSeconds,
   formatTime,
   formatTimeInput,
-} from "../utils/Time/time";
+} from "../../../../utils/Time/time";
 
 function EditableTimerText({
   fontSize,

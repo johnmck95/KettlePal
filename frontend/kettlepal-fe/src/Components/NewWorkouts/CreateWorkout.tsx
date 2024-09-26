@@ -18,17 +18,20 @@ import {
   VStack,
   useDisclosure,
 } from "@chakra-ui/react";
-import AddComment from "../AddComment";
+import AddComment from "./FormComponents.tsx/Generic/AddComment";
 import { getCurrentDate } from "../../utils/Time/time";
 import { FaPlusCircle, FaSave } from "react-icons/fa";
 import ConfirmModal from "../ConfirmModal";
 import { useUser } from "../../Contexts/UserContext";
 import LoadingSpinner from "../LoadingSpinner";
 import theme from "../../Constants/theme";
-import Timer from "../Timer";
+import Timer from "./FormComponents.tsx/Generic/Timer";
 import { formatExerciseString } from "../../utils/Exercises/exercises";
 import dayjs from "dayjs";
 import { useAddWorkoutWithExercisesMutation } from "../../generated/frontend-types";
+import WorkoutDate from "./FormComponents.tsx/Workout/WorkoutDate";
+import WorkoutComment from "./FormComponents.tsx/Workout/WorkoutComment";
+import WorkoutTimer from "./FormComponents.tsx/Workout/WorkoutTimer";
 
 export type CreateWorkoutState = {
   createdAt: string;
@@ -258,51 +261,25 @@ export default function CreateWorkout() {
 
   return (
     <Box m={["0.5rem 1rem 1rem 1rem", "1rem"]} w={["100%", "100%", "720px"]}>
-      {/* DATE */}
       <HStack
         justifyContent={"space-between"}
         mb="0.75rem"
         h={["90px", "120px"]}
       >
-        <FormControl
-          isRequired
-          isInvalid={submitted && !state.createdAt}
-          h="100%"
-          display="flex"
-          flexDirection="column"
-          justifyContent={"flex-end"}
-        >
-          <FormLabel fontSize={["sm", "lg"]}>
-            <b>Workout Date</b>
-          </FormLabel>
-          <Input
-            size={["sm", "lg"]}
-            name="createdAt"
-            type="date"
-            bg="white"
-            maxW="180px"
-            value={state.createdAt}
-            onChange={handleStateChange}
-            border="1px solid grey"
-            borderRadius={"5px"}
-            m="0"
-            focusBorderColor={theme.colors.green[300]}
-          />
-        </FormControl>
+        {/* WORKOUT DATE */}
+        <WorkoutDate
+          submitted={submitted}
+          state={state}
+          handleStateChange={handleStateChange}
+        />
 
         {/* TIMER */}
-        <VStack justifyContent={"flex-end"} alignItems={"center"}>
-          <FormLabel fontSize={["sm", "lg"]} m="0px">
-            <b>Elapsed Time</b>
-          </FormLabel>
-          <Timer
-            seconds={state.elapsedSeconds}
-            isActive={timerIsActive}
-            handleIsActive={handleTimerIsActive}
-            setTime={setTime}
-            size="md"
-          />
-        </VStack>
+        <WorkoutTimer
+          state={state}
+          timerIsActive={timerIsActive}
+          handleTimerIsActive={handleTimerIsActive}
+          setTime={setTime}
+        />
       </HStack>
 
       {/* ERROR MESSAGES */}
@@ -342,15 +319,11 @@ export default function CreateWorkout() {
       </HStack>
 
       {/* WORKOUT COMMENT */}
-      <FormControl mb="1rem">
-        {addWorkoutComment && (
-          <AddComment
-            placeholderText="Add a Workout Comment"
-            comment={state.comment}
-            setComment={setComment}
-          />
-        )}
-      </FormControl>
+      <WorkoutComment
+        addWorkoutComment={addWorkoutComment}
+        state={state}
+        setComment={setComment}
+      />
 
       {/* EXERCISES */}
       <Box>
