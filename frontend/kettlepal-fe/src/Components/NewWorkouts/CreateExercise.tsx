@@ -15,7 +15,7 @@ import ExerciseReps from "./FormComponents.tsx/Exercise/ExerciseReps";
 import ExerciseRepsDisplay from "./FormComponents.tsx/Exercise/ExerciseRepsDisplay";
 import ExerciseWeightUnit from "./FormComponents.tsx/Exercise/ExerciseWeightUnit";
 import ExerciseTimer from "./FormComponents.tsx/Exercise/ExerciseTimer";
-import TrackExercise from "./FormComponents.tsx/TrackWorkout/TrackExercise";
+import TrackExercise from "./FormComponents.tsx/MidWorkoutTracking/TrackExercise";
 import { ExerciseContainer } from "./FormComponents.tsx/Exercise/ExerciseContainer";
 
 export default function CreateExercise({

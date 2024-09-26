@@ -263,7 +263,7 @@ export default function CreateWorkout() {
         {/* WORKOUT DATE */}
         <WorkoutDate
           submitted={submitted}
-          state={state}
+          createdAt={state.createdAt}
           handleStateChange={handleStateChange}
         />
 

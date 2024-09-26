@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
 
@@ -17,6 +17,10 @@ export function postgresToDayJs(timestamp: string): dayjs.Dayjs {
   const utcTime = dayjs.utc(dayjs.unix(Number(timestamp) / 1000));
   const localTime = utcTime.tz(dayjs.tz.guess() ?? "America/Vancouver");
   return localTime;
+}
+
+export function formatDateForYYYYMMDD(date: dayjs.Dayjs): string {
+  return dayjs(date).format("YYYY-MM-DD");
 }
 
 export function getCurrentDate(): string {

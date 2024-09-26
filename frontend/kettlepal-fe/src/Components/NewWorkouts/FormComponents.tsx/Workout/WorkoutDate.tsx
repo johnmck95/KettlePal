@@ -1,22 +1,21 @@
 import { FormControl, FormLabel, Input } from "@chakra-ui/react";
-import { CreateWorkoutState } from "../../CreateWorkout";
 import { ChangeEvent } from "react";
 import theme from "../../../../Constants/theme";
 
 interface WorkoutDateProps {
   submitted: boolean;
-  state: CreateWorkoutState;
+  createdAt: string;
   handleStateChange: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 export default function WorkoutDate({
   submitted,
-  state,
+  createdAt,
   handleStateChange,
 }: WorkoutDateProps) {
   return (
     <FormControl
       isRequired
-      isInvalid={submitted && !state.createdAt}
+      isInvalid={submitted && !createdAt}
       h="100%"
       display="flex"
       flexDirection="column"
@@ -31,7 +30,7 @@ export default function WorkoutDate({
         type="date"
         bg="white"
         maxW="180px"
-        value={state.createdAt}
+        value={createdAt}
         onChange={handleStateChange}
         border="1px solid grey"
         borderRadius={"5px"}

@@ -73,7 +73,10 @@ export default function ViewDetailedWorkoutModal({
             </HStack>
             <VStack alignItems="flex-start" gap={0}>
               {editing ? (
-                <EditWorkout />
+                <EditWorkout
+                  workoutWithExercises={workoutWithExercises}
+                  refetchPastWorkouts={refetchPastWorkouts}
+                />
               ) : (
                 <>
                   {/* DATE */}
