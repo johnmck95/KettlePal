@@ -22,9 +22,10 @@ export const ExerciseTitles = [
   "Barbell Deadlift",
   "Barbell Squat",
   "Bench Press",
+  "Custom",
 ];
 
-export const KettlbellWeightsKG = ["14", "20", "24", "28", "32"];
+export const KettlbellWeightsKG = ["14", "20", "24", "28", "32", "Custom"];
 
 export const WeightOptions = [
   {

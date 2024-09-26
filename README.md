@@ -20,12 +20,13 @@ An overbuilt "just-for-me" learning project that is made to keep track of my per
 - Design new workouts, track progress, and save to the database.
   - Edit saved exercises
   - Client-side and server-side validation.
+  - Edit past workouts.
 - View historical workout data.
 - View specific workouts in greater detail with computed information, like work capacity.
 
 ## Road Map
 
-- Edit a saved workout.
+- Add pagination and filtration options to past workouts.
 - Use D3.js to show trends from your workout data.
 - Integrate with Strava API to get data from bike rides and runs.
 
