@@ -45,4 +45,4 @@ Development and production environments.
 
 | Login                                             | View Workouts                                       | View Detailed Workout                               | Create Workout                                      |
 | ------------------------------------------------- | --------------------------------------------------- | --------------------------------------------------- | --------------------------------------------------- |
-| <img src="image.png" alt="alt text" width="200" > | <img src="image-1.png" alt="alt text" width="200" > | <img src="image-2.png" alt="alt text" width="200" > | <img src="image-3.png" alt="alt text" width="200" > |
+| <img src="image.png" alt="alt text" width="200" > | <img src="image-1.png" alt="alt text" width="200" > | <img src="image-5.png" alt="alt text" width="200" > | <img src="image-4.png" alt="alt text" width="200" > |
