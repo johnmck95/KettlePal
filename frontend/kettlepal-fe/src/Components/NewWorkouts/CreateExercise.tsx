@@ -431,6 +431,7 @@ export default function CreateExercise({
           textAlign="left"
           color={
             submitted &&
+            !seeDetails &&
             (weightUnitIsInvalid || repsDisplayIsInvalid || timerIsInvalid)
               ? theme.colors.error
               : theme.colors.feldgrau[700]
