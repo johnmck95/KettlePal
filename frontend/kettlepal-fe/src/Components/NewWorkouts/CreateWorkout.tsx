@@ -42,6 +42,7 @@ export default function CreateWorkout() {
     setShowServerError,
     setAddWorkoutComment,
     setShowTracking,
+    setFormHasErrors,
     handleTimerIsActive,
     handleStateChange,
     handleAddExercise,
@@ -160,7 +161,7 @@ export default function CreateWorkout() {
                   deleteExercise={deleteExercise}
                   exerciseIndex={index}
                   submitted={submitted}
-                  setFormHasErrors={setShowTracking}
+                  setFormHasErrors={setFormHasErrors}
                   trackWorkout={showTracking}
                 />
               </motion.div>

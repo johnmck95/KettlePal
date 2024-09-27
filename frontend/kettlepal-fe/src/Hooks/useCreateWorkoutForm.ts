@@ -244,6 +244,7 @@ const useCreateWorkoutForm = () => {
     isOpenSaveWorkout,
     setTime,
     setComment,
+    setFormHasErrors,
     setShowServerError,
     setAddWorkoutComment,
     setShowTracking,
