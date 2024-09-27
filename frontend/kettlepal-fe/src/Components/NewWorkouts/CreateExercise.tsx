@@ -72,9 +72,9 @@ export default function CreateExercise({
     swipeDistance,
   } = useCreateExerciseForm({
     exercise,
+    exerciseIndex,
     handleExercise,
     deleteExercise,
-    exerciseIndex,
     setFormHasErrors,
   });
 
