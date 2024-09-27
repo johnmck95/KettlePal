@@ -113,6 +113,7 @@ export type Mutation = {
   updateExercise?: Maybe<Exercise>;
   updateUser?: Maybe<User>;
   updateWorkout?: Maybe<Workout>;
+  updateWorkoutWithExercises?: Maybe<Workout>;
 };
 
 
@@ -187,6 +188,12 @@ export type MutationUpdateWorkoutArgs = {
   uid: Scalars['ID']['input'];
 };
 
+
+export type MutationUpdateWorkoutWithExercisesArgs = {
+  workoutUid: Scalars['ID']['input'];
+  workoutWithExercises: UpdateWorkoutWithExercisesInput;
+};
+
 export type Query = {
   __typename?: 'Query';
   checkSession: CheckSessionResponse;
@@ -217,6 +224,26 @@ export type RefreshTokenResponse = {
   __typename?: 'RefreshTokenResponse';
   message?: Maybe<Scalars['String']['output']>;
   success: Scalars['Boolean']['output'];
+};
+
+export type UpdateExerciseInput = {
+  comment?: InputMaybe<Scalars['String']['input']>;
+  elapsedSeconds?: InputMaybe<Scalars['Int']['input']>;
+  key?: InputMaybe<Scalars['String']['input']>;
+  reps?: InputMaybe<Scalars['String']['input']>;
+  repsDisplay?: InputMaybe<Scalars['String']['input']>;
+  sets?: InputMaybe<Scalars['String']['input']>;
+  title: Scalars['String']['input'];
+  uid: Scalars['ID']['input'];
+  weight?: InputMaybe<Scalars['String']['input']>;
+  weightUnit?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdateWorkoutWithExercisesInput = {
+  comment?: InputMaybe<Scalars['String']['input']>;
+  createdAt?: InputMaybe<Scalars['String']['input']>;
+  elapsedSeconds?: InputMaybe<Scalars['Int']['input']>;
+  exercises: Array<InputMaybe<UpdateExerciseInput>>;
 };
 
 export type User = {
@@ -284,6 +311,14 @@ export type DeleteExerciseMutationVariables = Exact<{
 
 
 export type DeleteExerciseMutation = { __typename?: 'Mutation', deleteExercise: { __typename?: 'Exercise', uid: string } };
+
+export type UpdateWorkoutWithExercisesMutationVariables = Exact<{
+  workoutUid: Scalars['ID']['input'];
+  workoutWithExercises: UpdateWorkoutWithExercisesInput;
+}>;
+
+
+export type UpdateWorkoutWithExercisesMutation = { __typename?: 'Mutation', updateWorkoutWithExercises?: { __typename?: 'Workout', createdAt: string, comment?: string | null, exercises?: Array<{ __typename?: 'Exercise', title: string, reps?: number | null, sets?: number | null }> | null } | null };
 
 export type UserWithWorkoutsQueryVariables = Exact<{
   uid: Scalars['ID']['input'];
@@ -514,6 +549,49 @@ export function useDeleteExerciseMutation(baseOptions?: Apollo.MutationHookOptio
 export type DeleteExerciseMutationHookResult = ReturnType<typeof useDeleteExerciseMutation>;
 export type DeleteExerciseMutationResult = Apollo.MutationResult<DeleteExerciseMutation>;
 export type DeleteExerciseMutationOptions = Apollo.BaseMutationOptions<DeleteExerciseMutation, DeleteExerciseMutationVariables>;
+export const UpdateWorkoutWithExercisesDocument = gql`
+    mutation UpdateWorkoutWithExercises($workoutUid: ID!, $workoutWithExercises: UpdateWorkoutWithExercisesInput!) {
+  updateWorkoutWithExercises(
+    workoutUid: $workoutUid
+    workoutWithExercises: $workoutWithExercises
+  ) {
+    createdAt
+    comment
+    exercises {
+      title
+      reps
+      sets
+    }
+  }
+}
+    `;
+export type UpdateWorkoutWithExercisesMutationFn = Apollo.MutationFunction<UpdateWorkoutWithExercisesMutation, UpdateWorkoutWithExercisesMutationVariables>;
+
+/**
+ * __useUpdateWorkoutWithExercisesMutation__
+ *
+ * To run a mutation, you first call `useUpdateWorkoutWithExercisesMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateWorkoutWithExercisesMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateWorkoutWithExercisesMutation, { data, loading, error }] = useUpdateWorkoutWithExercisesMutation({
+ *   variables: {
+ *      workoutUid: // value for 'workoutUid'
+ *      workoutWithExercises: // value for 'workoutWithExercises'
+ *   },
+ * });
+ */
+export function useUpdateWorkoutWithExercisesMutation(baseOptions?: Apollo.MutationHookOptions<UpdateWorkoutWithExercisesMutation, UpdateWorkoutWithExercisesMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateWorkoutWithExercisesMutation, UpdateWorkoutWithExercisesMutationVariables>(UpdateWorkoutWithExercisesDocument, options);
+      }
+export type UpdateWorkoutWithExercisesMutationHookResult = ReturnType<typeof useUpdateWorkoutWithExercisesMutation>;
+export type UpdateWorkoutWithExercisesMutationResult = Apollo.MutationResult<UpdateWorkoutWithExercisesMutation>;
+export type UpdateWorkoutWithExercisesMutationOptions = Apollo.BaseMutationOptions<UpdateWorkoutWithExercisesMutation, UpdateWorkoutWithExercisesMutationVariables>;
 export const UserWithWorkoutsDocument = gql`
     query UserWithWorkouts($uid: ID!) {
   user(uid: $uid) {

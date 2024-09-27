@@ -1,5 +1,7 @@
-export function verifyExercises(exercises) {
-    if (exercises.length < 1) {
+export function verifyExercises({ exercises, updatingWorkout = false, }) {
+    // You can delete the last exercise when updating,
+    // but you cannot create a new workout with no exercises
+    if (updatingWorkout === false && exercises.length < 1) {
         return { result: false, reason: "At least 1 exercise is required." };
     }
     for (const exercise of exercises) {

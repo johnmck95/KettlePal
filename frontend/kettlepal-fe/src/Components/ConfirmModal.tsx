@@ -40,13 +40,21 @@ export default function ConfirmModal({
         onClose={onClose}
         motionPreset="slideInBottom"
         isCentered
+        scrollBehavior="inside"
       >
         <ModalOverlay />
         <ModalContent margin={"1rem"}>
           <ModalHeader color={theme.colors.olive[900]}>
             {ModalTitle}
           </ModalHeader>
-          <ModalCloseButton />
+          <ModalCloseButton
+            sx={{
+              _focus: {
+                borderColor: theme.colors.green[300],
+                boxShadow: `0 0 0 1px ${theme.colors.green[300]}`,
+              },
+            }}
+          />
           <ModalBody>
             <Box>{ModalBodyText}</Box>
           </ModalBody>

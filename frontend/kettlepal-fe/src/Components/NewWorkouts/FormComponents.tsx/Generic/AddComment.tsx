@@ -1,5 +1,5 @@
 import React from "react";
-import theme from "../Constants/theme";
+import theme from "../../../../Constants/theme";
 import {
   Box,
   Editable,

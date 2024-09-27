@@ -183,13 +183,13 @@ const resolvers = {
             if (isWorkoutValid.result === false) {
                 throw new Error(isWorkoutValid.reason);
             }
-            const areExercisesValid = verifyExercises(newExercises);
+            const areExercisesValid = verifyExercises({ exercises: newExercises });
             if (areExercisesValid.result === false) {
                 throw new Error(areExercisesValid.reason);
             }
+            let addedWorkoutWithExercises;
             try {
-                let addedWorkoutWithExercises = null;
-                await knexInstance.transaction(async function (trx) {
+                addedWorkoutWithExercises = await knexInstance.transaction(async function (trx) {
                     try {
                         const [workout] = (await trx("workouts")
                             .returning("*")
@@ -202,25 +202,21 @@ const resolvers = {
                                 workoutUid: workout.uid,
                             });
                         })));
-                        await trx.commit();
-                        if (trx.isCompleted()) {
-                            addedWorkoutWithExercises = {
-                                ...workout,
-                                exercises,
-                            };
-                        }
-                        return addedWorkoutWithExercises;
+                        return {
+                            ...workout,
+                            exercises,
+                        };
                     }
                     catch (error) {
                         await trx.rollback();
                         throw new Error("Failed to create workout with exercises.");
                     }
                 });
-                return addedWorkoutWithExercises;
             }
             catch (error) {
                 throw new Error("Failed to create workout with exercises.");
             }
+            return addedWorkoutWithExercises;
         },
         async addWorkout(_, { userUid, workout, }, { req }) {
             if (!req.userUid || req.userUid !== userUid) {
@@ -321,7 +317,10 @@ const resolvers = {
                 createdAt: null, // Don't update createdAt when exercise already exists
                 workoutElapsedSeconds: null,
             });
-            const areExercisesValid = verifyExercises(newExercises);
+            const areExercisesValid = verifyExercises({
+                exercises: newExercises,
+                updatingWorkout: true,
+            });
             if (areExercisesValid.result === false) {
                 throw new Error(areExercisesValid.reason);
             }
@@ -337,6 +336,91 @@ const resolvers = {
                 console.error("Error updating exercise:", error);
                 throw error;
             }
+        },
+        async updateWorkoutWithExercises(_, { workoutUid, workoutWithExercises, }, { req }) {
+            // 1. Validate auth token
+            if (!req.userUid) {
+                throw new NotAuthorizedError();
+            }
+            // 2. Validate current user owns the workout with exercises
+            const dbWorkout = await knexInstance("workouts")
+                .where({ uid: workoutUid })
+                .first();
+            if (dbWorkout.userUid !== req.userUid) {
+                throw NotAuthorizedError;
+            }
+            // 3. Format workout and exercises for DB
+            const newExercises = formatExercisesForDB({
+                exercises: workoutWithExercises.exercises,
+                createdAt: workoutWithExercises.createdAt,
+                workoutElapsedSeconds: workoutWithExercises.elapsedSeconds,
+            });
+            const newWorkout = formatWorkoutForDB(workoutWithExercises, req.userUid);
+            // 4. Verify workout and exercise data for errors
+            const isWorkoutValid = verifyWorkout(newWorkout);
+            if (isWorkoutValid.result === false) {
+                throw new Error(isWorkoutValid.reason);
+            }
+            const areExercisesValid = verifyExercises({
+                exercises: newExercises,
+                updatingWorkout: true,
+            });
+            if (areExercisesValid.result === false) {
+                throw new Error(areExercisesValid.reason);
+            }
+            const dbExercises = await knexInstance("exercises").where({
+                workoutUid: workoutUid,
+            });
+            let updatedWorkoutWithExercises;
+            // Data is ready, start updating in a transaction. Rollback if any errors occur.
+            try {
+                updatedWorkoutWithExercises = await knexInstance.transaction(async function (trx) {
+                    try {
+                        // 5. Update all exercises that have changed
+                        for (let exercise of newExercises) {
+                            const dbExercise = dbExercises.find((dbExercise) => dbExercise.uid === exercise.uid);
+                            if (!dbExercise) {
+                                throw new Error(`Exercise with uid ${exercise.uid} not found in DB.`);
+                            }
+                            const mergedExercise = { ...dbExercise, ...exercise };
+                            await trx("exercises")
+                                .where({ uid: exercise.uid })
+                                .update(mergedExercise);
+                        }
+                        // 6. Delete any exercises that have been removed
+                        if (newExercises.length !== dbExercises.length) {
+                            const exercisesToDelete = dbExercises.filter((dbExercise) => !newExercises.find((exercise) => exercise.uid === dbExercise.uid));
+                            for (let exercise of exercisesToDelete) {
+                                await trx("exercises").where({ uid: exercise.uid }).del();
+                            }
+                        }
+                        // 7. Update the workout
+                        await trx("workouts")
+                            .where({ uid: workoutUid })
+                            .update(newWorkout);
+                        // 8. Fetch updated data to return
+                        const [updatedWorkout] = await trx("workouts").where({
+                            uid: workoutUid,
+                        });
+                        const updatedExercises = await trx("exercises").where({
+                            workoutUid: workoutUid,
+                        });
+                        return {
+                            ...updatedWorkout,
+                            exercises: updatedExercises,
+                        };
+                    }
+                    catch (error) {
+                        await trx.rollback();
+                        throw new Error("Failed to updateWorkoutWithExercises.");
+                    }
+                });
+            }
+            catch (error) {
+                console.error("Error deleting workout with exercises:", error);
+                throw error;
+            }
+            return updatedWorkoutWithExercises;
         },
         async deleteUser(_, { uid }, { req }) {
             if (!req.userUid) {

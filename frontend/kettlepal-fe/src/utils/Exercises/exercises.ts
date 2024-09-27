@@ -1,4 +1,4 @@
-import { CreateWorkoutState } from "../../Components/NewWorkouts/CreateWorkout";
+import { CreateWorkoutState } from "../../Hooks/useCreateWorkoutForm";
 import { Exercise } from "../../generated/frontend-types";
 
 export function formatReps(

@@ -14,7 +14,7 @@ import CalendarWidget from "../CalendarWidget";
 import { FaTimes } from "react-icons/fa";
 import ConfirmModal from "../ConfirmModal";
 import LoadingSpinner from "../LoadingSpinner";
-import ViewDetailedWorkoutModal from "./ViewDetailedWorkoutModal";
+import ViewDetailedWorkoutModal from "./ViewDetailedWorkoutModal/ViewDetailedWorkoutModal";
 import {
   UserWithWorkoutsQuery,
   useDeleteWorkoutWithExercisesMutation,

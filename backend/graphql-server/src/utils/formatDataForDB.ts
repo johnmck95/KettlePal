@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import {
   AddOrEditWorkoutInput,
   AddWorkoutWithExercisesInput,
+  UpdateWorkoutWithExercisesInput,
 } from "../generated/backend-types";
 
 // Frontend collects YYYY-MM-DD.
@@ -15,6 +16,7 @@ function formatCreatedAt(createdAt: string, elapsedSeconds: number) {
   return fullCreatedAt;
 }
 
+// Function overload for ADDING a new new workout.
 export function formatExercisesForDB({
   exercises,
   createdAt,
@@ -23,9 +25,20 @@ export function formatExercisesForDB({
   exercises: AddWorkoutWithExercisesInput["exercises"];
   createdAt: string | null;
   workoutElapsedSeconds: number | null;
+});
+// Function overload for MUTATING a past new workout.
+export function formatExercisesForDB({
+  exercises,
+  createdAt,
+  workoutElapsedSeconds,
+}: {
+  exercises: UpdateWorkoutWithExercisesInput["exercises"];
+  createdAt: string | null;
+  workoutElapsedSeconds: number | null;
 }) {
   const formattedExercises = exercises.map((exercise) => {
     const {
+      uid,
       title,
       weight,
       weightUnit,
@@ -36,13 +49,12 @@ export function formatExercisesForDB({
       elapsedSeconds,
     } = exercise;
 
-    return {
+    const baseExercise = {
       title,
       weight: isNaN(parseFloat(weight as string))
         ? null
         : parseFloat(weight as string),
       weightUnit: weightUnit !== "" ? weightUnit : null,
-      // Frontend collects strings, but we store these values as floats in the DB.
       sets: isNaN(parseFloat(sets as string))
         ? null
         : parseFloat(sets as string),
@@ -57,6 +69,10 @@ export function formatExercisesForDB({
           ? formatCreatedAt(createdAt, workoutElapsedSeconds)
           : null,
     };
+
+    // UID will only exist when updting an exercise.
+    // Let the DB generate a UID for new exercises.
+    return uid ? { uid, ...baseExercise } : baseExercise;
   });
 
   return formattedExercises;

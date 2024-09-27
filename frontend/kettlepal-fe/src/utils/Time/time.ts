@@ -19,6 +19,10 @@ export function postgresToDayJs(timestamp: string): dayjs.Dayjs {
   return localTime;
 }
 
+export function formatDateForYYYYMMDD(date: dayjs.Dayjs): string {
+  return dayjs(date).format("YYYY-MM-DD");
+}
+
 export function getCurrentDate(): string {
   const currentDate = new Date();
   const year = currentDate.getFullYear();

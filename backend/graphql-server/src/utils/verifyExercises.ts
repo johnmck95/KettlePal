@@ -9,11 +9,19 @@ export type ExerciseFromClient = {
   elapsedSeconds: number;
 };
 
-export function verifyExercises(exercises: ExerciseFromClient[]): {
+export function verifyExercises({
+  exercises,
+  updatingWorkout = false,
+}: {
+  exercises: ExerciseFromClient[];
+  updatingWorkout?: boolean;
+}): {
   result: boolean;
   reason: string;
 } {
-  if (exercises.length < 1) {
+  // You can delete the last exercise when updating,
+  // but you cannot create a new workout with no exercises
+  if (updatingWorkout === false && exercises.length < 1) {
     return { result: false, reason: "At least 1 exercise is required." };
   }
 
