@@ -18,6 +18,17 @@ import ExerciseTimer from "./FormComponents.tsx/Exercise/ExerciseTimer";
 import TrackExercise from "./FormComponents.tsx/MidWorkoutTracking/TrackExercise";
 import { ExerciseContainer } from "./FormComponents.tsx/Exercise/ExerciseContainer";
 
+interface CreateExerciseProps {
+  exercise: Omit<CreateWorkoutState["exercises"][number], "key">;
+  handleExercise: (name: string, value: string | number, index: number) => void;
+  deleteExercise: ((index: number) => void) | (() => Promise<void>);
+  exerciseIndex: number;
+  submitted: boolean;
+  setFormHasErrors: (value: boolean) => void;
+  trackWorkout: boolean;
+  mutatingWorkout?: boolean;
+}
+
 export default function CreateExercise({
   exercise,
   handleExercise,
@@ -26,15 +37,8 @@ export default function CreateExercise({
   submitted,
   setFormHasErrors,
   trackWorkout,
-}: {
-  exercise: Omit<CreateWorkoutState["exercises"][number], "key">;
-  handleExercise: (name: string, value: string | number, index: number) => void;
-  deleteExercise: ((index: number) => void) | (() => Promise<void>);
-  exerciseIndex: number;
-  submitted: boolean;
-  setFormHasErrors: (value: boolean) => void;
-  trackWorkout: boolean;
-}) {
+  mutatingWorkout,
+}: CreateExerciseProps) {
   const SESSION_STORAGE_KEY = `completedSets-${exerciseIndex}`;
   const EXERCISE_TIMER_KEY = `exerciseTimerIsActive-${exerciseIndex}`;
 
@@ -295,7 +299,7 @@ export default function CreateExercise({
             w="100%"
             justifyContent="space-between"
             alignItems="flex-end"
-            mt="-0.75rem"
+            mt={mutatingWorkout ? 0 : "-0.75rem"}
           >
             <HStack>
               {/* REPS DISPLAY */}
@@ -321,7 +325,7 @@ export default function CreateExercise({
             <ExerciseTimer
               exercise={exercise}
               timerIsActive={timerIsActive}
-              handleTimerIsActive={handleTimerIsActive}
+              handleTimerIsActive={mutatingWorkout ? null : handleTimerIsActive}
               setTime={setTime}
             />
           </HStack>

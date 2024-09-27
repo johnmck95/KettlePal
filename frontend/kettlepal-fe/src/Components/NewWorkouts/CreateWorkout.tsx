@@ -164,7 +164,7 @@ export default function CreateWorkout() {
   function deleteExercise(index: number): void {
     setState((prevState) => ({
       ...prevState,
-      exercises: prevState.exercises.filter((_, i) => i !== index),
+      exercises: prevState?.exercises?.filter((_, i) => i !== index),
     }));
   }
 

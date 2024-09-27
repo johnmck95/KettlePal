@@ -5,7 +5,7 @@ import { CreateWorkoutState } from "../../CreateWorkout";
 interface ExerciseTimerProps {
   exercise: Omit<CreateWorkoutState["exercises"][number], "key">;
   timerIsActive: boolean;
-  handleTimerIsActive: (newState: boolean) => void;
+  handleTimerIsActive: ((newState: boolean) => void) | null;
   setTime: (time: number) => void;
 }
 export default function ExerciseTimer({
@@ -15,12 +15,7 @@ export default function ExerciseTimer({
   setTime,
 }: ExerciseTimerProps) {
   return (
-    <VStack
-      justifyContent={"flex-end"}
-      alignItems={"center"}
-      minWidth="130px"
-      spacing={0}
-    >
+    <VStack alignItems={"flex-start"} minWidth="130px" spacing={0}>
       <FormLabel fontSize={["12px", "14px", "16px"]} m="0">
         Elapsed Time
       </FormLabel>

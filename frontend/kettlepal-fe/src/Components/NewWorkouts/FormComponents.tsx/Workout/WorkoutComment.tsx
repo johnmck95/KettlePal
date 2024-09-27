@@ -1,4 +1,3 @@
-import { CreateWorkoutState } from "../../CreateWorkout";
 import { FormControl, FormLabel } from "@chakra-ui/react";
 import AddComment from "../Generic/AddComment";
 
@@ -18,7 +17,7 @@ export default function WorkoutComment({
   return (
     <FormControl mb="1rem">
       {showLabel && (
-        <FormLabel fontSize={["sm", "lg"]} m="0px" alignSelf="flex-start">
+        <FormLabel fontSize={["sm", "lg"]} mb="4px" alignSelf="flex-start">
           <b>Workout Comment</b>
         </FormLabel>
       )}

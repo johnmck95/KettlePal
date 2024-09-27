@@ -185,8 +185,8 @@ function Digital({
       as="div"
       border={`1px solid ${theme.colors.gray[200]}`}
       borderRadius={["2px", "3px", "6px"]}
-      w="70px"
-      h={["32px", "40px"]}
+      w="100px"
+      h={["32px", "32px", "40px"]}
       textAlign="center"
       fontSize="xs"
       display="flex"
@@ -259,7 +259,13 @@ export default function Timer({
     <Stack
       direction={"row"}
       w="100%"
-      justifyContent={showControls ? "space-between" : "center"}
+      justifyContent={
+        showControls
+          ? "space-between"
+          : variant === "analog"
+          ? "center"
+          : "flex-start"
+      }
       alignItems="flex-end"
     >
       {variant === "digital" ? (

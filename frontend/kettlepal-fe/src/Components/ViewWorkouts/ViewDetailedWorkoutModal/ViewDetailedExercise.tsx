@@ -27,20 +27,24 @@ import ConfirmModal from "../../ConfirmModal";
 import LoadingSpinner from "../../LoadingSpinner";
 import Detail from "./Detail";
 
-export default function ViewDetailedExercise({
-  exercise,
-  showDetails,
-  refetchPastWorkouts,
-}: {
+interface ViewDetailedExerciseProps {
   exercise: NonNullable<
     NonNullable<
       NonNullable<UserWithWorkoutsQuery["user"]>["workouts"][0]
     >["exercises"]
   >[0];
   showDetails: boolean;
-  refetchPastWorkouts: () => void;
-}) {
-  const [editExercise, setEditExercise] = React.useState(false);
+  // refetchPastWorkouts: () => void;
+  // editing: boolean;
+}
+
+export default function ViewDetailedExercise({
+  exercise,
+  showDetails,
+}: // editing,
+// refetchPastWorkouts,
+ViewDetailedExerciseProps) {
+  // const [editExercise, setEditExercise] = React.useState(false);
   const {
     uid,
     title,
@@ -53,25 +57,25 @@ export default function ViewDetailedExercise({
     comment,
   } = exercise;
 
-  const [editableExercise, setEditableExercise] = useState<
-    Omit<CreateWorkoutState["exercises"][0], "key">
-  >({
-    title,
-    weight: weight?.toString() ?? "",
-    weightUnit: weightUnit ?? "",
-    sets: sets?.toString() ?? "",
-    reps: reps?.toString() ?? "",
-    repsDisplay: repsDisplay ?? "",
-    comment: comment ?? "",
-    elapsedSeconds: elapsedSeconds ?? 0,
-  });
+  // const [editableExercise, setEditableExercise] = useState<
+  //   Omit<CreateWorkoutState["exercises"][0], "key">
+  // >({
+  //   title,
+  //   weight: weight?.toString() ?? "",
+  //   weightUnit: weightUnit ?? "",
+  //   sets: sets?.toString() ?? "",
+  //   reps: reps?.toString() ?? "",
+  //   repsDisplay: repsDisplay ?? "",
+  //   comment: comment ?? "",
+  //   elapsedSeconds: elapsedSeconds ?? 0,
+  // });
 
-  function handleExercise(name: string, value: string | number): void {
-    setEditableExercise((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  }
+  // function handleExercise(name: string, value: string | number): void {
+  //   setEditableExercise((prev) => ({
+  //     ...prev,
+  //     [name]: value,
+  //   }));
+  // }
 
   // Save Exercise Modal Controls
   const {
@@ -85,69 +89,69 @@ export default function ViewDetailedExercise({
   const [showServerError, setShowServerError] = useState<boolean>(false);
   const [showUploadSuccess, setShowUploadSuccess] = useState<boolean>(false);
 
-  const [
-    updateExerciseMutation,
-    { loading: updateExerciseIsLoading, error: updateExerciseError },
-  ] = useUpdateExerciseMutation({
-    onCompleted: () => {
-      refetchPastWorkouts();
-      setShowUploadSuccess(true);
-      setTimeout(() => {
-        setShowUploadSuccess(false);
-      }, 5000);
-      setEditExercise(false);
-    },
-    onError: (error) => {
-      setShowServerError(true);
-      console.error("Error updating exercise: ", error.message);
-    },
-  });
+  // const [
+  //   updateExerciseMutation,
+  //   { loading: updateExerciseIsLoading, error: updateExerciseError },
+  // ] = useUpdateExerciseMutation({
+  //   onCompleted: () => {
+  //     refetchPastWorkouts();
+  //     setShowUploadSuccess(true);
+  //     setTimeout(() => {
+  //       setShowUploadSuccess(false);
+  //     }, 5000);
+  //     // setEditExercise(false);
+  //   },
+  //   onError: (error) => {
+  //     setShowServerError(true);
+  //     console.error("Error updating exercise: ", error.message);
+  //   },
+  // });
 
-  async function onSaveExercise() {
-    setSubmitted(true);
-    onCloseExercise();
-    // Client-side validation
-    if (formHasErrors) {
-      return;
-    }
-    // Try to write to DB
-    try {
-      await updateExerciseMutation({
-        variables: {
-          uid,
-          edits: editableExercise,
-        },
-      });
-    } catch (error) {
-      console.error("Error updating exercise: ", error);
-    }
-  }
+  // async function onSaveExercise() {
+  //   setSubmitted(true);
+  //   onCloseExercise();
+  //   // Client-side validation
+  //   if (formHasErrors) {
+  //     return;
+  //   }
+  //   // Try to write to DB
+  //   try {
+  //     await updateExerciseMutation({
+  //       variables: {
+  //         uid,
+  //         edits: editableExercise,
+  //       },
+  //     });
+  //   } catch (error) {
+  //     console.error("Error updating exercise: ", error);
+  //   }
+  // }
 
-  const [
-    deleteExerciseMutation,
-    { loading: deleteExerciseIsLoading, error: deleteExerciseError },
-  ] = useDeleteExerciseMutation({
-    onCompleted: () => {
-      refetchPastWorkouts();
-      setEditExercise(false);
-    },
-    onError: (error) => {
-      setShowServerError(true);
-      console.error("Error deleting exercise: ", error.message);
-    },
-  });
+  // const [
+  //   deleteExerciseMutation,
+  //   { loading: deleteExerciseIsLoading, error: deleteExerciseError },
+  // ] = useDeleteExerciseMutation({
+  //   onCompleted: () => {
+  //     refetchPastWorkouts();
+  //     // setEditExercise(false);
+  //   },
+  //   onError: (error) => {
+  //     setShowServerError(true);
+  //     console.error("Error deleting exercise: ", error.message);
+  //   },
+  // });
 
-  async function deleteExercise() {
-    try {
-      await deleteExerciseMutation({
-        variables: {
-          uid,
-        },
-      });
-    } catch (error) {
-      console.error("Error deleting exercise: ", error);
-    }
-  }
+  // async function deleteExercise() {
+  //   try {
+  //     await deleteExerciseMutation({
+  //       variables: {
+  //         uid,
+  //       },
+  //     });
+  //   } catch (error) {
+  //     console.error("Error deleting exercise: ", error);
+  //   }
+  // }
 
   return (
     <VStack
@@ -157,35 +161,11 @@ export default function ViewDetailedExercise({
       color={theme.colors.grey[800]}
       my="0.5rem"
     >
-      <HStack
-        w="100%"
-        justifyContent="space-between"
-        alignContent="center"
-        my={showDetails ? "0.5rem" : 0}
-      >
-        <Text fontSize={showDetails ? "xl" : "md"} color={theme.colors.black}>
-          <b>{formatExerciseString(exercise)}</b>
-        </Text>
-        <HStack my="0.15rem">
-          {editExercise && (
-            <IconButton
-              variant="primary"
-              aria-label="Save Exercise"
-              size="sm"
-              icon={<FaSave />}
-              onClick={onOpenExercise}
-            />
-          )}
-
-          <IconButton
-            variant="secondary"
-            aria-label="Edit Exercise"
-            size="sm"
-            icon={editExercise ? <FaMinus /> : <FaPencilAlt />}
-            onClick={() => setEditExercise((prev) => !prev)}
-          />
-        </HStack>
-      </HStack>
+      {/* {!editing && ( */}
+      <Text fontSize={showDetails ? "xl" : "md"} color={theme.colors.black}>
+        <b>{formatExerciseString(exercise)}</b>
+      </Text>
+      {/* )} */}
 
       {/* SUCCESSFULLY UPDATED EXERCISE */}
       {showUploadSuccess && (
@@ -196,7 +176,7 @@ export default function ViewDetailedExercise({
       )}
 
       {/* ERROR WHILE UPDATING EXERCISE */}
-      {showServerError && (!!updateExerciseError || !!deleteExerciseError) && (
+      {/* {showServerError && (!!updateExerciseError || !!deleteExerciseError) && (
         <Alert
           status="error"
           my="1rem"
@@ -225,9 +205,9 @@ export default function ViewDetailedExercise({
             onClick={() => setShowServerError(false)}
           />
         </Alert>
-      )}
+      )} */}
 
-      {editExercise || updateExerciseIsLoading || deleteExerciseIsLoading ? (
+      {/* {editing || updateExerciseIsLoading || deleteExerciseIsLoading ? (
         <>
           {updateExerciseIsLoading || deleteExerciseIsLoading ? (
             <LoadingSpinner />
@@ -245,48 +225,48 @@ export default function ViewDetailedExercise({
             </Box>
           )}
         </>
-      ) : (
-        <>
-          {!!comment && showDetails && (
-            <Text ml="0.5rem" fontSize="sm" color={theme.colors.grey[700]}>
-              <i>{comment}</i>
-            </Text>
-          )}
-          {showDetails && (
-            <Flex
-              justifyContent="space-evenly"
-              flexWrap="wrap"
-              mt="0.5rem"
-              w="100%"
-            >
-              {!!elapsedSeconds && (
-                <Detail
-                  title={"Elapsed Time"}
-                  value={formatDurationShort(elapsedSeconds ?? 0)}
-                />
-              )}
-              {!!sets && !!reps && (
-                <Detail
-                  title={"Total Reps"}
-                  value={`${(sets * reps).toLocaleString()}`}
-                />
-              )}
-              {!!sets && !!reps && !!weight && !!weightUnit && (
-                <Detail
-                  title={"Work Capacity"}
-                  value={`${(
-                    sets *
-                    reps *
-                    weight
-                  ).toLocaleString()} ${weightUnit}`}
-                />
-              )}
-            </Flex>
-          )}
-        </>
-      )}
+      ) : ( */}
+      <>
+        {!!comment && showDetails && (
+          <Text ml="0.5rem" fontSize="sm" color={theme.colors.grey[700]}>
+            <i>{comment}</i>
+          </Text>
+        )}
+        {showDetails && (
+          <Flex
+            justifyContent="space-evenly"
+            flexWrap="wrap"
+            mt="0.5rem"
+            w="100%"
+          >
+            {!!elapsedSeconds && (
+              <Detail
+                title={"Elapsed Time"}
+                value={formatDurationShort(elapsedSeconds ?? 0)}
+              />
+            )}
+            {!!sets && !!reps && (
+              <Detail
+                title={"Total Reps"}
+                value={`${(sets * reps).toLocaleString()}`}
+              />
+            )}
+            {!!sets && !!reps && !!weight && !!weightUnit && (
+              <Detail
+                title={"Work Capacity"}
+                value={`${(
+                  sets *
+                  reps *
+                  weight
+                ).toLocaleString()} ${weightUnit}`}
+              />
+            )}
+          </Flex>
+        )}
+      </>
+      {/* )} */}
       {/* CONFIRM SAVE EXERCISE MODAL */}
-      <ConfirmModal
+      {/* <ConfirmModal
         isOpen={isOpenExercise}
         onClose={onCloseExercise}
         onConfirmation={onSaveExercise}
@@ -318,7 +298,7 @@ export default function ViewDetailedExercise({
         CloseText="Cancel"
         ProceedText="Save"
         variant="confirm"
-      />
+      /> */}
     </VStack>
   );
 }

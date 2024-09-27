@@ -1,71 +1,66 @@
-import { HStack, VStack, Box } from "@chakra-ui/react";
+import { HStack, VStack, Box, Text, useDisclosure } from "@chakra-ui/react";
 import WorkoutTimer from "../../NewWorkouts/FormComponents.tsx/Workout/WorkoutTimer";
 import WorkoutComment from "../../NewWorkouts/FormComponents.tsx/Workout/WorkoutComment";
 import WorkoutDate from "../../NewWorkouts/FormComponents.tsx/Workout/WorkoutDate";
-import { ChangeEvent, useState } from "react";
-import { CreateWorkoutState } from "../../NewWorkouts/CreateWorkout";
+import { useState } from "react";
 import { UserWithWorkoutsQuery } from "../../../generated/frontend-types";
-import {
-  formatDateForYYYYMMDD,
-  postgresToDayJs,
-} from "../../../utils/Time/time";
+import React from "react";
+import CreateExercise from "../../NewWorkouts/CreateExercise";
+import useUpdateWorkoutWithExercises from "../../../Hooks/useUpdateWorkoutWithExercises";
+import ConfirmModal from "../../ConfirmModal";
+import BeforeAfterConfirmModalConent from "./BeforeAfterConfirmModalContent";
 
 interface EditWorkoutProps {
   workoutWithExercises: NonNullable<
     NonNullable<UserWithWorkoutsQuery["user"]>["workouts"]
   >[0];
   refetchPastWorkouts: () => void;
+  isOpen: boolean;
+  onClose: () => void;
 }
 
 export default function EditWorkout({
   workoutWithExercises,
+  isOpen,
+  onClose,
 }: EditWorkoutProps) {
   const [submitted, setSubmitted] = useState(false);
+  const {
+    state,
+    formHasErrors,
+    handleStateChange,
+    setTime,
+    setComment,
+    deleteExercise,
+    handleExercise,
+    setFormHasErrors,
+  } = useUpdateWorkoutWithExercises({ workoutWithExercises });
 
-  const { uid, elapsedSeconds, createdAt, comment } =
-    workoutWithExercises ?? {};
+  function onUpdateWorkouWithExercises() {
+    setSubmitted(true);
+    onClose();
 
-  const [editableWorkout, setEditableWorkout] = useState<
-    Pick<CreateWorkoutState, "createdAt" | "comment" | "elapsedSeconds">
-  >({
-    createdAt: formatDateForYYYYMMDD(postgresToDayJs(createdAt ?? "")) ?? "",
-    comment: comment ?? "",
-    elapsedSeconds: elapsedSeconds ?? 0,
-  });
+    if (formHasErrors) {
+      return;
+    }
 
-  function handleStateChange(event: ChangeEvent<HTMLInputElement>): void {
-    const { name, value } = event.target;
-    setEditableWorkout((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+    try {
+      // mutate workoutwithexercises to DB
+    } catch (e) {
+      console.log(e);
+    }
   }
-
-  const setTime = (elapsedSeconds: number) => {
-    setEditableWorkout((prevState) => ({
-      ...prevState,
-      elapsedSeconds,
-    }));
-  };
-
-  const setComment = (newComment: string) => {
-    setEditableWorkout((prevState) => ({
-      ...prevState,
-      comment: newComment,
-    }));
-  };
-
   return (
     <VStack w="100%">
       <HStack mt="2.5rem" w="100%">
         <WorkoutDate
           submitted={submitted}
-          createdAt={editableWorkout.createdAt}
+          createdAt={state.createdAt}
           handleStateChange={handleStateChange}
         />
-        <Box w="150px">
+        <Box w="175px">
           <WorkoutTimer
-            elapsedSeconds={editableWorkout.elapsedSeconds}
+            elapsedSeconds={state.elapsedSeconds}
             timerIsActive={false}
             handleTimerIsActive={null}
             setTime={setTime}
@@ -75,9 +70,43 @@ export default function EditWorkout({
 
       <WorkoutComment
         addWorkoutComment={true}
-        comment={editableWorkout.comment}
+        comment={state.comment}
         showLabel={true}
         setComment={setComment}
+      />
+
+      {/* EXERCISES */}
+      {state.exercises?.map((exercise, index) => {
+        return (
+          <CreateExercise
+            key={index}
+            exercise={exercise}
+            handleExercise={handleExercise}
+            deleteExercise={deleteExercise}
+            exerciseIndex={index}
+            submitted={submitted}
+            setFormHasErrors={setFormHasErrors}
+            trackWorkout={false}
+            mutatingWorkout={true}
+          />
+        );
+      })}
+
+      {/* CONFIRM SAVE EXERCISE MODAL */}
+      <ConfirmModal
+        isOpen={isOpen}
+        onClose={onClose}
+        onConfirmation={onUpdateWorkouWithExercises}
+        ModalTitle="Update Workout"
+        ModalBodyText={
+          <BeforeAfterConfirmModalConent
+            before={workoutWithExercises}
+            after={state}
+          />
+        }
+        CloseText="Cancel"
+        ProceedText="Save"
+        variant="confirm"
       />
     </VStack>
   );

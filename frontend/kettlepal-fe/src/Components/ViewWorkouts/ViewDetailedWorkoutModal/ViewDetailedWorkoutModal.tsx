@@ -1,24 +1,19 @@
 import {
-  Box,
   Modal,
   ModalBody,
   ModalContent,
-  Text,
   ModalOverlay,
   VStack,
   HStack,
   Button,
   IconButton,
+  useDisclosure,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
-import theme from "../../../Constants/theme";
-import { formatDurationShort, postgresToDayJs } from "../../../utils/Time/time";
-import { totalWorkoutWorkCapacity } from "../../../utils/Workouts/workouts";
 import { UserWithWorkoutsQuery } from "../../../generated/frontend-types";
-import { FaMinus, FaPencilAlt, FaTimes } from "react-icons/fa";
-import Detail from "./Detail";
-import ViewDetailedExercise from "./ViewDetailedExercise";
+import { FaPencilAlt, FaTimes } from "react-icons/fa";
 import EditWorkout from "./EditWorkout";
+import ShowWorkout from "./ShowWorkout";
 
 export default function ViewDetailedWorkoutModal({
   workoutWithExercises,
@@ -33,11 +28,14 @@ export default function ViewDetailedWorkoutModal({
   onClose: () => void;
   refetchPastWorkouts: () => void;
 }) {
-  const [showDetails, setShowDetails] = React.useState(false);
-  const { comment, createdAt, exercises, elapsedSeconds } =
-    workoutWithExercises ?? {};
   const [editing, setEditing] = useState(false);
 
+  // Modal controls for Mutating the workout
+  const {
+    isOpen: isOpenUpdateWorkout,
+    onOpen: onOpenUpdateWorkout,
+    onClose: onCloseUpdateWorkout,
+  } = useDisclosure();
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose} motionPreset="slideInBottom">
@@ -56,7 +54,7 @@ export default function ViewDetailedWorkoutModal({
                 left="16px"
                 top="14px"
                 h="32px"
-                onClick={() => console.log("TODO: save updates to DB")}
+                onClick={onOpenUpdateWorkout}
               >
                 Save
               </Button>
@@ -81,7 +79,7 @@ export default function ViewDetailedWorkoutModal({
                 variant="secondary"
                 aria-label="Edit Exercise"
                 size="sm"
-                icon={editing ? <FaMinus /> : <FaPencilAlt />}
+                icon={<FaPencilAlt />}
                 onClick={() => setEditing((prev) => !prev)}
               />
             </HStack>
@@ -90,77 +88,14 @@ export default function ViewDetailedWorkoutModal({
                 <EditWorkout
                   workoutWithExercises={workoutWithExercises}
                   refetchPastWorkouts={refetchPastWorkouts}
+                  isOpen={isOpenUpdateWorkout}
+                  onClose={onCloseUpdateWorkout}
                 />
               ) : (
                 <>
-                  {/* DATE */}
-                  <Text
-                    fontSize={["lg", "2xl"]}
-                    maxW="calc(100% - 75px)"
-                    overflow="scroll"
-                  >
-                    <b>
-                      {postgresToDayJs(createdAt ?? "").format(
-                        "ddd, MMM DD, YYYY"
-                      )}
-                    </b>
-                  </Text>
-
-                  {/* WORKOUT COMMENT */}
-                  <Text fontSize={["sm", "md"]} color={theme.colors.grey[700]}>
-                    <i>{comment}</i>
-                  </Text>
-
-                  {/* ELAPSED TIME AND TOTAL WORK CAPACITY */}
-                  <HStack w="100%" justifyContent="space-evenly" my="1rem">
-                    <Detail
-                      title={"Elapsed Time"}
-                      value={formatDurationShort(elapsedSeconds ?? 0)}
-                      variant="md"
-                    />
-                    <Detail
-                      title={"Work Capacity"}
-                      value={totalWorkoutWorkCapacity(workoutWithExercises)}
-                      variant="md"
-                    />
-                  </HStack>
+                  <ShowWorkout workoutWithExercises={workoutWithExercises} />
                 </>
               )}
-
-              {/* SHOW DETAILS BUTTON */}
-              <Button
-                fontSize={["xs", "sm"]}
-                width="100%"
-                variant="primary"
-                onClick={() =>
-                  setShowDetails((prevShowDetails) => !prevShowDetails)
-                }
-                my="0.5rem"
-              >
-                {showDetails ? "Hide" : "Show"} Details
-              </Button>
-              <Box
-                width="100%"
-                margin="0"
-                padding="0"
-                sx={{
-                  "& > *:not(:first-of-type)": {
-                    borderTop: showDetails
-                      ? `1px solid ${theme.colors.feldgrau[100]}`
-                      : "none",
-                  },
-                }}
-              >
-                {/* EXERCISES */}
-                {exercises?.map((exercise) => (
-                  <ViewDetailedExercise
-                    key={exercise.uid}
-                    exercise={exercise}
-                    showDetails={showDetails}
-                    refetchPastWorkouts={refetchPastWorkouts}
-                  />
-                ))}
-              </Box>
             </VStack>
           </ModalBody>
         </ModalContent>
