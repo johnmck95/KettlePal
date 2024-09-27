@@ -51,6 +51,12 @@ export default function ShowWorkout({
         variant="primary"
         onClick={() => setShowDetails((prevShowDetails) => !prevShowDetails)}
         my="0.5rem"
+        sx={{
+          _focus: {
+            borderColor: theme.colors.green[300],
+            boxShadow: `0 0 0 1px ${theme.colors.green[300]}`,
+          },
+        }}
       >
         {showDetails ? "Hide" : "Show"} Details
       </Button>

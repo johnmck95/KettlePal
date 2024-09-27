@@ -286,6 +286,12 @@ export default function CreateExercise({
             ? theme.colors.error
             : theme.colors.feldgrau[700]
         }
+        sx={{
+          _focus: {
+            borderColor: theme.colors.green[300],
+            boxShadow: `0 0 0 1px ${theme.colors.green[300]}`,
+          },
+        }}
       >
         {seeDetails ? "Hide Details" : "More Details"}
       </Button>

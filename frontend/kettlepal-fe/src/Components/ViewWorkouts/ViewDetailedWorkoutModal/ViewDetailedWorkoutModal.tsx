@@ -16,6 +16,7 @@ import { UserWithWorkoutsQuery } from "../../../generated/frontend-types";
 import { FaPencilAlt, FaTimes } from "react-icons/fa";
 import EditWorkout from "./EditWorkout";
 import ShowWorkout from "./ShowWorkout";
+import theme from "../../../Constants/theme";
 
 export default function ViewDetailedWorkoutModal({
   workoutWithExercises,
@@ -41,7 +42,13 @@ export default function ViewDetailedWorkoutModal({
   } = useDisclosure();
   return (
     <>
-      <Modal isOpen={isOpen} onClose={onClose} motionPreset="slideInBottom">
+      <Modal
+        isOpen={isOpen}
+        onClose={onClose}
+        motionPreset="slideInBottom"
+        isCentered
+        scrollBehavior="inside"
+      >
         <ModalOverlay />
         <ModalContent
           padding={["0.75rem 0.25rem", "1rem 0.5rem"]}
@@ -58,6 +65,7 @@ export default function ViewDetailedWorkoutModal({
                 top="14px"
                 h="40px"
                 onClick={onOpenUpdateWorkout}
+                zIndex={3}
               >
                 Save
               </Button>
@@ -88,17 +96,31 @@ export default function ViewDetailedWorkoutModal({
             >
               <IconButton
                 variant="secondary"
-                aria-label="Close Modal"
-                size="sm"
-                icon={<FaTimes />}
-                onClick={onClose}
-              />
-              <IconButton
-                variant="secondary"
                 aria-label="Edit Exercise"
                 size="sm"
                 icon={<FaPencilAlt />}
                 onClick={() => setEditing((prev) => !prev)}
+                sx={{
+                  _focus: {
+                    borderColor: theme.colors.green[300],
+                    boxShadow: `0 0 0 1px ${theme.colors.green[300]}`,
+                  },
+                }}
+                zIndex={3}
+              />
+              <IconButton
+                variant="secondary"
+                aria-label="Close Modal"
+                size="sm"
+                icon={<FaTimes />}
+                onClick={onClose}
+                sx={{
+                  _focus: {
+                    borderColor: theme.colors.green[300],
+                    boxShadow: `0 0 0 1px ${theme.colors.green[300]}`,
+                  },
+                }}
+                zIndex={3}
               />
             </HStack>
             <VStack alignItems="flex-start" gap={0}>

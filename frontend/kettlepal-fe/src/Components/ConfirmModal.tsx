@@ -40,6 +40,7 @@ export default function ConfirmModal({
         onClose={onClose}
         motionPreset="slideInBottom"
         isCentered
+        scrollBehavior="inside"
       >
         <ModalOverlay />
         <ModalContent margin={"1rem"}>

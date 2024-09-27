@@ -195,7 +195,6 @@ const resolvers = {
                             .returning("*")
                             .insert(newWorkout));
                         const [exercises] = (await Promise.all(newExercises.map((exercise) => {
-                            console.log("Adding :", exercise.title);
                             return trx("exercises")
                                 .returning("*")
                                 .insert({
@@ -203,24 +202,6 @@ const resolvers = {
                                 workoutUid: workout.uid,
                             });
                         })));
-                        // const exercises = await Promise.all(
-                        //   newExercises.map(async (exercise) => {
-                        //     try {
-                        //       const [insertedExercise] = (await trx("exercises")
-                        //         .returning("*")
-                        //         .insert({
-                        //           ...exercise,
-                        //           workoutUid: workout.uid,
-                        //         })) as Exercise[];
-                        //       return insertedExercise;
-                        //     } catch (error) {
-                        //       console.error("Error inserting exercise:", error.message);
-                        //       throw error;
-                        //     }
-                        //   })
-                        // );
-                        console.log("All exercises added");
-                        // await trx.commit();
                         return {
                             ...workout,
                             exercises,
@@ -235,7 +216,6 @@ const resolvers = {
             catch (error) {
                 throw new Error("Failed to create workout with exercises.");
             }
-            console.log("returning.. ", addedWorkoutWithExercises);
             return addedWorkoutWithExercises;
         },
         async addWorkout(_, { userUid, workout, }, { req }) {

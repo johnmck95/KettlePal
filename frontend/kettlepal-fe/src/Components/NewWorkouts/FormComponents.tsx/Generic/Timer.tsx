@@ -298,6 +298,12 @@ export default function Timer({
             fontSize="12px"
             onClick={onOpen}
             variant="secondary"
+            sx={{
+              _focus: {
+                borderColor: theme.colors.green[300],
+                boxShadow: `0 0 0 1px ${theme.colors.green[300]}`,
+              },
+            }}
           >
             Reset
           </Button>
@@ -307,6 +313,12 @@ export default function Timer({
             fontSize="12px"
             variant="primary"
             onClick={isActive ? pause : startOrResume}
+            sx={{
+              _focus: {
+                borderColor: theme.colors.green[300],
+                boxShadow: `0 0 0 1px ${theme.colors.green[300]}`,
+              },
+            }}
           >
             {isActive ? "Pause" : seconds === 0 ? "Start" : "Resume"}
           </Button>

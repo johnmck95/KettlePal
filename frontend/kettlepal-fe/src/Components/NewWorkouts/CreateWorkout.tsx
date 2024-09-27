@@ -298,6 +298,12 @@ export default function CreateWorkout() {
           onClick={() => setAddWorkoutComment((prev) => !prev)}
           textAlign="left"
           my="0.5rem"
+          sx={{
+            _focus: {
+              borderColor: theme.colors.green[300],
+              boxShadow: `0 0 0 1px ${theme.colors.green[300]}`,
+            },
+          }}
         >
           {addWorkoutComment ? "Hide Comment" : "Add Comment"}
         </Button>
@@ -307,6 +313,12 @@ export default function CreateWorkout() {
           onClick={() => setShowTracking((prev) => !prev)}
           textAlign="left"
           my="0.5rem"
+          sx={{
+            _focus: {
+              borderColor: theme.colors.green[300],
+              boxShadow: `0 0 0 1px ${theme.colors.green[300]}`,
+            },
+          }}
         >
           {showTracking ? "Hide Workout Tracking" : "Track Workout"}
         </Button>
@@ -355,6 +367,12 @@ export default function CreateWorkout() {
           variant="primary"
           onClick={handleAddExercise}
           leftIcon={<FaPlusCircle />}
+          sx={{
+            _focus: {
+              borderColor: theme.colors.green[300],
+              boxShadow: `0 0 0 1px ${theme.colors.green[300]}`,
+            },
+          }}
         >
           Add Exercise
         </Button>
@@ -364,6 +382,12 @@ export default function CreateWorkout() {
             leftIcon={<FaSave />}
             disabled={true}
             onClick={onOpenSaveWorkout}
+            sx={{
+              _focus: {
+                borderColor: theme.colors.green[300],
+                boxShadow: `0 0 0 1px ${theme.colors.green[300]}`,
+              },
+            }}
           >
             Save Workout
           </Button>

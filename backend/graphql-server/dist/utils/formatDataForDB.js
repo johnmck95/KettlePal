@@ -8,7 +8,7 @@ function formatCreatedAt(createdAt, elapsedSeconds) {
         .format("YYYY-MM-DDTHH:mm:ss.SSSZ");
     return fullCreatedAt;
 }
-// Function voerload for MUTATING a past new workout.
+// Function overload for MUTATING a past new workout.
 export function formatExercisesForDB({ exercises, createdAt, workoutElapsedSeconds, }) {
     const formattedExercises = exercises.map((exercise) => {
         const { uid, title, weight, weightUnit, sets, reps, repsDisplay, comment, elapsedSeconds, } = exercise;
