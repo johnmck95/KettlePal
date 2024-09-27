@@ -47,7 +47,14 @@ export default function ConfirmModal({
           <ModalHeader color={theme.colors.olive[900]}>
             {ModalTitle}
           </ModalHeader>
-          <ModalCloseButton />
+          <ModalCloseButton
+            sx={{
+              _focus: {
+                borderColor: theme.colors.green[300],
+                boxShadow: `0 0 0 1px ${theme.colors.green[300]}`,
+              },
+            }}
+          />
           <ModalBody>
             <Box>{ModalBodyText}</Box>
           </ModalBody>
