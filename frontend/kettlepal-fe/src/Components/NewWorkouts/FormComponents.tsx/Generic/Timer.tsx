@@ -208,7 +208,7 @@ function Digital({
 interface TimerProps {
   seconds: number;
   isActive: boolean;
-  handleIsActive: (value: boolean) => void;
+  handleIsActive: ((value: boolean) => void) | null;
   setTime: (elapsedSeconds: number) => void;
   size?: "sm" | "md";
   variant?: "analog" | "digital";
@@ -229,30 +229,37 @@ export default function Timer({
   const [updateTo, setUpdateTo] = React.useState(formatTime(seconds));
 
   function startOrResume() {
-    handleIsActive(true);
+    if (handleIsActive) {
+      handleIsActive(true);
+    }
     setTime(seconds);
     setUpdateTo(formatTime(seconds));
   }
 
   function onReset() {
-    handleIsActive(false);
+    if (handleIsActive) {
+      handleIsActive(false);
+    }
     onClose();
     setUpdateTo("00:00");
     setTime(0);
   }
 
   function pause() {
-    handleIsActive(false);
+    if (handleIsActive) {
+      handleIsActive(false);
+    }
     setTime(seconds);
   }
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const showControls = handleIsActive !== null;
 
   return (
     <Stack
       direction={"row"}
       w="100%"
-      justifyContent={"space-between"}
+      justifyContent={showControls ? "space-between" : "center"}
       alignItems="flex-end"
     >
       {variant === "digital" ? (
@@ -273,30 +280,32 @@ export default function Timer({
           pause={pause}
         />
       )}
-      <Stack
-        direction={"column"}
-        spacing={variant === "digital" ? 1 : 1.5}
-        alignSelf="center"
-      >
-        <Button
-          w="55px"
-          h="20px"
-          fontSize="12px"
-          onClick={onOpen}
-          variant="secondary"
+      {handleIsActive && (
+        <Stack
+          direction={"column"}
+          spacing={variant === "digital" ? 1 : 1.5}
+          alignSelf="center"
         >
-          Reset
-        </Button>
-        <Button
-          w="55px"
-          h="20px"
-          fontSize="12px"
-          variant="primary"
-          onClick={isActive ? pause : startOrResume}
-        >
-          {isActive ? "Pause" : seconds === 0 ? "Start" : "Resume"}
-        </Button>
-      </Stack>
+          <Button
+            w="55px"
+            h="20px"
+            fontSize="12px"
+            onClick={onOpen}
+            variant="secondary"
+          >
+            Reset
+          </Button>
+          <Button
+            w="55px"
+            h="20px"
+            fontSize="12px"
+            variant="primary"
+            onClick={isActive ? pause : startOrResume}
+          >
+            {isActive ? "Pause" : seconds === 0 ? "Start" : "Resume"}
+          </Button>
+        </Stack>
+      )}
 
       <ConfirmModal
         isOpen={isOpen}

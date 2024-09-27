@@ -1,4 +1,4 @@
-import { HStack, VStack } from "@chakra-ui/react";
+import { HStack, VStack, Box } from "@chakra-ui/react";
 import WorkoutTimer from "../../NewWorkouts/FormComponents.tsx/Workout/WorkoutTimer";
 import WorkoutComment from "../../NewWorkouts/FormComponents.tsx/Workout/WorkoutComment";
 import WorkoutDate from "../../NewWorkouts/FormComponents.tsx/Workout/WorkoutDate";
@@ -41,22 +41,44 @@ export default function EditWorkout({
     }));
   }
 
+  const setTime = (elapsedSeconds: number) => {
+    setEditableWorkout((prevState) => ({
+      ...prevState,
+      elapsedSeconds,
+    }));
+  };
+
+  const setComment = (newComment: string) => {
+    setEditableWorkout((prevState) => ({
+      ...prevState,
+      comment: newComment,
+    }));
+  };
+
   return (
-    <VStack>
-      <HStack>
+    <VStack w="100%">
+      <HStack mt="2.5rem" w="100%">
         <WorkoutDate
           submitted={submitted}
           createdAt={editableWorkout.createdAt}
           handleStateChange={handleStateChange}
         />
-        {/* <WorkoutTimer
-          state={}
-          timerIsActive={}
-          handleTimerIsActive={}
-          setTime={}
-        />  */}
+        <Box w="150px">
+          <WorkoutTimer
+            elapsedSeconds={editableWorkout.elapsedSeconds}
+            timerIsActive={false}
+            handleTimerIsActive={null}
+            setTime={setTime}
+          />
+        </Box>
       </HStack>
-      {/* <WorkoutComment addWorkoutComment={true} state={} setComment={} /> */}
+
+      <WorkoutComment
+        addWorkoutComment={true}
+        comment={editableWorkout.comment}
+        showLabel={true}
+        setComment={setComment}
+      />
     </VStack>
   );
 }

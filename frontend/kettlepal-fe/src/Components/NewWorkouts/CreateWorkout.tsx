@@ -269,7 +269,7 @@ export default function CreateWorkout() {
 
         {/* TIMER */}
         <WorkoutTimer
-          state={state}
+          elapsedSeconds={state.elapsedSeconds}
           timerIsActive={timerIsActive}
           handleTimerIsActive={handleTimerIsActive}
           setTime={setTime}
@@ -315,7 +315,7 @@ export default function CreateWorkout() {
       {/* WORKOUT COMMENT */}
       <WorkoutComment
         addWorkoutComment={addWorkoutComment}
-        state={state}
+        comment={state.comment}
         setComment={setComment}
       />
 

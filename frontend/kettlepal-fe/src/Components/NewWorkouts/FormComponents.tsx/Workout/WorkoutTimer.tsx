@@ -1,15 +1,14 @@
 import { FormLabel, VStack } from "@chakra-ui/react";
 import Timer from "../Generic/Timer";
-import { CreateWorkoutState } from "../../CreateWorkout";
 
 interface WorkoutTimerProps {
-  state: CreateWorkoutState;
+  elapsedSeconds: number;
   timerIsActive: boolean;
-  handleTimerIsActive: (newState: boolean) => void;
+  handleTimerIsActive: ((newState: boolean) => void) | null;
   setTime: (elapsedSeconds: number) => void;
 }
 export default function WorkoutTimer({
-  state,
+  elapsedSeconds,
   timerIsActive,
   handleTimerIsActive,
   setTime,
@@ -20,7 +19,7 @@ export default function WorkoutTimer({
         <b>Elapsed Time</b>
       </FormLabel>
       <Timer
-        seconds={state.elapsedSeconds}
+        seconds={elapsedSeconds}
         isActive={timerIsActive}
         handleIsActive={handleTimerIsActive}
         setTime={setTime}

@@ -1,24 +1,31 @@
 import { CreateWorkoutState } from "../../CreateWorkout";
-import { FormControl } from "@chakra-ui/react";
+import { FormControl, FormLabel } from "@chakra-ui/react";
 import AddComment from "../Generic/AddComment";
 
 interface WorkoutCommentProps {
   addWorkoutComment: boolean;
-  state: CreateWorkoutState;
+  comment: string;
+  showLabel?: boolean;
   setComment: (newComment: string) => void;
 }
 
 export default function WorkoutComment({
   addWorkoutComment,
-  state,
+  comment,
+  showLabel,
   setComment,
 }: WorkoutCommentProps) {
   return (
     <FormControl mb="1rem">
+      {showLabel && (
+        <FormLabel fontSize={["sm", "lg"]} m="0px" alignSelf="flex-start">
+          <b>Workout Comment</b>
+        </FormLabel>
+      )}
       {addWorkoutComment && (
         <AddComment
           placeholderText="Add a Workout Comment"
-          comment={state.comment}
+          comment={comment}
           setComment={setComment}
         />
       )}
