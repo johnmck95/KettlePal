@@ -13,7 +13,7 @@ const LoadingSpinner = ({ size = 24 }: { size?: string | number }) => {
   }, []);
 
   return (
-    <VStack w="100%" m="1rem">
+    <VStack w="100%">
       <Spinner
         boxSize={size}
         thickness="0.4rem"

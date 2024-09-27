@@ -3,7 +3,25 @@ import { formatDateForYYYYMMDD, postgresToDayJs } from "../utils/Time/time";
 import { UserWithWorkoutsQuery } from "../generated/frontend-types";
 import { CreateWorkoutState } from "../Components/NewWorkouts/CreateWorkout";
 
-const useUpdateWorkoutWithExercises = ({
+export type UpdateWorkoutState = {
+  createdAt: string;
+  comment: string;
+  elapsedSeconds: number;
+  exercises: Array<{
+    uid: string;
+    title: string;
+    weight: string;
+    weightUnit: string;
+    sets: string;
+    reps: string;
+    repsDisplay: string;
+    comment: string;
+    elapsedSeconds: number;
+    key: string;
+  }>;
+};
+
+const useUpdateWorkoutWithExercisesForm = ({
   workoutWithExercises,
 }: {
   workoutWithExercises: NonNullable<
@@ -14,12 +32,13 @@ const useUpdateWorkoutWithExercises = ({
     workoutWithExercises ?? {};
   const [formHasErrors, setFormHasErrors] = useState(false);
 
-  const [state, setState] = useState<CreateWorkoutState>({
+  const [state, setState] = useState<UpdateWorkoutState>({
     createdAt: formatDateForYYYYMMDD(postgresToDayJs(createdAt ?? "")) ?? "",
     comment: comment ?? "",
     elapsedSeconds: elapsedSeconds ?? 0,
     exercises: (exercises ?? [])?.map((exercise) => {
       return {
+        uid: exercise.uid ?? "",
         title: exercise?.title ?? "",
         weight: exercise.weight?.toString() ?? "",
         weightUnit: exercise.weightUnit ?? "",
@@ -111,4 +130,4 @@ const useUpdateWorkoutWithExercises = ({
   };
 };
 
-export default useUpdateWorkoutWithExercises;
+export default useUpdateWorkoutWithExercisesForm;

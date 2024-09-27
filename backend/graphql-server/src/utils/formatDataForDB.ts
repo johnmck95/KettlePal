@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import {
   AddOrEditWorkoutInput,
   AddWorkoutWithExercisesInput,
+  UpdateWorkoutWithExercisesInput,
 } from "../generated/backend-types";
 
 // Frontend collects YYYY-MM-DD.
@@ -20,7 +21,9 @@ export function formatExercisesForDB({
   createdAt,
   workoutElapsedSeconds,
 }: {
-  exercises: AddWorkoutWithExercisesInput["exercises"];
+  exercises:
+    | AddWorkoutWithExercisesInput["exercises"]
+    | UpdateWorkoutWithExercisesInput["exercises"];
   createdAt: string | null;
   workoutElapsedSeconds: number | null;
 }) {
@@ -37,6 +40,7 @@ export function formatExercisesForDB({
     } = exercise;
 
     return {
+      uid: exercise.uid ?? null,
       title,
       weight: isNaN(parseFloat(weight as string))
         ? null

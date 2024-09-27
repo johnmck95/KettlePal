@@ -72,6 +72,10 @@ type Mutation {
   updateUser(uid: ID!, edits: EditUserInput!): User
   updateWorkout(uid: ID!, edits: AddOrEditWorkoutInput!): Workout
   updateExercise(uid: ID!, edits: EditExerciseInput!): Exercise
+  updateWorkoutWithExercises(
+    workoutUid: ID!
+    workoutWithExercises: UpdateWorkoutWithExercisesInput!
+  ): Workout
 
   signUp(user: AddUserInput!): User
   login(email: String!, password: String!): User
@@ -115,6 +119,26 @@ input AddWorkoutWithExercisesInput {
   elapsedSeconds: Int
   comment: String
   exercises: [AddExerciseInput]!
+}
+
+input UpdateWorkoutWithExercisesInput {
+  createdAt: String
+  elapsedSeconds: Int
+  comment: String
+  exercises: [UpdateExerciseInput]!
+}
+
+input UpdateExerciseInput {
+  uid: ID!
+  title: String!
+  weight: String
+  weightUnit: String
+  sets: String
+  reps: String
+  repsDisplay: String
+  comment: String
+  elapsedSeconds: Int
+  key: String
 }
 
 input AddExerciseInput {

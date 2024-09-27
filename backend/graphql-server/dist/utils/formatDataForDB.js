@@ -12,6 +12,7 @@ export function formatExercisesForDB({ exercises, createdAt, workoutElapsedSecon
     const formattedExercises = exercises.map((exercise) => {
         const { title, weight, weightUnit, sets, reps, repsDisplay, comment, elapsedSeconds, } = exercise;
         return {
+            uid: exercise.uid ?? null,
             title,
             weight: isNaN(parseFloat(weight))
                 ? null

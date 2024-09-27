@@ -8,6 +8,8 @@ import {
   Button,
   IconButton,
   useDisclosure,
+  Alert,
+  AlertIcon,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { UserWithWorkoutsQuery } from "../../../generated/frontend-types";
@@ -29,6 +31,7 @@ export default function ViewDetailedWorkoutModal({
   refetchPastWorkouts: () => void;
 }) {
   const [editing, setEditing] = useState(false);
+  const [showUploadSuccess, setShowUploadSuccess] = useState<boolean>(false);
 
   // Modal controls for Mutating the workout
   const {
@@ -53,12 +56,27 @@ export default function ViewDetailedWorkoutModal({
                 position="absolute"
                 left="16px"
                 top="14px"
-                h="32px"
+                h="40px"
                 onClick={onOpenUpdateWorkout}
               >
                 Save
               </Button>
             )}
+
+            {/* SUCCESSFULLY UPDATED EXERCISE */}
+            {showUploadSuccess && (
+              <Alert
+                status="success"
+                my="2rem"
+                w="100%%"
+                borderRadius={"8px"}
+                bg="green.50"
+              >
+                <AlertIcon />
+                Workout Updated Successfully!
+              </Alert>
+            )}
+
             <HStack
               justifyContent={"flex-end"}
               gap={2}
@@ -90,6 +108,8 @@ export default function ViewDetailedWorkoutModal({
                   refetchPastWorkouts={refetchPastWorkouts}
                   isOpen={isOpenUpdateWorkout}
                   onClose={onCloseUpdateWorkout}
+                  setShowUploadSuccess={setShowUploadSuccess}
+                  setEditing={setEditing}
                 />
               ) : (
                 <>
