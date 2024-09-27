@@ -1,10 +1,10 @@
 import { Box, Text } from "@chakra-ui/react";
 import theme from "../../../Constants/theme";
 import { formatExerciseString } from "../../../utils/Exercises/exercises";
-import { CreateWorkoutState } from "../../NewWorkouts/CreateWorkout";
 import { UserWithWorkoutsQuery } from "../../../generated/frontend-types";
 import dayjs from "dayjs";
 import { postgresToDayJs } from "../../../utils/Time/time";
+import { CreateWorkoutState } from "../../../Hooks/useCreateWorkoutForm";
 
 interface BeforeAfterConfirmModalConentProps {
   before: NonNullable<

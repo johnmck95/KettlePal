@@ -2,8 +2,6 @@ import {
   HStack,
   VStack,
   Box,
-  Text,
-  useDisclosure,
   Alert,
   AlertIcon,
   AlertDescription,

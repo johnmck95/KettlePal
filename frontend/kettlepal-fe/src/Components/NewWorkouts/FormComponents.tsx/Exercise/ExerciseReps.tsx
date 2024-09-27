@@ -1,6 +1,6 @@
 import { FormControl, FormLabel, Input, Text } from "@chakra-ui/react";
-import { CreateWorkoutState } from "../../CreateWorkout";
 import theme from "../../../../Constants/theme";
+import { CreateWorkoutState } from "../../../../Hooks/useCreateWorkoutForm";
 
 interface ExerciseRepsProps {
   submitted: boolean;

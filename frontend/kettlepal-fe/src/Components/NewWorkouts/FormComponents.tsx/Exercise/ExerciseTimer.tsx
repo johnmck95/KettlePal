@@ -1,6 +1,6 @@
 import { FormLabel, VStack } from "@chakra-ui/react";
 import Timer from "../Generic/Timer";
-import { CreateWorkoutState } from "../../CreateWorkout";
+import { CreateWorkoutState } from "../../../../Hooks/useCreateWorkoutForm";
 
 interface ExerciseTimerProps {
   exercise: Omit<CreateWorkoutState["exercises"][number], "key">;

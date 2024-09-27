@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { CreateWorkoutState } from "./CreateWorkout";
+
 import { HStack, Button, useDisclosure } from "@chakra-ui/react";
 import AddComment from "./FormComponents.tsx/Generic/AddComment";
 import {
@@ -17,6 +17,7 @@ import ExerciseWeightUnit from "./FormComponents.tsx/Exercise/ExerciseWeightUnit
 import ExerciseTimer from "./FormComponents.tsx/Exercise/ExerciseTimer";
 import TrackExercise from "./FormComponents.tsx/MidWorkoutTracking/TrackExercise";
 import { ExerciseContainer } from "./FormComponents.tsx/Exercise/ExerciseContainer";
+import { CreateWorkoutState } from "../../Hooks/useCreateWorkoutForm";
 
 interface CreateExerciseProps {
   exercise: Omit<CreateWorkoutState["exercises"][number], "key">;

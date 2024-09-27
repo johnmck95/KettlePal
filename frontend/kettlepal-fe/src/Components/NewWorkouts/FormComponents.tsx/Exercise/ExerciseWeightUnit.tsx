@@ -1,7 +1,7 @@
 import { FormControl, FormLabel, Select } from "@chakra-ui/react";
 import theme from "../../../../Constants/theme";
 import { WeightOptions } from "../../../../Constants/ExercisesOptions";
-import { CreateWorkoutState } from "../../CreateWorkout";
+import { CreateWorkoutState } from "../../../../Hooks/useCreateWorkoutForm";
 
 interface ExerciseWeightUnitProps {
   submitted: boolean;

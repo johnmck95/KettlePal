@@ -1,7 +1,7 @@
 import { FormControl, FormLabel, Input, Select } from "@chakra-ui/react";
-import { CreateWorkoutState } from "../../CreateWorkout";
 import theme from "../../../../Constants/theme";
 import { KettlbellWeightsKG } from "../../../../Constants/ExercisesOptions";
+import { CreateWorkoutState } from "../../../../Hooks/useCreateWorkoutForm";
 
 interface ExerciseWeightProps {
   submitted: boolean;

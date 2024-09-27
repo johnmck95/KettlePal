@@ -1,7 +1,6 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { formatDateForYYYYMMDD, postgresToDayJs } from "../utils/Time/time";
 import { UserWithWorkoutsQuery } from "../generated/frontend-types";
-import { CreateWorkoutState } from "../Components/NewWorkouts/CreateWorkout";
 
 export type UpdateWorkoutState = {
   createdAt: string;
