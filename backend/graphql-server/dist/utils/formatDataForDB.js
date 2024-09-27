@@ -8,17 +8,16 @@ function formatCreatedAt(createdAt, elapsedSeconds) {
         .format("YYYY-MM-DDTHH:mm:ss.SSSZ");
     return fullCreatedAt;
 }
+// Function voerload for MUTATING a past new workout.
 export function formatExercisesForDB({ exercises, createdAt, workoutElapsedSeconds, }) {
     const formattedExercises = exercises.map((exercise) => {
-        const { title, weight, weightUnit, sets, reps, repsDisplay, comment, elapsedSeconds, } = exercise;
-        return {
-            uid: exercise.uid ?? null,
+        const { uid, title, weight, weightUnit, sets, reps, repsDisplay, comment, elapsedSeconds, } = exercise;
+        const baseExercise = {
             title,
             weight: isNaN(parseFloat(weight))
                 ? null
                 : parseFloat(weight),
             weightUnit: weightUnit !== "" ? weightUnit : null,
-            // Frontend collects strings, but we store these values as floats in the DB.
             sets: isNaN(parseFloat(sets))
                 ? null
                 : parseFloat(sets),
@@ -32,6 +31,9 @@ export function formatExercisesForDB({ exercises, createdAt, workoutElapsedSecon
                 ? formatCreatedAt(createdAt, workoutElapsedSeconds)
                 : null,
         };
+        // UID will only exist when updting an exercise.
+        // Let the DB generate a UID for new exercises.
+        return uid ? { uid, ...baseExercise } : baseExercise;
     });
     return formattedExercises;
 }

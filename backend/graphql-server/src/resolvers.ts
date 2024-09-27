@@ -219,45 +219,40 @@ const resolvers = {
         throw new Error(areExercisesValid.reason);
       }
 
+      let addedWorkoutWithExercises;
       try {
-        let addedWorkoutWithExercises = null;
-        await knexInstance.transaction(async function (trx) {
-          try {
-            const [workout] = (await trx("workouts")
-              .returning("*")
-              .insert(newWorkout)) as unknown as Workout[];
+        addedWorkoutWithExercises = await knexInstance.transaction(
+          async function (trx) {
+            try {
+              const [workout] = (await trx("workouts")
+                .returning("*")
+                .insert(newWorkout)) as unknown as Workout[];
 
-            const [exercises] = (await Promise.all(
-              newExercises.map((exercise) => {
-                return trx("exercises")
-                  .returning("*")
-                  .insert({
-                    ...exercise,
-                    workoutUid: workout.uid,
-                  });
-              })
-            )) as unknown as Exercise[];
+              const [exercises] = (await Promise.all(
+                newExercises.map((exercise) => {
+                  return trx("exercises")
+                    .returning("*")
+                    .insert({
+                      ...exercise,
+                      workoutUid: workout.uid,
+                    });
+                })
+              )) as unknown as Exercise[];
 
-            await trx.commit();
-
-            if (trx.isCompleted()) {
-              addedWorkoutWithExercises = {
+              return {
                 ...workout,
                 exercises,
               };
+            } catch (error) {
+              await trx.rollback();
+              throw new Error("Failed to create workout with exercises.");
             }
-
-            return addedWorkoutWithExercises;
-          } catch (error) {
-            await trx.rollback();
-            throw new Error("Failed to create workout with exercises.");
           }
-        });
-
-        return addedWorkoutWithExercises;
+        );
       } catch (error) {
         throw new Error("Failed to create workout with exercises.");
       }
+      return addedWorkoutWithExercises;
     },
 
     async addWorkout(
@@ -478,7 +473,6 @@ const resolvers = {
       });
 
       let updatedWorkoutWithExercises;
-
       // Data is ready, start updating in a transaction. Rollback if any errors occur.
       try {
         updatedWorkoutWithExercises = await knexInstance.transaction(

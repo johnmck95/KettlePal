@@ -187,14 +187,15 @@ const resolvers = {
             if (areExercisesValid.result === false) {
                 throw new Error(areExercisesValid.reason);
             }
+            let addedWorkoutWithExercises;
             try {
-                let addedWorkoutWithExercises = null;
-                await knexInstance.transaction(async function (trx) {
+                addedWorkoutWithExercises = await knexInstance.transaction(async function (trx) {
                     try {
                         const [workout] = (await trx("workouts")
                             .returning("*")
                             .insert(newWorkout));
                         const [exercises] = (await Promise.all(newExercises.map((exercise) => {
+                            console.log("Adding :", exercise.title);
                             return trx("exercises")
                                 .returning("*")
                                 .insert({
@@ -202,25 +203,40 @@ const resolvers = {
                                 workoutUid: workout.uid,
                             });
                         })));
-                        await trx.commit();
-                        if (trx.isCompleted()) {
-                            addedWorkoutWithExercises = {
-                                ...workout,
-                                exercises,
-                            };
-                        }
-                        return addedWorkoutWithExercises;
+                        // const exercises = await Promise.all(
+                        //   newExercises.map(async (exercise) => {
+                        //     try {
+                        //       const [insertedExercise] = (await trx("exercises")
+                        //         .returning("*")
+                        //         .insert({
+                        //           ...exercise,
+                        //           workoutUid: workout.uid,
+                        //         })) as Exercise[];
+                        //       return insertedExercise;
+                        //     } catch (error) {
+                        //       console.error("Error inserting exercise:", error.message);
+                        //       throw error;
+                        //     }
+                        //   })
+                        // );
+                        console.log("All exercises added");
+                        // await trx.commit();
+                        return {
+                            ...workout,
+                            exercises,
+                        };
                     }
                     catch (error) {
                         await trx.rollback();
                         throw new Error("Failed to create workout with exercises.");
                     }
                 });
-                return addedWorkoutWithExercises;
             }
             catch (error) {
                 throw new Error("Failed to create workout with exercises.");
             }
+            console.log("returning.. ", addedWorkoutWithExercises);
+            return addedWorkoutWithExercises;
         },
         async addWorkout(_, { userUid, workout, }, { req }) {
             if (!req.userUid || req.userUid !== userUid) {
@@ -346,7 +362,6 @@ const resolvers = {
             if (!req.userUid) {
                 throw new NotAuthorizedError();
             }
-            // req = { userUid: "40f6e5fe-5ede-46a4-976e-8ff9d1da74cd" }; // TODO: delete me.
             // 2. Validate current user owns the workout with exercises
             const dbWorkout = await knexInstance("workouts")
                 .where({ uid: workoutUid })
