@@ -47,6 +47,20 @@ export default function ViewDetailedWorkoutModal({
           m={["0.5rem"]}
         >
           <ModalBody p={["0.5rem", "1rem"]} overflow="scroll">
+            {editing && (
+              <Button
+                fontSize={["xs", "sm"]}
+                width="140px"
+                variant="primary"
+                position="absolute"
+                left="16px"
+                top="14px"
+                h="32px"
+                onClick={() => console.log("TODO: save updates to DB")}
+              >
+                Save
+              </Button>
+            )}
             <HStack
               justifyContent={"flex-end"}
               gap={2}
