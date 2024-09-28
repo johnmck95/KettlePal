@@ -13,7 +13,7 @@ const USER_WITH_WORKOUTS_QUERY = gql`
         uid
         comment
         elapsedSeconds
-        createdAt
+        date
         exercises {
           uid
           title

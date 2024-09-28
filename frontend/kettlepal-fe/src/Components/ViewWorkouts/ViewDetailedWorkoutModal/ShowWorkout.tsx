@@ -1,11 +1,12 @@
 import { Box, Button, HStack, Text } from "@chakra-ui/react";
-import { formatDurationShort, postgresToDayJs } from "../../../utils/Time/time";
+import { formatDurationShort } from "../../../utils/Time/time";
 import Detail from "./Detail";
 import { totalWorkoutWorkCapacity } from "../../../utils/Workouts/workouts";
 import { UserWithWorkoutsQuery } from "../../../generated/frontend-types";
 import theme from "../../../Constants/theme";
 import ViewDetailedExercise from "./ViewDetailedExercise";
 import { useState } from "react";
+import dayjs from "dayjs";
 
 interface ShowWorkoutProps {
   workoutWithExercises: NonNullable<
@@ -16,13 +17,13 @@ export default function ShowWorkout({
   workoutWithExercises,
 }: ShowWorkoutProps) {
   const [showDetails, setShowDetails] = useState(false);
-  const { comment, createdAt, exercises, elapsedSeconds } =
+  const { comment, date, exercises, elapsedSeconds } =
     workoutWithExercises ?? {};
   return (
     <>
       {/* DATE */}
       <Text fontSize={["lg", "2xl"]} maxW="calc(100% - 75px)" overflow="scroll">
-        <b>{postgresToDayJs(createdAt ?? "").format("ddd, MMM DD, YYYY")}</b>
+        <b>{dayjs(date).format("ddd, MMM DD, YYYY")}</b>
       </Text>
 
       {/* WORKOUT COMMENT */}

@@ -2,7 +2,6 @@ import React from "react";
 import { Box, Center, Text } from "@chakra-ui/react";
 import dayjs from "dayjs";
 import theme from "../Constants/theme";
-import { postgresToDayJs } from "../utils/Time/time";
 
 export default function CalendarWidget({
   date,
@@ -13,7 +12,7 @@ export default function CalendarWidget({
   w?: string;
   h?: string;
 }) {
-  const convertedDate: dayjs.Dayjs = postgresToDayJs(date);
+  const convertedDate = dayjs(date).tz(dayjs.tz.guess() ?? "America/Vancouver");
 
   return (
     <Box

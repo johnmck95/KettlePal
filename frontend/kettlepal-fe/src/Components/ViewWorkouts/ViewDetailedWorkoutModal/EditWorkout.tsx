@@ -124,7 +124,7 @@ export default function EditWorkout({
             <HStack mt="2.5rem" w="100%">
               <WorkoutDate
                 submitted={submitted}
-                createdAt={state.createdAt}
+                date={state.date}
                 handleStateChange={handleStateChange}
               />
               <Box w="175px">

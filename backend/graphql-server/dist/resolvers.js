@@ -43,9 +43,12 @@ const resolvers = {
                 throw new NotAuthorizedError();
             }
             try {
-                return await knexInstance("workouts")
-                    .select("*")
-                    .orderBy("createdAt", "desc");
+                return (await knexInstance.raw(`
+            SELECT *
+            FROM workouts
+            WHERE "userUid" = ?
+            ORDER BY date::date DESC
+          `, [req.userUid])).rows;
             }
             catch (error) {
                 console.error("Error fetching workouts:", error);
@@ -112,10 +115,12 @@ const resolvers = {
     User: {
         async workouts(parent) {
             try {
-                return await knexInstance("workouts")
-                    .select("*")
-                    .where({ userUid: parent.uid })
-                    .orderBy("createdAt", "desc");
+                return (await knexInstance.raw(`
+              SELECT *
+              FROM workouts
+              WHERE "userUid" = ?
+              ORDER BY date::date DESC
+            `, [parent.uid])).rows;
             }
             catch (error) {
                 console.error("Error fetching workouts:", error);
@@ -173,11 +178,7 @@ const resolvers = {
             if (!req.userUid || req.userUid !== userUid) {
                 throw new NotAuthorizedError();
             }
-            const newExercises = formatExercisesForDB({
-                exercises: workoutWithExercises.exercises,
-                createdAt: workoutWithExercises.createdAt,
-                workoutElapsedSeconds: workoutWithExercises.elapsedSeconds,
-            });
+            const newExercises = formatExercisesForDB(workoutWithExercises.exercises);
             const newWorkout = formatWorkoutForDB(workoutWithExercises, userUid);
             const isWorkoutValid = verifyWorkout(newWorkout);
             if (isWorkoutValid.result === false) {
@@ -208,12 +209,14 @@ const resolvers = {
                         };
                     }
                     catch (error) {
+                        console.log(error.message);
                         await trx.rollback();
                         throw new Error("Failed to create workout with exercises.");
                     }
                 });
             }
             catch (error) {
+                console.log(error.message);
                 throw new Error("Failed to create workout with exercises.");
             }
             return addedWorkoutWithExercises;
@@ -312,11 +315,7 @@ const resolvers = {
             // for any errors before writing to the database
             let oldExercise = (await knexInstance("exercises").where({ uid: uid }))[0];
             const mergedExercise = { ...oldExercise, ...edits };
-            const newExercises = formatExercisesForDB({
-                exercises: [mergedExercise],
-                createdAt: null, // Don't update createdAt when exercise already exists
-                workoutElapsedSeconds: null,
-            });
+            const newExercises = formatExercisesForDB([mergedExercise]);
             const areExercisesValid = verifyExercises({
                 exercises: newExercises,
                 updatingWorkout: true,
@@ -350,11 +349,7 @@ const resolvers = {
                 throw NotAuthorizedError;
             }
             // 3. Format workout and exercises for DB
-            const newExercises = formatExercisesForDB({
-                exercises: workoutWithExercises.exercises,
-                createdAt: workoutWithExercises.createdAt,
-                workoutElapsedSeconds: workoutWithExercises.elapsedSeconds,
-            });
+            const newExercises = formatExercisesForDB(workoutWithExercises.exercises);
             const newWorkout = formatWorkoutForDB(workoutWithExercises, req.userUid);
             // 4. Verify workout and exercise data for errors
             const isWorkoutValid = verifyWorkout(newWorkout);

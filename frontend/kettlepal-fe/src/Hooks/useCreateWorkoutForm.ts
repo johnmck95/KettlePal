@@ -8,7 +8,7 @@ const SESSION_STATE_KEY = "createWorkoutState";
 const WORKOUT_TIMER_KEY = "workoutTimerIsActive";
 
 export type CreateWorkoutState = {
-  createdAt: string;
+  date: string;
   comment: string;
   elapsedSeconds: number;
   exercises: Array<{
@@ -30,7 +30,7 @@ const useCreateWorkoutForm = () => {
     return fromStorage
       ? JSON.parse(fromStorage)
       : {
-          createdAt: getCurrentDate(),
+          date: getCurrentDate(),
           comment: "",
           elapsedSeconds: 0,
           exercises: [],
@@ -63,7 +63,7 @@ const useCreateWorkoutForm = () => {
     useAddWorkoutWithExercisesMutation({
       onCompleted() {
         setState({
-          createdAt: getCurrentDate(),
+          date: getCurrentDate(),
           comment: "",
           elapsedSeconds: 0,
           exercises: [],
@@ -176,7 +176,7 @@ const useCreateWorkoutForm = () => {
     date = "Please enter a workout date.",
     timer = "Please stop the workout timer before saving.",
   }
-  const dateIsInvalid = !state.createdAt;
+  const dateIsInvalid = !state.date;
   const timerIsInvalid = timerIsActive;
   const [numErrors, setNumErrors] = useState(0);
   const errors: string[] = [];

@@ -11,7 +11,7 @@ describe("totalWorkoutWorkCapacity", () => {
       uid: "123",
       comment: "Workout comment",
       elapsedSeconds: 123,
-      createdAt: "2024-08-29",
+      date: "2024-08-29",
       exercises: [],
     };
   });

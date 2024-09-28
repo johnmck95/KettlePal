@@ -4,18 +4,18 @@ import theme from "../../../../Constants/theme";
 
 interface WorkoutDateProps {
   submitted: boolean;
-  createdAt: string;
+  date: string;
   handleStateChange: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 export default function WorkoutDate({
   submitted,
-  createdAt,
+  date,
   handleStateChange,
 }: WorkoutDateProps) {
   return (
     <FormControl
       isRequired
-      isInvalid={submitted && !createdAt}
+      isInvalid={submitted && !date}
       h="100%"
       display="flex"
       flexDirection="column"
@@ -26,11 +26,11 @@ export default function WorkoutDate({
       </FormLabel>
       <Input
         size={["sm", "lg"]}
-        name="createdAt"
+        name="date"
         type="date"
         bg="white"
         maxW="180px"
-        value={createdAt}
+        value={date}
         onChange={handleStateChange}
         border="1px solid grey"
         borderRadius={"5px"}
