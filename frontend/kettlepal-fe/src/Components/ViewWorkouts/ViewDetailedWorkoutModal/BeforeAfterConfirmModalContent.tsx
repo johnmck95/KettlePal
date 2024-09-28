@@ -3,7 +3,6 @@ import theme from "../../../Constants/theme";
 import { formatExerciseString } from "../../../utils/Exercises/exercises";
 import { UserWithWorkoutsQuery } from "../../../generated/frontend-types";
 import dayjs from "dayjs";
-import { postgresToDayJs } from "../../../utils/Time/time";
 import { CreateWorkoutState } from "../../../Hooks/useCreateWorkoutForm";
 
 interface BeforeAfterConfirmModalConentProps {
@@ -36,10 +35,10 @@ export default function BeforeAfterConfirmModalConent({
         </Text>
         {(after?.exercises?.length ?? 0) > 0 && (
           <>
-            {after.createdAt && (
+            {after.date && (
               <>
                 <Text fontSize="18" m="0" color={theme.colors.grey[700]}>
-                  <b>{dayjs(after.createdAt).format("dddd, MMMM DD, YYYY")}</b>
+                  <b>{dayjs(after.date).format("dddd, MMMM DD, YYYY")}</b>
                 </Text>
               </>
             )}
@@ -72,14 +71,10 @@ export default function BeforeAfterConfirmModalConent({
         </Text>
         {(before?.exercises?.length ?? 0) > 0 && (
           <>
-            {before?.createdAt && (
+            {before?.date && (
               <>
                 <Text fontSize="18" m="0" color={theme.colors.grey[700]}>
-                  <b>
-                    {postgresToDayJs(before?.createdAt).format(
-                      "dddd, MMMM DD, YYYY"
-                    )}
-                  </b>
+                  <b>{dayjs(before?.date).format("dddd, MMMM DD, YYYY")}</b>
                 </Text>
               </>
             )}

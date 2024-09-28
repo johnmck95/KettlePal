@@ -38,7 +38,7 @@ export type AddOrEditUserInput = {
 
 export type AddOrEditWorkoutInput = {
   comment?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['String']['input']>;
+  date: Scalars['String']['input'];
   elapsedSeconds?: InputMaybe<Scalars['Int']['input']>;
 };
 
@@ -51,7 +51,7 @@ export type AddUserInput = {
 
 export type AddWorkoutWithExercisesInput = {
   comment?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['String']['input']>;
+  date: Scalars['String']['input'];
   elapsedSeconds?: InputMaybe<Scalars['Int']['input']>;
   exercises: Array<InputMaybe<AddExerciseInput>>;
 };
@@ -240,7 +240,7 @@ export type UpdateExerciseInput = {
 
 export type UpdateWorkoutWithExercisesInput = {
   comment?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['String']['input']>;
+  date: Scalars['String']['input'];
   elapsedSeconds?: InputMaybe<Scalars['Int']['input']>;
   exercises: Array<InputMaybe<UpdateExerciseInput>>;
 };
@@ -262,6 +262,7 @@ export type Workout = {
   __typename?: 'Workout';
   comment?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['String']['output'];
+  date: Scalars['String']['output'];
   elapsedSeconds?: Maybe<Scalars['Int']['output']>;
   exercises?: Maybe<Array<Exercise>>;
   uid: Scalars['ID']['output'];
@@ -460,6 +461,7 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
 export type WorkoutResolvers<ContextType = any, ParentType extends ResolversParentTypes['Workout'] = ResolversParentTypes['Workout']> = ResolversObject<{
   comment?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  date?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   elapsedSeconds?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   exercises?: Resolver<Maybe<Array<ResolversTypes['Exercise']>>, ParentType, ContextType>;
   uid?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;

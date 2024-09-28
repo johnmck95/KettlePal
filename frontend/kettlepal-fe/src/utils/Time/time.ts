@@ -6,23 +6,7 @@ import timezone from "dayjs/plugin/timezone";
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-/**
- * Converts a postgres timestamp to a dayJs object considering unix timestamp conventions.
- * Tries to convert to the users locale timezone.
- * @param timestamp the unedited postgres timestamp.
- * @returns a dayJs object that correctly handles unix conversions
- */
-
-export function postgresToDayJs(timestamp: string): dayjs.Dayjs {
-  const utcTime = dayjs.utc(dayjs.unix(Number(timestamp) / 1000));
-  const localTime = utcTime.tz(dayjs.tz.guess() ?? "America/Vancouver");
-  return localTime;
-}
-
-export function formatDateForYYYYMMDD(date: dayjs.Dayjs): string {
-  return dayjs(date).format("YYYY-MM-DD");
-}
-
+// Returns YYYY-MM-DD format of the current date
 export function getCurrentDate(): string {
   const currentDate = new Date();
   const year = currentDate.getFullYear();
@@ -143,4 +127,30 @@ export function computeSeconds(formattedSeconds: string) {
     totalSeconds = minutes * 60 + seconds;
   }
   return totalSeconds;
+}
+
+export function isValidDateFormat(dateString: string) {
+  const regex = /^\d{4}-\d{2}-\d{2}$/;
+  if (!regex.test(dateString)) {
+    return false;
+  }
+
+  const parts = dateString.split("-");
+  const year = parseInt(parts[0], 10);
+  const month = parseInt(parts[1], 10);
+  const day = parseInt(parts[2], 10);
+
+  // Check the ranges of year and month
+  if (year < 1900 || year > 3000 || month <= 0 || month > 12) {
+    return false;
+  }
+
+  // Adjust for leap years
+  const monthLength = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+  if (year % 400 === 0 || (year % 100 !== 0 && year % 4 === 0)) {
+    monthLength[1] = 29;
+  }
+
+  // Check the range of the day
+  return day > 0 && day <= monthLength[month - 1];
 }

@@ -94,10 +94,7 @@ export default function ViewWorkout({
                 onOpen();
               }}
             />
-            <CalendarWidget
-              date={workoutWithExercises?.createdAt ?? ""}
-              w="4rem"
-            />
+            <CalendarWidget date={workoutWithExercises?.date ?? ""} w="4rem" />
             <VStack mx="1rem">
               {exercises?.map((exercise) => {
                 return <ViewExercise key={exercise.uid} exercise={exercise} />;

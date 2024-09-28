@@ -71,7 +71,7 @@ export default function CreateWorkout() {
         {/* WORKOUT DATE */}
         <WorkoutDate
           submitted={submitted}
-          createdAt={state.createdAt}
+          date={state.date}
           handleStateChange={handleStateChange}
         />
 
@@ -239,9 +239,9 @@ export default function CreateWorkout() {
               <>
                 <br />
                 <br />
-                {state.createdAt && (
+                {state.date && (
                   <>
-                    {dayjs(state.createdAt).format("dddd, MMMM DD, YYYY")}
+                    {dayjs(state.date).format("dddd, MMMM DD, YYYY")}
                     <br />
                   </>
                 )}

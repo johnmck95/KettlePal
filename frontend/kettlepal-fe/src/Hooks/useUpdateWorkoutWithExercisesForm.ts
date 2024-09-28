@@ -1,9 +1,8 @@
 import { ChangeEvent, useEffect, useState } from "react";
-import { formatDateForYYYYMMDD, postgresToDayJs } from "../utils/Time/time";
 import { UserWithWorkoutsQuery } from "../generated/frontend-types";
 
 export type UpdateWorkoutState = {
-  createdAt: string;
+  date: string;
   comment: string;
   elapsedSeconds: number;
   exercises: Array<{
@@ -27,12 +26,12 @@ const useUpdateWorkoutWithExercisesForm = ({
     NonNullable<UserWithWorkoutsQuery["user"]>["workouts"]
   >[0];
 }) => {
-  const { comment, createdAt, exercises, elapsedSeconds } =
+  const { comment, date, exercises, elapsedSeconds } =
     workoutWithExercises ?? {};
   const [formHasErrors, setFormHasErrors] = useState(false);
 
   const [state, setState] = useState<UpdateWorkoutState>({
-    createdAt: formatDateForYYYYMMDD(postgresToDayJs(createdAt ?? "")) ?? "",
+    date: date ?? "",
     comment: comment ?? "",
     elapsedSeconds: elapsedSeconds ?? 0,
     exercises: (exercises ?? [])?.map((exercise) => {
@@ -100,7 +99,7 @@ const useUpdateWorkoutWithExercisesForm = ({
   }
 
   // Workout Validation
-  const dateIsInvalid = !state.createdAt;
+  const dateIsInvalid = !state.date;
   enum WorkoutErrors {
     date = "Please enter a workout date.",
   }

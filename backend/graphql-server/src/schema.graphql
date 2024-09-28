@@ -12,6 +12,7 @@ type User {
 
 type Workout {
   uid: ID!
+  date: String!
   createdAt: String!
   elapsedSeconds: Int
   comment: String
@@ -109,20 +110,20 @@ input EditUserInput {
 }
 
 input AddOrEditWorkoutInput {
-  createdAt: String
+  date: String!
   elapsedSeconds: Int
   comment: String
 }
 
 input AddWorkoutWithExercisesInput {
-  createdAt: String
+  date: String!
   elapsedSeconds: Int
   comment: String
   exercises: [AddExerciseInput]!
 }
 
 input UpdateWorkoutWithExercisesInput {
-  createdAt: String
+  date: String!
   elapsedSeconds: Int
   comment: String
   exercises: [UpdateExerciseInput]!

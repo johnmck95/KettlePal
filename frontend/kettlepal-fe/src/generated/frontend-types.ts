@@ -39,7 +39,7 @@ export type AddOrEditUserInput = {
 
 export type AddOrEditWorkoutInput = {
   comment?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['String']['input']>;
+  date: Scalars['String']['input'];
   elapsedSeconds?: InputMaybe<Scalars['Int']['input']>;
 };
 
@@ -52,7 +52,7 @@ export type AddUserInput = {
 
 export type AddWorkoutWithExercisesInput = {
   comment?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['String']['input']>;
+  date: Scalars['String']['input'];
   elapsedSeconds?: InputMaybe<Scalars['Int']['input']>;
   exercises: Array<InputMaybe<AddExerciseInput>>;
 };
@@ -241,7 +241,7 @@ export type UpdateExerciseInput = {
 
 export type UpdateWorkoutWithExercisesInput = {
   comment?: InputMaybe<Scalars['String']['input']>;
-  createdAt?: InputMaybe<Scalars['String']['input']>;
+  date: Scalars['String']['input'];
   elapsedSeconds?: InputMaybe<Scalars['Int']['input']>;
   exercises: Array<InputMaybe<UpdateExerciseInput>>;
 };
@@ -263,6 +263,7 @@ export type Workout = {
   __typename?: 'Workout';
   comment?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['String']['output'];
+  date: Scalars['String']['output'];
   elapsedSeconds?: Maybe<Scalars['Int']['output']>;
   exercises?: Maybe<Array<Exercise>>;
   uid: Scalars['ID']['output'];
@@ -318,14 +319,14 @@ export type UpdateWorkoutWithExercisesMutationVariables = Exact<{
 }>;
 
 
-export type UpdateWorkoutWithExercisesMutation = { __typename?: 'Mutation', updateWorkoutWithExercises?: { __typename?: 'Workout', createdAt: string, comment?: string | null, exercises?: Array<{ __typename?: 'Exercise', title: string, reps?: number | null, sets?: number | null }> | null } | null };
+export type UpdateWorkoutWithExercisesMutation = { __typename?: 'Mutation', updateWorkoutWithExercises?: { __typename?: 'Workout', date: string, comment?: string | null, exercises?: Array<{ __typename?: 'Exercise', title: string, reps?: number | null, sets?: number | null }> | null } | null };
 
 export type UserWithWorkoutsQueryVariables = Exact<{
   uid: Scalars['ID']['input'];
 }>;
 
 
-export type UserWithWorkoutsQuery = { __typename?: 'Query', user?: { __typename?: 'User', firstName: string, lastName: string, workouts: Array<{ __typename?: 'Workout', uid: string, comment?: string | null, elapsedSeconds?: number | null, createdAt: string, exercises?: Array<{ __typename?: 'Exercise', uid: string, title: string, weight?: number | null, weightUnit?: string | null, sets?: number | null, reps?: number | null, repsDisplay?: string | null, comment?: string | null, elapsedSeconds?: number | null, createdAt: string }> | null } | null> } | null };
+export type UserWithWorkoutsQuery = { __typename?: 'Query', user?: { __typename?: 'User', firstName: string, lastName: string, workouts: Array<{ __typename?: 'Workout', uid: string, comment?: string | null, elapsedSeconds?: number | null, date: string, exercises?: Array<{ __typename?: 'Exercise', uid: string, title: string, weight?: number | null, weightUnit?: string | null, sets?: number | null, reps?: number | null, repsDisplay?: string | null, comment?: string | null, elapsedSeconds?: number | null, createdAt: string }> | null } | null> } | null };
 
 export type CheckSessionQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -555,7 +556,7 @@ export const UpdateWorkoutWithExercisesDocument = gql`
     workoutUid: $workoutUid
     workoutWithExercises: $workoutWithExercises
   ) {
-    createdAt
+    date
     comment
     exercises {
       title
@@ -601,7 +602,7 @@ export const UserWithWorkoutsDocument = gql`
       uid
       comment
       elapsedSeconds
-      createdAt
+      date
       exercises {
         uid
         title

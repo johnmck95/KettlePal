@@ -80,7 +80,7 @@ const UPDATE_WORKOUT_WITH_EXERCISES = gql`
       workoutUid: $workoutUid
       workoutWithExercises: $workoutWithExercises
     ) {
-      createdAt
+      date
       comment
       exercises {
         title
