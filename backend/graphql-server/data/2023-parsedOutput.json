@@ -1,0 +1,4217 @@
+[
+  {
+    "date": "2023-12-30",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Climb",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "",
+        "reps": "",
+        "repsDisplay": "",
+        "comment": "1.5hr",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Deadlift",
+        "weight": "135",
+        "weightUnit": "lb",
+        "sets": "2",
+        "reps": "5",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Deadlift",
+        "weight": "185",
+        "weightUnit": "lb",
+        "sets": "2",
+        "reps": "5",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Deadlift",
+        "weight": "225",
+        "weightUnit": "lb",
+        "sets": "5",
+        "reps": "5",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Dumbbell Press",
+        "weight": "60",
+        "weightUnit": "lb",
+        "sets": "3",
+        "reps": "10",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-12-26",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Turkish Get Up",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "",
+        "reps": "",
+        "repsDisplay": "",
+        "comment": "5min",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Single Arm Swing",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "5",
+        "reps": "20",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-12-19",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Climb",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "",
+        "reps": "",
+        "repsDisplay": "",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Barbell Squat",
+        "weight": "95",
+        "weightUnit": "lb",
+        "sets": "1",
+        "reps": "8",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Barbell Squat (135lb) 1x8",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "",
+        "reps": "",
+        "repsDisplay": "",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Barbell Squat",
+        "weight": "185",
+        "weightUnit": "lb",
+        "sets": "1",
+        "reps": "5",
+        "repsDisplay": "std",
+        "comment": " Cut short by hamstring sausage casing",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Bench Press",
+        "weight": "95",
+        "weightUnit": "lb",
+        "sets": "1",
+        "reps": "10",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Bench Press",
+        "weight": "135",
+        "weightUnit": "lb",
+        "sets": "1",
+        "reps": "8",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Bench Press",
+        "weight": "155",
+        "weightUnit": "lb",
+        "sets": "5",
+        "reps": "5",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-12-16",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Clean, Squat & Press",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "1",
+        "reps": "6",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Drinking Birds",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "5",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Goblet Squat (28kg) 8x8",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "",
+        "reps": "",
+        "repsDisplay": "",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Push Up",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "8",
+        "reps": "15",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-12-14",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Single Arm Swing",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "3",
+        "reps": "14",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Press",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "6",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Single Arm Swing",
+        "weight": "28",
+        "weightUnit": "kg",
+        "sets": "7",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-12-12",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Clean, Squat & Press",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "2",
+        "reps": "6",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Snatch",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "2",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Snatch",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "3",
+        "reps": "8",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Racked Squat",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "2",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-12-09",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Clean, Squat & Press",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "3",
+        "reps": "6",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Swing",
+        "weight": "32",
+        "weightUnit": "kg",
+        "sets": "8",
+        "reps": "15",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Press",
+        "weight": "28",
+        "weightUnit": "kg",
+        "sets": "5",
+        "reps": "4",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-12-08",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Clean, Squat & Press",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "3",
+        "reps": "6",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Drinking Birds",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "3",
+        "reps": "8",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Push Ups",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "6",
+        "reps": "15",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Goblet Squat",
+        "weight": "32",
+        "weightUnit": "kg",
+        "sets": "6",
+        "reps": "8",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "L Sit",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "6",
+        "reps": "10",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-12-05",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Press",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "2",
+        "reps": "12",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Single Arm Swing",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "2",
+        "reps": "12",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Single Arm Swing",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "1",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Press",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "1",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Single Arm Swing",
+        "weight": "32",
+        "weightUnit": "kg",
+        "sets": "5",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Press",
+        "weight": "28",
+        "weightUnit": "kg",
+        "sets": "3",
+        "reps": "4",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Clean & Press",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "3",
+        "reps": "6",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-11-30",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Racked Squat",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "5",
+        "reps": "12",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Press",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "3",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-11-29",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Clean & Press",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "2",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Racked Squat",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "2",
+        "reps": "10",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Single Arm Swing",
+        "weight": "28",
+        "weightUnit": "kg",
+        "sets": "5",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Press",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "2",
+        "reps": "6",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Press",
+        "weight": "28",
+        "weightUnit": "kg",
+        "sets": "3",
+        "reps": "2",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "L Sit",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "5",
+        "reps": "10",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Push Up",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "3",
+        "reps": "12",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Goblet Squat",
+        "weight": "28",
+        "weightUnit": "kg",
+        "sets": "1",
+        "reps": "8",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-11-21",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Clean & Press",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "5",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Clean & Press",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "3",
+        "reps": "6",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Swing",
+        "weight": "32",
+        "weightUnit": "kg",
+        "sets": "3",
+        "reps": "20",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Goblet Squat",
+        "weight": "32",
+        "weightUnit": "kg",
+        "sets": "1",
+        "reps": "10",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Racked Squat",
+        "weight": "32",
+        "weightUnit": "kg",
+        "sets": "1",
+        "reps": "6",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-11-02",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Barbell Squat",
+        "weight": "95",
+        "weightUnit": "lb",
+        "sets": "1",
+        "reps": "10",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Barbell Squat",
+        "weight": "115",
+        "weightUnit": "lb",
+        "sets": "1",
+        "reps": "10",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Barbell Squat",
+        "weight": "135",
+        "weightUnit": "lb",
+        "sets": "3",
+        "reps": "8",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Barbell Squat",
+        "weight": "155",
+        "weightUnit": "lb",
+        "sets": "2",
+        "reps": "6",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Bench Press",
+        "weight": "95",
+        "weightUnit": "lb",
+        "sets": "1",
+        "reps": "12",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-11-01",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Press",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "3",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Press",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "4",
+        "reps": "6",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Single Arm Swing",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "2",
+        "reps": "20",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Racked Squats",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "2",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Single Arm Swing",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "6",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Racked Squat",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "3",
+        "reps": "8",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-10-24",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Barbell Squat",
+        "weight": "115",
+        "weightUnit": "lb",
+        "sets": "2",
+        "reps": "10",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Swing",
+        "weight": "60",
+        "weightUnit": "lb",
+        "sets": "5",
+        "reps": "20",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Push Ups",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "5",
+        "reps": "15",
+        "repsDisplay": "std",
+        "comment": "Cut short by susage casing legs..",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-10-21",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Turkish Get Up",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "12",
+        "reps": "2",
+        "repsDisplay": "l/r",
+        "comment": "9min top-swap",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Clean",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "10",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Plank",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "3",
+        "reps": "90",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-10-20",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Plank",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "3",
+        "reps": "90",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Push Ups",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "3",
+        "reps": "15",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Goblet Squat",
+        "weight": "32",
+        "weightUnit": "kg",
+        "sets": "3",
+        "reps": "8",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Swing",
+        "weight": "32",
+        "weightUnit": "kg",
+        "sets": "3",
+        "reps": "15",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-10-18",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Pumptrack",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "",
+        "reps": "",
+        "repsDisplay": "",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Swings",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "3",
+        "reps": "20",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "SA Swings (24kg) 2x10/10",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "",
+        "reps": "",
+        "repsDisplay": "",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Swings",
+        "weight": "32",
+        "weightUnit": "kg",
+        "sets": "3",
+        "reps": "15",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-10-17",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Climb",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "",
+        "reps": "",
+        "repsDisplay": "",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Barbell Squat",
+        "weight": "95",
+        "weightUnit": "lb",
+        "sets": "1",
+        "reps": "8",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Barbell Squat",
+        "weight": "135",
+        "weightUnit": "lb",
+        "sets": "1",
+        "reps": "8",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Barbell Squat",
+        "weight": "185",
+        "weightUnit": "lb",
+        "sets": "1",
+        "reps": "5",
+        "repsDisplay": "std",
+        "comment": "Cut short by susage casing legs..",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-10-10",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Plank",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "3",
+        "reps": "90",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "SA Deadlight (Md)",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "3",
+        "reps": "16",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Press",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "8",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Swing",
+        "weight": "28",
+        "weightUnit": "kg",
+        "sets": "10",
+        "reps": "12",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-10-03",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Goblet Squat",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "2",
+        "reps": "10",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Goblet Squat",
+        "weight": "28",
+        "weightUnit": "kg",
+        "sets": "3",
+        "reps": "8",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Goblet Squat",
+        "weight": "32",
+        "weightUnit": "kg",
+        "sets": "5",
+        "reps": "6",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Swing",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "3",
+        "reps": "10",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Swing",
+        "weight": "32",
+        "weightUnit": "kg",
+        "sets": "3",
+        "reps": "10",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-09-26",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Climb",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "",
+        "reps": "",
+        "repsDisplay": "",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Press",
+        "weight": "40",
+        "weightUnit": "lb",
+        "sets": "1",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Press",
+        "weight": "50",
+        "weightUnit": "lb",
+        "sets": "1",
+        "reps": "8",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Press",
+        "weight": "60",
+        "weightUnit": "lb",
+        "sets": "3",
+        "reps": "4",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Squats",
+        "weight": "95",
+        "weightUnit": "lb",
+        "sets": "1",
+        "reps": "8",
+        "repsDisplay": "std",
+        "comment": "(to the floor)",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Squats",
+        "weight": "145",
+        "weightUnit": "lb",
+        "sets": "1",
+        "reps": "5",
+        "repsDisplay": "std",
+        "comment": " (to the floor)",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-09-12",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Goblet Squat",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "2",
+        "reps": "10",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Turkish Get Up",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "2",
+        "reps": "4",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Goblet Squat",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "2",
+        "reps": "10",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Turkish Get Up",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "2",
+        "reps": "2",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Goblet Squat",
+        "weight": "28",
+        "weightUnit": "kg",
+        "sets": "3",
+        "reps": "8",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Turkish Get Up",
+        "weight": "28",
+        "weightUnit": "kg",
+        "sets": "3",
+        "reps": "2",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-09-11",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "4.5km run",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "",
+        "reps": "",
+        "repsDisplay": "",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Swing",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "5",
+        "reps": "12",
+        "repsDisplay": "std",
+        "comment": "EMOM",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Swing",
+        "weight": "28",
+        "weightUnit": "kg",
+        "sets": "8",
+        "reps": "10",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Press",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "1",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Press",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "2",
+        "reps": "6",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Press",
+        "weight": "28",
+        "weightUnit": "kg",
+        "sets": "3",
+        "reps": "2",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Press",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "2",
+        "reps": "6",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Press",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "1",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-09-05",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Swing",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "1",
+        "reps": "15",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Swing",
+        "weight": "28",
+        "weightUnit": "kg",
+        "sets": "2",
+        "reps": "10",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Swing",
+        "weight": "32",
+        "weightUnit": "kg",
+        "sets": "3",
+        "reps": "10",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Swing",
+        "weight": "28",
+        "weightUnit": "kg",
+        "sets": "2",
+        "reps": "10",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Swing",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "1",
+        "reps": "15",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Press",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "1",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Press",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "2",
+        "reps": "6",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Press",
+        "weight": "28",
+        "weightUnit": "kg",
+        "sets": "2",
+        "reps": "2",
+        "repsDisplay": "l/r",
+        "comment": "Cut short by trap spasm. Strength was great",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-09-03",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Bench Press",
+        "weight": "95",
+        "weightUnit": "lb",
+        "sets": "1",
+        "reps": "8",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Bench Press",
+        "weight": "115",
+        "weightUnit": "lb",
+        "sets": "1",
+        "reps": "8",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Bench Press",
+        "weight": "135",
+        "weightUnit": "lb",
+        "sets": "1",
+        "reps": "5",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Bench Press",
+        "weight": "155",
+        "weightUnit": "lb",
+        "sets": "3",
+        "reps": "5",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Bench Press",
+        "weight": "135",
+        "weightUnit": "lb",
+        "sets": "1",
+        "reps": "8",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-08-28",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Shoulder Bands",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "",
+        "reps": "",
+        "repsDisplay": "",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Press",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "3",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Press",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "6",
+        "reps": "6",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Single Arm Swing",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "7",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Racked Squat",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "4",
+        "reps": "8",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-08-24",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Shoulder Bands",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "",
+        "reps": "",
+        "repsDisplay": "",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Snatch",
+        "weight": "14",
+        "weightUnit": "kg",
+        "sets": "1",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Press",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "2",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Press",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "5",
+        "reps": "6",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-08-22",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Climb",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "",
+        "reps": "",
+        "repsDisplay": "",
+        "comment": "1.5hrs",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Deadlift",
+        "weight": "135",
+        "weightUnit": "lb",
+        "sets": "1",
+        "reps": "10",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Deadlift",
+        "weight": "185",
+        "weightUnit": "lb",
+        "sets": "1",
+        "reps": "5",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Deadlift",
+        "weight": "225",
+        "weightUnit": "lb",
+        "sets": "1",
+        "reps": "5",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Deadlift",
+        "weight": "245",
+        "weightUnit": "lb",
+        "sets": "3",
+        "reps": "5",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Deadlift",
+        "weight": "225",
+        "weightUnit": "lb",
+        "sets": "1",
+        "reps": "5",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "L Raise",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "4",
+        "reps": "8",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-08-16",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Clean & Press",
+        "weight": "18",
+        "weightUnit": "kg",
+        "sets": "1",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Clean & Press",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "3",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Swing",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "3",
+        "reps": "20",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Table Touchdowns",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "3",
+        "reps": "20",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Push Up",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "3",
+        "reps": "15",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Leg lifts",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "5",
+        "reps": "10",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Pillow Passes",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "",
+        "reps": "",
+        "repsDisplay": "",
+        "comment": "30s on 30s off for 5mins",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-08-03",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Plank",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "5",
+        "reps": "90",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Table Touchdowns",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "5",
+        "reps": "20",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Couch Glute Med Bands (Md)",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "4",
+        "reps": "15",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Leg Raises",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "4",
+        "reps": "10",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Clam Shells",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "4",
+        "reps": "20",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-08-01",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Swing",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "1",
+        "reps": "20",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Swing",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "10",
+        "reps": "20",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Push Up",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "5",
+        "reps": "15",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-07-28",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Clean & Press",
+        "weight": "14",
+        "weightUnit": "kg",
+        "sets": "1",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "swap each hand",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Clean & Press",
+        "weight": "18",
+        "weightUnit": "kg",
+        "sets": "1",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "swap each hand",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Clean & Press",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "2",
+        "reps": "8",
+        "repsDisplay": "l/r",
+        "comment": "swap each hand",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Clean & Press",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "4",
+        "reps": "4",
+        "repsDisplay": "l/r",
+        "comment": "swap each hand",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Clean & Press",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "3",
+        "reps": "6",
+        "repsDisplay": "l/r",
+        "comment": "swap each hand",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Couch Glute Bands",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "4",
+        "reps": "15",
+        "repsDisplay": "std",
+        "comment": "medium band",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Pistol Squat",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "4",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "to couch",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-07-19",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Clean & Press",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "5",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Banded Squat (24kg, Md)",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "4",
+        "reps": "8",
+        "repsDisplay": "std",
+        "comment": "Cut short by intense right outer knee pain",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Pillow Passes",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "3",
+        "reps": "10",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Push Up",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "3",
+        "reps": "15",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Clam Shells",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "3",
+        "reps": "20",
+        "repsDisplay": "std",
+        "comment": "heavy band",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Inner Leg Side Plank",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "1",
+        "reps": "2",
+        "repsDisplay": "l/r",
+        "comment": "30s/s30",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Single Arm Swing",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "1",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-07-16",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Deadlift",
+        "weight": "135",
+        "weightUnit": "lb",
+        "sets": "1",
+        "reps": "6",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Deadlift",
+        "weight": "185",
+        "weightUnit": "lb",
+        "sets": "1",
+        "reps": "5",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Deadlift",
+        "weight": "215",
+        "weightUnit": "lb",
+        "sets": "2",
+        "reps": "5",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Deadlift",
+        "weight": "235",
+        "weightUnit": "lb",
+        "sets": "3",
+        "reps": "5",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Deadlift",
+        "weight": "215",
+        "weightUnit": "lb",
+        "sets": "1",
+        "reps": "5",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-07-14",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Plank",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "4",
+        "reps": "1",
+        "repsDisplay": "std",
+        "comment": " 4x45/45/45",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Leg Raises",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "4",
+        "reps": "10",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Push up",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "4",
+        "reps": "15",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Pillow Passes",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "4",
+        "reps": "10",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Pistol Squat",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "4",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "to 90",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-07-11",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "2hr climb",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "",
+        "reps": "",
+        "repsDisplay": "",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Deadlift",
+        "weight": "205",
+        "weightUnit": "lb",
+        "sets": "10",
+        "reps": "5",
+        "repsDisplay": "std",
+        "comment": "2min rest",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-07-06",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Plank",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "3",
+        "reps": "90",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Leg Raises",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "3",
+        "reps": "10",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Pillow Passes",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "3",
+        "reps": "6",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Push up",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "3",
+        "reps": "12",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-07-04",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Pistol Squat",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "5",
+        "reps": "4",
+        "repsDisplay": "l/r",
+        "comment": " (to 90)",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Banded Squat (24k)",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "5",
+        "reps": "8",
+        "repsDisplay": "std",
+        "comment": "medium band",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Rows",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "5",
+        "reps": "16",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Swing",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "5",
+        "reps": "20",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Press",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "5",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-06-27",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Pistol Squat",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "10",
+        "reps": "4",
+        "repsDisplay": "l/r",
+        "comment": "to 100 degrees",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Swing",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "10",
+        "reps": "20",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-06-19",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "SA Rows LFF",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "5",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Press",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "5",
+        "reps": "6",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Single Arm Swing",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "5",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Goblet Squat",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "5",
+        "reps": "10",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-06-14",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "SA Rows LFF",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "3",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Racked Squat",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "3",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Press",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "3",
+        "reps": "6",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Swing",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "3",
+        "reps": "25",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Turkish Get Up",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "3",
+        "reps": "2",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Push Up (KB Planche)",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "3",
+        "reps": "10",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Leg Raises",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "3",
+        "reps": "10",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Clam Shells",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "3",
+        "reps": "20",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-06-07",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "SL Banded Deadlift",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "3",
+        "reps": "16",
+        "repsDisplay": "l/r",
+        "comment": "heavy band",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Shoulder Bands",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "3",
+        "reps": "16",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Plank",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "3",
+        "reps": "90",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Swing",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "10",
+        "reps": "15",
+        "repsDisplay": "std",
+        "comment": "EMOM",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Press",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "5",
+        "reps": "6",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-06-03",
+    "comment": "(sick) ",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Turkish Get Up",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "",
+        "reps": "",
+        "repsDisplay": "",
+        "comment": "11min",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Racked Squat",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "5",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Single Arm Swing",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "5",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Chest Press",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "5",
+        "reps": "20",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Leg Raises",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "4",
+        "reps": "8",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Reverse Flys",
+        "weight": "10",
+        "weightUnit": "lb",
+        "sets": "4",
+        "reps": "10",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-06-02",
+    "comment": "(sick) ",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Press",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "5",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Shoulder Bands",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "",
+        "reps": "",
+        "repsDisplay": "",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "SL Banded Deadlift",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "4",
+        "reps": "16",
+        "repsDisplay": "l/r",
+        "comment": "Medium bands",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Single Arm Swing",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "3",
+        "reps": "20",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Push Ups",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "2",
+        "reps": "10",
+        "repsDisplay": "std",
+        "comment": "planche",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-05-22",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Single Arm Swing",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "4",
+        "reps": "20",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Snatch",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "3",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Press",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "3",
+        "reps": "4",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Leg Raise",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "2",
+        "reps": "8",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-05-18",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Turkish Get Up",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "3",
+        "reps": "4",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Snatch",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "3",
+        "reps": "12",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Goblet Squat",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "2",
+        "reps": "10",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Shoulder Bands",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "",
+        "reps": "",
+        "repsDisplay": "",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-05-11",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Turkish Get Up",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "3",
+        "reps": "4",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "SA Swings",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "3",
+        "reps": "20",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Press",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "2",
+        "reps": "6",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Clean",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "2",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Leg lifts",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "3",
+        "reps": "8",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Shoulder Bands",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "",
+        "reps": "",
+        "repsDisplay": "",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-05-07",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Single Arm Swing",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "5",
+        "reps": "20",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Racked Squats",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "10",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Swings",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "10",
+        "reps": "20",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Shoulder Bands",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "",
+        "reps": "",
+        "repsDisplay": "",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-05-03",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "SL Deadlift",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "5",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "heavy bands",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Turkish Get Up",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "1",
+        "reps": "4",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Turkish Get Up",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "7",
+        "reps": "2",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Swings",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "7",
+        "reps": "20",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Press",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "3",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Goblet Squats",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "3",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Clam Shells",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "3",
+        "reps": "20",
+        "repsDisplay": "l/r",
+        "comment": "heavy",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Side Plank",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "1",
+        "reps": "2",
+        "repsDisplay": "l/r",
+        "comment": "45s/45s",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-04-23",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Knee & Shoulder Bands",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "",
+        "reps": "",
+        "repsDisplay": "",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Swings",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "4",
+        "reps": "25",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Cleans",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "3",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Press",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "4",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Leg Raise",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "5",
+        "reps": "10",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Side Planks",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "3",
+        "reps": "2",
+        "repsDisplay": "l/r",
+        "comment": "45s/45s",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-04-20",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Physio Session (bands, balls, bells)",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "",
+        "reps": "",
+        "repsDisplay": "",
+        "comment": "3hrs",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-04-09",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Climb 2hr",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "",
+        "reps": "",
+        "repsDisplay": "",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Goblet Squat",
+        "weight": "115",
+        "weightUnit": "lb",
+        "sets": "1",
+        "reps": "5",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Goblet Squat",
+        "weight": "145",
+        "weightUnit": "lb",
+        "sets": "3",
+        "reps": "5",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "V Pull",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "6",
+        "reps": "8",
+        "repsDisplay": "std",
+        "comment": "Shoulder Bands",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Hanging Leg Raise",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "3",
+        "reps": "5",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Bench Press (95lbs)",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "1",
+        "reps": "10",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Bench Press (125lbs)",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "2",
+        "reps": "8",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-04-03",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Snatch",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "5",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Clean & Press",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "5",
+        "reps": "6",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Single Arm Swing",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "2",
+        "reps": "20",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-04-02",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Clean to Squat",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "5",
+        "reps": "6",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Swing",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "4",
+        "reps": "25",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Shoulder Bands",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "",
+        "reps": "",
+        "repsDisplay": "",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-03-31",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Deadlift",
+        "weight": "135",
+        "weightUnit": "lb",
+        "sets": "1",
+        "reps": "5",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Deadlift",
+        "weight": "225",
+        "weightUnit": "lb",
+        "sets": "1",
+        "reps": "5",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Deadlift",
+        "weight": "205",
+        "weightUnit": "lb",
+        "sets": "2",
+        "reps": "5",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Deadlift",
+        "weight": "205",
+        "weightUnit": "lb",
+        "sets": "2",
+        "reps": "4",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Dips",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "4",
+        "reps": "6",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-03-30",
+    "comment": "(20kg + 24kg) - UNSTRUCTURED",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Swing",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "",
+        "reps": "",
+        "repsDisplay": "",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "SA Swing",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "",
+        "reps": "",
+        "repsDisplay": "",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Clean",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "",
+        "reps": "",
+        "repsDisplay": "",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Armour Build",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "",
+        "reps": "",
+        "repsDisplay": "",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Press",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "",
+        "reps": "",
+        "repsDisplay": "",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-03-22",
+    "comment": "350 total swings",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Swing",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "16",
+        "reps": "20",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Swing",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "2",
+        "reps": "15",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Push Up",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "5",
+        "reps": "12",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-03-19",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Farmers Walk (24kg) 2x7  7min each, 14min",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "",
+        "reps": "",
+        "repsDisplay": "",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Swing",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "8",
+        "reps": "15",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Pull Up",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "6",
+        "reps": "5",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Goblet Squat",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "5",
+        "reps": "10",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Hanging Leg Raise",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "4",
+        "reps": "8",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-03-16",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "SA Deadlift",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "3",
+        "reps": "16",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Shoulder Bands",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "3",
+        "reps": "16",
+        "repsDisplay": "l/r",
+        "comment": "8 back + 8up",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Side Plank",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "3",
+        "reps": "1",
+        "repsDisplay": "std",
+        "comment": "45s/45s/45s",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Clamshell",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "",
+        "reps": "",
+        "repsDisplay": "",
+        "comment": "10/10",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "SA Baby Roll",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "",
+        "reps": "",
+        "repsDisplay": "",
+        "comment": "5/5",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Shoulder Press",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "",
+        "reps": "",
+        "repsDisplay": "",
+        "comment": "5/5",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-03-14",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "2hr climb",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "",
+        "reps": "",
+        "repsDisplay": "",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Deadlift",
+        "weight": "135",
+        "weightUnit": "lb",
+        "sets": "1",
+        "reps": "5",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Deadlift",
+        "weight": "185",
+        "weightUnit": "lb",
+        "sets": "2",
+        "reps": "5",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Deadlift",
+        "weight": "225",
+        "weightUnit": "lb",
+        "sets": "2",
+        "reps": "5",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Deadlift",
+        "weight": "205",
+        "weightUnit": "lb",
+        "sets": "2",
+        "reps": "5",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Goblet Squat",
+        "weight": "95",
+        "weightUnit": "lb",
+        "sets": "1",
+        "reps": "5",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Goblet Squat",
+        "weight": "135",
+        "weightUnit": "lb",
+        "sets": "5",
+        "reps": "5",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-03-09",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Clamshell",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "3",
+        "reps": "20",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Side Plank",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "3",
+        "reps": "2",
+        "repsDisplay": "l/r",
+        "comment": "60/60s",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "SA Deadlift",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "3",
+        "reps": "16",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Shoulder Bands",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "3",
+        "reps": "32",
+        "repsDisplay": "l/r",
+        "comment": "8back, 8 up",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Swing",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "5",
+        "reps": "20",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Turkish Get Up",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "5",
+        "reps": "2",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-02-27",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "SA Deadlift",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "3",
+        "reps": "12",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Clamshell",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "3",
+        "reps": "20",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Plank",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "3",
+        "reps": "1",
+        "repsDisplay": "std",
+        "comment": "90s each",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Shoulder Bands",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "3",
+        "reps": "32",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Turkish Get Up",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "3",
+        "reps": "4",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Armour Build",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "3",
+        "reps": "12",
+        "repsDisplay": "std",
+        "comment": "(2.1.3/2.1.3 - Clean.Press.Squat)",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Swing",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "3",
+        "reps": "20",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-02-15",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Swing",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "20",
+        "reps": "15",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Push Up",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "6",
+        "reps": "15",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-02-10",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "SA Deadlift",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "3",
+        "reps": "16",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Goblet Squat",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "10",
+        "reps": "6",
+        "repsDisplay": "std",
+        "comment": " EMOM",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Press",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "5",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Clean",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "6",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Pyramid Holds",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "",
+        "reps": "",
+        "repsDisplay": "",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-02-07",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Swings",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "17",
+        "reps": "15",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Press",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "",
+        "reps": "",
+        "repsDisplay": "",
+        "comment": "6X5/5",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-02-04",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "SA Deadlift",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "3",
+        "reps": "16",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Plank",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "3",
+        "reps": "1",
+        "repsDisplay": "std",
+        "comment": "45s/45s/45s",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Side Steps",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "3",
+        "reps": "20",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Swings",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "10",
+        "reps": "15",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-01-25",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Single Arm Swing",
+        "weight": "50",
+        "weightUnit": "lb",
+        "sets": "8",
+        "reps": "15",
+        "repsDisplay": "std",
+        "comment": "EMOM",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Swing",
+        "weight": "50",
+        "weightUnit": "lb",
+        "sets": "6",
+        "reps": "15",
+        "repsDisplay": "std",
+        "comment": "EMOM",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Press",
+        "weight": "50",
+        "weightUnit": "lb",
+        "sets": "3",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Press",
+        "weight": "50",
+        "weightUnit": "lb",
+        "sets": "2",
+        "reps": "8",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-01-16",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Swing",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "6",
+        "reps": "15",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Swing",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "6",
+        "reps": "10",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Press",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "7",
+        "reps": "6",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-01-14",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "1hr pumptrack",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "",
+        "reps": "",
+        "repsDisplay": "",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Swing",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "4",
+        "reps": "15",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Swing",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "4",
+        "reps": "10",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Press",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "6",
+        "reps": "6",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2023-01-11",
+    "comment": "",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Swing",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "11",
+        "reps": "10",
+        "repsDisplay": "std",
+        "comment": "straight leg",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Press",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "5",
+        "reps": "6",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  }
+]

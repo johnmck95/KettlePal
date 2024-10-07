@@ -1,10 +1,26 @@
-/** To run this file:
- * tsc parseWorkouts.ts && mv parseWorkouts.js parseWorkouts.cjs && node parseWorkouts.cjs
+/** SCRIPT INSTRUCTIONS **
+ *
+ * --> parseWorkouts.ts will try to parse XXXX-KETTLEBELLHISTORY.txt and turn it into JSON.
+ * --> writeParsedWorkoutsToDB.ts will try to read this parsed JSON, run it through the GraphQL server and write it to the database.
+ *
+ * To only generate the JSON:
+ *      npm run build && npm run parseWorkouts
+ *
+ * To generate the JSON and write it to the database:
+ *      npm run build && npm parseAndUploadWorkouts
  */
 
 import * as fs from "fs";
+import path, { join } from "path";
+import { fileURLToPath } from "url";
 
-const RUN_FOR_YEAR = "2024";
+// const RUN_FOR_YEAR = "2024"; Successfully run for prod
+// const RUN_FOR_YEAR = "2023"; Successfully run for prod
+// const RUN_FOR_YEAR = "2022"; Successfully run for prod
+const RUN_FOR_YEAR = "0"; // Completed running this script.
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 interface AddExerciseInput {
   title: string;
@@ -31,7 +47,9 @@ const MonthMapping = {
   apr: "04",
   may: "05",
   jun: "06",
+  june: "06",
   jul: "07",
+  july: "07",
   aug: "08",
   sep: "09",
   sept: "09",
@@ -43,9 +61,11 @@ const MonthMapping = {
 const titleMapping = {
   "sa deadlift": "Single Leg Deadlift",
   "sa swing": "Single Arm Swing",
+  "s/a swing": "Single Arm Swing",
   tgu: "Turkish Get Up",
   "c&p": "Clean & Press",
   squat: "Goblet Squat",
+  bench: "Bench Press",
 };
 
 function parseOpeningWorkoutLine(line: string) {
@@ -53,9 +73,9 @@ function parseOpeningWorkoutLine(line: string) {
   const date =
     RUN_FOR_YEAR +
     "-" +
-    MonthMapping[components[0].toLowerCase()] +
+    MonthMapping[components[0]?.toLowerCase()] +
     "-" +
-    components[1].padStart(2, "0");
+    components[1]?.toLowerCase().padStart(2, "0");
   const workoutComment =
     components.length > 2 ? components.slice(2).join(" ") : "";
 
@@ -153,28 +173,16 @@ function readAndParseWorkoutFile(filePath: string): void {
     console.error("Error reading file:", error);
   }
 
-  const formattedWorkouts = [];
-  // const easyWorkouts = [workouts[0]];
-  // for (let workout of easyWorkouts) {
+  // Final output of this script
+  const formattedWorkouts: AddWorkoutWithExercisesInput[] = [];
+
   for (let workout of workouts) {
     // Create new workout object
     let workoutWithExercises = {
       date: "",
       comment: "",
       elapsedSeconds: 0,
-      exercises: [
-        {
-          title: "",
-          weight: "",
-          weightUnit: "",
-          sets: "",
-          reps: "",
-          repsDisplay: "",
-          comment: "",
-          elapsedSeconds: 0,
-          key: "",
-        },
-      ],
+      exercises: [],
     };
     const lines = workout.split("\n");
 
@@ -186,6 +194,7 @@ function readAndParseWorkoutFile(filePath: string): void {
 
     // Format exercises and update object
     for (let i = 1; i < lines.length; i++) {
+      // line is correct
       const line = lines[i];
       const formattedExercise = parseExerciseLine(line);
       workoutWithExercises.exercises.push(formattedExercise);
@@ -194,10 +203,29 @@ function readAndParseWorkoutFile(filePath: string): void {
     formattedWorkouts.push(workoutWithExercises);
   }
 
-  console.log(formattedWorkouts);
+  writeOutputToFile(JSON.stringify(formattedWorkouts, null, 2));
 }
+
+function writeOutputToFile(output: string) {
+  const filePath = join(
+    __dirname,
+    "..",
+    "..",
+    "data",
+    `${RUN_FOR_YEAR}-parsedOutput.json`
+  );
+  fs.writeFileSync(filePath, output);
+}
+
 function main() {
-  const filePath = `./${RUN_FOR_YEAR}-KETTLEBELL-HISTORY.TXT`;
+  const filePath = join(
+    __dirname,
+    "..",
+    "..",
+    "data",
+    `${RUN_FOR_YEAR}-KETTLEBELL-HISTORY.TXT`
+  );
+
   readAndParseWorkoutFile(filePath);
 }
 
