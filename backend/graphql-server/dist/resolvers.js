@@ -8,7 +8,7 @@ import { ACCESS_TOKEN_COOKIE_NAME, REFRESH_TOKEN_COOKIE_NAME, createTokens, refr
 import { NotAuthorizedError } from "./utils/Errors/NotAuthorizedError.js";
 // Incoming Resolver Properties are: (parent, args, context)
 const knexInstance = knex(knexConfig);
-const resolvers = {
+export const resolvers = {
     // The top-level resolvers inside Query are the entry point resolvers for the graph, not nested queries like workout{ exercises{...} }
     Query: {
         async users(_, __, { req }) {

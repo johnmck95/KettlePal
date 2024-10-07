@@ -1,0 +1,431 @@
+[
+  {
+    "date": "2022-12-31",
+    "comment": "Exact data was not recorded - end of 2022ish.",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Goblet Squat",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "10",
+        "reps": "6",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Clean",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "8",
+        "reps": "8",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Push Up",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "10",
+        "reps": "10",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2022-12-26",
+    "comment": "Exact data was not recorded - end of 2022ish.",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Swing",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "10",
+        "reps": "15",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Press",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "5",
+        "reps": "8",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "SA Baby Rolls",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "5",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2022-12-19",
+    "comment": "Exact data was not recorded - end of 2022ish.",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Pyramid Holds",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "",
+        "reps": "",
+        "repsDisplay": "",
+        "comment": "5-4-3-2-1",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Press",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "5",
+        "reps": "6",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "SL Deadlift",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "3",
+        "reps": "16",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Side Plank",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "3",
+        "reps": "1",
+        "repsDisplay": "std",
+        "comment": "45s/45s/45",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Banded Side Steps",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "3",
+        "reps": "20",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2022-12-13",
+    "comment": "Exact data was not recorded - end of 2022ish.",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Goblet Squat",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "8",
+        "reps": "5",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Clean",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "10",
+        "reps": "6",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Push Up",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "10",
+        "reps": "8",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2022-12-06",
+    "comment": "Exact data was not recorded - end of 2022ish",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Press",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "2",
+        "reps": "4",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Swing",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "17",
+        "reps": "10",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Turkish Get Up",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "6",
+        "reps": "2",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2022-12-01",
+    "comment": "Exact data was not recorded - end of 2022ish",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Swings",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "11",
+        "reps": "10",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Press",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "5",
+        "reps": "8",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2022-11-25",
+    "comment": "Exact data was not recorded - end of 2022ish",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Swings",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "7",
+        "reps": "25",
+        "repsDisplay": "std",
+        "comment": "sets of 15 or 20, 175 total reps",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Arm Bar Baby Roll",
+        "weight": "35",
+        "weightUnit": "lb",
+        "sets": "4",
+        "reps": "8",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "SA Banded Deadlift",
+        "weight": "",
+        "weightUnit": "",
+        "sets": "4",
+        "reps": "10",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2022-11-20",
+    "comment": "Exact data was not recorded - end of 2022ish",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Turkish Get Up",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "7",
+        "reps": "2",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Swing",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "12",
+        "reps": "12",
+        "repsDisplay": "std",
+        "comment": "= 144",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2022-11-15",
+    "comment": "Exact data was not recorded - end of 2022ish",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Goblet Squat",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "2",
+        "reps": "8",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Press",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "5",
+        "reps": "6",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Swings",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "10",
+        "reps": "12",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Turkish Get Up",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "5",
+        "reps": "2",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2022-11-09",
+    "comment": "Exact data was not recorded - end of 2022ish",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Swings",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "12",
+        "reps": "10",
+        "repsDisplay": "std",
+        "comment": " 250 total reps",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Press",
+        "weight": "24",
+        "weightUnit": "kg",
+        "sets": "8",
+        "reps": "4",
+        "repsDisplay": "l/r",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  },
+  {
+    "date": "2022-11-01",
+    "comment": "Exact data was not recorded - end of 2022ish",
+    "elapsedSeconds": 0,
+    "exercises": [
+      {
+        "title": "Swings",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "20",
+        "reps": "10",
+        "repsDisplay": "std",
+        "comment": "",
+        "elapsedSeconds": 0,
+        "key": ""
+      },
+      {
+        "title": "Press",
+        "weight": "20",
+        "weightUnit": "kg",
+        "sets": "",
+        "reps": "",
+        "repsDisplay": "",
+        "comment": "8 x 5/5",
+        "elapsedSeconds": 0,
+        "key": ""
+      }
+    ]
+  }
+]
