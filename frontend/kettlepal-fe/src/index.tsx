@@ -18,9 +18,24 @@ const httpLink = createHttpLink({
   credentials: "include",
 });
 
+const cache = new InMemoryCache({
+  typePolicies: {
+    User: {
+      fields: {
+        workouts: {
+          keyArgs: false,
+          merge(existing = [], incoming) {
+            return [...existing, ...incoming];
+          },
+        },
+      },
+    },
+  },
+});
+
 const client = new ApolloClient({
   uri: backendURL(),
-  cache: new InMemoryCache(),
+  cache: cache,
   link: httpLink,
   defaultOptions: {
     watchQuery: {

@@ -38,17 +38,30 @@ const resolvers = {
                 throw error;
             }
         },
-        async workouts(_, __, { req }) {
+        async workouts(_, { limit, offset }, { req }) {
             if (!req.userUid) {
                 throw new NotAuthorizedError();
             }
             try {
-                return (await knexInstance.raw(`
-            SELECT *
-            FROM workouts
-            WHERE "userUid" = ?
-            ORDER BY date::date DESC
-          `, [req.userUid])).rows;
+                let result;
+                let query = `
+          SELECT *
+          FROM workouts
+          WHERE "userUid" = ?
+          ORDER BY date::date DESC
+        `;
+                let params = [req.userUid];
+                if (offset !== undefined) {
+                    query += ` OFFSET ?`;
+                    params.push(offset.toString());
+                }
+                if (limit !== undefined) {
+                    query += ` LIMIT ?`;
+                    params.push(limit.toString());
+                }
+                result = await knexInstance.raw(query, params);
+                const workouts = result.rows;
+                return workouts;
             }
             catch (error) {
                 console.error("Error fetching workouts:", error);
@@ -113,14 +126,27 @@ const resolvers = {
     },
     // Resolvers to gather nested fields within a User query (EX: User{ workouts{...} })
     User: {
-        async workouts(parent) {
+        async workouts(parent, { limit, offset }) {
             try {
-                return (await knexInstance.raw(`
-              SELECT *
-              FROM workouts
-              WHERE "userUid" = ?
-              ORDER BY date::date DESC
-            `, [parent.uid])).rows;
+                let result;
+                let query = `
+          SELECT *
+          FROM workouts
+          WHERE "userUid" = ?
+          ORDER BY date::date DESC
+        `;
+                let params = [parent.uid];
+                if (offset !== undefined) {
+                    query += ` OFFSET ?`;
+                    params.push(offset.toString());
+                }
+                if (limit !== undefined) {
+                    query += ` LIMIT ?`;
+                    params.push(limit.toString());
+                }
+                result = await knexInstance.raw(query, params);
+                const workouts = result.rows;
+                return workouts;
             }
             catch (error) {
                 console.error("Error fetching workouts:", error);

@@ -5,11 +5,11 @@ import { gql } from "@apollo/client";
  in the desired .tsx file. */
 
 const USER_WITH_WORKOUTS_QUERY = gql`
-  query UserWithWorkouts($uid: ID!) {
+  query UserWithWorkouts($uid: ID!, $offset: Int, $limit: Int) {
     user(uid: $uid) {
       firstName
       lastName
-      workouts {
+      workouts(offset: $offset, limit: $limit) {
         uid
         comment
         elapsedSeconds

@@ -219,6 +219,12 @@ export type QueryWorkoutArgs = {
   uid: Scalars['ID']['input'];
 };
 
+
+export type QueryWorkoutsArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
 export type RefreshTokenResponse = {
   __typename?: 'RefreshTokenResponse';
   message?: Maybe<Scalars['String']['output']>;
@@ -256,6 +262,12 @@ export type User = {
   tokenCount: Scalars['Int']['output'];
   uid: Scalars['ID']['output'];
   workouts: Array<Maybe<Workout>>;
+};
+
+
+export type UserWorkoutsArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type Workout = {
@@ -436,7 +448,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'uid'>>;
   users?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>;
   workout?: Resolver<Maybe<ResolversTypes['Workout']>, ParentType, ContextType, RequireFields<QueryWorkoutArgs, 'uid'>>;
-  workouts?: Resolver<Maybe<Array<Maybe<ResolversTypes['Workout']>>>, ParentType, ContextType>;
+  workouts?: Resolver<Maybe<Array<Maybe<ResolversTypes['Workout']>>>, ParentType, ContextType, Partial<QueryWorkoutsArgs>>;
 }>;
 
 export type RefreshTokenResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['RefreshTokenResponse'] = ResolversParentTypes['RefreshTokenResponse']> = ResolversObject<{
@@ -454,7 +466,7 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   password?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   tokenCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   uid?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  workouts?: Resolver<Array<Maybe<ResolversTypes['Workout']>>, ParentType, ContextType>;
+  workouts?: Resolver<Array<Maybe<ResolversTypes['Workout']>>, ParentType, ContextType, Partial<UserWorkoutsArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
