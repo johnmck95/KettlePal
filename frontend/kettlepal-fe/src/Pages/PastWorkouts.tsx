@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import LoadingSpinner from "../Components/LoadingSpinner";
 import {
   VStack,
@@ -10,6 +10,7 @@ import {
   AlertIcon,
   AlertDescription,
   CloseButton,
+  Button,
 } from "@chakra-ui/react";
 import ViewWorkout from "../Components/ViewWorkouts/ViewWorkout";
 import { useUser } from "../Contexts/UserContext";
@@ -17,10 +18,56 @@ import { useUserWithWorkoutsQuery } from "../generated/frontend-types";
 
 export default function PastWorkouts() {
   const { user } = useUser();
-  const { loading, error, data, refetch } = useUserWithWorkoutsQuery({
-    variables: { uid: user?.uid ?? "" },
-    fetchPolicy: "cache-first",
-  });
+  const [offset, setOffset] = useState(0);
+  const limit = 10;
+  const [hasMore, setHasMore] = useState(true);
+  const scrollPositionRef = useRef(0);
+
+  const { loading, error, data, refetch, fetchMore } = useUserWithWorkoutsQuery(
+    {
+      variables: {
+        uid: user?.uid ?? "",
+        offset: offset,
+        limit: limit,
+      },
+      fetchPolicy: "cache-and-network",
+    }
+  );
+
+  // Check if there are more workouts to load on initial load
+  useEffect(() => {
+    if (data?.user?.workouts) {
+      setHasMore(data.user.workouts.length >= limit);
+    }
+  }, [data, limit]);
+
+  const loadMoreWorkouts = useCallback(() => {
+    if (!hasMore) {
+      return;
+    }
+
+    // Store current scroll position
+    scrollPositionRef.current = window.scrollY;
+
+    // Fetch more data, Apollo Cache policy responsible for appending this to data.
+    fetchMore({
+      variables: {
+        offset: offset + limit,
+        limit: limit,
+      },
+    }).then((fetchMoreResult) => {
+      const newWorkouts = fetchMoreResult.data.user?.workouts || [];
+      if (newWorkouts.length < limit) {
+        setHasMore(false);
+      }
+      setOffset(offset + limit);
+
+      // Restore scroll position after data is loaded and DOM is updated
+      setTimeout(() => {
+        window.scrollTo(0, scrollPositionRef.current);
+      }, 0);
+    });
+  }, [hasMore, fetchMore, offset, limit]);
 
   const noWorkouts = !data?.user?.workouts || data?.user?.workouts.length === 0;
 
@@ -31,10 +78,10 @@ export default function PastWorkouts() {
     }
   }, [error]);
 
-  if (loading) {
+  if (loading && offset === 0) {
     return (
       <Center w="100%" h="100%">
-        <LoadingSpinner size={24} />;
+        <LoadingSpinner size={24} />
       </Center>
     );
   }
@@ -61,7 +108,7 @@ export default function PastWorkouts() {
         </Alert>
       )}
 
-      {!loading && !error && data && (
+      {data && (
         <VStack w="100%" my="0.5rem">
           {data === null ? (
             <Text>No User Found</Text>
@@ -78,6 +125,15 @@ export default function PastWorkouts() {
                 ) : null
               )}
             </>
+          )}
+          {hasMore && (
+            <Button
+              onClick={loadMoreWorkouts}
+              isLoading={loading}
+              variant="secondary"
+            >
+              Load More
+            </Button>
           )}
         </VStack>
       )}

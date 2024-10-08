@@ -220,6 +220,12 @@ export type QueryWorkoutArgs = {
   uid: Scalars['ID']['input'];
 };
 
+
+export type QueryWorkoutsArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
 export type RefreshTokenResponse = {
   __typename?: 'RefreshTokenResponse';
   message?: Maybe<Scalars['String']['output']>;
@@ -257,6 +263,12 @@ export type User = {
   tokenCount: Scalars['Int']['output'];
   uid: Scalars['ID']['output'];
   workouts: Array<Maybe<Workout>>;
+};
+
+
+export type UserWorkoutsArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 export type Workout = {
@@ -323,6 +335,8 @@ export type UpdateWorkoutWithExercisesMutation = { __typename?: 'Mutation', upda
 
 export type UserWithWorkoutsQueryVariables = Exact<{
   uid: Scalars['ID']['input'];
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
@@ -594,11 +608,11 @@ export type UpdateWorkoutWithExercisesMutationHookResult = ReturnType<typeof use
 export type UpdateWorkoutWithExercisesMutationResult = Apollo.MutationResult<UpdateWorkoutWithExercisesMutation>;
 export type UpdateWorkoutWithExercisesMutationOptions = Apollo.BaseMutationOptions<UpdateWorkoutWithExercisesMutation, UpdateWorkoutWithExercisesMutationVariables>;
 export const UserWithWorkoutsDocument = gql`
-    query UserWithWorkouts($uid: ID!) {
+    query UserWithWorkouts($uid: ID!, $offset: Int, $limit: Int) {
   user(uid: $uid) {
     firstName
     lastName
-    workouts {
+    workouts(offset: $offset, limit: $limit) {
       uid
       comment
       elapsedSeconds
@@ -633,6 +647,8 @@ export const UserWithWorkoutsDocument = gql`
  * const { data, loading, error } = useUserWithWorkoutsQuery({
  *   variables: {
  *      uid: // value for 'uid'
+ *      offset: // value for 'offset'
+ *      limit: // value for 'limit'
  *   },
  * });
  */

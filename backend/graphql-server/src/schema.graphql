@@ -5,7 +5,7 @@ type User {
   email: String!
   password: String!
   isAuthorized: Boolean!
-  workouts: [Workout]!
+  workouts(offset: Int, limit: Int): [Workout]!
   createdAt: String!
   tokenCount: Int!
 }
@@ -43,7 +43,7 @@ type CheckSessionResponse {
 type Query {
   users: [User]
   user(uid: ID!): User
-  workouts: [Workout]
+  workouts(offset: Int, limit: Int): [Workout]
   workout(uid: ID!): Workout
   exercises: [Exercise]
   exercise(uid: ID!): Exercise
