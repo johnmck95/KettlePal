@@ -15,6 +15,7 @@ import {
 import ViewWorkout from "../Components/ViewWorkouts/ViewWorkout";
 import { useUser } from "../Contexts/UserContext";
 import { useUserWithWorkoutsQuery } from "../generated/frontend-types";
+import { NetworkStatus } from "@apollo/client";
 
 export default function PastWorkouts() {
   const { user } = useUser();
@@ -23,16 +24,19 @@ export default function PastWorkouts() {
   const [hasMore, setHasMore] = useState(true);
   const scrollPositionRef = useRef(0);
 
-  const { loading, error, data, refetch, fetchMore } = useUserWithWorkoutsQuery(
-    {
+  const { loading, error, data, refetch, fetchMore, networkStatus } =
+    useUserWithWorkoutsQuery({
       variables: {
         uid: user?.uid ?? "",
         offset: offset,
         limit: limit,
       },
       fetchPolicy: "cache-and-network",
-    }
-  );
+      notifyOnNetworkStatusChange: true,
+    });
+
+  const isInitialLoading = loading && networkStatus === NetworkStatus.loading;
+  const isFetchingMore = networkStatus === NetworkStatus.fetchMore;
 
   // Check if there are more workouts to load on initial load
   useEffect(() => {
@@ -78,7 +82,7 @@ export default function PastWorkouts() {
     }
   }, [error]);
 
-  if (loading && offset === 0) {
+  if (isInitialLoading) {
     return (
       <Center w="100%" h="100%">
         <LoadingSpinner size={24} />
@@ -129,10 +133,10 @@ export default function PastWorkouts() {
           {hasMore && (
             <Button
               onClick={loadMoreWorkouts}
-              isLoading={loading}
+              isLoading={isFetchingMore || isInitialLoading}
               variant="secondary"
             >
-              Load More
+              {isFetchingMore || isInitialLoading ? "Loading..." : "Load More"}
             </Button>
           )}
         </VStack>
