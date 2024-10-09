@@ -19,7 +19,6 @@ import { NetworkStatus } from "@apollo/client";
 
 export default function PastWorkouts() {
   const { user } = useUser();
-  const [offset, setOffset] = useState(0);
   const limit = 10;
   const [hasMore, setHasMore] = useState(true);
   const scrollPositionRef = useRef(0);
@@ -28,7 +27,7 @@ export default function PastWorkouts() {
     useUserWithWorkoutsQuery({
       variables: {
         uid: user?.uid ?? "",
-        offset: offset,
+        offset: 0,
         limit: limit,
       },
       fetchPolicy: "cache-and-network",
@@ -56,7 +55,7 @@ export default function PastWorkouts() {
     // Fetch more data, Apollo Cache policy responsible for appending this to data.
     fetchMore({
       variables: {
-        offset: offset + limit,
+        offset: data?.user?.workouts?.length || 0,
         limit: limit,
       },
     }).then((fetchMoreResult) => {
@@ -64,14 +63,13 @@ export default function PastWorkouts() {
       if (newWorkouts.length < limit) {
         setHasMore(false);
       }
-      setOffset(offset + limit);
 
       // Restore scroll position after data is loaded and DOM is updated
       setTimeout(() => {
         window.scrollTo(0, scrollPositionRef.current);
       }, 0);
     });
-  }, [hasMore, fetchMore, offset, limit]);
+  }, [hasMore, fetchMore, limit, data?.user?.workouts?.length]);
 
   const noWorkouts = !data?.user?.workouts || data?.user?.workouts.length === 0;
 

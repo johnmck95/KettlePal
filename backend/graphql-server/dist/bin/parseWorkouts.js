@@ -1,12 +1,21 @@
-/** To run this file:
- * tsc parseWorkouts.ts && mv parseWorkouts.js parseWorkouts.cjs && node parseWorkouts.cjs
+/** SCRIPT INSTRUCTIONS **
+ *
+ * --> parseWorkouts.ts will try to parse XXXX-KETTLEBELLHISTORY.txt and turn it into JSON.
+ * --> writeParsedWorkoutsToDB.ts will try to read this parsed JSON, run it through the GraphQL server and write it to the database.
+ *
+ * To only generate the JSON:
+ *      npm run build && npm run parseWorkouts
+ *
+ * To generate the JSON and write it to the database:
+ *      npm run build && npm parseAndUploadWorkouts
  */
 import * as fs from "fs";
 import path, { join } from "path";
 import { fileURLToPath } from "url";
 // const RUN_FOR_YEAR = "2024"; Successfully run for prod
 // const RUN_FOR_YEAR = "2023"; Successfully run for prod
-const RUN_FOR_YEAR = "2022";
+// const RUN_FOR_YEAR = "2022"; Successfully run for prod
+const RUN_FOR_YEAR = "0"; // Completed running this script.
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const MonthMapping = {

@@ -23,9 +23,22 @@ const cache = new InMemoryCache({
     User: {
       fields: {
         workouts: {
-          keyArgs: false,
-          merge(existing = [], incoming) {
-            return [...existing, ...incoming];
+          keyArgs: ["uid"],
+          // @ts-expect-error TODO: Fix TS. https://www.apollographql.com/docs/react/pagination/core-api#paginated-read-functions
+          merge(
+            existing = [],
+            incoming,
+            { args }: { args?: { offset?: number } }
+          ) {
+            const offset = (args?.offset as unknown as any) || 0;
+            const merged = existing ? existing.slice(0) : [];
+            for (let i = 0; i < incoming.length; i++) {
+              merged[offset + i] = incoming[i];
+            }
+            return merged;
+          },
+          read(existing = []) {
+            return existing;
           },
         },
       },
