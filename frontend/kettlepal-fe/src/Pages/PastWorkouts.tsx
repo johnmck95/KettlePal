@@ -16,6 +16,7 @@ import ViewWorkout from "../Components/ViewWorkouts/ViewWorkout";
 import { useUser } from "../Contexts/UserContext";
 import { useUserWithWorkoutsQuery } from "../generated/frontend-types";
 import { NetworkStatus } from "@apollo/client";
+import Filters from "../Components/ViewWorkouts/Filters/Filters";
 
 export default function PastWorkouts() {
   const { user } = useUser();
@@ -117,15 +118,18 @@ export default function PastWorkouts() {
           ) : (
             <>
               {noWorkouts && <Text> Record your first workout!</Text>}
-              {data?.user?.workouts?.map((workoutWithExercises) =>
-                workoutWithExercises ? (
-                  <ViewWorkout
-                    key={workoutWithExercises.uid}
-                    workoutWithExercises={workoutWithExercises}
-                    refetchPastWorkouts={refetch}
-                  />
-                ) : null
-              )}
+              <>
+                <Filters />
+                {data?.user?.workouts?.map((workoutWithExercises) =>
+                  workoutWithExercises ? (
+                    <ViewWorkout
+                      key={workoutWithExercises.uid}
+                      workoutWithExercises={workoutWithExercises}
+                      refetchPastWorkouts={refetch}
+                    />
+                  ) : null
+                )}
+              </>
             </>
           )}
           {hasMore && (
