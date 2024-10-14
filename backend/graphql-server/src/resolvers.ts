@@ -21,11 +21,14 @@ import {
   AddOrEditWorkoutInput,
   AddWorkoutWithExercisesInput,
   Exercise,
+  QueryPastWorkoutsArgs,
+  QueryUserArgs,
   QueryWorkoutsArgs,
   UpdateWorkoutWithExercisesInput,
   User,
   Workout,
 } from "./generated/backend-types.js";
+import getFuzzyWorkoutSearchResults from "./utils/Search/PastWorkoutsFuzzySearch.js";
 
 // Incoming Resolver Properties are: (parent, args, context)
 const knexInstance = knex(knexConfig);
@@ -44,7 +47,25 @@ export const resolvers = {
         throw error;
       }
     },
-    async user(_, { uid }: { uid: String }, { req }: any) {
+    async pastWorkouts(
+      _,
+      { userUid, searchQuery, limit, offset }: QueryPastWorkoutsArgs,
+      { req }: any
+    ) {
+      if (!req.userUid || req.userUid !== userUid) {
+        throw new NotAuthorizedError();
+      }
+      const pastWorkouts = await getFuzzyWorkoutSearchResults({
+        searchQuery,
+        userUid,
+        knexInstance,
+        limit,
+        offset,
+      });
+
+      return pastWorkouts;
+    },
+    async user(_, { uid }: QueryUserArgs, { req }: any) {
       if (!req.userUid || req.userUid !== uid) {
         throw new NotAuthorizedError();
       }

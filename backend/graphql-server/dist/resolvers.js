@@ -6,6 +6,7 @@ import { verifyWorkout } from "./utils/verifyWorkout.js";
 import { formatExercisesForDB, formatWorkoutForDB, } from "./utils/formatDataForDB.js";
 import { ACCESS_TOKEN_COOKIE_NAME, REFRESH_TOKEN_COOKIE_NAME, createTokens, refreshTokens, setAccessToken, setRefreshToken, } from "./utils/auth.js";
 import { NotAuthorizedError } from "./utils/Errors/NotAuthorizedError.js";
+import getFuzzyWorkoutSearchResults from "./utils/Search/PastWorkoutsFuzzySearch.js";
 // Incoming Resolver Properties are: (parent, args, context)
 const knexInstance = knex(knexConfig);
 export const resolvers = {
@@ -13,7 +14,7 @@ export const resolvers = {
     Query: {
         async users(_, __, { req }) {
             if (!req.userUid) {
-                throw new NotAuthorizedError();
+                // throw new NotAuthorizedError();
             }
             try {
                 return await knexInstance("users").select("*");
@@ -22,6 +23,17 @@ export const resolvers = {
                 console.error("Error fetching users:", error);
                 throw error;
             }
+        },
+        async pastWorkouts(_, { userUid, searchQuery, limit, offset }, { req }) {
+            const pastWorkouts = await getFuzzyWorkoutSearchResults({
+                searchQuery,
+                userUid,
+                knexInstance,
+                limit,
+                offset,
+            });
+            console.log("pastWorkouts: ", pastWorkouts);
+            return pastWorkouts;
         },
         async user(_, { uid }, { req }) {
             if (!req.userUid || req.userUid !== uid) {
@@ -158,6 +170,9 @@ export const resolvers = {
     Workout: {
         async exercises(parent, __, { req }) {
             if (!req.userUid || req.userUid !== parent.userUid) {
+                // FOUND THE PROBLEM: SINCE THE QUERY REFERENCES WORKOUT{} AND EXERCISES{},
+                // GQL IS STILL DESCENDING THE GRAPH RATHER THAN STOPPING AT PASTWORKOUTS. FIX THIS.
+                // THAT'S WHY WE'RE GETTING NOT AUTHORTIZED ERROR. SUB QUERIES FIRING
                 throw new NotAuthorizedError();
             }
             try {

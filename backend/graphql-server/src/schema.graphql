@@ -10,6 +10,28 @@ type User {
   tokenCount: Int!
 }
 
+# Bit of a hack to let fuzzy search bypass Workouts{Exericises{}} graphql traversal.
+type WorkoutWithExercises {
+  uid: ID!
+  date: String!
+  createdAt: String!
+  elapsedSeconds: Int
+  comment: String
+  userUid: ID!
+  exercises: [Exercise!]!
+}
+
+type UserPastWorkouts {
+  uid: ID!
+  firstName: String!
+  lastName: String!
+  email: String!
+  password: String!
+  isAuthorized: Boolean!
+  createdAt: String!
+  workoutWithExercises: [WorkoutWithExercises]!
+}
+
 type Workout {
   uid: ID!
   date: String!
@@ -49,6 +71,12 @@ type Query {
   exercise(uid: ID!): Exercise
 
   checkSession: CheckSessionResponse!
+  pastWorkouts(
+    userUid: ID!
+    searchQuery: String
+    offset: Int
+    limit: Int
+  ): UserPastWorkouts
 }
 
 type RefreshTokenResponse {
