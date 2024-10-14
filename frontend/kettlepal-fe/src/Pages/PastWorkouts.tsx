@@ -14,7 +14,7 @@ import {
 } from "@chakra-ui/react";
 import ViewWorkout from "../Components/ViewWorkouts/ViewWorkout";
 import { useUser } from "../Contexts/UserContext";
-import { useUserWithWorkoutsQuery } from "../generated/frontend-types";
+import { useFuzzySearchQuery } from "../generated/frontend-types";
 import { NetworkStatus } from "@apollo/client";
 import Filters from "../Components/ViewWorkouts/Filters/Filters";
 
@@ -24,12 +24,18 @@ export default function PastWorkouts() {
   const [hasMore, setHasMore] = useState(true);
   const scrollPositionRef = useRef(0);
 
+  const [searchQuery, setSearchQuery] = React.useState("");
+  function onSearchSubmit(finalQuery: string) {
+    setSearchQuery(finalQuery);
+  }
+
   const { loading, error, data, refetch, fetchMore, networkStatus } =
-    useUserWithWorkoutsQuery({
+    useFuzzySearchQuery({
       variables: {
-        uid: user?.uid ?? "",
+        userUid: user?.uid ?? "",
         offset: 0,
         limit: limit,
+        searchQuery,
       },
       fetchPolicy: "cache-and-network",
       notifyOnNetworkStatusChange: true,
@@ -40,8 +46,8 @@ export default function PastWorkouts() {
 
   // Check if there are more workouts to load on initial load
   useEffect(() => {
-    if (data?.user?.workouts) {
-      setHasMore(data.user.workouts.length >= limit);
+    if (data?.pastWorkouts?.workoutWithExercises) {
+      setHasMore(data?.pastWorkouts?.workoutWithExercises.length >= limit);
     }
   }, [data, limit]);
 
@@ -56,11 +62,12 @@ export default function PastWorkouts() {
     // Fetch more data, Apollo Cache policy responsible for appending this to data.
     fetchMore({
       variables: {
-        offset: data?.user?.workouts?.length || 0,
+        offset: data?.pastWorkouts?.workoutWithExercises?.length || 0,
         limit: limit,
       },
     }).then((fetchMoreResult) => {
-      const newWorkouts = fetchMoreResult.data.user?.workouts || [];
+      const newWorkouts =
+        fetchMoreResult.data?.pastWorkouts?.workoutWithExercises || [];
       if (newWorkouts.length < limit) {
         setHasMore(false);
       }
@@ -70,9 +77,16 @@ export default function PastWorkouts() {
         window.scrollTo(0, scrollPositionRef.current);
       }, 0);
     });
-  }, [hasMore, fetchMore, limit, data?.user?.workouts?.length]);
+  }, [
+    hasMore,
+    fetchMore,
+    limit,
+    data?.pastWorkouts?.workoutWithExercises.length,
+  ]);
 
-  const noWorkouts = !data?.user?.workouts || data?.user?.workouts.length === 0;
+  const noWorkouts =
+    !data?.pastWorkouts?.workoutWithExercises ||
+    data?.pastWorkouts?.workoutWithExercises.length === 0;
 
   const [showServerError, setShowServerError] = useState<boolean>(false);
   useEffect(() => {
@@ -119,15 +133,20 @@ export default function PastWorkouts() {
             <>
               {noWorkouts && <Text> Record your first workout!</Text>}
               <>
-                <Filters />
-                {data?.user?.workouts?.map((workoutWithExercises) =>
-                  workoutWithExercises ? (
-                    <ViewWorkout
-                      key={workoutWithExercises.uid}
-                      workoutWithExercises={workoutWithExercises}
-                      refetchPastWorkouts={refetch}
-                    />
-                  ) : null
+                <Filters
+                  // searchQuery={searchQuery}
+                  // handleChange={handleChange}
+                  onSearchSubmit={onSearchSubmit}
+                />
+                {data?.pastWorkouts?.workoutWithExercises?.map(
+                  (workoutWithExercises) =>
+                    workoutWithExercises ? (
+                      <ViewWorkout
+                        key={workoutWithExercises.uid}
+                        workoutWithExercises={workoutWithExercises}
+                        refetchPastWorkouts={refetch}
+                      />
+                    ) : null
                 )}
               </>
             </>

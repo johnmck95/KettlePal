@@ -1,5 +1,5 @@
 import { ChangeEvent, useEffect, useState } from "react";
-import { UserWithWorkoutsQuery } from "../generated/frontend-types";
+import { FuzzySearchQuery } from "../generated/frontend-types";
 
 export type UpdateWorkoutState = {
   date: string;
@@ -23,7 +23,7 @@ const useUpdateWorkoutWithExercisesForm = ({
   workoutWithExercises,
 }: {
   workoutWithExercises: NonNullable<
-    NonNullable<UserWithWorkoutsQuery["user"]>["workouts"]
+    NonNullable<FuzzySearchQuery["pastWorkouts"]>["workoutWithExercises"]
   >[0];
 }) => {
   const { comment, date, exercises, elapsedSeconds } =

@@ -199,6 +199,7 @@ export type Query = {
   checkSession: CheckSessionResponse;
   exercise?: Maybe<Exercise>;
   exercises?: Maybe<Array<Maybe<Exercise>>>;
+  pastWorkouts?: Maybe<UserPastWorkouts>;
   user?: Maybe<User>;
   users?: Maybe<Array<Maybe<User>>>;
   workout?: Maybe<Workout>;
@@ -208,6 +209,14 @@ export type Query = {
 
 export type QueryExerciseArgs = {
   uid: Scalars['ID']['input'];
+};
+
+
+export type QueryPastWorkoutsArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  searchQuery?: InputMaybe<Scalars['String']['input']>;
+  userUid: Scalars['ID']['input'];
 };
 
 
@@ -271,6 +280,18 @@ export type UserWorkoutsArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
+export type UserPastWorkouts = {
+  __typename?: 'UserPastWorkouts';
+  createdAt: Scalars['String']['output'];
+  email: Scalars['String']['output'];
+  firstName: Scalars['String']['output'];
+  isAuthorized: Scalars['Boolean']['output'];
+  lastName: Scalars['String']['output'];
+  password: Scalars['String']['output'];
+  uid: Scalars['ID']['output'];
+  workoutWithExercises: Array<Maybe<WorkoutWithExercises>>;
+};
+
 export type Workout = {
   __typename?: 'Workout';
   comment?: Maybe<Scalars['String']['output']>;
@@ -278,6 +299,17 @@ export type Workout = {
   date: Scalars['String']['output'];
   elapsedSeconds?: Maybe<Scalars['Int']['output']>;
   exercises?: Maybe<Array<Exercise>>;
+  uid: Scalars['ID']['output'];
+  userUid: Scalars['ID']['output'];
+};
+
+export type WorkoutWithExercises = {
+  __typename?: 'WorkoutWithExercises';
+  comment?: Maybe<Scalars['String']['output']>;
+  createdAt: Scalars['String']['output'];
+  date: Scalars['String']['output'];
+  elapsedSeconds?: Maybe<Scalars['Int']['output']>;
+  exercises: Array<Exercise>;
   uid: Scalars['ID']['output'];
   userUid: Scalars['ID']['output'];
 };
@@ -332,6 +364,16 @@ export type UpdateWorkoutWithExercisesMutationVariables = Exact<{
 
 
 export type UpdateWorkoutWithExercisesMutation = { __typename?: 'Mutation', updateWorkoutWithExercises?: { __typename?: 'Workout', date: string, comment?: string | null, exercises?: Array<{ __typename?: 'Exercise', title: string, reps?: number | null, sets?: number | null }> | null } | null };
+
+export type FuzzySearchQueryVariables = Exact<{
+  userUid: Scalars['ID']['input'];
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  searchQuery?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type FuzzySearchQuery = { __typename?: 'Query', pastWorkouts?: { __typename?: 'UserPastWorkouts', firstName: string, lastName: string, workoutWithExercises: Array<{ __typename?: 'WorkoutWithExercises', uid: string, comment?: string | null, elapsedSeconds?: number | null, date: string, exercises: Array<{ __typename?: 'Exercise', uid: string, title: string, weight?: number | null, weightUnit?: string | null, sets?: number | null, reps?: number | null, repsDisplay?: string | null, comment?: string | null, elapsedSeconds?: number | null, createdAt: string }> } | null> } | null };
 
 export type UserWithWorkoutsQueryVariables = Exact<{
   uid: Scalars['ID']['input'];
@@ -607,6 +649,73 @@ export function useUpdateWorkoutWithExercisesMutation(baseOptions?: Apollo.Mutat
 export type UpdateWorkoutWithExercisesMutationHookResult = ReturnType<typeof useUpdateWorkoutWithExercisesMutation>;
 export type UpdateWorkoutWithExercisesMutationResult = Apollo.MutationResult<UpdateWorkoutWithExercisesMutation>;
 export type UpdateWorkoutWithExercisesMutationOptions = Apollo.BaseMutationOptions<UpdateWorkoutWithExercisesMutation, UpdateWorkoutWithExercisesMutationVariables>;
+export const FuzzySearchDocument = gql`
+    query FuzzySearch($userUid: ID!, $offset: Int, $limit: Int, $searchQuery: String) {
+  pastWorkouts(
+    userUid: $userUid
+    searchQuery: $searchQuery
+    limit: $limit
+    offset: $offset
+  ) {
+    firstName
+    lastName
+    workoutWithExercises {
+      uid
+      comment
+      elapsedSeconds
+      date
+      exercises {
+        uid
+        title
+        weight
+        weightUnit
+        sets
+        reps
+        repsDisplay
+        comment
+        elapsedSeconds
+        createdAt
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useFuzzySearchQuery__
+ *
+ * To run a query within a React component, call `useFuzzySearchQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFuzzySearchQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFuzzySearchQuery({
+ *   variables: {
+ *      userUid: // value for 'userUid'
+ *      offset: // value for 'offset'
+ *      limit: // value for 'limit'
+ *      searchQuery: // value for 'searchQuery'
+ *   },
+ * });
+ */
+export function useFuzzySearchQuery(baseOptions: Apollo.QueryHookOptions<FuzzySearchQuery, FuzzySearchQueryVariables> & ({ variables: FuzzySearchQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FuzzySearchQuery, FuzzySearchQueryVariables>(FuzzySearchDocument, options);
+      }
+export function useFuzzySearchLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FuzzySearchQuery, FuzzySearchQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FuzzySearchQuery, FuzzySearchQueryVariables>(FuzzySearchDocument, options);
+        }
+export function useFuzzySearchSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<FuzzySearchQuery, FuzzySearchQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<FuzzySearchQuery, FuzzySearchQueryVariables>(FuzzySearchDocument, options);
+        }
+export type FuzzySearchQueryHookResult = ReturnType<typeof useFuzzySearchQuery>;
+export type FuzzySearchLazyQueryHookResult = ReturnType<typeof useFuzzySearchLazyQuery>;
+export type FuzzySearchSuspenseQueryHookResult = ReturnType<typeof useFuzzySearchSuspenseQuery>;
+export type FuzzySearchQueryResult = Apollo.QueryResult<FuzzySearchQuery, FuzzySearchQueryVariables>;
 export const UserWithWorkoutsDocument = gql`
     query UserWithWorkouts($uid: ID!, $offset: Int, $limit: Int) {
   user(uid: $uid) {

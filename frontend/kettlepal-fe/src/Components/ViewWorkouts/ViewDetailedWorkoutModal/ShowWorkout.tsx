@@ -2,7 +2,7 @@ import { Box, Button, HStack, Text } from "@chakra-ui/react";
 import { formatDurationShort } from "../../../utils/Time/time";
 import Detail from "./Detail";
 import { totalWorkoutWorkCapacity } from "../../../utils/Workouts/workouts";
-import { UserWithWorkoutsQuery } from "../../../generated/frontend-types";
+import { FuzzySearchQuery } from "../../../generated/frontend-types";
 import theme from "../../../Constants/theme";
 import ViewDetailedExercise from "./ViewDetailedExercise";
 import { useState } from "react";
@@ -10,7 +10,7 @@ import dayjs from "dayjs";
 
 interface ShowWorkoutProps {
   workoutWithExercises: NonNullable<
-    NonNullable<UserWithWorkoutsQuery["user"]>["workouts"]
+    NonNullable<FuzzySearchQuery["pastWorkouts"]>["workoutWithExercises"]
   >[0];
 }
 export default function ShowWorkout({

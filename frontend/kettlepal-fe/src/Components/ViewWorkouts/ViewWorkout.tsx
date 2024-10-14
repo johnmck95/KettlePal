@@ -16,7 +16,7 @@ import ConfirmModal from "../ConfirmModal";
 import LoadingSpinner from "../LoadingSpinner";
 import ViewDetailedWorkoutModal from "./ViewDetailedWorkoutModal/ViewDetailedWorkoutModal";
 import {
-  UserWithWorkoutsQuery,
+  FuzzySearchQuery,
   useDeleteWorkoutWithExercisesMutation,
 } from "../../generated/frontend-types";
 
@@ -25,7 +25,7 @@ export default function ViewWorkout({
   refetchPastWorkouts,
 }: {
   workoutWithExercises: NonNullable<
-    NonNullable<UserWithWorkoutsQuery["user"]>["workouts"]
+    NonNullable<FuzzySearchQuery["pastWorkouts"]>["workoutWithExercises"]
   >[0];
   refetchPastWorkouts: () => void;
 }) {

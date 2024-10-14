@@ -12,7 +12,7 @@ import {
   AlertIcon,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
-import { UserWithWorkoutsQuery } from "../../../generated/frontend-types";
+import { FuzzySearchQuery } from "../../../generated/frontend-types";
 import { FaPencilAlt, FaTimes } from "react-icons/fa";
 import EditWorkout from "./EditWorkout";
 import ShowWorkout from "./ShowWorkout";
@@ -25,7 +25,7 @@ export default function ViewDetailedWorkoutModal({
   refetchPastWorkouts,
 }: {
   workoutWithExercises: NonNullable<
-    NonNullable<UserWithWorkoutsQuery["user"]>["workouts"]
+    NonNullable<FuzzySearchQuery["pastWorkouts"]>["workoutWithExercises"]
   >[0];
   isOpen: boolean;
   onClose: () => void;
