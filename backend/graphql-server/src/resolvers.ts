@@ -30,9 +30,9 @@ import {
 } from "./generated/backend-types.js";
 import getFuzzyWorkoutSearchResults from "./utils/Search/PastWorkoutsFuzzySearch.js";
 
-// Incoming Resolver Properties are: (parent, args, context)
 const knexInstance = knex(knexConfig);
 
+// Incoming Resolver Properties are: (parent, args, context)
 export const resolvers = {
   // The top-level resolvers inside Query are the entry point resolvers for the graph, not nested queries like workout{ exercises{...} }
   Query: {

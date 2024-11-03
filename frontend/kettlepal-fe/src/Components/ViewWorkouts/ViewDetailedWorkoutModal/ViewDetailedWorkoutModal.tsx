@@ -10,6 +10,7 @@ import {
   useDisclosure,
   Alert,
   AlertIcon,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { FuzzySearchQuery } from "../../../generated/frontend-types";
@@ -33,6 +34,7 @@ export default function ViewDetailedWorkoutModal({
 }) {
   const [editing, setEditing] = useState(false);
   const [showUploadSuccess, setShowUploadSuccess] = useState<boolean>(false);
+  const [isMobile] = useMediaQuery("(max-width: 420px)");
 
   // Modal controls for Mutating the workout
   const {
@@ -103,7 +105,9 @@ export default function ViewDetailedWorkoutModal({
                 sx={{
                   _focus: {
                     borderColor: theme.colors.green[300],
-                    boxShadow: `0 0 0 1px ${theme.colors.green[300]}`,
+                    boxShadow: isMobile
+                      ? `0 0 0 0`
+                      : `0 0 0 1px ${theme.colors.green[300]}`,
                   },
                 }}
                 zIndex={3}
@@ -117,7 +121,9 @@ export default function ViewDetailedWorkoutModal({
                 sx={{
                   _focus: {
                     borderColor: theme.colors.green[300],
-                    boxShadow: `0 0 0 1px ${theme.colors.green[300]}`,
+                    boxShadow: isMobile
+                      ? `0 0 0 0`
+                      : `0 0 0 1px ${theme.colors.green[300]}`,
                   },
                 }}
                 zIndex={3}

@@ -14,7 +14,7 @@ export const resolvers = {
     Query: {
         async users(_, __, { req }) {
             if (!req.userUid) {
-                // throw new NotAuthorizedError();
+                throw new NotAuthorizedError();
             }
             try {
                 return await knexInstance("users").select("*");
@@ -25,6 +25,9 @@ export const resolvers = {
             }
         },
         async pastWorkouts(_, { userUid, searchQuery, limit, offset }, { req }) {
+            if (!req.userUid || req.userUid !== userUid) {
+                throw new NotAuthorizedError();
+            }
             const pastWorkouts = await getFuzzyWorkoutSearchResults({
                 searchQuery,
                 userUid,
@@ -32,7 +35,6 @@ export const resolvers = {
                 limit,
                 offset,
             });
-            console.log("pastWorkouts: ", pastWorkouts);
             return pastWorkouts;
         },
         async user(_, { uid }, { req }) {
@@ -170,9 +172,6 @@ export const resolvers = {
     Workout: {
         async exercises(parent, __, { req }) {
             if (!req.userUid || req.userUid !== parent.userUid) {
-                // FOUND THE PROBLEM: SINCE THE QUERY REFERENCES WORKOUT{} AND EXERCISES{},
-                // GQL IS STILL DESCENDING THE GRAPH RATHER THAN STOPPING AT PASTWORKOUTS. FIX THIS.
-                // THAT'S WHY WE'RE GETTING NOT AUTHORTIZED ERROR. SUB QUERIES FIRING
                 throw new NotAuthorizedError();
             }
             try {

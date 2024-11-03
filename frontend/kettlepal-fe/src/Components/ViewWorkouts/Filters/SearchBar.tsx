@@ -36,6 +36,11 @@ export default function SearchBar({ onSearchSubmit }: SearchBarProps) {
         name="searchQuery"
         value={searchQuery}
         onChange={handleChange}
+        onKeyDown={(event) => {
+          if (event.key === "Enter") {
+            onSearchSubmit(searchQuery);
+          }
+        }}
       />
       <InputRightAddon p={0} border="none" borderRightRadius={30}>
         <Button

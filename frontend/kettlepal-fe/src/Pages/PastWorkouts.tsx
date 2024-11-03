@@ -131,13 +131,14 @@ export default function PastWorkouts() {
             <Text>No User Found</Text>
           ) : (
             <>
-              {noWorkouts && <Text> Record your first workout!</Text>}
               <>
                 <Filters
-                  // searchQuery={searchQuery}
-                  // handleChange={handleChange}
+                  searchQuery={searchQuery}
                   onSearchSubmit={onSearchSubmit}
+                  resetSearchQuery={() => setSearchQuery("")}
                 />
+                {noWorkouts && <Text> No workouts found.</Text>}
+
                 {data?.pastWorkouts?.workoutWithExercises?.map(
                   (workoutWithExercises) =>
                     workoutWithExercises ? (
