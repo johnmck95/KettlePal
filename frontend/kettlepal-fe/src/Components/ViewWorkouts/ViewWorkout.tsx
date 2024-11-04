@@ -69,8 +69,7 @@ export default function ViewWorkout({
   return (
     <>
       <HStack
-        w={"calc(100% - 0.6rem)"}
-        maxW="720px"
+        w="100%"
         p="0.5rem"
         m="0.1rem"
         position="relative"

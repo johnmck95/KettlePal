@@ -1,13 +1,32 @@
 export default async function getFuzzyWorkoutSearchResults({ searchQuery, userUid, knexInstance, limit, offset, }) {
     const user = await knexInstance("users").where("uid", userUid).first();
+    // const query = knexInstance("workouts")
+    //   .select("workouts.*")
+    //   .leftJoin("exercises", "workouts.uid", "exercises.workoutUid")
+    //   .where("workouts.userUid", userUid)
+    //   .groupBy("workouts.uid")
+    //   .whereRaw("workouts.comment ILIKE ?", [`%${searchQuery}%`])
+    //   .orWhereRaw("exercises.title ILIKE ?", [`%${searchQuery}%`])
+    //   .orWhereRaw("exercises.comment ILIKE ?", [`%${searchQuery}%`])
+    //   .orderByRaw("date::date DESC")
+    //   .offset(offset)
+    //   .limit(limit);
     const query = knexInstance("workouts")
         .select("workouts.*")
         .leftJoin("exercises", "workouts.uid", "exercises.workoutUid")
         .where("workouts.userUid", userUid)
+        .andWhere(function () {
+        this.whereRaw("LOWER(workouts.comment) LIKE ?", [
+            `%${searchQuery.toLowerCase()}%`,
+        ])
+            .orWhereRaw("LOWER(exercises.title) LIKE ?", [
+            `%${searchQuery.toLowerCase()}%`,
+        ])
+            .orWhereRaw("LOWER(exercises.comment) LIKE ?", [
+            `%${searchQuery.toLowerCase()}%`,
+        ]);
+    })
         .groupBy("workouts.uid")
-        .whereRaw("workouts.comment ILIKE ?", [`%${searchQuery}%`])
-        .orWhereRaw("exercises.title ILIKE ?", [`%${searchQuery}%`])
-        .orWhereRaw("exercises.comment ILIKE ?", [`%${searchQuery}%`])
         .orderByRaw("date::date DESC")
         .offset(offset)
         .limit(limit);
@@ -18,11 +37,9 @@ export default async function getFuzzyWorkoutSearchResults({ searchQuery, userUi
         const exercises = await knexInstance("exercises").where("workoutUid", workout.uid);
         workoutWithExercises.push({ ...workout, exercises });
     }
-    // console.log("workoutWithExercises: ", workoutWithExercises);
     const res = {
         ...user,
         workoutWithExercises,
     };
-    console.log("returning res...", res.workoutWithExercises.length);
     return res;
 }

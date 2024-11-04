@@ -35,7 +35,6 @@ export const resolvers = {
                 limit,
                 offset,
             });
-            console.log("resolver is returning... ", pastWorkouts.workoutWithExercises.length + " pastWorkouts. ", pastWorkouts.workoutWithExercises[0].exercises[0].title);
             return pastWorkouts;
         },
         async user(_, { uid }, { req }) {

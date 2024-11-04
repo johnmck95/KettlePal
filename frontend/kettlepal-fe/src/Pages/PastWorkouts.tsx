@@ -47,8 +47,9 @@ export default function PastWorkouts() {
   // Check if there are more workouts to load on initial load
   useEffect(() => {
     if (data?.pastWorkouts?.workoutWithExercises) {
+      const numWorkouts = data?.pastWorkouts?.workoutWithExercises.length;
       // Pagination limit stopped us from gathering more data, more data likely available.
-      setHasMore(data?.pastWorkouts?.workoutWithExercises.length % limit === 0);
+      setHasMore(numWorkouts > 0 && numWorkouts % limit === 0);
     }
   }, [data, limit]);
 
@@ -129,7 +130,7 @@ export default function PastWorkouts() {
       )}
 
       {data && (
-        <VStack w="100%" my="0.5rem">
+        <VStack w={"calc(100% - 0.6rem)"} maxW="720px" my="0.5rem">
           {data === null ? (
             <Text>No User Found</Text>
           ) : (

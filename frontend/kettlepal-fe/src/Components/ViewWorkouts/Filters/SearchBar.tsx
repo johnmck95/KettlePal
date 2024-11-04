@@ -21,7 +21,11 @@ export default function SearchBar({ onSearchSubmit }: SearchBarProps) {
   }
 
   return (
-    <InputGroup size="sm" bg="transparent" borderRadius={30}>
+    <InputGroup
+      size="md"
+      borderRadius={30}
+      boxShadow={`0px 1px 4px ${theme.colors.grey[400]}`}
+    >
       <InputLeftElement
         pointerEvents="none"
         children={<FaSearch color="gray.600" />}
@@ -44,7 +48,7 @@ export default function SearchBar({ onSearchSubmit }: SearchBarProps) {
       />
       <InputRightAddon p={0} border="none" borderRightRadius={30}>
         <Button
-          size="sm"
+          size="md"
           borderLeftRadius={0}
           borderRightRadius={30}
           variant="primary"
