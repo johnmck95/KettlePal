@@ -47,7 +47,8 @@ export default function PastWorkouts() {
   // Check if there are more workouts to load on initial load
   useEffect(() => {
     if (data?.pastWorkouts?.workoutWithExercises) {
-      setHasMore(data?.pastWorkouts?.workoutWithExercises.length >= limit);
+      // Pagination limit stopped us from gathering more data, more data likely available.
+      setHasMore(data?.pastWorkouts?.workoutWithExercises.length % limit === 0);
     }
   }, [data, limit]);
 
@@ -103,6 +104,8 @@ export default function PastWorkouts() {
     );
   }
 
+  // console.log("isInitialLoading: ", isInitialLoading);
+  // console.log("isFetchingMore: ", isFetchingMore);
   return (
     <Flex w="100%" flexDirection="column" alignItems={"center"}>
       {showServerError && (

@@ -7,8 +7,8 @@ import { formatExercisesForDB, formatWorkoutForDB, } from "./utils/formatDataFor
 import { ACCESS_TOKEN_COOKIE_NAME, REFRESH_TOKEN_COOKIE_NAME, createTokens, refreshTokens, setAccessToken, setRefreshToken, } from "./utils/auth.js";
 import { NotAuthorizedError } from "./utils/Errors/NotAuthorizedError.js";
 import getFuzzyWorkoutSearchResults from "./utils/Search/PastWorkoutsFuzzySearch.js";
-// Incoming Resolver Properties are: (parent, args, context)
 const knexInstance = knex(knexConfig);
+// Incoming Resolver Properties are: (parent, args, context)
 export const resolvers = {
     // The top-level resolvers inside Query are the entry point resolvers for the graph, not nested queries like workout{ exercises{...} }
     Query: {
@@ -35,6 +35,7 @@ export const resolvers = {
                 limit,
                 offset,
             });
+            console.log("resolver is returning... ", pastWorkouts.workoutWithExercises.length + " pastWorkouts. ", pastWorkouts.workoutWithExercises[0].exercises[0].title);
             return pastWorkouts;
         },
         async user(_, { uid }, { req }) {

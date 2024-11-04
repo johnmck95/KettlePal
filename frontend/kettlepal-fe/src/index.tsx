@@ -43,6 +43,31 @@ const cache = new InMemoryCache({
         },
       },
     },
+    Query: {
+      fields: {
+        pastWorkouts: {
+          keyArgs: ["userUid", "searchQuery"],
+          merge(existing = { workoutWithExercises: [] }, incoming, { args }) {
+            const offset = args?.offset || 0;
+            const merged = existing?.workoutWithExercises
+              ? existing?.workoutWithExercises.slice(0)
+              : [];
+
+            for (let i = 0; i < incoming?.workoutWithExercises.length; i++) {
+              merged[offset + i] = incoming?.workoutWithExercises[i];
+            }
+
+            return {
+              ...incoming,
+              workoutWithExercises: merged,
+            };
+          },
+          read(existing) {
+            return existing;
+          },
+        },
+      },
+    },
   },
 });
 

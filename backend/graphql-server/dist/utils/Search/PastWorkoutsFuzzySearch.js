@@ -18,9 +18,11 @@ export default async function getFuzzyWorkoutSearchResults({ searchQuery, userUi
         const exercises = await knexInstance("exercises").where("workoutUid", workout.uid);
         workoutWithExercises.push({ ...workout, exercises });
     }
+    // console.log("workoutWithExercises: ", workoutWithExercises);
     const res = {
         ...user,
         workoutWithExercises,
     };
+    console.log("returning res...", res.workoutWithExercises.length);
     return res;
 }
