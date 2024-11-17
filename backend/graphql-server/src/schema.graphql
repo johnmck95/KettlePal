@@ -14,7 +14,6 @@ type User {
 type WorkoutWithExercises {
   uid: ID!
   date: String!
-  createdAt: String!
   elapsedSeconds: Int
   comment: String
   userUid: ID!
@@ -28,7 +27,6 @@ type UserPastWorkouts {
   email: String!
   password: String!
   isAuthorized: Boolean!
-  createdAt: String!
   workoutWithExercises: [WorkoutWithExercises]!
 }
 

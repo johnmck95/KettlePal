@@ -105,8 +105,6 @@ export default function PastWorkouts() {
     );
   }
 
-  // console.log("isInitialLoading: ", isInitialLoading);
-  // console.log("isFetchingMore: ", isFetchingMore);
   return (
     <Flex w="100%" flexDirection="column" alignItems={"center"}>
       {showServerError && (

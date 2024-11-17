@@ -281,13 +281,11 @@ export type UserWorkoutsArgs = {
 
 export type UserPastWorkouts = {
   __typename?: 'UserPastWorkouts';
-  createdAt: Scalars['String']['output'];
   email: Scalars['String']['output'];
   firstName: Scalars['String']['output'];
   isAuthorized: Scalars['Boolean']['output'];
   lastName: Scalars['String']['output'];
   password: Scalars['String']['output'];
-  tokenCount: Scalars['Int']['output'];
   uid: Scalars['ID']['output'];
   workoutWithExercises: Array<Maybe<WorkoutWithExercises>>;
 };
@@ -306,7 +304,6 @@ export type Workout = {
 export type WorkoutWithExercises = {
   __typename?: 'WorkoutWithExercises';
   comment?: Maybe<Scalars['String']['output']>;
-  createdAt: Scalars['String']['output'];
   date: Scalars['String']['output'];
   elapsedSeconds?: Maybe<Scalars['Int']['output']>;
   exercises: Array<Exercise>;
@@ -509,13 +506,11 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
 }>;
 
 export type UserPastWorkoutsResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserPastWorkouts'] = ResolversParentTypes['UserPastWorkouts']> = ResolversObject<{
-  createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   firstName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   isAuthorized?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   lastName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   password?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  tokenCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   uid?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   workoutWithExercises?: Resolver<Array<Maybe<ResolversTypes['WorkoutWithExercises']>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -534,7 +529,6 @@ export type WorkoutResolvers<ContextType = any, ParentType extends ResolversPare
 
 export type WorkoutWithExercisesResolvers<ContextType = any, ParentType extends ResolversParentTypes['WorkoutWithExercises'] = ResolversParentTypes['WorkoutWithExercises']> = ResolversObject<{
   comment?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   date?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   elapsedSeconds?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   exercises?: Resolver<Array<ResolversTypes['Exercise']>, ParentType, ContextType>;
