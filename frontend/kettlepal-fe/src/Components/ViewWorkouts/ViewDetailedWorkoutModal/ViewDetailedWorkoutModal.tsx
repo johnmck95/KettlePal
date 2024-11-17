@@ -12,7 +12,7 @@ import {
   AlertIcon,
   useMediaQuery,
 } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { FuzzySearchQuery } from "../../../generated/frontend-types";
 import { FaPencilAlt, FaTimes } from "react-icons/fa";
 import EditWorkout from "./EditWorkout";
@@ -35,6 +35,7 @@ export default function ViewDetailedWorkoutModal({
   const [editing, setEditing] = useState(false);
   const [showUploadSuccess, setShowUploadSuccess] = useState<boolean>(false);
   const [isMobile] = useMediaQuery("(max-width: 420px)");
+  const focusRef = useRef(null);
 
   // Modal controls for Mutating the workout
   const {
@@ -42,11 +43,13 @@ export default function ViewDetailedWorkoutModal({
     onOpen: onOpenUpdateWorkout,
     onClose: onCloseUpdateWorkout,
   } = useDisclosure();
+
   return (
     <>
       <Modal
         isOpen={isOpen}
         onClose={onClose}
+        initialFocusRef={focusRef}
         motionPreset="slideInBottom"
         isCentered
         scrollBehavior="inside"
@@ -56,7 +59,7 @@ export default function ViewDetailedWorkoutModal({
           padding={["0.75rem 0.25rem", "1rem 0.5rem"]}
           m={["0.5rem"]}
         >
-          <ModalBody p={["0.5rem", "1rem"]} overflow="scroll">
+          <ModalBody p={["0.5rem", "1rem"]}>
             {editing && (
               <Button
                 fontSize={["xs", "sm"]}
@@ -141,7 +144,10 @@ export default function ViewDetailedWorkoutModal({
                 />
               ) : (
                 <>
-                  <ShowWorkout workoutWithExercises={workoutWithExercises} />
+                  <ShowWorkout
+                    workoutWithExercises={workoutWithExercises}
+                    focusRef={focusRef}
+                  />
                 </>
               )}
             </VStack>

@@ -12,9 +12,11 @@ interface ShowWorkoutProps {
   workoutWithExercises: NonNullable<
     NonNullable<FuzzySearchQuery["pastWorkouts"]>["workoutWithExercises"]
   >[0];
+  focusRef?: React.MutableRefObject<null>;
 }
 export default function ShowWorkout({
   workoutWithExercises,
+  focusRef,
 }: ShowWorkoutProps) {
   const [showDetails, setShowDetails] = useState(false);
   const { comment, date, exercises, elapsedSeconds } =
@@ -22,7 +24,7 @@ export default function ShowWorkout({
   return (
     <>
       {/* DATE */}
-      <Text fontSize={["lg", "2xl"]} maxW="calc(100% - 75px)" overflow="scroll">
+      <Text fontSize={["lg", "2xl"]} maxW="calc(100% - 75px)">
         <b>{dayjs(date).format("ddd, MMM DD, YYYY")}</b>
       </Text>
 
@@ -52,6 +54,7 @@ export default function ShowWorkout({
         variant="primary"
         onClick={() => setShowDetails((prevShowDetails) => !prevShowDetails)}
         my="0.5rem"
+        ref={focusRef}
         sx={{
           _focus: {
             borderColor: theme.colors.green[300],
