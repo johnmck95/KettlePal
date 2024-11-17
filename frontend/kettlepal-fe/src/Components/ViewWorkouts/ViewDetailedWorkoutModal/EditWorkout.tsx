@@ -13,7 +13,6 @@ import WorkoutDate from "../../NewWorkouts/FormComponents.tsx/Workout/WorkoutDat
 import { useState } from "react";
 import {
   FuzzySearchQuery,
-  UserWithWorkoutsQuery,
   useUpdateWorkoutWithExercisesMutation,
 } from "../../../generated/frontend-types";
 import React from "react";
