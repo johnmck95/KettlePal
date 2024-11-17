@@ -1,9 +1,9 @@
-import { UserWithWorkoutsQuery } from "../../generated/frontend-types";
+import { FuzzySearchQuery } from "../../generated/frontend-types";
 import { totalWorkoutWorkCapacity } from "./workouts";
 
 describe("totalWorkoutWorkCapacity", () => {
   let workoutWithExercises: NonNullable<
-    NonNullable<UserWithWorkoutsQuery["user"]>["workouts"]
+    NonNullable<FuzzySearchQuery["pastWorkouts"]>["workoutWithExercises"]
   >[0];
 
   beforeEach(() => {

@@ -18,15 +18,15 @@ An overbuilt "just-for-me" learning project that is made to keep track of my per
 
 - JWT Authentication, Login/Logout, Hashing. (Sign Up is intentionally witheld until further securtiy testing is done.)
 - Design new workouts, track progress, and save to the database.
-  - Edit saved exercises
   - Client-side and server-side validation.
-  - Edit past workouts.
+- Edit past workouts.
 - View historical workout data.
-- View specific workouts in greater detail with computed information, like work capacity.
+- Fuzzy-Search historical workouts/exercises.
+- View specific workouts in greater detail with computed information.
 
 ## Road Map
 
-- Add pagination and filtration options to past workouts.
+- Add filters for quick sorting of past workouts.
 - Use D3.js to show trends from your workout data.
 - Integrate with Strava API to get data from bike rides and runs.
 

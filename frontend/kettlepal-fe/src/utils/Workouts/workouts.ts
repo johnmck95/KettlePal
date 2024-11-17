@@ -1,4 +1,7 @@
-import { UserWithWorkoutsQuery } from "../../generated/frontend-types";
+import {
+  FuzzySearchQuery,
+  UserWithWorkoutsQuery,
+} from "../../generated/frontend-types";
 
 type Exercise = NonNullable<
   NonNullable<
@@ -7,7 +10,7 @@ type Exercise = NonNullable<
 >[0];
 export function totalWorkoutWorkCapacity(
   workoutWithExercises: NonNullable<
-    NonNullable<UserWithWorkoutsQuery["user"]>["workouts"]
+    NonNullable<FuzzySearchQuery["pastWorkouts"]>["workoutWithExercises"]
   >[0]
 ): string {
   const exercisesInLB = workoutWithExercises?.exercises?.filter(

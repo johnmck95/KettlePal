@@ -1,13 +1,13 @@
 import { Box, Text } from "@chakra-ui/react";
 import theme from "../../../Constants/theme";
 import { formatExerciseString } from "../../../utils/Exercises/exercises";
-import { UserWithWorkoutsQuery } from "../../../generated/frontend-types";
+import { FuzzySearchQuery } from "../../../generated/frontend-types";
 import dayjs from "dayjs";
 import { CreateWorkoutState } from "../../../Hooks/useCreateWorkoutForm";
 
 interface BeforeAfterConfirmModalConentProps {
   before: NonNullable<
-    NonNullable<UserWithWorkoutsQuery["user"]>["workouts"]
+    NonNullable<FuzzySearchQuery["pastWorkouts"]>["workoutWithExercises"]
   >[0];
   after: CreateWorkoutState;
 }

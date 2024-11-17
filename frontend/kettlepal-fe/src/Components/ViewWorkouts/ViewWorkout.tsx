@@ -7,6 +7,7 @@ import {
   IconButton,
   VStack,
   useDisclosure,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import ViewExercise from "./ViewExercise";
 import theme from "../../Constants/theme";
@@ -16,7 +17,7 @@ import ConfirmModal from "../ConfirmModal";
 import LoadingSpinner from "../LoadingSpinner";
 import ViewDetailedWorkoutModal from "./ViewDetailedWorkoutModal/ViewDetailedWorkoutModal";
 import {
-  UserWithWorkoutsQuery,
+  FuzzySearchQuery,
   useDeleteWorkoutWithExercisesMutation,
 } from "../../generated/frontend-types";
 
@@ -25,10 +26,11 @@ export default function ViewWorkout({
   refetchPastWorkouts,
 }: {
   workoutWithExercises: NonNullable<
-    NonNullable<UserWithWorkoutsQuery["user"]>["workouts"]
+    NonNullable<FuzzySearchQuery["pastWorkouts"]>["workoutWithExercises"]
   >[0];
   refetchPastWorkouts: () => void;
 }) {
+  const [isMobile] = useMediaQuery("(max-width: 420px)");
   const [deleteWorkoutWithExercises, { loading, error }] =
     useDeleteWorkoutWithExercisesMutation({
       onCompleted() {
@@ -67,8 +69,7 @@ export default function ViewWorkout({
   return (
     <>
       <HStack
-        w={"calc(100% - 0.6rem)"}
-        maxW="720px"
+        w="100%"
         p="0.5rem"
         m="0.1rem"
         position="relative"
@@ -84,6 +85,14 @@ export default function ViewWorkout({
             <IconButton
               variant="closeX"
               aria-label="Delete Workout"
+              sx={{
+                _focus: {
+                  borderColor: theme.colors.green[300],
+                  boxShadow: isMobile
+                    ? `0 0 0 0`
+                    : `0 0 0 1px ${theme.colors.green[300]}`,
+                },
+              }}
               icon={<FaTimes />}
               size="sm"
               position="absolute"

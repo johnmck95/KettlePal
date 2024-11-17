@@ -12,7 +12,7 @@ import WorkoutComment from "../../NewWorkouts/FormComponents.tsx/Workout/Workout
 import WorkoutDate from "../../NewWorkouts/FormComponents.tsx/Workout/WorkoutDate";
 import { useState } from "react";
 import {
-  UserWithWorkoutsQuery,
+  FuzzySearchQuery,
   useUpdateWorkoutWithExercisesMutation,
 } from "../../../generated/frontend-types";
 import React from "react";
@@ -24,7 +24,7 @@ import LoadingSpinner from "../../LoadingSpinner";
 
 interface EditWorkoutProps {
   workoutWithExercises: NonNullable<
-    NonNullable<UserWithWorkoutsQuery["user"]>["workouts"]
+    NonNullable<FuzzySearchQuery["pastWorkouts"]>["workoutWithExercises"]
   >[0];
   refetchPastWorkouts: () => void;
   isOpen: boolean;

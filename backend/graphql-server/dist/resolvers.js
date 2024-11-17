@@ -6,8 +6,9 @@ import { verifyWorkout } from "./utils/verifyWorkout.js";
 import { formatExercisesForDB, formatWorkoutForDB, } from "./utils/formatDataForDB.js";
 import { ACCESS_TOKEN_COOKIE_NAME, REFRESH_TOKEN_COOKIE_NAME, createTokens, refreshTokens, setAccessToken, setRefreshToken, } from "./utils/auth.js";
 import { NotAuthorizedError } from "./utils/Errors/NotAuthorizedError.js";
-// Incoming Resolver Properties are: (parent, args, context)
+import getFuzzyWorkoutSearchResults from "./utils/Search/PastWorkoutsFuzzySearch.js";
 const knexInstance = knex(knexConfig);
+// Incoming Resolver Properties are: (parent, args, context)
 export const resolvers = {
     // The top-level resolvers inside Query are the entry point resolvers for the graph, not nested queries like workout{ exercises{...} }
     Query: {
@@ -22,6 +23,19 @@ export const resolvers = {
                 console.error("Error fetching users:", error);
                 throw error;
             }
+        },
+        async pastWorkouts(_, { userUid, searchQuery, limit, offset }, { req }) {
+            if (!req.userUid || req.userUid !== userUid) {
+                throw new NotAuthorizedError();
+            }
+            const pastWorkouts = await getFuzzyWorkoutSearchResults({
+                searchQuery,
+                userUid,
+                knexInstance,
+                limit,
+                offset,
+            });
+            return pastWorkouts;
         },
         async user(_, { uid }, { req }) {
             if (!req.userUid || req.userUid !== uid) {
