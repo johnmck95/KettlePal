@@ -31,6 +31,15 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
+/////////////////////////// TESTING ///////////////////////////
+app.use((req, res, next) => {
+  res.on("finish", () => {
+    console.log("Cookies sent in response:", res.getHeaders()["set-cookie"]);
+  });
+  next();
+});
+/////////////////////////// TESTING ///////////////////////////
+
 // Enable pre-flight requests for all routes
 app.options("*", cors(corsOptions));
 
