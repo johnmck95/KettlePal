@@ -27,25 +27,46 @@ export function createTokens(user: User) {
 export const REFRESH_TOKEN_COOKIE_NAME = "refresh-token";
 export const ACCESS_TOKEN_COOKIE_NAME = "access-token";
 
-export function setAccessToken(res: any, accessToken: string) {
+// export function setAccessToken(res: any, accessToken: string) {
+//   res.cookie(ACCESS_TOKEN_COOKIE_NAME, accessToken, {
+//     httpOnly: true,
+//     secure: process.env.NODE_ENV === "production",
+//     sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+//     path: "/",
+//     maxAge: 15 * 60 * 1000, // 15 minutes
+//   });
+// }
+
+// export function setRefreshToken(res: any, refreshToken: string) {
+//   res.cookie(REFRESH_TOKEN_COOKIE_NAME, refreshToken, {
+//     httpOnly: true,
+//     secure: process.env.NODE_ENV === "production",
+//     sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+//     path: "/",
+//     maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+//   });
+// }
+
+export function setAccessToken(res, accessToken) {
   res.cookie(ACCESS_TOKEN_COOKIE_NAME, accessToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+    secure: true, // Explicitly set to true
+    sameSite: "none", // Required for cross-origin cookies
     path: "/",
     maxAge: 15 * 60 * 1000, // 15 minutes
   });
 }
 
-export function setRefreshToken(res: any, refreshToken: string) {
+export function setRefreshToken(res, refreshToken) {
   res.cookie(REFRESH_TOKEN_COOKIE_NAME, refreshToken, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+    secure: true, // Explicitly set to true
+    sameSite: "none", // Required for cross-origin cookies
     path: "/",
     maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
   });
 }
+/////////////////////////////////// END OF TESTING
 
 export async function refreshTokens(req, res) {
   const knexInstance = knex(knexConfig);
