@@ -189,19 +189,18 @@ export default function Login() {
 
           {/* CONTINUE AS GUEST */}
           <Text w="100%" mt="1rem" fontSize="xs" color={theme.colors.grey[700]}>
-            Don't have an account? Take a look around as a{" "}
-            <Button
-              variant="link"
-              fontSize="sm"
-              color={theme.colors.green[600]}
-              onClick={handleGuestLogin}
-            >
-              guest.
-            </Button>
-          </Text>
-
-          <Text w="100%" fontSize="8px" color={theme.colors.grey[600]}>
-            <i>We are not offering new accounts at this time.</i>
+            <i>
+              While we're not offering new accounts at this time, feel free to
+              explore the application as a{" "}
+              <Button
+                variant="link"
+                fontSize="sm"
+                color={theme.colors.green[600]}
+                onClick={handleGuestLogin}
+              >
+                guest.
+              </Button>
+            </i>
           </Text>
         </VStack>
       </Center>
