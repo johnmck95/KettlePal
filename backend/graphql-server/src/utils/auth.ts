@@ -33,7 +33,8 @@ export function setAccessToken(res: any, accessToken: string) {
     secure: process.env.NODE_ENV === "production",
     sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
     path: "/",
-    maxAge: 15 * 60 * 1000, // 15 minutes
+    // maxAge: 15 * 60 * 1000, // 15 minutes
+    maxAge: 2 * 24 * 60 * 60 * 1000, // 2 days
   });
 }
 
