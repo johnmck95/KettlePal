@@ -44,14 +44,7 @@ export default function Login() {
     onCompleted: (data) => {
       if (data?.login) {
         login();
-        /// TESTING - for PWA redirect ///
-        // navigate("/new-workout");
-        if (window.matchMedia("(display-mode: standalone)").matches) {
-          window.location.href = "/new-workout";
-        } else {
-          navigate("/new-workout");
-        }
-        /// TESTING ///
+        navigate("/new-workout");
       } else {
         console.error("Login failed: ", error);
       }
