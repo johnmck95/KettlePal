@@ -4,7 +4,7 @@ import { Flex } from "@chakra-ui/react";
 
 export default function NewWorkout() {
   return (
-    <Flex w="100%" justifyContent={"center"}>
+    <Flex w="100%" h="100%" justifyContent={"center"}>
       <CreateWorkout />
     </Flex>
   );
