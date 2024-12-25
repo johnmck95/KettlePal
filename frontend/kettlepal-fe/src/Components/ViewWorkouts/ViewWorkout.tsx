@@ -24,11 +24,13 @@ import {
 export default function ViewWorkout({
   workoutWithExercises,
   refetchPastWorkouts,
+  searchQuery,
 }: {
   workoutWithExercises: NonNullable<
     NonNullable<FuzzySearchQuery["pastWorkouts"]>["workoutWithExercises"]
   >[0];
   refetchPastWorkouts: () => void;
+  searchQuery: string;
 }) {
   const [isMobile] = useMediaQuery("(max-width: 420px)");
   const [deleteWorkoutWithExercises, { loading, error }] =
@@ -106,7 +108,13 @@ export default function ViewWorkout({
             <CalendarWidget date={workoutWithExercises?.date ?? ""} w="4rem" />
             <VStack mx="1rem">
               {exercises?.map((exercise) => {
-                return <ViewExercise key={exercise.uid} exercise={exercise} />;
+                return (
+                  <ViewExercise
+                    key={exercise.uid}
+                    exercise={exercise}
+                    searchQuery={searchQuery}
+                  />
+                );
               })}
             </VStack>
 

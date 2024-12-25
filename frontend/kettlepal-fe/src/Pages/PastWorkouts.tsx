@@ -145,6 +145,7 @@ export default function PastWorkouts() {
                   (workoutWithExercises) =>
                     workoutWithExercises ? (
                       <ViewWorkout
+                        searchQuery={searchQuery}
                         key={workoutWithExercises.uid}
                         workoutWithExercises={workoutWithExercises}
                         refetchPastWorkouts={refetch}
