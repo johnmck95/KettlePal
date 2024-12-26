@@ -3,7 +3,6 @@ export const allowedOrigins = [
   "http://localhost:4000",
   "https://kettlepal.netlify.app",
   "https://kettlepal.onrender.com",
-  "https://kettlepal.onrender.com/graphql",
 ];
 
 export function frontendURL() {
