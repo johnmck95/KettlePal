@@ -4,10 +4,10 @@ import knex from "knex";
 const { sign, verify } = pkg;
 export function createTokens(user) {
     const refreshToken = sign({ userUid: user.uid, tokenCount: user.tokenCount }, process.env.REFRESH_TOKEN_SECRET, {
-        expiresIn: "30days",
+        expiresIn: "30 days",
     });
     const accessToken = sign({ userUid: user.uid }, process.env.ACCESS_TOKEN_SECRET, {
-        expiresIn: "15mins",
+        expiresIn: "15m",
     });
     return { refreshToken, accessToken };
 }
