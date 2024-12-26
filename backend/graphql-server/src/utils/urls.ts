@@ -2,6 +2,7 @@ export const allowedOrigins = [
   "http://localhost:3000",
   "http://localhost:4000",
   "https://kettlepal.netlify.app",
+  "https://kettlepal.netlify.app/graphql",
   "https://kettlepal.onrender.com",
 ];
 
