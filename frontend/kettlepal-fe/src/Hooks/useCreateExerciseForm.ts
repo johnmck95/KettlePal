@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { CreateWorkoutState } from "./useCreateWorkoutForm";
 import { useDisclosure } from "@chakra-ui/react";
 import ExerciseTitles, {
@@ -19,15 +19,10 @@ const useCreateExerciseForm = ({
   setFormHasErrors: (value: boolean) => void;
 }) => {
   const SESSION_STORAGE_KEY = `completedSets-${exerciseIndex}`;
-  const EXERCISE_TIMER_KEY = `exerciseTimerIsActive-${exerciseIndex}`;
   // Tracking a workout
   const [completedSets, setCompletedSets] = useState<number>(() => {
     const sessionVal = sessionStorage.getItem(SESSION_STORAGE_KEY);
     return sessionVal ? parseInt(sessionVal) : 0;
-  });
-  const [timerIsActive, setTimerIsActive] = useState(() => {
-    const fromStorage = sessionStorage.getItem(EXERCISE_TIMER_KEY);
-    return fromStorage ? true : false;
   });
   const [customTitle, setCustomTitle] = useState(
     exercise.title !== "" && !ExerciseTitles.includes(exercise.title)
@@ -36,15 +31,6 @@ const useCreateExerciseForm = ({
     exercise.weight !== "" && !KettlbellWeightsKG.includes(exercise.weight)
   );
 
-  // Start/pause the exercise timer. Stores decisions in session storage to persist.
-  const handleTimerIsActive = (newState: boolean) => {
-    setTimerIsActive(newState);
-    if (newState) {
-      sessionStorage.setItem(EXERCISE_TIMER_KEY, "true");
-    } else {
-      sessionStorage.removeItem(EXERCISE_TIMER_KEY);
-    }
-  };
   const setExerciseComment = (newComment: string) => {
     handleExercise("comment", newComment, exerciseIndex);
   };
@@ -64,27 +50,6 @@ const useCreateExerciseForm = ({
     );
   }
 
-  // Sets exercise timer. Name property not available in HTML.
-  const setTime = useCallback(
-    (elapsedSeconds: number) => {
-      handleExercise("elapsedSeconds", elapsedSeconds, exerciseIndex);
-    },
-    [exerciseIndex, handleExercise]
-  );
-
-  // Update exercise timer every 1s
-  useEffect(() => {
-    let interval: NodeJS.Timeout | undefined = undefined;
-    if (timerIsActive) {
-      interval = setInterval(() => {
-        setTime(exercise.elapsedSeconds + 1);
-      }, 1000);
-    } else if (!timerIsActive && exercise.elapsedSeconds !== 0) {
-      clearInterval(interval);
-    }
-    return () => clearInterval(interval);
-  }, [timerIsActive, exercise.elapsedSeconds, setTime]);
-
   // ERROR VALIDATION
   const titleIsInvalid = !exercise.title;
   const weightIsInvalid =
@@ -100,7 +65,6 @@ const useCreateExerciseForm = ({
   const repsDisplayIsInvalid =
     (!!exercise.reps === true || !!exercise.sets === true) &&
     !!exercise.repsDisplay === false;
-  const timerIsInvalid = timerIsActive;
 
   enum ExerciseErrors {
     title = "Title is required.",
@@ -109,7 +73,6 @@ const useCreateExerciseForm = ({
     sets = "Sets are required when Reps or Rep Type are provided.",
     reps = "Reps are required when Sets or Rep Type are provided.",
     repsDisplay = "Rep Type is required when Sets or Reps are provided.",
-    timer = "Please stop the exercise timer before saving.",
   }
 
   const [numErrors, setNumErrors] = useState(0);
@@ -120,7 +83,6 @@ const useCreateExerciseForm = ({
   if (setsIsInvalid) errors.push(ExerciseErrors.sets);
   if (repsIsInvalid) errors.push(ExerciseErrors.reps);
   if (repsDisplayIsInvalid) errors.push(ExerciseErrors.repsDisplay);
-  if (timerIsInvalid) errors.push(ExerciseErrors.timer);
 
   if (numErrors !== errors.length) {
     setNumErrors(errors.length);
@@ -210,17 +172,14 @@ const useCreateExerciseForm = ({
     isOpenDeleteExercise,
     minSwipeDistance,
     offset,
-    timerIsActive,
     repsDisplayIsInvalid,
     repsIsInvalid,
     setsIsInvalid,
-    timerIsInvalid,
     titleIsInvalid,
     weightIsInvalid,
     weightUnitIsInvalid,
     completedASet,
     customOnCloseDeleteExercise,
-    handleTimerIsActive,
     onDeleteExercise,
     onOpenDeleteExercise,
     onTouchEnd,
@@ -231,7 +190,6 @@ const useCreateExerciseForm = ({
     setCustomWeight,
     setExerciseComment,
     setOffset,
-    setTime,
     swipeDistance,
   };
 };
