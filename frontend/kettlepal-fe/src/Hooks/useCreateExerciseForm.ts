@@ -25,7 +25,6 @@ const useCreateExerciseForm = ({
     const sessionVal = sessionStorage.getItem(SESSION_STORAGE_KEY);
     return sessionVal ? parseInt(sessionVal) : 0;
   });
-  const [seeDetails, setSeeDetails] = useState<boolean>(false);
   const [timerIsActive, setTimerIsActive] = useState(() => {
     const fromStorage = sessionStorage.getItem(EXERCISE_TIMER_KEY);
     return fromStorage ? true : false;
@@ -211,7 +210,6 @@ const useCreateExerciseForm = ({
     isOpenDeleteExercise,
     minSwipeDistance,
     offset,
-    seeDetails,
     timerIsActive,
     repsDisplayIsInvalid,
     repsIsInvalid,
@@ -233,7 +231,6 @@ const useCreateExerciseForm = ({
     setCustomWeight,
     setExerciseComment,
     setOffset,
-    setSeeDetails,
     setTime,
     swipeDistance,
   };
