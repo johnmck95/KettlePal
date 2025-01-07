@@ -109,13 +109,15 @@ export default function CreateExercise({
         />
 
         {/* WEIGHT UNIT */}
-        <ExerciseWeightUnit
-          submitted={submitted}
-          weightUnitIsInvalid={weightUnitIsInvalid}
-          exercise={exercise}
-          exerciseIndex={exerciseIndex}
-          handleExercise={handleExercise}
-        />
+        {!trackWorkout && (
+          <ExerciseWeightUnit
+            submitted={submitted}
+            weightUnitIsInvalid={weightUnitIsInvalid}
+            exercise={exercise}
+            exerciseIndex={exerciseIndex}
+            handleExercise={handleExercise}
+          />
+        )}
 
         {/* SETS */}
         <ExerciseSets
@@ -135,13 +137,16 @@ export default function CreateExercise({
           handleExercise={handleExercise}
         />
 
-        <ExerciseRepsDisplay
-          submitted={submitted}
-          repsDisplayIsInvalid={repsDisplayIsInvalid}
-          exercise={exercise}
-          exerciseIndex={exerciseIndex}
-          handleExercise={handleExercise}
-        />
+        {/* REPS DISPLAY */}
+        {!trackWorkout && (
+          <ExerciseRepsDisplay
+            submitted={submitted}
+            repsDisplayIsInvalid={repsDisplayIsInvalid}
+            exercise={exercise}
+            exerciseIndex={exerciseIndex}
+            handleExercise={handleExercise}
+          />
+        )}
       </HStack>
 
       {/* EXERCISE COMMENT */}

@@ -131,10 +131,10 @@ const useCreateWorkoutForm = () => {
         {
           title: "",
           weight: "",
-          weightUnit: "kg",
+          weightUnit: "",
           sets: "",
           reps: "",
-          repsDisplay: "std",
+          repsDisplay: "",
           comment: "",
           elapsedSeconds: 0,
           key: `key-${Date.now()}-${Math.random().toString(36)}`,

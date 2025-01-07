@@ -1,7 +1,10 @@
 import { FormControl, FormLabel, Input, Select } from "@chakra-ui/react";
 import theme from "../../../../Constants/theme";
-import ExerciseTitles from "../../../../Constants/ExercisesOptions";
+import ExerciseTitles, {
+  Preconfigurations,
+} from "../../../../Constants/ExercisesOptions";
 import { CreateWorkoutState } from "../../../../Hooks/useCreateWorkoutForm";
+import { set } from "js-cookie";
 
 interface ExerciseTitleProps {
   submitted: boolean;
@@ -22,6 +25,24 @@ export default function ExerciseTitle({
   setCustomTitle,
   handleExercise,
 }: ExerciseTitleProps) {
+  // Sets the title and preconfigured weight unit and reps display in state, if available.
+  const setTitleAndPreconfigurations = (event: any) => {
+    const name = event.target.name;
+    const value = event.target.value;
+    // Set the Title
+    handleExercise(name, value, exerciseIndex);
+    handleExercise(
+      "weightUnit",
+      Preconfigurations[value]?.weightUnit.value ?? "",
+      exerciseIndex
+    );
+    handleExercise(
+      "repsDisplay",
+      Preconfigurations[value]?.repsDisplay.value ?? "",
+      exerciseIndex
+    );
+  };
+
   return (
     <FormControl
       flexGrow={3}
@@ -56,11 +77,7 @@ export default function ExerciseTitle({
           onChange={(event) =>
             event.target.value === "Custom"
               ? setCustomTitle(true)
-              : handleExercise(
-                  event.target.name,
-                  event.target.value,
-                  exerciseIndex
-                )
+              : setTitleAndPreconfigurations(event)
           }
           focusBorderColor={theme.colors.green[300]}
           color={!!exercise.title ? theme.colors.black : theme.colors.grey[500]}
