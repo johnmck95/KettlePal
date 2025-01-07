@@ -24,6 +24,7 @@ interface CreateExerciseProps {
   setFormHasErrors: (value: boolean) => void;
   trackWorkout: boolean;
   mutatingWorkout?: boolean;
+  showComments?: boolean;
 }
 
 export default function CreateExercise({
@@ -34,6 +35,7 @@ export default function CreateExercise({
   submitted,
   setFormHasErrors,
   trackWorkout,
+  showComments,
 }: CreateExerciseProps) {
   const {
     completedSets,
@@ -51,7 +53,6 @@ export default function CreateExercise({
     weightUnitIsInvalid,
     completedASet,
     customOnCloseDeleteExercise,
-    handleTimerIsActive,
     onDeleteExercise,
     onOpenDeleteExercise,
     onTouchEnd,
@@ -144,12 +145,14 @@ export default function CreateExercise({
       </HStack>
 
       {/* EXERCISE COMMENT */}
-      <AddComment
-        placeholderText="Add an Exercise Comment"
-        comment={exercise.comment}
-        setComment={setExerciseComment}
-        maxWidth="100%"
-      />
+      {showComments && (
+        <AddComment
+          placeholderText="Add an Exercise Comment"
+          comment={exercise.comment}
+          setComment={setExerciseComment}
+          maxWidth="100%"
+        />
+      )}
 
       {/* SETS COMPLETED */}
       <TrackExercise

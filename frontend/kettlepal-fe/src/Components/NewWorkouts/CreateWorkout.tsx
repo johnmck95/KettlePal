@@ -30,7 +30,7 @@ export default function CreateWorkout() {
     loading,
     error,
     showTracking,
-    addWorkoutComment,
+    addComments,
     showUploadSuccess,
     submitted,
     errors,
@@ -40,7 +40,7 @@ export default function CreateWorkout() {
     setTime,
     setComment,
     setShowServerError,
-    setAddWorkoutComment,
+    setAddComments,
     setShowTracking,
     setFormHasErrors,
     handleTimerIsActive,
@@ -101,12 +101,12 @@ export default function CreateWorkout() {
         })}
       </Box>
 
-      {/* ADD COMMENT & TRACK WORKOUT BUTTONS */}
+      {/* ADD COMMENTS & TRACK WORKOUT BUTTONS */}
       <HStack w="100%" justifyContent={"space-between"} mt="1rem">
         <Button
           size="sm"
           variant="secondary"
-          onClick={() => setAddWorkoutComment((prev) => !prev)}
+          onClick={() => setAddComments((prev) => !prev)}
           textAlign="left"
           my="0.5rem"
           sx={{
@@ -116,7 +116,7 @@ export default function CreateWorkout() {
             },
           }}
         >
-          {addWorkoutComment ? "Hide Comment" : "Add Comment"}
+          {addComments ? "Hide Comments" : "Add Comments"}
         </Button>
         <Button
           size="sm"
@@ -137,7 +137,7 @@ export default function CreateWorkout() {
 
       {/* WORKOUT COMMENT */}
       <WorkoutComment
-        addWorkoutComment={addWorkoutComment}
+        addComments={addComments}
         comment={state.comment}
         setComment={setComment}
       />
@@ -166,6 +166,7 @@ export default function CreateWorkout() {
                   submitted={submitted}
                   setFormHasErrors={setFormHasErrors}
                   trackWorkout={showTracking}
+                  showComments={addComments}
                 />
               </motion.div>
             );

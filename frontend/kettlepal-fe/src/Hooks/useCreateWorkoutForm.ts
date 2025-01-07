@@ -37,7 +37,7 @@ const useCreateWorkoutForm = () => {
         };
   });
   const [showTracking, setShowTracking] = useState<boolean>(false);
-  const [addWorkoutComment, setAddWorkoutComment] = useState<boolean>(false);
+  const [addComments, setAddComments] = useState<boolean>(false);
   const [showUploadSuccess, setShowUploadSuccess] = useState<boolean>(false);
   const [submitted, setSubmitted] = useState(false);
   const [formHasErrors, setFormHasErrors] = useState(false);
@@ -235,7 +235,7 @@ const useCreateWorkoutForm = () => {
     loading,
     error,
     showTracking,
-    addWorkoutComment,
+    addComments,
     showUploadSuccess,
     submitted,
     errors,
@@ -246,7 +246,7 @@ const useCreateWorkoutForm = () => {
     setComment,
     setFormHasErrors,
     setShowServerError,
-    setAddWorkoutComment,
+    setAddComments,
     setShowTracking,
     handleTimerIsActive,
     handleStateChange,

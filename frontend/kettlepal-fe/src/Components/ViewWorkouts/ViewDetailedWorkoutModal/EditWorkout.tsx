@@ -138,7 +138,7 @@ export default function EditWorkout({
             </HStack>
 
             <WorkoutComment
-              addWorkoutComment={true}
+              addComments={true}
               comment={state.comment}
               showLabel={true}
               setComment={setComment}
