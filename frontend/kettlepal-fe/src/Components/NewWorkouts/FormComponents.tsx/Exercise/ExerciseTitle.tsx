@@ -26,7 +26,9 @@ export default function ExerciseTitle({
 }: ExerciseTitleProps) {
   // Sets the title and preconfigured weight unit and reps display in state, if available.
   const setTitleAndPreconfigurations = (
-    event: React.ChangeEvent<HTMLInputElement>
+    event:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLSelectElement>
   ) => {
     const name = event.target.name;
     const value = event.target.value;
