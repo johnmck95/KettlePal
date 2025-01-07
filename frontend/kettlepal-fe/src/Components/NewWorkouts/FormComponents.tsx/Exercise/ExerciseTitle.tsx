@@ -4,7 +4,6 @@ import ExerciseTitles, {
   Preconfigurations,
 } from "../../../../Constants/ExercisesOptions";
 import { CreateWorkoutState } from "../../../../Hooks/useCreateWorkoutForm";
-import { set } from "js-cookie";
 
 interface ExerciseTitleProps {
   submitted: boolean;
