@@ -23,7 +23,13 @@ export default function ExerciseTitle({
   handleExercise,
 }: ExerciseTitleProps) {
   return (
-    <FormControl w="50%" isRequired isInvalid={submitted && titleIsInvalid}>
+    <FormControl
+      flexGrow={3}
+      flexShrink={1}
+      flexBasis={["50px", "90px", "160px", "180px"]}
+      isRequired
+      isInvalid={submitted && titleIsInvalid}
+    >
       <FormLabel fontSize={["12px", "14px", "16px"]} m="0">
         Title
       </FormLabel>

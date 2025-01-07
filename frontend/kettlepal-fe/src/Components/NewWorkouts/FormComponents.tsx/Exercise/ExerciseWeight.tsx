@@ -23,7 +23,12 @@ export default function ExerciseWeight({
   handleExercise,
 }: ExerciseWeightProps) {
   return (
-    <FormControl w="23%" isInvalid={submitted && weightIsInvalid}>
+    <FormControl
+      flexGrow={1}
+      flexShrink={1}
+      flexBasis={["35px", "55px", "75px"]}
+      isInvalid={submitted && weightIsInvalid}
+    >
       <FormLabel fontSize={["12px", "14px", "16px"]} m="0">
         Weight
       </FormLabel>
