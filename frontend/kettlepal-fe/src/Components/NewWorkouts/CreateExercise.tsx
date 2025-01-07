@@ -24,7 +24,7 @@ interface CreateExerciseProps {
   setFormHasErrors: (value: boolean) => void;
   trackWorkout: boolean;
   mutatingWorkout?: boolean;
-  showComments?: boolean;
+  showComments: boolean;
 }
 
 export default function CreateExercise({

@@ -157,6 +157,7 @@ export default function EditWorkout({
                   setFormHasErrors={setFormHasErrors}
                   trackWorkout={false}
                   mutatingWorkout={true}
+                  showComments={true}
                 />
               );
             })}
