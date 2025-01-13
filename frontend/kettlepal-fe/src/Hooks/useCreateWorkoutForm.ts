@@ -1,11 +1,15 @@
 import { ChangeEvent, useEffect, useState } from "react";
-import { getCurrentDate } from "../utils/Time/time";
+import {
+  STOPWATCH_TIMESTAMP_KEY,
+  calculateElapsedTime,
+  getCurrentDate,
+} from "../utils/Time/time";
 import { useAddWorkoutWithExercisesMutation } from "../generated/frontend-types";
 import { useUser } from "../Contexts/UserContext";
 import { useDisclosure } from "@chakra-ui/react";
 
 const SESSION_STATE_KEY = "createWorkoutState";
-const WORKOUT_TIMER_KEY = "workoutTimerIsActive";
+const STOPWATCH_IS_ACTIVE_KEY = "stopwatchIsActive";
 
 export type CreateWorkoutState = {
   date: string;
@@ -45,16 +49,16 @@ const useCreateWorkoutForm = () => {
   const userUid = useUser().user?.uid ?? null;
 
   const [timerIsActive, setTimerIsActive] = useState(() => {
-    const fromStorage = sessionStorage.getItem(WORKOUT_TIMER_KEY);
+    const fromStorage = sessionStorage.getItem(STOPWATCH_IS_ACTIVE_KEY);
     return fromStorage ? true : false;
   });
 
   const handleTimerIsActive = (newState: boolean) => {
     setTimerIsActive(newState);
     if (newState) {
-      sessionStorage.setItem(WORKOUT_TIMER_KEY, "true");
+      sessionStorage.setItem(STOPWATCH_IS_ACTIVE_KEY, "true");
     } else {
-      sessionStorage.removeItem(WORKOUT_TIMER_KEY);
+      sessionStorage.removeItem(STOPWATCH_IS_ACTIVE_KEY);
     }
   };
 
@@ -89,7 +93,11 @@ const useCreateWorkoutForm = () => {
     let interval: NodeJS.Timeout | undefined = undefined;
     if (timerIsActive) {
       interval = setInterval(() => {
-        setTime(state.elapsedSeconds + 1);
+        const storedTimestamp = parseInt(
+          sessionStorage.getItem(STOPWATCH_TIMESTAMP_KEY) ?? "",
+          10
+        );
+        setTime(calculateElapsedTime(storedTimestamp));
       }, 1000);
     } else if (!timerIsActive && state.elapsedSeconds !== 0) {
       clearInterval(interval);

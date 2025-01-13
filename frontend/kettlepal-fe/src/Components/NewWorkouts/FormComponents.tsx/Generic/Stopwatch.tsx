@@ -1,5 +1,5 @@
+import React, { useEffect, useState } from "react";
 import {
-  Text,
   Button,
   Box,
   Stack,
@@ -8,22 +8,24 @@ import {
   EditablePreview,
   EditableInput,
 } from "@chakra-ui/react";
-import React from "react";
 import theme from "../../../../Constants/theme";
-import ConfirmModal from "../../../ConfirmModal";
 import {
+  STOPWATCH_TIMESTAMP_KEY,
+  calculateElapsedTime,
   computeSeconds,
   formatTime,
   formatTimeInput,
 } from "../../../../utils/Time/time";
+import ConfirmModal from "../../../ConfirmModal";
 
-function EditableTimerText({
+function EditableText({
   fontSize,
   seconds,
   updateTo,
   setUpdateTo,
   setTime,
   pause,
+  setStartTimeStamp,
 }: {
   fontSize: string;
   seconds: number;
@@ -31,13 +33,23 @@ function EditableTimerText({
   setUpdateTo: (value: string) => void;
   setTime: (elapsedSeconds: number) => void;
   pause: () => void;
+  setStartTimeStamp: (timestamp: number | null) => void;
 }) {
   const [beingEdited, setBeingEdited] = React.useState(false);
 
   const handleChange = (value: string) => {
+    // Format user input string and update UI
     let formattedValue = formatTimeInput(value);
     setUpdateTo(value);
-    setTime(computeSeconds(formattedValue));
+
+    // Compute new elapsed seconds and update form state
+    const newSeconds = computeSeconds(formattedValue);
+    const newTimestamp = Date.now() - newSeconds * 1000;
+    setTime(newSeconds);
+
+    // Update the start time stamp for accurate elapsed time
+    sessionStorage.setItem(STOPWATCH_TIMESTAMP_KEY, newTimestamp.toString());
+    setStartTimeStamp(newTimestamp);
   };
 
   function handleClick() {
@@ -54,6 +66,7 @@ function EditableTimerText({
     setUpdateTo(formattedValue);
     setTime(computeSeconds(formattedValue));
   };
+
   return (
     <Editable
       value={beingEdited ? updateTo : formatTime(seconds)}
@@ -92,6 +105,7 @@ function Analog({
   setUpdateTo,
   setTime,
   pause,
+  setStartTimeStamp,
 }: {
   size: "sm" | "md";
   seconds: number;
@@ -99,6 +113,7 @@ function Analog({
   setUpdateTo: (value: string) => void;
   setTime: (elapsedSeconds: number) => void;
   pause: () => void;
+  setStartTimeStamp: (timestamp: number | null) => void;
 }) {
   return (
     <Box
@@ -131,12 +146,13 @@ function Analog({
         justifyContent="center"
         alignItems="center"
       >
-        <EditableTimerText
+        <EditableText
           seconds={seconds}
           updateTo={updateTo}
           setUpdateTo={setUpdateTo}
           setTime={setTime}
           pause={pause}
+          setStartTimeStamp={setStartTimeStamp}
           fontSize={
             size === "sm"
               ? seconds >= 3600
@@ -167,137 +183,100 @@ function Analog({
   );
 }
 
-function Digital({
-  seconds,
-  updateTo,
-  setUpdateTo,
-  setTime,
-  pause,
-}: {
-  seconds: number;
-  updateTo: string;
-  setUpdateTo: (value: string) => void;
-  setTime: (elapsedSeconds: number) => void;
-  pause: () => void;
-}) {
-  return (
-    <Text
-      as="div"
-      border={`1px solid ${theme.colors.gray[200]}`}
-      borderRadius={["2px", "3px", "6px"]}
-      w="100px"
-      h={["32px", "32px", "40px"]}
-      textAlign="center"
-      fontSize="xs"
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-    >
-      <EditableTimerText
-        fontSize={"11px"}
-        seconds={seconds}
-        updateTo={updateTo}
-        setUpdateTo={setUpdateTo}
-        setTime={setTime}
-        pause={pause}
-      />
-    </Text>
-  );
-}
-
-interface TimerProps {
+interface StopwatchProps {
   seconds: number;
   isActive: boolean;
-  handleIsActive: ((value: boolean) => void) | null;
+  omitControls?: boolean;
   setTime: (elapsedSeconds: number) => void;
-  size?: "sm" | "md";
-  variant?: "analog" | "digital";
+  handleIsActive: ((newState: boolean) => void) | null;
 }
 
-// NOTE: The parent component is responsible for setting the interval.
-// This enables the timer to continue working even when removed from the DOM.
-export default function Timer({
+export default function Stopwatch({
   seconds,
   isActive,
-  handleIsActive,
+  omitControls = false,
   setTime,
-  size = "md",
-  variant = "analog",
-}: TimerProps) {
+  handleIsActive,
+}: StopwatchProps) {
+  const [startTimeStamp, setStartTimeStamp] = useState<any>(() => {
+    const storedTimestamp = sessionStorage.getItem(STOPWATCH_TIMESTAMP_KEY);
+    return storedTimestamp ? parseInt(storedTimestamp, 10) : null;
+  });
   // updateTo is an unformatted user-input string. It's a temporary
   // variable before formatting and saving to the form state.
   const [updateTo, setUpdateTo] = React.useState(formatTime(seconds));
 
-  function startOrResume() {
+  useEffect(() => {
+    const storedTimestamp = sessionStorage.getItem(STOPWATCH_TIMESTAMP_KEY);
+    if (storedTimestamp) {
+      setStartTimeStamp(parseInt(storedTimestamp, 10));
+    }
+  }, [startTimeStamp]);
+
+  function start() {
+    const newTimestamp = Date.now();
+    sessionStorage.setItem(STOPWATCH_TIMESTAMP_KEY, newTimestamp.toString());
+    setStartTimeStamp(newTimestamp);
     if (handleIsActive) {
       handleIsActive(true);
     }
-    setTime(seconds);
-    setUpdateTo(formatTime(seconds));
   }
 
-  function onReset() {
+  function resume() {
+    if (handleIsActive) {
+      handleIsActive(true);
+    }
+    setTime(calculateElapsedTime(startTimeStamp));
+  }
+
+  function startOrResume() {
+    seconds === 0 ? start() : resume();
+  }
+
+  function reset() {
     if (handleIsActive) {
       handleIsActive(false);
     }
-    onClose();
-    setUpdateTo("00:00");
+    setStartTimeStamp(null);
+    sessionStorage.removeItem(STOPWATCH_TIMESTAMP_KEY);
     setTime(0);
+    setUpdateTo("00:00");
+    onClose();
   }
 
-  function pause() {
+  function stop() {
     if (handleIsActive) {
       handleIsActive(false);
     }
-    setTime(seconds);
+    setTime(calculateElapsedTime(startTimeStamp));
   }
 
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const showControls = handleIsActive !== null;
 
   return (
     <Stack
       direction={"row"}
       w="100%"
-      justifyContent={
-        showControls
-          ? "space-between"
-          : variant === "analog"
-          ? "center"
-          : "flex-start"
-      }
+      justifyContent={omitControls ? "center" : "space-between"}
       alignItems="flex-end"
     >
-      {variant === "digital" ? (
-        <Digital
-          seconds={seconds}
-          updateTo={updateTo}
-          setUpdateTo={setUpdateTo}
-          setTime={setTime}
-          pause={pause}
-        />
-      ) : (
-        <Analog
-          size={size}
-          seconds={seconds}
-          updateTo={updateTo}
-          setUpdateTo={setUpdateTo}
-          setTime={setTime}
-          pause={pause}
-        />
-      )}
-      {handleIsActive && (
-        <Stack
-          direction={"column"}
-          spacing={variant === "digital" ? 1 : 1.5}
-          alignSelf="center"
-        >
+      <Analog
+        size={"md"}
+        seconds={seconds}
+        updateTo={updateTo}
+        setUpdateTo={setUpdateTo}
+        setTime={setTime}
+        pause={stop}
+        setStartTimeStamp={setStartTimeStamp}
+      />
+      {!omitControls && (
+        <Stack direction={"column"} spacing={1.5} alignSelf="center">
           <Button
             w="55px"
             h="20px"
             fontSize="12px"
-            onClick={onOpen}
             variant="secondary"
+            onClick={onOpen}
             sx={{
               _focus: {
                 borderColor: theme.colors.green[300],
@@ -312,7 +291,7 @@ export default function Timer({
             h="20px"
             fontSize="12px"
             variant="primary"
-            onClick={isActive ? pause : startOrResume}
+            onClick={isActive ? stop : startOrResume}
             sx={{
               _focus: {
                 borderColor: theme.colors.green[300],
@@ -320,21 +299,21 @@ export default function Timer({
               },
             }}
           >
-            {isActive ? "Pause" : seconds === 0 ? "Start" : "Resume"}
+            {isActive ? "Stop" : seconds === 0 ? "Start" : "Resume"}
           </Button>
+
+          <ConfirmModal
+            isOpen={isOpen}
+            onClose={onClose}
+            onConfirmation={reset}
+            ModalTitle="Reset Timer"
+            ModalBodyText="Are you sure you would like to reset the stopwatch? This cannot be undone."
+            CloseText="Cancel"
+            ProceedText="Reset"
+            variant="warn"
+          />
         </Stack>
       )}
-
-      <ConfirmModal
-        isOpen={isOpen}
-        onClose={onClose}
-        onConfirmation={onReset}
-        ModalTitle="Reset Timer"
-        ModalBodyText="Are you sure you would like to Reset the timer? This cannot be undone."
-        CloseText="Cancel"
-        ProceedText="Reset"
-        variant="warn"
-      />
     </Stack>
   );
 }

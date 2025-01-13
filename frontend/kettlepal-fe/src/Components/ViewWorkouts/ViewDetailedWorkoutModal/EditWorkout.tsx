@@ -7,7 +7,6 @@ import {
   AlertDescription,
   CloseButton,
 } from "@chakra-ui/react";
-import WorkoutTimer from "../../NewWorkouts/FormComponents.tsx/Workout/WorkoutTimer";
 import WorkoutComment from "../../NewWorkouts/FormComponents.tsx/Workout/WorkoutComment";
 import WorkoutDate from "../../NewWorkouts/FormComponents.tsx/Workout/WorkoutDate";
 import { useState } from "react";
@@ -21,6 +20,7 @@ import useUpdateWorkoutWithExercisesForm from "../../../Hooks/useUpdateWorkoutWi
 import ConfirmModal from "../../ConfirmModal";
 import BeforeAfterConfirmModalConent from "./BeforeAfterConfirmModalContent";
 import LoadingSpinner from "../../LoadingSpinner";
+import WorkoutStopwatch from "../../NewWorkouts/FormComponents.tsx/Workout/WorkoutStopwatch";
 
 interface EditWorkoutProps {
   workoutWithExercises: NonNullable<
@@ -128,11 +128,12 @@ export default function EditWorkout({
                 handleStateChange={handleStateChange}
               />
               <Box w="175px">
-                <WorkoutTimer
-                  elapsedSeconds={state.elapsedSeconds}
-                  timerIsActive={false}
-                  handleTimerIsActive={null}
+                <WorkoutStopwatch
+                  seconds={state.elapsedSeconds}
+                  isActive={false}
                   setTime={setTime}
+                  handleIsActive={null}
+                  omitControls={true}
                 />
               </Box>
             </HStack>

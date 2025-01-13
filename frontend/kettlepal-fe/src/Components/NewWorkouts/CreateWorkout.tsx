@@ -21,8 +21,8 @@ import { formatExerciseString } from "../../utils/Exercises/exercises";
 import dayjs from "dayjs";
 import WorkoutDate from "./FormComponents.tsx/Workout/WorkoutDate";
 import WorkoutComment from "./FormComponents.tsx/Workout/WorkoutComment";
-import WorkoutTimer from "./FormComponents.tsx/Workout/WorkoutTimer";
 import useCreateWorkoutForm from "../../Hooks/useCreateWorkoutForm";
+import WorkoutStopwatch from "./FormComponents.tsx/Workout/WorkoutStopwatch";
 
 export default function CreateWorkout() {
   const {
@@ -78,12 +78,12 @@ export default function CreateWorkout() {
           handleStateChange={handleStateChange}
         />
 
-        {/* TIMER */}
-        <WorkoutTimer
-          elapsedSeconds={state.elapsedSeconds}
-          timerIsActive={timerIsActive}
-          handleTimerIsActive={handleTimerIsActive}
+        {/* STOPWATCH */}
+        <WorkoutStopwatch
+          seconds={state.elapsedSeconds}
+          isActive={timerIsActive}
           setTime={setTime}
+          handleIsActive={handleTimerIsActive}
         />
       </HStack>
 
