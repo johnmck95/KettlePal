@@ -10,13 +10,13 @@ import {
 } from "@chakra-ui/react";
 import theme from "../../../../Constants/theme";
 import {
-  STOPWATCH_TIMESTAMP_KEY,
   calculateElapsedTime,
   computeSeconds,
   formatTime,
   formatTimeInput,
 } from "../../../../utils/Time/time";
 import ConfirmModal from "../../../ConfirmModal";
+import { STOPWATCH_TIMESTAMP_KEY } from "../../../../Hooks/useCreateWorkoutForm";
 
 function EditableText({
   fontSize,
@@ -25,7 +25,7 @@ function EditableText({
   setUpdateTo,
   setTime,
   pause,
-  setStartTimeStamp,
+  setStartTimestamp,
 }: {
   fontSize: string;
   seconds: number;
@@ -33,7 +33,7 @@ function EditableText({
   setUpdateTo: (value: string) => void;
   setTime: (elapsedSeconds: number) => void;
   pause: () => void;
-  setStartTimeStamp: (timestamp: number | null) => void;
+  setStartTimestamp: (timestamp: number | null) => void;
 }) {
   const [beingEdited, setBeingEdited] = React.useState(false);
 
@@ -49,7 +49,7 @@ function EditableText({
 
     // Update the start time stamp for accurate elapsed time
     sessionStorage.setItem(STOPWATCH_TIMESTAMP_KEY, newTimestamp.toString());
-    setStartTimeStamp(newTimestamp);
+    setStartTimestamp(newTimestamp);
   };
 
   function handleClick() {
@@ -105,7 +105,7 @@ function Analog({
   setUpdateTo,
   setTime,
   pause,
-  setStartTimeStamp,
+  setStartTimestamp,
 }: {
   size: "sm" | "md";
   seconds: number;
@@ -113,7 +113,7 @@ function Analog({
   setUpdateTo: (value: string) => void;
   setTime: (elapsedSeconds: number) => void;
   pause: () => void;
-  setStartTimeStamp: (timestamp: number | null) => void;
+  setStartTimestamp: (timestamp: number | null) => void;
 }) {
   return (
     <Box
@@ -152,7 +152,7 @@ function Analog({
           setUpdateTo={setUpdateTo}
           setTime={setTime}
           pause={pause}
-          setStartTimeStamp={setStartTimeStamp}
+          setStartTimestamp={setStartTimestamp}
           fontSize={
             size === "sm"
               ? seconds >= 3600
@@ -198,7 +198,7 @@ export default function Stopwatch({
   setTime,
   handleIsActive,
 }: StopwatchProps) {
-  const [startTimeStamp, setStartTimeStamp] = useState<any>(() => {
+  const [startTimestamp, setStartTimestamp] = useState(() => {
     const storedTimestamp = sessionStorage.getItem(STOPWATCH_TIMESTAMP_KEY);
     return storedTimestamp ? parseInt(storedTimestamp, 10) : null;
   });
@@ -209,14 +209,14 @@ export default function Stopwatch({
   useEffect(() => {
     const storedTimestamp = sessionStorage.getItem(STOPWATCH_TIMESTAMP_KEY);
     if (storedTimestamp) {
-      setStartTimeStamp(parseInt(storedTimestamp, 10));
+      setStartTimestamp(parseInt(storedTimestamp, 10));
     }
-  }, [startTimeStamp]);
+  }, [startTimestamp]);
 
   function start() {
     const newTimestamp = Date.now();
     sessionStorage.setItem(STOPWATCH_TIMESTAMP_KEY, newTimestamp.toString());
-    setStartTimeStamp(newTimestamp);
+    setStartTimestamp(newTimestamp);
     if (handleIsActive) {
       handleIsActive(true);
     }
@@ -226,7 +226,7 @@ export default function Stopwatch({
     if (handleIsActive) {
       handleIsActive(true);
     }
-    setTime(calculateElapsedTime(startTimeStamp));
+    setTime(calculateElapsedTime(startTimestamp ?? 0));
   }
 
   function startOrResume() {
@@ -237,7 +237,7 @@ export default function Stopwatch({
     if (handleIsActive) {
       handleIsActive(false);
     }
-    setStartTimeStamp(null);
+    setStartTimestamp(null);
     sessionStorage.removeItem(STOPWATCH_TIMESTAMP_KEY);
     setTime(0);
     setUpdateTo("00:00");
@@ -248,7 +248,7 @@ export default function Stopwatch({
     if (handleIsActive) {
       handleIsActive(false);
     }
-    setTime(calculateElapsedTime(startTimeStamp));
+    setTime(calculateElapsedTime(startTimestamp ?? 0));
   }
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -267,7 +267,7 @@ export default function Stopwatch({
         setUpdateTo={setUpdateTo}
         setTime={setTime}
         pause={stop}
-        setStartTimeStamp={setStartTimeStamp}
+        setStartTimestamp={setStartTimestamp}
       />
       {!omitControls && (
         <Stack direction={"column"} spacing={1.5} alignSelf="center">

@@ -159,5 +159,3 @@ export function calculateElapsedTime(startTimeStamp: number) {
   const currentTimeStamp = new Date().getTime();
   return Math.floor((currentTimeStamp - startTimeStamp) / 1000);
 }
-
-export const STOPWATCH_TIMESTAMP_KEY = "stopwatchStartTimeStamp";

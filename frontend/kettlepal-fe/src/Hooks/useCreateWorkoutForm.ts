@@ -1,15 +1,12 @@
 import { ChangeEvent, useEffect, useState } from "react";
-import {
-  STOPWATCH_TIMESTAMP_KEY,
-  calculateElapsedTime,
-  getCurrentDate,
-} from "../utils/Time/time";
+import { calculateElapsedTime, getCurrentDate } from "../utils/Time/time";
 import { useAddWorkoutWithExercisesMutation } from "../generated/frontend-types";
 import { useUser } from "../Contexts/UserContext";
 import { useDisclosure } from "@chakra-ui/react";
 
 const SESSION_STATE_KEY = "createWorkoutState";
 const STOPWATCH_IS_ACTIVE_KEY = "stopwatchIsActive";
+export const STOPWATCH_TIMESTAMP_KEY = "stopwatchStartTimeStamp";
 
 export type CreateWorkoutState = {
   date: string;
