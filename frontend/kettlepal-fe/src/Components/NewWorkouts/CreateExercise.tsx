@@ -1,20 +1,19 @@
 import React from "react";
 
-import { HStack, Button } from "@chakra-ui/react";
+import { HStack } from "@chakra-ui/react";
 import AddComment from "./FormComponents.tsx/Generic/AddComment";
 import ConfirmModal from "../ConfirmModal";
-import theme from "../../Constants/theme";
 import ExerciseTitle from "./FormComponents.tsx/Exercise/ExerciseTitle";
 import ExerciseWeight from "./FormComponents.tsx/Exercise/ExerciseWeight";
 import ExerciseSets from "./FormComponents.tsx/Exercise/ExerciseSets";
 import ExerciseReps from "./FormComponents.tsx/Exercise/ExerciseReps";
 import ExerciseRepsDisplay from "./FormComponents.tsx/Exercise/ExerciseRepsDisplay";
 import ExerciseWeightUnit from "./FormComponents.tsx/Exercise/ExerciseWeightUnit";
-import ExerciseTimer from "./FormComponents.tsx/Exercise/ExerciseTimer";
 import TrackExercise from "./FormComponents.tsx/MidWorkoutTracking/TrackExercise";
 import { ExerciseContainer } from "./FormComponents.tsx/Exercise/ExerciseContainer";
 import { CreateWorkoutState } from "../../Hooks/useCreateWorkoutForm";
 import useCreateExerciseForm from "../../Hooks/useCreateExerciseForm";
+import "../../Styles/CustomSelect.css";
 
 interface CreateExerciseProps {
   exercise: Omit<CreateWorkoutState["exercises"][number], "key">;
@@ -25,6 +24,7 @@ interface CreateExerciseProps {
   setFormHasErrors: (value: boolean) => void;
   trackWorkout: boolean;
   mutatingWorkout?: boolean;
+  showComments: boolean;
 }
 
 export default function CreateExercise({
@@ -35,7 +35,7 @@ export default function CreateExercise({
   submitted,
   setFormHasErrors,
   trackWorkout,
-  mutatingWorkout,
+  showComments,
 }: CreateExerciseProps) {
   const {
     completedSets,
@@ -45,18 +45,14 @@ export default function CreateExercise({
     isOpenDeleteExercise,
     minSwipeDistance,
     offset,
-    seeDetails,
-    timerIsActive,
     repsDisplayIsInvalid,
     repsIsInvalid,
     setsIsInvalid,
-    timerIsInvalid,
     titleIsInvalid,
     weightIsInvalid,
     weightUnitIsInvalid,
     completedASet,
     customOnCloseDeleteExercise,
-    handleTimerIsActive,
     onDeleteExercise,
     onOpenDeleteExercise,
     onTouchEnd,
@@ -67,8 +63,6 @@ export default function CreateExercise({
     setCustomWeight,
     setExerciseComment,
     setOffset,
-    setSeeDetails,
-    setTime,
     swipeDistance,
   } = useCreateExerciseForm({
     exercise,
@@ -91,7 +85,7 @@ export default function CreateExercise({
       swipeDistance={swipeDistance}
       onOpenDeleteExercise={onOpenDeleteExercise}
     >
-      <HStack w="100%" mb="0.25rem">
+      <HStack w="100%" mb="0.25rem" flexWrap="wrap">
         {/* TITLE */}
         <ExerciseTitle
           submitted={submitted}
@@ -114,6 +108,17 @@ export default function CreateExercise({
           handleExercise={handleExercise}
         />
 
+        {/* WEIGHT UNIT */}
+        {!trackWorkout && (
+          <ExerciseWeightUnit
+            submitted={submitted}
+            weightUnitIsInvalid={weightUnitIsInvalid}
+            exercise={exercise}
+            exerciseIndex={exerciseIndex}
+            handleExercise={handleExercise}
+          />
+        )}
+
         {/* SETS */}
         <ExerciseSets
           submitted={submitted}
@@ -131,77 +136,21 @@ export default function CreateExercise({
           exerciseIndex={exerciseIndex}
           handleExercise={handleExercise}
         />
-      </HStack>
 
-      {/* SEE DETAILS */}
-      <Button
-        fontSize={[12, 14, 16]}
-        alignSelf={"flex-start"}
-        size={["xs", "sm", "md"]}
-        variant="secondary"
-        onClick={() => setSeeDetails((prev) => !prev)}
-        textAlign="left"
-        color={
-          submitted &&
-          !seeDetails &&
-          (weightUnitIsInvalid || repsDisplayIsInvalid || timerIsInvalid)
-            ? theme.colors.error
-            : theme.colors.feldgrau[700]
-        }
-        sx={{
-          _focus: {
-            borderColor: theme.colors.green[300],
-            boxShadow: `0 0 0 1px ${theme.colors.green[300]}`,
-          },
-        }}
-      >
-        {seeDetails ? "Hide Details" : "More Details"}
-      </Button>
-      <HStack
-        w="100%"
-        justifyContent={seeDetails ? "space-between" : "flex-start"}
-        alignItems="flex-start"
-      >
-        {seeDetails && (
-          <HStack
-            w="100%"
-            justifyContent="space-between"
-            alignItems="flex-end"
-            mt={mutatingWorkout ? 0 : "-0.75rem"}
-          >
-            <HStack>
-              {/* REPS DISPLAY */}
-              <ExerciseRepsDisplay
-                submitted={submitted}
-                repsDisplayIsInvalid={repsDisplayIsInvalid}
-                exercise={exercise}
-                exerciseIndex={exerciseIndex}
-                handleExercise={handleExercise}
-              />
-
-              {/* WEIGHT UNIT */}
-              <ExerciseWeightUnit
-                submitted={submitted}
-                weightUnitIsInvalid={weightUnitIsInvalid}
-                exercise={exercise}
-                exerciseIndex={exerciseIndex}
-                handleExercise={handleExercise}
-              />
-            </HStack>
-
-            {/* EXERCISE TIMER */}
-            <ExerciseTimer
-              exercise={exercise}
-              timerIsActive={timerIsActive}
-              handleTimerIsActive={mutatingWorkout ? null : handleTimerIsActive}
-              setTime={setTime}
-            />
-          </HStack>
+        {/* REPS DISPLAY */}
+        {!trackWorkout && (
+          <ExerciseRepsDisplay
+            submitted={submitted}
+            repsDisplayIsInvalid={repsDisplayIsInvalid}
+            exercise={exercise}
+            exerciseIndex={exerciseIndex}
+            handleExercise={handleExercise}
+          />
         )}
       </HStack>
 
       {/* EXERCISE COMMENT */}
-      {seeDetails && (
+      {showComments && (
         <AddComment
           placeholderText="Add an Exercise Comment"
           comment={exercise.comment}

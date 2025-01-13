@@ -1,0 +1,10 @@
+@media (max-width: 768px) {
+  .chakra-select__icon-wrapper {
+    right: 0px !important;
+  }
+
+  select {
+    padding-inline-end: 22px !important;
+    padding-inline-start: 4px !important;
+  }
+}

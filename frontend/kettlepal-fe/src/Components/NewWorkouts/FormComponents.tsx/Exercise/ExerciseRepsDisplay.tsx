@@ -20,12 +20,13 @@ export default function ExerciseRepsDisplay({
 }: ExerciseRepsDisplayProps) {
   return (
     <FormControl
-      minWidth="70px"
-      maxWidth={["90px", "110px", "130px"]}
+      flexGrow={2}
+      flexShrink={1}
+      flexBasis={["35px", "70px", "90px"]}
       isInvalid={submitted && repsDisplayIsInvalid}
     >
       <FormLabel fontSize={["12px", "14px", "16px"]} m="0">
-        Rep Type
+        Type
       </FormLabel>
       <Select
         fontSize={["12px", "14px", "16px"]}

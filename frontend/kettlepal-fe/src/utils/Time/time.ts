@@ -154,3 +154,8 @@ export function isValidDateFormat(dateString: string) {
   // Check the range of the day
   return day > 0 && day <= monthLength[month - 1];
 }
+
+export function calculateElapsedTime(startTimeStamp: number) {
+  const currentTimeStamp = new Date().getTime();
+  return Math.floor((currentTimeStamp - startTimeStamp) / 1000);
+}

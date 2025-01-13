@@ -1,11 +1,12 @@
 import { ChangeEvent, useEffect, useState } from "react";
-import { getCurrentDate } from "../utils/Time/time";
+import { calculateElapsedTime, getCurrentDate } from "../utils/Time/time";
 import { useAddWorkoutWithExercisesMutation } from "../generated/frontend-types";
 import { useUser } from "../Contexts/UserContext";
 import { useDisclosure } from "@chakra-ui/react";
 
 const SESSION_STATE_KEY = "createWorkoutState";
-const WORKOUT_TIMER_KEY = "workoutTimerIsActive";
+const STOPWATCH_IS_ACTIVE_KEY = "stopwatchIsActive";
+export const STOPWATCH_TIMESTAMP_KEY = "stopwatchStartTimeStamp";
 
 export type CreateWorkoutState = {
   date: string;
@@ -37,7 +38,7 @@ const useCreateWorkoutForm = () => {
         };
   });
   const [showTracking, setShowTracking] = useState<boolean>(false);
-  const [addWorkoutComment, setAddWorkoutComment] = useState<boolean>(false);
+  const [addComments, setAddComments] = useState<boolean>(false);
   const [showUploadSuccess, setShowUploadSuccess] = useState<boolean>(false);
   const [submitted, setSubmitted] = useState(false);
   const [formHasErrors, setFormHasErrors] = useState(false);
@@ -45,16 +46,16 @@ const useCreateWorkoutForm = () => {
   const userUid = useUser().user?.uid ?? null;
 
   const [timerIsActive, setTimerIsActive] = useState(() => {
-    const fromStorage = sessionStorage.getItem(WORKOUT_TIMER_KEY);
+    const fromStorage = sessionStorage.getItem(STOPWATCH_IS_ACTIVE_KEY);
     return fromStorage ? true : false;
   });
 
   const handleTimerIsActive = (newState: boolean) => {
     setTimerIsActive(newState);
     if (newState) {
-      sessionStorage.setItem(WORKOUT_TIMER_KEY, "true");
+      sessionStorage.setItem(STOPWATCH_IS_ACTIVE_KEY, "true");
     } else {
-      sessionStorage.removeItem(WORKOUT_TIMER_KEY);
+      sessionStorage.removeItem(STOPWATCH_IS_ACTIVE_KEY);
     }
   };
 
@@ -89,7 +90,11 @@ const useCreateWorkoutForm = () => {
     let interval: NodeJS.Timeout | undefined = undefined;
     if (timerIsActive) {
       interval = setInterval(() => {
-        setTime(state.elapsedSeconds + 1);
+        const storedTimestamp = parseInt(
+          sessionStorage.getItem(STOPWATCH_TIMESTAMP_KEY) ?? "",
+          10
+        );
+        setTime(calculateElapsedTime(storedTimestamp));
       }, 1000);
     } else if (!timerIsActive && state.elapsedSeconds !== 0) {
       clearInterval(interval);
@@ -131,10 +136,10 @@ const useCreateWorkoutForm = () => {
         {
           title: "",
           weight: "",
-          weightUnit: "kg",
+          weightUnit: "",
           sets: "",
           reps: "",
-          repsDisplay: "std",
+          repsDisplay: "",
           comment: "",
           elapsedSeconds: 0,
           key: `key-${Date.now()}-${Math.random().toString(36)}`,
@@ -235,7 +240,7 @@ const useCreateWorkoutForm = () => {
     loading,
     error,
     showTracking,
-    addWorkoutComment,
+    addComments,
     showUploadSuccess,
     submitted,
     errors,
@@ -246,7 +251,7 @@ const useCreateWorkoutForm = () => {
     setComment,
     setFormHasErrors,
     setShowServerError,
-    setAddWorkoutComment,
+    setAddComments,
     setShowTracking,
     handleTimerIsActive,
     handleStateChange,

@@ -21,8 +21,8 @@ import { formatExerciseString } from "../../utils/Exercises/exercises";
 import dayjs from "dayjs";
 import WorkoutDate from "./FormComponents.tsx/Workout/WorkoutDate";
 import WorkoutComment from "./FormComponents.tsx/Workout/WorkoutComment";
-import WorkoutTimer from "./FormComponents.tsx/Workout/WorkoutTimer";
 import useCreateWorkoutForm from "../../Hooks/useCreateWorkoutForm";
+import WorkoutStopwatch from "./FormComponents.tsx/Workout/WorkoutStopwatch";
 
 export default function CreateWorkout() {
   const {
@@ -30,7 +30,7 @@ export default function CreateWorkout() {
     loading,
     error,
     showTracking,
-    addWorkoutComment,
+    addComments,
     showUploadSuccess,
     submitted,
     errors,
@@ -40,7 +40,7 @@ export default function CreateWorkout() {
     setTime,
     setComment,
     setShowServerError,
-    setAddWorkoutComment,
+    setAddComments,
     setShowTracking,
     setFormHasErrors,
     handleTimerIsActive,
@@ -62,7 +62,10 @@ export default function CreateWorkout() {
   }
 
   return (
-    <Box m={["0.5rem 1rem 1rem 1rem", "1rem"]} w={["100%", "100%", "720px"]}>
+    <Box
+      m={["0.5rem 1rem 1rem 1rem", "1rem"]}
+      w={["100%", "100%", "100%", "900px"]}
+    >
       <HStack
         justifyContent={"space-between"}
         mb="0.75rem"
@@ -75,12 +78,12 @@ export default function CreateWorkout() {
           handleStateChange={handleStateChange}
         />
 
-        {/* TIMER */}
-        <WorkoutTimer
-          elapsedSeconds={state.elapsedSeconds}
-          timerIsActive={timerIsActive}
-          handleTimerIsActive={handleTimerIsActive}
+        {/* STOPWATCH */}
+        <WorkoutStopwatch
+          seconds={state.elapsedSeconds}
+          isActive={timerIsActive}
           setTime={setTime}
+          handleIsActive={handleTimerIsActive}
         />
       </HStack>
 
@@ -98,12 +101,12 @@ export default function CreateWorkout() {
         })}
       </Box>
 
-      {/* ADD COMMENT & TRACK WORKOUT BUTTONS */}
+      {/* ADD COMMENTS & TRACK WORKOUT BUTTONS */}
       <HStack w="100%" justifyContent={"space-between"} mt="1rem">
         <Button
           size="sm"
           variant="secondary"
-          onClick={() => setAddWorkoutComment((prev) => !prev)}
+          onClick={() => setAddComments((prev) => !prev)}
           textAlign="left"
           my="0.5rem"
           sx={{
@@ -113,7 +116,7 @@ export default function CreateWorkout() {
             },
           }}
         >
-          {addWorkoutComment ? "Hide Comment" : "Add Comment"}
+          {addComments ? "Hide Comments" : "Add Comments"}
         </Button>
         <Button
           size="sm"
@@ -134,7 +137,7 @@ export default function CreateWorkout() {
 
       {/* WORKOUT COMMENT */}
       <WorkoutComment
-        addWorkoutComment={addWorkoutComment}
+        addComments={addComments}
         comment={state.comment}
         setComment={setComment}
       />
@@ -163,6 +166,7 @@ export default function CreateWorkout() {
                   submitted={submitted}
                   setFormHasErrors={setFormHasErrors}
                   trackWorkout={showTracking}
+                  showComments={addComments}
                 />
               </motion.div>
             );

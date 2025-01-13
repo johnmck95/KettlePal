@@ -1,6 +1,8 @@
 import { FormControl, FormLabel, Input, Select } from "@chakra-ui/react";
 import theme from "../../../../Constants/theme";
-import ExerciseTitles from "../../../../Constants/ExercisesOptions";
+import ExerciseTitles, {
+  Preconfigurations,
+} from "../../../../Constants/ExercisesOptions";
 import { CreateWorkoutState } from "../../../../Hooks/useCreateWorkoutForm";
 
 interface ExerciseTitleProps {
@@ -22,8 +24,36 @@ export default function ExerciseTitle({
   setCustomTitle,
   handleExercise,
 }: ExerciseTitleProps) {
+  // Sets the title and preconfigured weight unit and reps display in state, if available.
+  const setTitleAndPreconfigurations = (
+    event:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const name = event.target.name;
+    const value = event.target.value;
+    // Set the Title
+    handleExercise(name, value, exerciseIndex);
+    handleExercise(
+      "weightUnit",
+      Preconfigurations[value]?.weightUnit.value ?? "",
+      exerciseIndex
+    );
+    handleExercise(
+      "repsDisplay",
+      Preconfigurations[value]?.repsDisplay.value ?? "",
+      exerciseIndex
+    );
+  };
+
   return (
-    <FormControl w="50%" isRequired isInvalid={submitted && titleIsInvalid}>
+    <FormControl
+      flexGrow={3}
+      flexShrink={1}
+      flexBasis={["50px", "90px", "160px", "180px"]}
+      isRequired
+      isInvalid={submitted && titleIsInvalid}
+    >
       <FormLabel fontSize={["12px", "14px", "16px"]} m="0">
         Title
       </FormLabel>
@@ -50,11 +80,7 @@ export default function ExerciseTitle({
           onChange={(event) =>
             event.target.value === "Custom"
               ? setCustomTitle(true)
-              : handleExercise(
-                  event.target.name,
-                  event.target.value,
-                  exerciseIndex
-                )
+              : setTitleAndPreconfigurations(event)
           }
           focusBorderColor={theme.colors.green[300]}
           color={!!exercise.title ? theme.colors.black : theme.colors.grey[500]}

@@ -18,7 +18,12 @@ export default function ExerciseReps({
   handleExercise,
 }: ExerciseRepsProps) {
   return (
-    <FormControl w="15%" isInvalid={submitted && repsIsInvalid}>
+    <FormControl
+      flexGrow={0.5}
+      flexShrink={0.5}
+      flexBasis={["30px", "35px", "55px"]}
+      isInvalid={submitted && repsIsInvalid}
+    >
       <FormLabel fontSize={["12px", "14px", "16px"]} m="0">
         <Text>Reps</Text>
       </FormLabel>
@@ -28,6 +33,7 @@ export default function ExerciseReps({
         type="number"
         name="reps"
         placeholder="0"
+        padding="0.5rem"
         value={exercise.reps}
         onChange={(event) =>
           handleExercise("reps", event.target.value, exerciseIndex)
