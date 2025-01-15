@@ -9,6 +9,7 @@ import Tray from "./Components/Tray";
 import { UserProvider } from "./Contexts/UserContext";
 import PrivateRoute from "./Components/Auth/PrivateRoute";
 import SessionChecker from "./Components/Auth/SessionChecker";
+import Profile from "./Pages/Profile";
 
 export const App = () => (
   <ChakraProvider theme={theme}>
@@ -34,6 +35,14 @@ export const App = () => (
             element={
               <PrivateRoute>
                 <NewWorkout />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <PrivateRoute>
+                <Profile />
               </PrivateRoute>
             }
           />

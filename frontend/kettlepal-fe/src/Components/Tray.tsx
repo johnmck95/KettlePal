@@ -11,7 +11,7 @@ import {
   Alert,
 } from "@chakra-ui/react";
 import React from "react";
-import { FaPlusCircle, FaListAlt, FaSignOutAlt } from "react-icons/fa";
+import { FaPlusCircle, FaListAlt, FaSignOutAlt, FaUser } from "react-icons/fa";
 import { useUser } from "../Contexts/UserContext";
 import LoadingSpinner from "./LoadingSpinner";
 import { useLogoutMutation } from "../generated/frontend-types";
@@ -118,6 +118,28 @@ export default function Tray() {
                   textAlign="center"
                 >
                   Past
+                </Text>
+              </VStack>
+            </Link>
+
+            <Link href="profile" h="100%" w="55px">
+              <VStack justifyContent={"center"} gap={0} my="auto">
+                <Icon
+                  as={FaUser}
+                  aria-label="Profile"
+                  sx={{
+                    mt: "6px",
+                    width: "1.5rem",
+                    height: "1.5rem",
+                  }}
+                />
+                <Text
+                  fontSize={["10px"]}
+                  color="white"
+                  w="100%"
+                  textAlign="center"
+                >
+                  Profile
                 </Text>
               </VStack>
             </Link>
