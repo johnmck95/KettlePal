@@ -8,22 +8,27 @@ export default function Profile() {
   const isLargeScreen = useBreakpointValue({ base: false, lg: true });
   return (
     <Grid
-      templateRows={isLargeScreen ? "repeat(2, 1fr)" : "repeat(3, auto)"}
-      templateColumns={isLargeScreen ? "1fr minmax(350px, auto)" : "1fr"}
+      templateRows={isLargeScreen ? "repeat(2, auto)" : "repeat(3, auto)"}
+      templateColumns={isLargeScreen ? "1fr minmax(300px, auto)" : "1fr"}
       gap={4}
-      h="100%"
       w="100%"
-      padding="1rem"
+      maxW="1440px"
+      padding={["0.25rem", "1rem"]}
+      justifySelf="center"
     >
-      <GridItem rowSpan={1} colSpan={1}>
+      <GridItem rowSpan={1} colSpan={1} order={1}>
         <AtAGlance />
       </GridItem>
 
-      <GridItem rowSpan={isLargeScreen ? 2 : 1} colSpan={1}>
+      <GridItem
+        rowSpan={isLargeScreen ? 2 : 1}
+        colSpan={1}
+        order={isLargeScreen ? 2 : 3}
+      >
         <UserStats />
       </GridItem>
 
-      <GridItem rowSpan={1} colSpan={1}>
+      <GridItem rowSpan={1} colSpan={1} order={isLargeScreen ? 3 : 2}>
         <YourProgression />
       </GridItem>
     </Grid>

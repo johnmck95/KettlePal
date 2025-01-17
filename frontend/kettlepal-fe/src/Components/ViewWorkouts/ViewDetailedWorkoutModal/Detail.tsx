@@ -12,7 +12,7 @@ export default function Detail({
   variant?: "sm" | "md";
 }) {
   return (
-    <VStack gap={0} minWidth={variant === "sm" ? "80px" : "120px"}>
+    <VStack gap={0}>
       <Text
         fontSize={variant === "sm" ? ["8px", "12px"] : ["xs", "sm"]}
         color={theme.colors.grey[700]}
