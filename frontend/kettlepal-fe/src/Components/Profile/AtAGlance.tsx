@@ -38,8 +38,9 @@ export default function AtAGlance() {
         borderRadius="10px"
         justifyContent={"center"}
         alignItems={"center"}
+        color={theme.colors.white}
       >
-        {selectedMetric}
+        {selectedMetric} - Graph coming soon..
       </Flex>
       <HStack
         mt="0.5rem"
