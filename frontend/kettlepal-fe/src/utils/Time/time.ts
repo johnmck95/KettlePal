@@ -52,27 +52,33 @@ export function formatDurationShort(seconds: number): string {
   return result;
 }
 
-// Converts seconds (number) into HHH:MM:SS format
-export const formatTime = (seconds: number, verbose: boolean = false) => {
-  const getSeconds = `0${seconds % 60}`.slice(-2);
-  const minutes = Math.floor(seconds / 60);
-  const getMinutes = `0${minutes % 60}`.slice(-2);
-  let getHours = `${Math.floor(seconds / 3600)}`;
-  if (getHours.length < 2) {
-    getHours = "0" + getHours;
-  }
+const pad = (num: number): string => num.toString().padStart(2, "0");
+const pluralize = (word: string, count: number): string =>
+  `${word}${count !== 1 ? "s" : ""}`;
+
+// Converts seconds into "HHH:MM:SS" format when verbose is false
+// Converts seconds into  "X hrs, Y mins, Z secs" when verbose is true
+export const formatTime = (
+  seconds: number,
+  verbose: boolean = false
+): string => {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const secs = seconds % 60;
 
   if (verbose) {
-    return `${Number(getHours) > 0 ? `${getHours} hr, ` : ""}  ${
-      Number(getMinutes) === 0 ? 0 : getMinutes
-    } mins, ${Number(getSeconds) === 0 ? 0 : getSeconds} secs`;
+    return [
+      hours > 0 ? `${hours} ${pluralize("hr", hours)}` : "",
+      minutes > 0 ? `${minutes} ${pluralize("min", minutes)}` : "",
+      secs > 0 ? `${secs} ${pluralize("sec", secs)}` : "",
+    ]
+      .filter(Boolean)
+      .join(", ");
   }
 
-  if (getHours === "00") {
-    return `${getMinutes}:${getSeconds}`;
-  } else {
-    return `${getHours}:${getMinutes}:${getSeconds}`;
-  }
+  return hours > 0
+    ? `${pad(hours)}:${pad(minutes)}:${pad(secs)}`
+    : `${pad(minutes)}:${pad(secs)}`;
 };
 
 // Turns user input (string) into HHH:MM:SS format

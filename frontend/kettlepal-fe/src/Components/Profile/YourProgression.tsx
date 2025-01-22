@@ -46,7 +46,7 @@ export default function YourProgression() {
         alignItems={"center"}
         color={theme.colors.white}
       >
-        {selectedMetric} - Graph coming soon..
+        {selectedMetric} - Coming Soon..
       </Flex>
 
       <HStack

@@ -142,13 +142,13 @@ export default function UserStats() {
                       <Tr>
                         <Td fontSize={["xs", "sm", "md"]}>Total Workouts</Td>
                         <Td fontSize={["xs", "sm", "md"]}>
-                          {userStats?.totalWorkouts}
+                          {userStats?.totalWorkouts.toLocaleString()}
                         </Td>
                       </Tr>
                       <Tr>
                         <Td fontSize={["xs", "sm", "md"]}>Total Exercises</Td>
                         <Td fontSize={["xs", "sm", "md"]}>
-                          {userStats?.totalExercises}
+                          {userStats?.totalExercises.toLocaleString()}
                         </Td>
                       </Tr>
                       <Tr>
@@ -191,7 +191,6 @@ export default function UserStats() {
                     </Tbody>
 
                     {/* FAVOURITE EXERCISES */}
-
                     <Thead>
                       <Tr>
                         <Th fontSize={["xs", "sm", "md"]}>
@@ -207,7 +206,7 @@ export default function UserStats() {
                             #1 - {topExercises[0].name}
                           </Td>
                           <Td fontSize={["xs", "sm", "md"]}>
-                            {topExercises[0].times}
+                            {topExercises[0].times.toLocaleString()}
                           </Td>
                         </Tr>
                       )}
@@ -217,7 +216,7 @@ export default function UserStats() {
                             #2 - {topExercises[1].name}
                           </Td>
                           <Td fontSize={["xs", "sm", "md"]}>
-                            {topExercises[1].times}
+                            {topExercises[1].times.toLocaleString()}
                           </Td>
                         </Tr>
                       )}
@@ -227,7 +226,7 @@ export default function UserStats() {
                             #3 - {topExercises[2].name}
                           </Td>
                           <Td fontSize={["xs", "sm", "md"]}>
-                            {topExercises[2].times}
+                            {topExercises[2].times.toLocaleString()}
                           </Td>
                         </Tr>
                       )}

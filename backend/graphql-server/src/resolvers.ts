@@ -211,7 +211,7 @@ export const resolvers = {
                 MAX(w."elapsedSeconds") AS longestWorkout,
                 MAX(workoutReps.totalReps) AS mostRepsInWorkout,
                 MAX(workoutCapacity.workCapacity) AS largestWorkCapacity,
-                MIN(w.date) AS oldestWorkoutDate  -- Changed this line
+                MIN(w.date) AS oldestWorkoutDate
               FROM workouts w
               LEFT JOIN (
                 SELECT "workoutUid", SUM(reps) AS totalReps

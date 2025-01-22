@@ -40,7 +40,7 @@ export default function AtAGlance() {
         alignItems={"center"}
         color={theme.colors.white}
       >
-        {selectedMetric} - Graph coming soon..
+        {selectedMetric} - Coming Soon..
       </Flex>
       <HStack
         mt="0.5rem"
