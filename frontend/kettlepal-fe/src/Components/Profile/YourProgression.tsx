@@ -66,6 +66,7 @@ export default function YourProgression() {
           mx="2rem"
           focusBorderColor={theme.colors.green[300]}
           onChange={(event) => handleExerciseChange(event.target.value)}
+          size={["xs", "sm", "md"]}
         >
           {ExerciseTitles.map((title) => (
             <option key={title} value={title}>

@@ -63,9 +63,9 @@ export const formatTime = (seconds: number, verbose: boolean = false) => {
   }
 
   if (verbose) {
-    return `${Number(getHours) > 0 ? `${getHours} hours, ` : ""}  ${
+    return `${Number(getHours) > 0 ? `${getHours} hr, ` : ""}  ${
       Number(getMinutes) === 0 ? 0 : getMinutes
-    } minutes, ${Number(getSeconds) === 0 ? 0 : getSeconds} seconds`;
+    } mins, ${Number(getSeconds) === 0 ? 0 : getSeconds} secs`;
   }
 
   if (getHours === "00") {
