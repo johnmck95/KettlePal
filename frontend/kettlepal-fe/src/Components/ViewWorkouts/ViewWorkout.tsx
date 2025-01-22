@@ -76,7 +76,7 @@ export default function ViewWorkout({
         m="0.1rem"
         position="relative"
         borderRadius="8px"
-        bg="white"
+        bg={theme.colors.white}
         boxShadow={`0px 1px 4px ${theme.colors.grey[400]}`}
         onClick={onOpenDetailedWorkout}
       >

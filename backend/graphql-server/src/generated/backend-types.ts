@@ -270,6 +270,7 @@ export type User = {
   password: Scalars['String']['output'];
   tokenCount: Scalars['Int']['output'];
   uid: Scalars['ID']['output'];
+  userStats?: Maybe<UserStats>;
   workouts: Array<Maybe<Workout>>;
 };
 
@@ -288,6 +289,18 @@ export type UserPastWorkouts = {
   password: Scalars['String']['output'];
   uid: Scalars['ID']['output'];
   workoutWithExercises: Array<Maybe<WorkoutWithExercises>>;
+};
+
+export type UserStats = {
+  __typename?: 'UserStats';
+  largestWorkCapacityKg: Scalars['Int']['output'];
+  longestWorkout: Scalars['Int']['output'];
+  mostRepsInWorkout: Scalars['Int']['output'];
+  oldestWorkoutDate: Scalars['String']['output'];
+  topThreeExercises: Scalars['String']['output'];
+  totalExercises: Scalars['Int']['output'];
+  totalTime: Scalars['Int']['output'];
+  totalWorkouts: Scalars['Int']['output'];
 };
 
 export type Workout = {
@@ -404,6 +417,7 @@ export type ResolversTypes = ResolversObject<{
   UpdateWorkoutWithExercisesInput: UpdateWorkoutWithExercisesInput;
   User: ResolverTypeWrapper<User>;
   UserPastWorkouts: ResolverTypeWrapper<UserPastWorkouts>;
+  UserStats: ResolverTypeWrapper<UserStats>;
   Workout: ResolverTypeWrapper<Workout>;
   WorkoutWithExercises: ResolverTypeWrapper<WorkoutWithExercises>;
 }>;
@@ -431,6 +445,7 @@ export type ResolversParentTypes = ResolversObject<{
   UpdateWorkoutWithExercisesInput: UpdateWorkoutWithExercisesInput;
   User: User;
   UserPastWorkouts: UserPastWorkouts;
+  UserStats: UserStats;
   Workout: Workout;
   WorkoutWithExercises: WorkoutWithExercises;
 }>;
@@ -501,6 +516,7 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   password?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   tokenCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   uid?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  userStats?: Resolver<Maybe<ResolversTypes['UserStats']>, ParentType, ContextType>;
   workouts?: Resolver<Array<Maybe<ResolversTypes['Workout']>>, ParentType, ContextType, Partial<UserWorkoutsArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
@@ -513,6 +529,18 @@ export type UserPastWorkoutsResolvers<ContextType = any, ParentType extends Reso
   password?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   uid?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   workoutWithExercises?: Resolver<Array<Maybe<ResolversTypes['WorkoutWithExercises']>>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type UserStatsResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserStats'] = ResolversParentTypes['UserStats']> = ResolversObject<{
+  largestWorkCapacityKg?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  longestWorkout?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  mostRepsInWorkout?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  oldestWorkoutDate?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  topThreeExercises?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  totalExercises?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalTime?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalWorkouts?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -545,6 +573,7 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   RefreshTokenResponse?: RefreshTokenResponseResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
   UserPastWorkouts?: UserPastWorkoutsResolvers<ContextType>;
+  UserStats?: UserStatsResolvers<ContextType>;
   Workout?: WorkoutResolvers<ContextType>;
   WorkoutWithExercises?: WorkoutWithExercisesResolvers<ContextType>;
 }>;

@@ -84,3 +84,20 @@ const CHECK_SESSION_QUERY = gql`
     }
   }
 `;
+
+const USER_STATS_QUERY = gql`
+  query UserStats($uid: ID!) {
+    user(uid: $uid) {
+      userStats {
+        totalWorkouts
+        totalExercises
+        totalTime
+        longestWorkout
+        mostRepsInWorkout
+        largestWorkCapacityKg
+        topThreeExercises
+        oldestWorkoutDate
+      }
+    }
+  }
+`;
