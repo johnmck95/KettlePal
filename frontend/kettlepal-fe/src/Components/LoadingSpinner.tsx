@@ -2,7 +2,15 @@ import React, { useState, useEffect } from "react";
 import { Spinner, VStack, Text } from "@chakra-ui/react";
 import theme from "../Constants/theme";
 
-const LoadingSpinner = ({ size = 24 }: { size?: string | number }) => {
+interface LoadingSpinnerProps {
+  size?: string | number;
+  disableMessage?: boolean;
+}
+
+const LoadingSpinner = ({
+  size = 24,
+  disableMessage = false,
+}: LoadingSpinnerProps) => {
   const [showMessage, setShowMessage] = useState(false);
 
   useEffect(() => {
@@ -21,7 +29,7 @@ const LoadingSpinner = ({ size = 24 }: { size?: string | number }) => {
         emptyColor={theme.colors.grey[200]}
         color={theme.colors.feldgrau[700]}
       />
-      {showMessage && (
+      {showMessage && !disableMessage && (
         <Text
           margin="1rem"
           maxWidth="600px"

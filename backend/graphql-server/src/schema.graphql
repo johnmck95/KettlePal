@@ -8,6 +8,18 @@ type User {
   workouts(offset: Int, limit: Int): [Workout]!
   createdAt: String!
   tokenCount: Int!
+  userStats: UserStats
+}
+
+type UserStats {
+  totalWorkouts: Int!
+  totalExercises: Int!
+  totalTime: Int!
+  longestWorkout: Int!
+  mostRepsInWorkout: Int!
+  largestWorkCapacityKg: Int!
+  topThreeExercises: String!
+  oldestWorkoutDate: String!
 }
 
 # Bit of a hack to let fuzzy search bypass Workouts{Exericises{}} graphql traversal.

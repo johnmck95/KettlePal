@@ -201,6 +201,79 @@ export const resolvers = {
         throw error;
       }
     },
+    async userStats(parent: User) {
+      try {
+        return (
+          await knexInstance.raw(`
+            WITH workoutStats AS (
+              SELECT 
+                w."userUid",
+                MAX(w."elapsedSeconds") AS longestWorkout,
+                MAX(workoutReps.totalReps) AS mostRepsInWorkout,
+                MAX(workoutCapacity.workCapacity) AS largestWorkCapacity,
+                MIN(w.date) AS oldestWorkoutDate  -- Changed this line
+              FROM workouts w
+              LEFT JOIN (
+                SELECT "workoutUid", SUM(reps) AS totalReps
+                FROM exercises
+                GROUP BY "workoutUid"
+              ) workoutReps ON w.uid = workoutReps."workoutUid"
+              LEFT JOIN (
+                SELECT 
+                  "workoutUid", 
+                  SUM(
+                    sets * reps * 
+                    CASE 
+                      WHEN "weightUnit" = 'lbs' THEN weight * 0.45359237
+                      ELSE weight
+                    END
+                  ) AS workCapacity
+                FROM exercises
+                WHERE weight IS NOT NULL
+                GROUP BY "workoutUid"
+              ) workoutCapacity ON w.uid = workoutCapacity."workoutUid"
+              GROUP BY w."userUid"
+            ),
+            favoriteExercises AS (
+              SELECT 
+                  w."userUid",
+                  e.title,
+                  COUNT(*) AS exerciseCount,
+                  ROW_NUMBER() OVER (PARTITION BY w."userUid" ORDER BY COUNT(*) DESC) AS rank
+                  FROM exercises e
+                  JOIN workouts w ON e."workoutUid" = w.uid
+                  GROUP BY w."userUid", e.title
+            )
+            SELECT 
+              COUNT(DISTINCT w.uid) AS "totalWorkouts",
+              COUNT(DISTINCT e.uid) AS "totalExercises",
+              SUM(w."elapsedSeconds") AS "totalTime",
+              ws.longestWorkout AS "longestWorkout",
+              ws.mostRepsInWorkout AS "mostRepsInWorkout",
+              ws.largestWorkCapacity AS "largestWorkCapacityKg",
+              ws.oldestWorkoutDate AS "oldestWorkoutDate",
+              (
+                SELECT STRING_AGG(fe.title || ' (' || fe.exerciseCount || ' times)', ', ')
+                FROM (
+                  SELECT title, exerciseCount
+                  FROM favoriteExercises
+                  WHERE "userUid" = u.uid AND rank <= 3
+                  ORDER BY rank
+                ) fe
+              ) AS "topThreeExercises"
+            FROM users u
+            LEFT JOIN workouts w ON u.uid = w."userUid"
+            LEFT JOIN exercises e ON w.uid = e."workoutUid"
+            LEFT JOIN workoutStats ws ON u.uid = ws."userUid"
+            WHERE u.uid = '${parent.uid}'
+            GROUP BY u.uid, ws.longestWorkout, ws.mostRepsInWorkout, ws.largestWorkCapacity, ws.oldestWorkoutDate;
+          `)
+        ).rows[0];
+      } catch (error) {
+        console.error("Error fetching user stats:", error);
+        throw error;
+      }
+    },
   },
 
   // This is the resolver for returning all exercises within a workout

@@ -271,6 +271,7 @@ export type User = {
   password: Scalars['String']['output'];
   tokenCount: Scalars['Int']['output'];
   uid: Scalars['ID']['output'];
+  userStats?: Maybe<UserStats>;
   workouts: Array<Maybe<Workout>>;
 };
 
@@ -282,7 +283,6 @@ export type UserWorkoutsArgs = {
 
 export type UserPastWorkouts = {
   __typename?: 'UserPastWorkouts';
-  createdAt: Scalars['String']['output'];
   email: Scalars['String']['output'];
   firstName: Scalars['String']['output'];
   isAuthorized: Scalars['Boolean']['output'];
@@ -290,6 +290,18 @@ export type UserPastWorkouts = {
   password: Scalars['String']['output'];
   uid: Scalars['ID']['output'];
   workoutWithExercises: Array<Maybe<WorkoutWithExercises>>;
+};
+
+export type UserStats = {
+  __typename?: 'UserStats';
+  largestWorkCapacityKg: Scalars['Int']['output'];
+  longestWorkout: Scalars['Int']['output'];
+  mostRepsInWorkout: Scalars['Int']['output'];
+  oldestWorkoutDate: Scalars['String']['output'];
+  topThreeExercises: Scalars['String']['output'];
+  totalExercises: Scalars['Int']['output'];
+  totalTime: Scalars['Int']['output'];
+  totalWorkouts: Scalars['Int']['output'];
 };
 
 export type Workout = {
@@ -306,7 +318,6 @@ export type Workout = {
 export type WorkoutWithExercises = {
   __typename?: 'WorkoutWithExercises';
   comment?: Maybe<Scalars['String']['output']>;
-  createdAt: Scalars['String']['output'];
   date: Scalars['String']['output'];
   elapsedSeconds?: Maybe<Scalars['Int']['output']>;
   exercises: Array<Exercise>;
@@ -388,6 +399,13 @@ export type CheckSessionQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type CheckSessionQuery = { __typename?: 'Query', checkSession: { __typename?: 'CheckSessionResponse', isValid: boolean, user?: { __typename?: 'User', uid: string, firstName: string, lastName: string, email: string, isAuthorized: boolean, createdAt: string, tokenCount: number } | null } };
+
+export type UserStatsQueryVariables = Exact<{
+  uid: Scalars['ID']['input'];
+}>;
+
+
+export type UserStatsQuery = { __typename?: 'Query', user?: { __typename?: 'User', userStats?: { __typename?: 'UserStats', totalWorkouts: number, totalExercises: number, totalTime: number, longestWorkout: number, mostRepsInWorkout: number, largestWorkCapacityKg: number, topThreeExercises: string, oldestWorkoutDate: string } | null } | null };
 
 
 export const LoginDocument = gql`
@@ -825,3 +843,52 @@ export type CheckSessionQueryHookResult = ReturnType<typeof useCheckSessionQuery
 export type CheckSessionLazyQueryHookResult = ReturnType<typeof useCheckSessionLazyQuery>;
 export type CheckSessionSuspenseQueryHookResult = ReturnType<typeof useCheckSessionSuspenseQuery>;
 export type CheckSessionQueryResult = Apollo.QueryResult<CheckSessionQuery, CheckSessionQueryVariables>;
+export const UserStatsDocument = gql`
+    query UserStats($uid: ID!) {
+  user(uid: $uid) {
+    userStats {
+      totalWorkouts
+      totalExercises
+      totalTime
+      longestWorkout
+      mostRepsInWorkout
+      largestWorkCapacityKg
+      topThreeExercises
+      oldestWorkoutDate
+    }
+  }
+}
+    `;
+
+/**
+ * __useUserStatsQuery__
+ *
+ * To run a query within a React component, call `useUserStatsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserStatsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserStatsQuery({
+ *   variables: {
+ *      uid: // value for 'uid'
+ *   },
+ * });
+ */
+export function useUserStatsQuery(baseOptions: Apollo.QueryHookOptions<UserStatsQuery, UserStatsQueryVariables> & ({ variables: UserStatsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<UserStatsQuery, UserStatsQueryVariables>(UserStatsDocument, options);
+      }
+export function useUserStatsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UserStatsQuery, UserStatsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<UserStatsQuery, UserStatsQueryVariables>(UserStatsDocument, options);
+        }
+export function useUserStatsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<UserStatsQuery, UserStatsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<UserStatsQuery, UserStatsQueryVariables>(UserStatsDocument, options);
+        }
+export type UserStatsQueryHookResult = ReturnType<typeof useUserStatsQuery>;
+export type UserStatsLazyQueryHookResult = ReturnType<typeof useUserStatsLazyQuery>;
+export type UserStatsSuspenseQueryHookResult = ReturnType<typeof useUserStatsSuspenseQuery>;
+export type UserStatsQueryResult = Apollo.QueryResult<UserStatsQuery, UserStatsQueryVariables>;
