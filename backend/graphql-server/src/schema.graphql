@@ -18,7 +18,7 @@ type UserStats {
   longestWorkout: Int!
   mostRepsInWorkout: Int!
   largestWorkCapacityKg: Int!
-  topThreeExercises: String!
+  topExercises: String!
   oldestWorkoutDate: String!
 }
 

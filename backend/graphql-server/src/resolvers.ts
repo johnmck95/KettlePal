@@ -257,10 +257,10 @@ export const resolvers = {
                 FROM (
                   SELECT title, exerciseCount
                   FROM favoriteExercises
-                  WHERE "userUid" = u.uid AND rank <= 3
+                  WHERE "userUid" = u.uid AND rank <= 10
                   ORDER BY rank
                 ) fe
-              ) AS "topThreeExercises"
+              ) AS "topExercises"
             FROM users u
             LEFT JOIN workouts w ON u.uid = w."userUid"
             LEFT JOIN exercises e ON w.uid = e."workoutUid"

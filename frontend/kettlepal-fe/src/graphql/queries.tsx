@@ -95,7 +95,7 @@ const USER_STATS_QUERY = gql`
         longestWorkout
         mostRepsInWorkout
         largestWorkCapacityKg
-        topThreeExercises
+        topExercises
         oldestWorkoutDate
       }
     }
