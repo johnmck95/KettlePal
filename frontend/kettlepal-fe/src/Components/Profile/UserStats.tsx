@@ -45,7 +45,7 @@ export default function UserStats() {
   }, [error]);
 
   const topExercises =
-    userStats?.topThreeExercises?.split(",").map((exercise) => {
+    userStats?.topExercises?.split(",").map((exercise) => {
       const [name, times] = exercise.split(" (");
       return { name, times: parseInt(times.replace(" times)", "")) };
     }) ?? [];
@@ -200,36 +200,18 @@ export default function UserStats() {
                       </Tr>
                     </Thead>
                     <Tbody>
-                      {topExercises.length > 0 && (
-                        <Tr>
-                          <Td fontSize={["xs", "sm", "md"]}>
-                            #1 - {topExercises[0].name}
-                          </Td>
-                          <Td fontSize={["xs", "sm", "md"]}>
-                            {topExercises[0].times.toLocaleString()}
-                          </Td>
-                        </Tr>
-                      )}
-                      {topExercises.length > 1 && (
-                        <Tr>
-                          <Td fontSize={["xs", "sm", "md"]}>
-                            #2 - {topExercises[1].name}
-                          </Td>
-                          <Td fontSize={["xs", "sm", "md"]}>
-                            {topExercises[1].times.toLocaleString()}
-                          </Td>
-                        </Tr>
-                      )}
-                      {topExercises.length > 2 && (
-                        <Tr>
-                          <Td fontSize={["xs", "sm", "md"]}>
-                            #3 - {topExercises[2].name}
-                          </Td>
-                          <Td fontSize={["xs", "sm", "md"]}>
-                            {topExercises[2].times.toLocaleString()}
-                          </Td>
-                        </Tr>
-                      )}
+                      {topExercises.map((exercise, index) => {
+                        return (
+                          <Tr key={index}>
+                            <Td fontSize={["xs", "sm", "md"]}>
+                              #{index + 1} - {exercise.name}
+                            </Td>
+                            <Td fontSize={["xs", "sm", "md"]}>
+                              {exercise.times.toLocaleString()}
+                            </Td>
+                          </Tr>
+                        );
+                      })}
                     </Tbody>
                   </Table>
                 </TableContainer>

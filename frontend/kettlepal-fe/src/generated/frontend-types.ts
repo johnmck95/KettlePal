@@ -298,7 +298,7 @@ export type UserStats = {
   longestWorkout: Scalars['Int']['output'];
   mostRepsInWorkout: Scalars['Int']['output'];
   oldestWorkoutDate: Scalars['String']['output'];
-  topThreeExercises: Scalars['String']['output'];
+  topExercises: Scalars['String']['output'];
   totalExercises: Scalars['Int']['output'];
   totalTime: Scalars['Int']['output'];
   totalWorkouts: Scalars['Int']['output'];
@@ -405,7 +405,7 @@ export type UserStatsQueryVariables = Exact<{
 }>;
 
 
-export type UserStatsQuery = { __typename?: 'Query', user?: { __typename?: 'User', userStats?: { __typename?: 'UserStats', totalWorkouts: number, totalExercises: number, totalTime: number, longestWorkout: number, mostRepsInWorkout: number, largestWorkCapacityKg: number, topThreeExercises: string, oldestWorkoutDate: string } | null } | null };
+export type UserStatsQuery = { __typename?: 'Query', user?: { __typename?: 'User', userStats?: { __typename?: 'UserStats', totalWorkouts: number, totalExercises: number, totalTime: number, longestWorkout: number, mostRepsInWorkout: number, largestWorkCapacityKg: number, topExercises: string, oldestWorkoutDate: string } | null } | null };
 
 
 export const LoginDocument = gql`
@@ -853,7 +853,7 @@ export const UserStatsDocument = gql`
       longestWorkout
       mostRepsInWorkout
       largestWorkCapacityKg
-      topThreeExercises
+      topExercises
       oldestWorkoutDate
     }
   }

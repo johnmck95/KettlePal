@@ -297,7 +297,7 @@ export type UserStats = {
   longestWorkout: Scalars['Int']['output'];
   mostRepsInWorkout: Scalars['Int']['output'];
   oldestWorkoutDate: Scalars['String']['output'];
-  topThreeExercises: Scalars['String']['output'];
+  topExercises: Scalars['String']['output'];
   totalExercises: Scalars['Int']['output'];
   totalTime: Scalars['Int']['output'];
   totalWorkouts: Scalars['Int']['output'];
@@ -537,7 +537,7 @@ export type UserStatsResolvers<ContextType = any, ParentType extends ResolversPa
   longestWorkout?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   mostRepsInWorkout?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   oldestWorkoutDate?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  topThreeExercises?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  topExercises?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   totalExercises?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   totalTime?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   totalWorkouts?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
