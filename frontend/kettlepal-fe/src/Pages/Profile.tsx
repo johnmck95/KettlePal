@@ -8,7 +8,7 @@ export default function Profile() {
   const isLargeScreen = useBreakpointValue({ base: false, lg: true });
   return (
     <Grid
-      templateRows={isLargeScreen ? "repeat(2, auto)" : "repeat(3, auto)"}
+      templateRows={isLargeScreen ? "repeat(8, auto)" : "repeat(3, auto)"}
       templateColumns={isLargeScreen ? "1fr minmax(300px, auto)" : "1fr"}
       gap={4}
       w="100%"
@@ -21,7 +21,7 @@ export default function Profile() {
       </GridItem>
 
       <GridItem
-        rowSpan={isLargeScreen ? 2 : 1}
+        rowSpan={isLargeScreen ? 8 : 1}
         colSpan={1}
         order={isLargeScreen ? 2 : 3}
       >

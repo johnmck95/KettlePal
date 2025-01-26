@@ -14,11 +14,11 @@ export default function AtAGlance() {
   };
 
   const [selectedMetric, setSelectedMetric] = React.useState<
-    "Reps" | "Work Capacity"
-  >("Work Capacity");
-  const metrics = ["Reps", "Work Capacity"];
+    "Time" | "Work Capacity"
+  >("Time");
+  const metrics = ["Time", "Work Capacity"];
   const handleMetricClick = (metric: string) => {
-    setSelectedMetric(metric as "Reps" | "Work Capacity");
+    setSelectedMetric(metric as "Time" | "Work Capacity");
   };
 
   return (

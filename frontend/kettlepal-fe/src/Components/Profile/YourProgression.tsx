@@ -20,11 +20,11 @@ export default function YourProgression() {
   };
 
   const [selectedMetric, setSelectedMetric] = React.useState<
-    "Reps" | "Work Capacity"
+    "Time" | "Work Capacity"
   >("Work Capacity");
-  const metrics = ["Reps", "Work Capacity"];
+  const metrics = ["Time", "Work Capacity"];
   const handleMetricClick = (metric: string) => {
-    setSelectedMetric(metric as "Reps" | "Work Capacity");
+    setSelectedMetric(metric as "Time" | "Work Capacity");
   };
 
   return (
