@@ -274,6 +274,204 @@ export const resolvers = {
         throw error;
       }
     },
+    // period: "weekly" | "monthly" | "annually" | "lifetime" --> the type of data queried.
+    // dateRange: "2021-01-01,2021-01-31" --> for custom date range, default is the latest. YYYY-MM-DD,YYYY-MM-DD
+    async atAGlance(
+      parent: User,
+      {
+        period,
+        dateRange,
+      }: { period: "Week" | "Month" | "Year" | "Lifetime"; dateRange: string }
+    ) {
+      const weeklyResponseExample = {
+        period: "weekly",
+        dateRange: "2025-01-01,2025-01-031",
+        data: [
+          // data is broken up by the day
+          {
+            dateRange: "2025-01-01,2025-01-01",
+            elapsedSeconds: 512,
+            workCapacityKg: 1400,
+          },
+          {
+            dateRange: "2025-01-02,2025-01-02",
+            elapsedSeconds: 452,
+            workCapacityKg: 15600,
+          },
+          {
+            dateRange: "2025-01-03,2025-01-03",
+            elapsedSeconds: 1230,
+            workCapacityKg: 43400,
+          },
+          {
+            dateRange: "2025-01-04,2025-01-04",
+            elapsedSeconds: 509,
+            workCapacityKg: 23999,
+          },
+          {
+            dateRange: "2025-01-05,2025-01-05",
+            elapsedSeconds: 345,
+            workCapacityKg: 13450,
+          },
+          {
+            dateRange: "2025-01-06,2025-01-06",
+            elapsedSeconds: 345,
+            workCapacityKg: 13450,
+          },
+          {
+            dateRange: "2025-01-07,2025-01-07",
+            elapsedSeconds: 345,
+            workCapacityKg: 13450,
+          },
+        ],
+      };
+
+      const montlyResponseExample = {
+        period: "monthly",
+        dateRange: "2024-01-01,2024-01-31",
+        data: [
+          // Data is broken up by the week
+          {
+            dateRange: "2024-01-01,2024-01-07",
+            elapsedSeconds: 5172,
+            workCapacityKg: 23400,
+          },
+          {
+            dateRange: "2024-01-07,2024-01-14",
+            elapsedSeconds: 4524,
+            workCapacityKg: 15600,
+          },
+          {
+            dateRange: "2024-01-15,2024-01-21",
+            elapsedSeconds: 12360,
+            workCapacityKg: 43400,
+          },
+          {
+            dateRange: "2024-01-22,2024-01-28",
+            elapsedSeconds: 5095,
+            workCapacityKg: 23999,
+          },
+          {
+            dateRange: "2024-01-29,2024-02-04", // Notice this week overlaps 2 months
+            elapsedSeconds: 3245,
+            workCapacityKg: 13450,
+          },
+        ],
+      };
+
+      const annualResponseExample = {
+        period: "annually",
+        dateRange: "2024-01-01,2024-12-31",
+        data: [
+          // Data is broken up by the month
+          {
+            dateRange: "2024-01-01,2024-01-31",
+            elapsedSeconds: 51372,
+            workCapacityKg: 234030,
+          },
+          {
+            dateRange: "2024-02-01,2024-02-28",
+            elapsedSeconds: 45324,
+            workCapacityKg: 156500,
+          },
+          {
+            dateRange: "2024-03-01,2024-03-31",
+            elapsedSeconds: 12360,
+            workCapacityKg: 43400,
+          },
+          {
+            dateRange: "2024-04-01,2024-04-30",
+            elapsedSeconds: 50595,
+            workCapacityKg: 233999,
+          },
+          {
+            dateRange: "2024-05-01,2024-05-30",
+            elapsedSeconds: 50595,
+            workCapacityKg: 233999,
+          },
+          {
+            dateRange: "2024-06-01,2024-06-30",
+            elapsedSeconds: 55695,
+            workCapacityKg: 259799,
+          },
+          {
+            dateRange: "2024-07-01,2024-07-30",
+            elapsedSeconds: 12495,
+            workCapacityKg: 543999,
+          },
+          {
+            dateRange: "2024-08-01,2024-08-30",
+            elapsedSeconds: 50015,
+            workCapacityKg: 233999,
+          },
+          {
+            dateRange: "2024-09-01,2024-09-30",
+            elapsedSeconds: 98595,
+            workCapacityKg: 974399,
+          },
+          {
+            dateRange: "2024-10-01,2024-10-30",
+            elapsedSeconds: 32195,
+            workCapacityKg: 323999,
+          },
+          {
+            dateRange: "2024-11-01,2024-11-30",
+            elapsedSeconds: 12595,
+            workCapacityKg: 23777,
+          },
+          {
+            dateRange: "2024-12-01,2024-12-30",
+            elapsedSeconds: 50095,
+            workCapacityKg: 113999,
+          },
+        ],
+      };
+
+      const lifetimeResponseExample = {
+        period: "lifetime",
+        dateRange: "2021-01-01,2025-12-31",
+        data: [
+          // Data is broken up by the year
+          {
+            dateRange: "2021-01-01,2021-12-31",
+            elapsedSeconds: 51372,
+            workCapacityKg: 234030,
+          },
+          {
+            dateRange: "2022-01-01,2022-12-31",
+            elapsedSeconds: 45324,
+            workCapacityKg: 156500,
+          },
+          {
+            dateRange: "2023-01-01,2023-12-31",
+            elapsedSeconds: 12360,
+            workCapacityKg: 43400,
+          },
+          {
+            dateRange: "2024-01-01,2024-12-31",
+            elapsedSeconds: 50595,
+            workCapacityKg: 233999,
+          },
+          {
+            dateRange: "2025-01-01,2025-12-31",
+            elapsedSeconds: 50595,
+            workCapacityKg: 233999,
+          },
+        ],
+      };
+
+      switch (period) {
+        case "Week":
+        default:
+          return weeklyResponseExample;
+        case "Month":
+          return montlyResponseExample;
+        case "Year":
+          return annualResponseExample;
+        case "Lifetime":
+          return lifetimeResponseExample;
+      }
+    },
   },
 
   // This is the resolver for returning all exercises within a workout

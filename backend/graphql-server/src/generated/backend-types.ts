@@ -56,6 +56,20 @@ export type AddWorkoutWithExercisesInput = {
   exercises: Array<InputMaybe<AddExerciseInput>>;
 };
 
+export type AtAGlance = {
+  __typename?: 'AtAGlance';
+  data: Array<Maybe<AtAGlanceData>>;
+  dateRange: Scalars['String']['output'];
+  period: Scalars['String']['output'];
+};
+
+export type AtAGlanceData = {
+  __typename?: 'AtAGlanceData';
+  dateRange: Scalars['String']['output'];
+  elapsedSeconds: Scalars['Int']['output'];
+  workCapacityKg: Scalars['Int']['output'];
+};
+
 export type CheckSessionResponse = {
   __typename?: 'CheckSessionResponse';
   isValid: Scalars['Boolean']['output'];
@@ -262,6 +276,7 @@ export type UpdateWorkoutWithExercisesInput = {
 
 export type User = {
   __typename?: 'User';
+  atAGlance?: Maybe<AtAGlance>;
   createdAt: Scalars['String']['output'];
   email: Scalars['String']['output'];
   firstName: Scalars['String']['output'];
@@ -272,6 +287,12 @@ export type User = {
   uid: Scalars['ID']['output'];
   userStats?: Maybe<UserStats>;
   workouts: Array<Maybe<Workout>>;
+};
+
+
+export type UserAtAGlanceArgs = {
+  dateRange: Scalars['String']['input'];
+  period: Scalars['String']['input'];
 };
 
 
@@ -401,6 +422,8 @@ export type ResolversTypes = ResolversObject<{
   AddOrEditWorkoutInput: AddOrEditWorkoutInput;
   AddUserInput: AddUserInput;
   AddWorkoutWithExercisesInput: AddWorkoutWithExercisesInput;
+  AtAGlance: ResolverTypeWrapper<AtAGlance>;
+  AtAGlanceData: ResolverTypeWrapper<AtAGlanceData>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   CheckSessionResponse: ResolverTypeWrapper<CheckSessionResponse>;
   EditExerciseInput: EditExerciseInput;
@@ -429,6 +452,8 @@ export type ResolversParentTypes = ResolversObject<{
   AddOrEditWorkoutInput: AddOrEditWorkoutInput;
   AddUserInput: AddUserInput;
   AddWorkoutWithExercisesInput: AddWorkoutWithExercisesInput;
+  AtAGlance: AtAGlance;
+  AtAGlanceData: AtAGlanceData;
   Boolean: Scalars['Boolean']['output'];
   CheckSessionResponse: CheckSessionResponse;
   EditExerciseInput: EditExerciseInput;
@@ -448,6 +473,20 @@ export type ResolversParentTypes = ResolversObject<{
   UserStats: UserStats;
   Workout: Workout;
   WorkoutWithExercises: WorkoutWithExercises;
+}>;
+
+export type AtAGlanceResolvers<ContextType = any, ParentType extends ResolversParentTypes['AtAGlance'] = ResolversParentTypes['AtAGlance']> = ResolversObject<{
+  data?: Resolver<Array<Maybe<ResolversTypes['AtAGlanceData']>>, ParentType, ContextType>;
+  dateRange?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  period?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type AtAGlanceDataResolvers<ContextType = any, ParentType extends ResolversParentTypes['AtAGlanceData'] = ResolversParentTypes['AtAGlanceData']> = ResolversObject<{
+  dateRange?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  elapsedSeconds?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  workCapacityKg?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type CheckSessionResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['CheckSessionResponse'] = ResolversParentTypes['CheckSessionResponse']> = ResolversObject<{
@@ -508,6 +547,7 @@ export type RefreshTokenResponseResolvers<ContextType = any, ParentType extends 
 }>;
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = ResolversObject<{
+  atAGlance?: Resolver<Maybe<ResolversTypes['AtAGlance']>, ParentType, ContextType, RequireFields<UserAtAGlanceArgs, 'dateRange' | 'period'>>;
   createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   firstName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -566,6 +606,8 @@ export type WorkoutWithExercisesResolvers<ContextType = any, ParentType extends 
 }>;
 
 export type Resolvers<ContextType = any> = ResolversObject<{
+  AtAGlance?: AtAGlanceResolvers<ContextType>;
+  AtAGlanceData?: AtAGlanceDataResolvers<ContextType>;
   CheckSessionResponse?: CheckSessionResponseResolvers<ContextType>;
   Exercise?: ExerciseResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
