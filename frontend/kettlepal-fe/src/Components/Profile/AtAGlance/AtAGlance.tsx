@@ -1,6 +1,5 @@
 import {
   Box,
-  Flex,
   Center,
   HStack,
   Heading,
@@ -11,11 +10,12 @@ import {
 } from "@chakra-ui/react";
 
 import React, { useState, useEffect } from "react";
-import theme from "../../Constants/theme";
-import { RadioGroup } from "../UI/RadioCard";
-import { useAtAGlanceQuery } from "../../generated/frontend-types";
-import { useUser } from "../../Contexts/UserContext";
-import LoadingSpinner from "../LoadingSpinner";
+import theme from "../../../Constants/theme";
+import { RadioGroup } from "../../UI/RadioCard";
+import { useAtAGlanceQuery } from "../../../generated/frontend-types";
+import { useUser } from "../../../Contexts/UserContext";
+import LoadingSpinner from "../../LoadingSpinner";
+import Visualization from "./Visualization";
 
 export default function AtAGlance() {
   const [selectedPeriod, setSelectedPeriod] = React.useState<
@@ -50,13 +50,14 @@ export default function AtAGlance() {
     }
   }, [error]);
 
-  console.log(data);
+  console.log("AT A GLANCE");
   return (
     <Box
       bg={theme.colors.white}
       borderRadius="8px"
       boxShadow={`0px 1px 2px ${theme.colors.grey[400]}`}
       p="1rem"
+      // minH="462px"
     >
       <HStack mb="1rem">
         <Heading fontSize="xl">Your {selectedPeriod} At a Glance</Heading>
@@ -80,23 +81,19 @@ export default function AtAGlance() {
         </Alert>
       )}
       {loading ? (
-        <Center w="100%" minH="50vh">
+        <Center w="100%" minH="400px">
           <LoadingSpinner size={16} disableMessage={true} />
         </Center>
       ) : (
-        <>
-          <Flex
-            w="100%"
-            h="350px"
-            bg={theme.colors.feldgrau[100]}
-            borderRadius="10px"
-            justifyContent={"center"}
-            alignItems={"center"}
-            color={theme.colors.white}
-          >
-            {selectedMetric} - Coming Soon..
-          </Flex>
-        </>
+        <Box w="100%" minH="400px">
+          {data?.user?.atAGlance?.data && data?.user?.atAGlance?.period && (
+            <Visualization
+              data={data?.user?.atAGlance?.data}
+              period={selectedPeriod}
+              visualizeField={selectedMetric}
+            />
+          )}
+        </Box>
       )}
       <HStack
         mt="0.5rem"

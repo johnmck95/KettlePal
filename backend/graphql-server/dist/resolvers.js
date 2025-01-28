@@ -249,38 +249,38 @@ export const resolvers = {
                     // data is broken up by the day
                     {
                         dateRange: "2025-01-01,2025-01-01",
-                        elapsedSeconds: 512,
-                        workCapacityKg: 1400,
+                        elapsedSeconds: 0,
+                        workCapacityKg: 0,
                     },
                     {
                         dateRange: "2025-01-02,2025-01-02",
-                        elapsedSeconds: 452,
-                        workCapacityKg: 15600,
+                        elapsedSeconds: 0,
+                        workCapacityKg: 0,
                     },
                     {
                         dateRange: "2025-01-03,2025-01-03",
-                        elapsedSeconds: 1230,
-                        workCapacityKg: 43400,
+                        elapsedSeconds: 45 * 60, // 45 mins
+                        workCapacityKg: 5800,
                     },
                     {
                         dateRange: "2025-01-04,2025-01-04",
-                        elapsedSeconds: 509,
-                        workCapacityKg: 23999,
+                        elapsedSeconds: 0,
+                        workCapacityKg: 0,
                     },
                     {
                         dateRange: "2025-01-05,2025-01-05",
-                        elapsedSeconds: 345,
-                        workCapacityKg: 13450,
+                        elapsedSeconds: 20 * 60,
+                        workCapacityKg: 2210,
                     },
                     {
                         dateRange: "2025-01-06,2025-01-06",
-                        elapsedSeconds: 345,
-                        workCapacityKg: 13450,
+                        elapsedSeconds: 0,
+                        workCapacityKg: 0,
                     },
                     {
                         dateRange: "2025-01-07,2025-01-07",
-                        elapsedSeconds: 345,
-                        workCapacityKg: 13450,
+                        elapsedSeconds: 0,
+                        workCapacityKg: 0,
                     },
                 ],
             };
@@ -390,28 +390,28 @@ export const resolvers = {
                     // Data is broken up by the year
                     {
                         dateRange: "2021-01-01,2021-12-31",
-                        elapsedSeconds: 51372,
-                        workCapacityKg: 234030,
+                        elapsedSeconds: 11372,
+                        workCapacityKg: 89030,
                     },
                     {
                         dateRange: "2022-01-01,2022-12-31",
-                        elapsedSeconds: 45324,
-                        workCapacityKg: 156500,
+                        elapsedSeconds: 23324,
+                        workCapacityKg: 176500,
                     },
                     {
                         dateRange: "2023-01-01,2023-12-31",
-                        elapsedSeconds: 12360,
-                        workCapacityKg: 43400,
+                        elapsedSeconds: 27360,
+                        workCapacityKg: 203400,
                     },
                     {
                         dateRange: "2024-01-01,2024-12-31",
-                        elapsedSeconds: 50595,
+                        elapsedSeconds: 34595,
                         workCapacityKg: 233999,
                     },
                     {
                         dateRange: "2025-01-01,2025-12-31",
-                        elapsedSeconds: 50595,
-                        workCapacityKg: 233999,
+                        elapsedSeconds: 28595,
+                        workCapacityKg: 283999,
                     },
                 ],
             };
