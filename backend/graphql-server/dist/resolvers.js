@@ -239,12 +239,79 @@ export const resolvers = {
                 throw error;
             }
         },
-        // period: "weekly" | "monthly" | "annually" | "lifetime" --> the type of data queried.
+        // period: "Week" | "Month" | "Year" | "Lifetime" --> the type of data queried.
         // dateRange: "2021-01-01,2021-01-31" --> for custom date range, default is the latest. YYYY-MM-DD,YYYY-MM-DD
         async atAGlance(parent, { period, dateRange, }) {
+            function getCurrentWeek() {
+                const today = new Date();
+                const currentDay = today.getDay();
+                const diff = today.getDate() - currentDay + (currentDay === 0 ? -6 : 1); // Adjust when current day is Sunday
+                const monday = new Date(today.setDate(diff));
+                const sunday = new Date(today.setDate(diff + 6));
+                const formatDate = (date) => {
+                    const year = date.getFullYear();
+                    const month = String(date.getMonth() + 1).padStart(2, "0");
+                    const day = String(date.getDate()).padStart(2, "0");
+                    return `${year}-${month}-${day}`;
+                };
+                return `${formatDate(monday)},${formatDate(sunday)}`;
+            }
+            // const formattedWeek = getCurrentWeek();
+            switch (period) {
+                case "Week":
+                default:
+                    const period = "weekly";
+                    const dateRange = getCurrentWeek();
+                    const data = (await knexInstance.raw(`
+              WITH date_range AS (
+                SELECT generate_series(
+                  date_trunc('week', CURRENT_DATE)::date,
+                  date_trunc('week', CURRENT_DATE)::date + interval '6 days',
+                  interval '1 day'
+                )::date AS day
+              ),
+              daily_stats AS (
+                SELECT 
+                  w.date,
+                  SUM(w."elapsedSeconds") AS elapsedSeconds,
+                  SUM(
+                    CASE 
+                      WHEN e."weightUnit" = 'kg' THEN e.weight * e.sets * e.reps
+                      WHEN e."weightUnit" = 'lb' THEN (e.weight * 0.45359237) * e.sets * e.reps
+                      ELSE 0
+                    END
+                  ) AS workCapacityKg
+                FROM workouts w
+                LEFT JOIN exercises e ON w.uid = e."workoutUid"
+                WHERE w."userUid" = '40f6e5fe-5ede-46a4-976e-8ff9d1da74cd'
+                  AND w.date::date >= date_trunc('week', CURRENT_DATE)::date
+                  AND w.date::date < (date_trunc('week', CURRENT_DATE) + interval '1 week')::date
+                GROUP BY w.date
+              )
+              SELECT 
+                TO_CHAR(dr.day, 'YYYY-MM-DD') || ',' || TO_CHAR(dr.day, 'YYYY-MM-DD') AS "dateRange",
+                COALESCE(ds.elapsedSeconds, 0) AS "elapsedSeconds",
+                COALESCE(ds.workCapacityKg, 0) AS "workCapacityKg"
+              FROM date_range dr
+              LEFT JOIN daily_stats ds ON dr.day = ds.date::date
+              ORDER BY dr.day
+            `)).rows;
+                    const response = {
+                        period,
+                        dateRange,
+                        data,
+                    };
+                    return response;
+                case "Month":
+                    break;
+                case "Year":
+                    break;
+                case "Lifetime":
+                    break;
+            }
             const weeklyResponseExample = {
                 period: "weekly",
-                dateRange: "2025-01-01,2025-01-031",
+                dateRange: "2025-01-01,2025-01-31",
                 data: [
                     // data is broken up by the day
                     {
@@ -286,31 +353,31 @@ export const resolvers = {
             };
             const montlyResponseExample = {
                 period: "monthly",
-                dateRange: "2024-01-01,2024-01-31",
+                dateRange: "2024-12-30,2025-02-02",
                 data: [
                     // Data is broken up by the week
                     {
-                        dateRange: "2024-01-01,2024-01-07",
+                        dateRange: "2024-12-30,2025-01-05",
                         elapsedSeconds: 5172,
                         workCapacityKg: 23400,
                     },
                     {
-                        dateRange: "2024-01-07,2024-01-14",
+                        dateRange: "2025-01-06,2025-01-12",
                         elapsedSeconds: 4524,
                         workCapacityKg: 15600,
                     },
                     {
-                        dateRange: "2024-01-15,2024-01-21",
+                        dateRange: "2025-01-13,2025-01-19",
                         elapsedSeconds: 12360,
                         workCapacityKg: 43400,
                     },
                     {
-                        dateRange: "2024-01-22,2024-01-28",
+                        dateRange: "2025-01-20,2025-01-26",
                         elapsedSeconds: 5095,
                         workCapacityKg: 23999,
                     },
                     {
-                        dateRange: "2024-01-29,2024-02-04", // Notice this week overlaps 2 months
+                        dateRange: "2025-01-27,2025-02-02", // Notice this week overlaps 2 months
                         elapsedSeconds: 3245,
                         workCapacityKg: 13450,
                     },
@@ -318,68 +385,68 @@ export const resolvers = {
             };
             const annualResponseExample = {
                 period: "annually",
-                dateRange: "2024-01-01,2024-12-31",
+                dateRange: "2025-01-01,2025-12-31",
                 data: [
                     // Data is broken up by the month
                     {
-                        dateRange: "2024-01-01,2024-01-31",
+                        dateRange: "2025-01-01,2025-01-31",
                         elapsedSeconds: 51372,
                         workCapacityKg: 234030,
                     },
                     {
-                        dateRange: "2024-02-01,2024-02-28",
-                        elapsedSeconds: 45324,
-                        workCapacityKg: 156500,
+                        dateRange: "2025-02-01,2025-02-28",
+                        elapsedSeconds: 0,
+                        workCapacityKg: 0,
                     },
                     {
-                        dateRange: "2024-03-01,2024-03-31",
-                        elapsedSeconds: 12360,
-                        workCapacityKg: 43400,
+                        dateRange: "2025-03-01,2025-03-31",
+                        elapsedSeconds: 0,
+                        workCapacityKg: 0,
                     },
                     {
-                        dateRange: "2024-04-01,2024-04-30",
-                        elapsedSeconds: 50595,
-                        workCapacityKg: 233999,
+                        dateRange: "2025-04-01,2025-04-30",
+                        elapsedSeconds: 0,
+                        workCapacityKg: 0,
                     },
                     {
-                        dateRange: "2024-05-01,2024-05-30",
-                        elapsedSeconds: 50595,
-                        workCapacityKg: 233999,
+                        dateRange: "2025-05-01,2025-05-30",
+                        elapsedSeconds: 0,
+                        workCapacityKg: 0,
                     },
                     {
-                        dateRange: "2024-06-01,2024-06-30",
-                        elapsedSeconds: 55695,
-                        workCapacityKg: 259799,
+                        dateRange: "2025-06-01,2025-06-30",
+                        elapsedSeconds: 0,
+                        workCapacityKg: 0,
                     },
                     {
-                        dateRange: "2024-07-01,2024-07-30",
-                        elapsedSeconds: 12495,
-                        workCapacityKg: 543999,
+                        dateRange: "2025-07-01,2025-07-30",
+                        elapsedSeconds: 0,
+                        workCapacityKg: 0,
                     },
                     {
-                        dateRange: "2024-08-01,2024-08-30",
-                        elapsedSeconds: 50015,
-                        workCapacityKg: 233999,
+                        dateRange: "2025-08-01,2025-08-30",
+                        elapsedSeconds: 0,
+                        workCapacityKg: 0,
                     },
                     {
-                        dateRange: "2024-09-01,2024-09-30",
-                        elapsedSeconds: 98595,
-                        workCapacityKg: 974399,
+                        dateRange: "2025-09-01,2025-09-30",
+                        elapsedSeconds: 0,
+                        workCapacityKg: 0,
                     },
                     {
-                        dateRange: "2024-10-01,2024-10-30",
-                        elapsedSeconds: 32195,
-                        workCapacityKg: 323999,
+                        dateRange: "2025-10-01,2025-10-30",
+                        elapsedSeconds: 0,
+                        workCapacityKg: 0,
                     },
                     {
-                        dateRange: "2024-11-01,2024-11-30",
-                        elapsedSeconds: 12595,
-                        workCapacityKg: 23777,
+                        dateRange: "2025-11-01,2025-11-30",
+                        elapsedSeconds: 0,
+                        workCapacityKg: 0,
                     },
                     {
-                        dateRange: "2024-12-01,2024-12-30",
-                        elapsedSeconds: 50095,
-                        workCapacityKg: 113999,
+                        dateRange: "2025-12-01,2025-12-30",
+                        elapsedSeconds: 0,
+                        workCapacityKg: 0,
                     },
                 ],
             };
@@ -410,16 +477,17 @@ export const resolvers = {
                     },
                     {
                         dateRange: "2025-01-01,2025-12-31",
-                        elapsedSeconds: 28595,
-                        workCapacityKg: 283999,
+                        elapsedSeconds: 3245,
+                        workCapacityKg: 13450,
                     },
                 ],
             };
             switch (period) {
-                case "Week":
-                default:
-                    return weeklyResponseExample;
+                // case "Week":
+                // default:
+                //   return weeklyResponseExample;
                 case "Month":
+                default:
                     return montlyResponseExample;
                 case "Year":
                     return annualResponseExample;

@@ -6,7 +6,6 @@ import YourProgression from "../Components/Profile/YourProgression";
 
 export default function Profile() {
   const isLargeScreen = useBreakpointValue({ base: false, lg: true });
-  console.log("PROFILE");
   return (
     <Grid
       templateRows={isLargeScreen ? "repeat(8, auto)" : "repeat(3, auto)"}

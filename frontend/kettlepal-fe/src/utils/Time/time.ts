@@ -172,15 +172,6 @@ export function calculateElapsedTime(startTimeStamp: number) {
   return Math.floor((currentTimeStamp - startTimeStamp) / 1000);
 }
 
-//EX: September 13, 2024
-export function epochToLongDateString(epoch: string) {
-  return new Date(Number(epoch)).toLocaleDateString("en-us", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-}
-
 //EX: 19% of days were active between 2022-11-01 and now
 export function calculateTotalActiveDaysPercentage(
   totalWorkouts: number | undefined | null,
@@ -199,4 +190,50 @@ export function calculateTotalActiveDaysPercentage(
   const percentage = Math.min((workouts / totalDays) * 100, 100);
 
   return percentage.toFixed(precision) + "%";
+}
+
+//EX: September 13, 2024
+export function epochToLongDateString(epoch: string) {
+  return new Date(Number(epoch)).toLocaleDateString("en-us", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+}
+
+// EX: Sept 13th, 2024
+export function formatDate(date: Date) {
+  const months = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
+  const day = date.getDate();
+  const month = months[date.getMonth()];
+  const year = date.getFullYear();
+
+  const suffix = (day: number) => {
+    if (day > 3 && day < 21) return "th";
+    switch (day % 10) {
+      case 1:
+        return "st";
+      case 2:
+        return "nd";
+      case 3:
+        return "rd";
+      default:
+        return "th";
+    }
+  };
+
+  return `${month} ${day}${suffix(day)}, ${year}`;
 }

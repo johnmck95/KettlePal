@@ -2,6 +2,7 @@ import {
   Box,
   Center,
   HStack,
+  VStack,
   Heading,
   Alert,
   AlertIcon,
@@ -15,7 +16,9 @@ import { RadioGroup } from "../../UI/RadioCard";
 import { useAtAGlanceQuery } from "../../../generated/frontend-types";
 import { useUser } from "../../../Contexts/UserContext";
 import LoadingSpinner from "../../LoadingSpinner";
-import Visualization from "./Visualization";
+import Graph from "./Visualization/Graph";
+import Detail from "../../ViewWorkouts/ViewDetailedWorkoutModal/Detail";
+import { formatTime } from "../../../utils/Time/time";
 
 export default function AtAGlance() {
   const [selectedPeriod, setSelectedPeriod] = React.useState<
@@ -50,14 +53,24 @@ export default function AtAGlance() {
     }
   }, [error]);
 
-  console.log("AT A GLANCE");
+  const totalTime = data?.user?.atAGlance?.data?.reduce((total, item) => {
+    const elapsedSeconds = item?.elapsedSeconds ?? 0;
+    return total + elapsedSeconds;
+  }, 0);
+  const totalWorkCapacityKg = data?.user?.atAGlance?.data?.reduce(
+    (total, item) => {
+      const workCapacityKg = item?.workCapacityKg ?? 0;
+      return total + workCapacityKg;
+    },
+    0
+  );
+
   return (
     <Box
       bg={theme.colors.white}
       borderRadius="8px"
       boxShadow={`0px 1px 2px ${theme.colors.grey[400]}`}
       p="1rem"
-      // minH="462px"
     >
       <HStack mb="1rem">
         <Heading fontSize="xl">Your {selectedPeriod} At a Glance</Heading>
@@ -85,15 +98,29 @@ export default function AtAGlance() {
           <LoadingSpinner size={16} disableMessage={true} />
         </Center>
       ) : (
-        <Box w="100%" minH="400px">
-          {data?.user?.atAGlance?.data && data?.user?.atAGlance?.period && (
-            <Visualization
-              data={data?.user?.atAGlance?.data}
-              period={selectedPeriod}
-              visualizeField={selectedMetric}
+        <VStack>
+          <HStack justifyContent="space-evenly" w="100%">
+            <Detail
+              title="Total Time"
+              value={formatTime(totalTime ?? 0, true) || "0 mins"}
+              variant="sm"
             />
-          )}
-        </Box>
+            <Detail
+              title="Total Work Capacity"
+              value={(totalWorkCapacityKg ?? 0).toLocaleString() + " kg"}
+              variant="sm"
+            />
+          </HStack>
+          <Box w="100%" minH="400px">
+            {data?.user?.atAGlance?.data && data?.user?.atAGlance?.period && (
+              <Graph
+                data={data?.user?.atAGlance?.data}
+                period={selectedPeriod}
+                visualizeField={selectedMetric}
+              />
+            )}
+          </Box>
+        </VStack>
       )}
       <HStack
         mt="0.5rem"

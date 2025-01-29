@@ -1,26 +1,36 @@
 import React, { useRef, useEffect } from "react";
 import * as d3 from "d3";
-import { AtAGlanceQuery } from "../../../generated/frontend-types";
-import theme from "../../../Constants/theme";
+import { AtAGlanceQuery } from "../../../../generated/frontend-types";
+import theme from "../../../../Constants/theme";
+import Tooltip from "./Tooltip";
 
 type AtAGlanceData = NonNullable<
   NonNullable<NonNullable<AtAGlanceQuery["user"]>["atAGlance"]>["data"]
 >;
 
-interface VisualizationProps {
+interface GraphProps {
   data: AtAGlanceData;
   period: "Week" | "Month" | "Year" | "Lifetime";
   visualizeField: "Time" | "Work Capacity";
 }
 
-export default function Visualization({
-  data,
-  period,
-  visualizeField,
-}: VisualizationProps) {
+export type FormattedData = {
+  startDate: Date;
+  endDate: Date;
+  xAxisLabel: string;
+  __typename?: "AtAGlanceData" | undefined;
+  dateRange?: string | undefined;
+  elapsedSeconds?: number | undefined;
+  workCapacityKg?: number | undefined;
+}[];
+
+export default function Graph({ data, period, visualizeField }: GraphProps) {
+  const [tooltipContent, setTooltipContent] = React.useState<
+    FormattedData[0] | null
+  >(null);
+  const [tooltipPosition, setTooltipPosition] = React.useState({ x: 0, y: 0 });
   const MAX_SECONDS = 60 * 60 * 2; // 2 hours
   const svgRef = useRef<SVGSVGElement>(null);
-  const tooltipRef = useRef<HTMLDivElement>(null);
   const visualizeFieldMapping = {
     Time: "elapsedSeconds",
     "Work Capacity": "workCapacityKg",
@@ -36,6 +46,7 @@ export default function Visualization({
     /////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////// Prepare Data & Labels /////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////
+
     const dayLabels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
     const weekLabels = data.map((entry, index) => `Week ${index + 1}`);
     const monthLabels = [
@@ -73,7 +84,7 @@ export default function Visualization({
 
     // Parse dates
     const parseDate = d3.timeParse("%Y-%m-%d");
-    const formattedData = data.map((entry, index) => ({
+    const formattedData: FormattedData = data.map((entry, index) => ({
       ...entry,
       startDate: parseDate(entry?.dateRange.split(",")[0] ?? "")!,
       endDate: parseDate(entry?.dateRange.split(",")[1] ?? "")!,
@@ -103,6 +114,7 @@ export default function Visualization({
         : period === "Year"
         ? monthLabels
         : yearLabels;
+
     /////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////// D3 Visualization Code /////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////
@@ -209,7 +221,54 @@ export default function Visualization({
       .attr("stroke-width", 2)
       .attr("d", line);
 
-    // Add dots
+    // Colors dots relative to the current date
+    function getDotColour(entry: (typeof formattedData)[0]) {
+      const today = new Date();
+      const pointStart = new Date(entry.startDate);
+      pointStart.setHours(0, 0, 0, 0);
+      const pointEnd = new Date(entry.endDate);
+      pointEnd.setHours(23, 59, 59, 999);
+
+      switch (period) {
+        case "Week":
+        default:
+          return today.getTime() >= pointStart.getTime() &&
+            today.getTime() <= pointEnd.getTime()
+            ? theme.colors.lion[700] // today
+            : today.getTime() < pointEnd.getTime()
+            ? theme.colors.grey[300] // future
+            : theme.colors.feldgrau[500]; // past
+
+        case "Month":
+          const currentDay = today.getDay();
+          const diff =
+            today.getDate() - currentDay + (currentDay === 0 ? -6 : 1); // Adjust when current day is Sunday
+          const monday = new Date(today.setDate(diff));
+          monday.setHours(0, 0, 0, 0);
+          const sunday = new Date(today.setDate(diff + 6));
+          sunday.setHours(23, 59, 59, 999);
+
+          return (pointEnd.getTime() >= monday.getTime() &&
+            pointEnd.getTime() <= sunday.getTime()) ||
+            (pointStart.getTime() <= sunday.getTime() &&
+              pointStart.getTime() >= monday.getTime())
+            ? theme.colors.lion[700] // this week
+            : pointEnd.getTime() < monday.getTime()
+            ? theme.colors.feldgrau[500] // past week
+            : theme.colors.grey[300]; // future week
+
+        case "Year":
+        case "Lifetime":
+          return today.getTime() >= pointStart.getTime() &&
+            today.getTime() <= pointEnd.getTime()
+            ? theme.colors.lion[700] // today
+            : today.getTime() < pointStart.getTime()
+            ? theme.colors.grey[300] // future
+            : theme.colors.feldgrau[500]; // past
+      }
+    }
+
+    // Add dots, register tooltip
     svgGroup
       .selectAll(".dot")
       .data(formattedData)
@@ -218,8 +277,46 @@ export default function Visualization({
       .attr("class", "dot")
       .attr("cx", (entry) => x(entry.xAxisLabel)! + x.bandwidth() / 2)
       .attr("cy", (entry) => y(yAxisValue(entry)))
-      .attr("r", 4)
-      .attr("fill", theme.colors.feldgrau[500]);
+      .attr("r", 8)
+      .attr("fill", (entry) => getDotColour(entry))
+      .on("mouseover", function (event, entry: FormattedData[0]) {
+        // Highlight dot on hover
+        d3.select(this).attr("fill", theme.colors.feldgrau[100]);
+
+        // Y coordinates are inverted in D3
+        const [mouseX, mouseY] = d3.pointer(event);
+
+        const graphWidth = svgRef.current?.clientWidth ?? 0;
+        const graphHeight = svgRef.current?.clientHeight ?? 0;
+        const tooltipWidth = 260 - 32; // -32px for the tooltip padding
+        const tooltipHeight = 125 - 32; // -32px for the tooltip padding
+
+        let setXTTooltipTo;
+        let setYTTooltipTo;
+        // always place the tooltip to the far graph edges on small screens
+        if (graphWidth <= 600) {
+          setXTTooltipTo =
+            mouseX >= graphWidth / 2 // mouse is in the right half, place tooltip far right
+              ? graphWidth - tooltipWidth - 50
+              : 75;
+        } else {
+          setXTTooltipTo =
+            mouseX >= graphWidth / 2 // mouse is in the right half, place tooltip to the left of the dot
+              ? mouseX - tooltipWidth + 38
+              : mouseX + 68;
+        }
+        setYTTooltipTo =
+          graphHeight - mouseY >= graphHeight / 2
+            ? mouseY + 35
+            : mouseY - tooltipHeight - 35;
+
+        setTooltipPosition({ x: setXTTooltipTo, y: setYTTooltipTo });
+        setTooltipContent(entry);
+      })
+      .on("mouseout", function (event, entry: FormattedData[0]) {
+        d3.select(this as any).attr("fill", getDotColour(entry));
+        setTooltipContent(null);
+      });
 
     // Add x axis
     svgGroup
@@ -229,30 +326,14 @@ export default function Visualization({
 
     // Add y axis
     svgGroup.append("g").call(d3.axisLeft(y));
-
-    // Create a tooltip
-    const tooltip = d3
-      .select(tooltipRef.current)
-      .style("position", "absolute")
-      .style("padding", "10px")
-      .style("background", "#333")
-      .style("color", "#fff")
-      .style("border-radius", "5px")
-      .style("pointer-events", "none")
-      .style("opacity", 0);
   }, [data, visualizeField, visualizationField, period, MAX_SECONDS]);
 
   return (
-    <svg ref={svgRef} style={{ width: "100%", minHeight: "400px" }}>
-      <div
-        ref={tooltipRef}
-        style={{
-          position: "absolute",
-          padding: "10px",
-          opacity: 0,
-          zIndex: 10,
-        }}
-      />
-    </svg>
+    <div style={{ position: "relative" }}>
+      <svg ref={svgRef} style={{ width: "100%", minHeight: "400px" }} />
+      {tooltipContent && (
+        <Tooltip content={tooltipContent} position={tooltipPosition} />
+      )}
+    </div>
   );
 }

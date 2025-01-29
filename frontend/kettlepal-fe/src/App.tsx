@@ -12,7 +12,6 @@ import SessionChecker from "./Components/Auth/SessionChecker";
 import Profile from "./Pages/Profile";
 
 export const App = () => {
-  console.log("APP");
   return (
     <ChakraProvider theme={theme}>
       <UserProvider>
