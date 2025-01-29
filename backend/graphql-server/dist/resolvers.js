@@ -256,7 +256,6 @@ export const resolvers = {
                 };
                 return `${formatDate(monday)},${formatDate(sunday)}`;
             }
-            // const formattedWeek = getCurrentWeek();
             switch (period) {
                 case "Week":
                 default:

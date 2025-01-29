@@ -281,7 +281,7 @@ export default function Graph({ data, period, visualizeField }: GraphProps) {
       .attr("fill", (entry) => getDotColour(entry))
       .on("mouseover", function (event, entry: FormattedData[0]) {
         // Highlight dot on hover
-        d3.select(this).attr("fill", theme.colors.feldgrau[100]);
+        d3.select(this).attr("fill", theme.colors.black);
 
         // Y coordinates are inverted in D3
         const [mouseX, mouseY] = d3.pointer(event);

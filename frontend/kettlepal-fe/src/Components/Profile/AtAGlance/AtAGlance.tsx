@@ -93,25 +93,26 @@ export default function AtAGlance() {
           />
         </Alert>
       )}
-      {loading ? (
-        <Center w="100%" minH="400px">
-          <LoadingSpinner size={16} disableMessage={true} />
-        </Center>
-      ) : (
-        <VStack>
-          <HStack justifyContent="space-evenly" w="100%">
-            <Detail
-              title="Total Time"
-              value={formatTime(totalTime ?? 0, true) || "0 mins"}
-              variant="sm"
-            />
-            <Detail
-              title="Total Work Capacity"
-              value={(totalWorkCapacityKg ?? 0).toLocaleString() + " kg"}
-              variant="sm"
-            />
-          </HStack>
-          <Box w="100%" minH="400px">
+      <VStack minH="485px">
+        <HStack justifyContent="space-evenly" w="100%" h="4.325rem">
+          <Detail
+            title="Total Time"
+            value={formatTime(totalTime ?? 0, true) || "0 mins"}
+            variant="sm"
+          />
+          <Detail
+            title="Total Work Capacity"
+            value={(totalWorkCapacityKg ?? 0).toLocaleString() + " kg"}
+            variant="sm"
+          />
+        </HStack>
+
+        {loading ? (
+          <Center w="100%" minH="400px">
+            <LoadingSpinner size={16} disableMessage={true} />
+          </Center>
+        ) : (
+          <Box w="100%">
             {data?.user?.atAGlance?.data && data?.user?.atAGlance?.period && (
               <Graph
                 data={data?.user?.atAGlance?.data}
@@ -120,8 +121,8 @@ export default function AtAGlance() {
               />
             )}
           </Box>
-        </VStack>
-      )}
+        )}
+      </VStack>
       <HStack
         mt="0.5rem"
         mb="0rem"
