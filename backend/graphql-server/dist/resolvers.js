@@ -241,10 +241,11 @@ export const resolvers = {
         },
         // period: "Week" | "Month" | "Year" | "Lifetime" --> the type of data queried.
         // dateRange: "2021-01-01,2021-01-31" --> for custom date range, default is the latest. YYYY-MM-DD,YYYY-MM-DD
-        async atAGlance(parent, { period, dateRange, }) {
-            function getRangeFromData(monthlyData) {
-                const start = monthlyData[0].dateRange.split(",")[0];
-                const end = monthlyData[monthlyData.length - 1].dateRange.split(",")[1];
+        async atAGlance(parent, { period, dateRange, // TODO: Implement custom date range
+         }) {
+            function getRangeFromData(queriedData) {
+                const start = queriedData[0].dateRange.split(",")[0];
+                const end = queriedData[queriedData.length - 1].dateRange.split(",")[1];
                 const range = `${start},${end}`;
                 return range;
             }
@@ -295,7 +296,6 @@ export const resolvers = {
             LEFT JOIN daily_elapsed_seconds des ON dr.day = des.date
             LEFT JOIN daily_work_capacity dwc ON dr.day = dwc.date
             ORDER BY dr.day;
-            
             `)).rows;
                     const weeklyDateRange = getRangeFromData(weeklyData);
                     return {
@@ -350,7 +350,6 @@ export const resolvers = {
                 workCapacityKg as "workCapacityKg"
               FROM weekly_stats
               ORDER BY week_start;
-
             `)).rows;
                     const monthlyDateRange = getRangeFromData(monthlyData);
                     return {
