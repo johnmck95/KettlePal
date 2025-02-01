@@ -34,8 +34,8 @@ export const WeightOptions = [
     label: "kg",
   },
   {
-    value: "lbs",
-    label: "lbs",
+    value: "lb",
+    label: "lb",
   },
 ];
 

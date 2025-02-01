@@ -20,6 +20,7 @@ import {
   AddOrEditUserInput,
   AddOrEditWorkoutInput,
   AddWorkoutWithExercisesInput,
+  AtAGlanceData,
   Exercise,
   QueryPastWorkoutsArgs,
   QueryUserArgs,
@@ -280,271 +281,249 @@ export const resolvers = {
       parent: User,
       {
         period,
-        dateRange,
+        dateRange, // TODO: Implement custom date range
       }: { period: "Week" | "Month" | "Year" | "Lifetime"; dateRange: string }
     ) {
-      function getCurrentWeek() {
-        const today = new Date();
-        const currentDay = today.getDay();
-        const diff = today.getDate() - currentDay + (currentDay === 0 ? -6 : 1); // Adjust when current day is Sunday
-
-        const monday = new Date(today.setDate(diff));
-        const sunday = new Date(today.setDate(diff + 6));
-
-        const formatDate = (date) => {
-          const year = date.getFullYear();
-          const month = String(date.getMonth() + 1).padStart(2, "0");
-          const day = String(date.getDate()).padStart(2, "0");
-          return `${year}-${month}-${day}`;
-        };
-
-        return `${formatDate(monday)},${formatDate(sunday)}`;
+      function getRangeFromData(queriedData: AtAGlanceData[]) {
+        const start = queriedData[0].dateRange.split(",")[0];
+        const end = queriedData[queriedData.length - 1].dateRange.split(",")[1];
+        const range = `${start},${end}`;
+        return range;
       }
 
       switch (period) {
         case "Week":
         default:
-          const period = "weekly";
-          const dateRange = getCurrentWeek();
-          const data = (
+          const weeklyPeriod = "weekly";
+          const weeklyData: AtAGlanceData[] = (
             await knexInstance.raw(`
-              WITH date_range AS (
-                SELECT generate_series(
-                  date_trunc('week', CURRENT_DATE)::date,
-                  date_trunc('week', CURRENT_DATE)::date + interval '6 days',
-                  interval '1 day'
-                )::date AS day
-              ),
-              daily_stats AS (
-                SELECT 
-                  w.date,
-                  SUM(w."elapsedSeconds") AS elapsedSeconds,
-                  SUM(
-                    CASE 
-                      WHEN e."weightUnit" = 'kg' THEN e.weight * e.sets * e.reps
-                      WHEN e."weightUnit" = 'lb' THEN (e.weight * 0.45359237) * e.sets * e.reps
-                      ELSE 0
-                    END
-                  ) AS workCapacityKg
-                FROM workouts w
-                LEFT JOIN exercises e ON w.uid = e."workoutUid"
-                WHERE w."userUid" = '40f6e5fe-5ede-46a4-976e-8ff9d1da74cd'
-                  AND w.date::date >= date_trunc('week', CURRENT_DATE)::date
-                  AND w.date::date < (date_trunc('week', CURRENT_DATE) + interval '1 week')::date
-                GROUP BY w.date
-              )
+            WITH date_range AS (
+              SELECT generate_series(
+                date_trunc('week', CURRENT_DATE)::date,
+                date_trunc('week', CURRENT_DATE)::date + interval '6 days',
+                interval '1 day'
+              )::date AS day
+            ),
+            daily_elapsed_seconds AS (
               SELECT 
-                TO_CHAR(dr.day, 'YYYY-MM-DD') || ',' || TO_CHAR(dr.day, 'YYYY-MM-DD') AS "dateRange",
-                COALESCE(ds.elapsedSeconds, 0) AS "elapsedSeconds",
-                COALESCE(ds.workCapacityKg, 0) AS "workCapacityKg"
-              FROM date_range dr
-              LEFT JOIN daily_stats ds ON dr.day = ds.date::date
-              ORDER BY dr.day
+                w.date::date,
+                SUM(w."elapsedSeconds") AS elapsedSeconds
+              FROM workouts w
+              WHERE w."userUid" = '${parent.uid}'
+                AND w.date::date >= date_trunc('week', CURRENT_DATE)::date
+                AND w.date::date < (date_trunc('week', CURRENT_DATE) + interval '1 week')::date
+              GROUP BY w.date::date
+            ),
+            daily_work_capacity AS (
+              SELECT 
+                w.date::date,
+                SUM(
+                  CASE 
+                    WHEN e."weightUnit" = 'kg' THEN (e.weight * e.sets * e.reps)::INTEGER
+                    WHEN e."weightUnit" = 'lb' THEN ((e.weight * 0.45359237) * e.sets * e.reps)::INTEGER
+                    ELSE 0
+                  END
+                ) AS workCapacityKg
+              FROM workouts w
+              LEFT JOIN exercises e ON w.uid = e."workoutUid"
+              WHERE w."userUid" = '${parent.uid}'
+                AND w.date::date >= date_trunc('week', CURRENT_DATE)::date
+                AND w.date::date < (date_trunc('week', CURRENT_DATE) + interval '1 week')::date
+              GROUP BY w.date::date
+            )
+            SELECT 
+              TO_CHAR(dr.day, 'YYYY-MM-DD') || ',' || TO_CHAR(dr.day, 'YYYY-MM-DD') AS "dateRange",
+              COALESCE(des.elapsedSeconds, 0) AS "elapsedSeconds",
+              COALESCE(dwc.workCapacityKg, 0) AS "workCapacityKg"
+            FROM date_range dr
+            LEFT JOIN daily_elapsed_seconds des ON dr.day = des.date
+            LEFT JOIN daily_work_capacity dwc ON dr.day = dwc.date
+            ORDER BY dr.day;
+            
             `)
           ).rows;
+          const weeklyDateRange = getRangeFromData(weeklyData);
 
-          const response = {
-            period,
-            dateRange,
-            data,
+          return {
+            period: weeklyPeriod,
+            dateRange: weeklyDateRange,
+            data: weeklyData,
           };
-          return response;
+
         case "Month":
-          break;
+          const montlyPeriod = "monthly";
+          const monthlyData: AtAGlanceData[] = (
+            await knexInstance.raw(`
+              WITH current_month AS (
+                SELECT 
+                  date_trunc('month', CURRENT_DATE) AS first_day_of_month,
+                  (date_trunc('month', CURRENT_DATE) + interval '1 month - 1 day') AS last_day_of_month
+              ),
+              weeks_in_month AS (
+                SELECT 
+                  generate_series(
+                    date_trunc('week', (SELECT first_day_of_month FROM current_month))::date,
+                    date_trunc('week', (SELECT last_day_of_month FROM current_month))::date,
+                    interval '7 days'
+                  )::date AS week_start
+              ),
+              weekly_stats AS (
+                SELECT 
+                  weeks.week_start,
+                  weeks.week_start + interval '6 days' AS week_end,
+                  -- Use DISTINCT to avoid duplicate elapsedSeconds when joining with exercises
+                  COALESCE((
+                    SELECT SUM(w."elapsedSeconds")
+                    FROM workouts w
+                    WHERE w.date::date >= weeks.week_start 
+                      AND w.date::date <= weeks.week_start + interval '6 days'
+                      AND w."userUid" = '${parent.uid}'
+                  ), 0) AS elapsedSeconds,
+                  COALESCE(SUM(
+                    CASE 
+                      WHEN e."weightUnit" = 'kg' THEN (e.weight * e.sets * e.reps)::INTEGER
+                      WHEN e."weightUnit" = 'lb' THEN ((e.weight * 0.45359237) * e.sets * e.reps)::INTEGER
+                      ELSE 0
+                    END
+                  ), 0) AS workCapacityKg
+                FROM weeks_in_month weeks
+                LEFT JOIN workouts w ON w.date::date >= weeks.week_start AND w.date::date <= weeks.week_start + interval '6 days'
+                  AND w."userUid" = '${parent.uid}'
+                LEFT JOIN exercises e ON w.uid = e."workoutUid"
+                GROUP BY weeks.week_start
+              )
+              SELECT 
+                TO_CHAR(week_start, 'YYYY-MM-DD') || ',' || TO_CHAR(week_end, 'YYYY-MM-DD') AS "dateRange",
+                elapsedSeconds AS "elapsedSeconds",
+                workCapacityKg as "workCapacityKg"
+              FROM weekly_stats
+              ORDER BY week_start;
+
+            `)
+          ).rows;
+          const monthlyDateRange = getRangeFromData(monthlyData);
+
+          return {
+            period: montlyPeriod,
+            dateRange: monthlyDateRange,
+            data: monthlyData,
+          };
         case "Year":
-          break;
+          const annualPeriod = "annually";
+          const yearlyData: AtAGlanceData[] = (
+            await knexInstance.raw(`
+              WITH current_year AS (
+                SELECT 
+                  date_trunc('year', CURRENT_DATE) AS first_day_of_year,
+                  (date_trunc('year', CURRENT_DATE) + interval '1 year - 1 day') AS last_day_of_year
+              ),
+              months_in_year AS (
+                SELECT 
+                  generate_series(
+                    date_trunc('month', (SELECT first_day_of_year FROM current_year))::date,
+                    date_trunc('month', (SELECT last_day_of_year FROM current_year))::date,
+                    interval '1 month'
+                  )::date AS month_start
+              ),
+              monthly_stats AS (
+                SELECT 
+                  months.month_start,
+                  (months.month_start + interval '1 month - 1 day')::date AS month_end,
+                  COALESCE((
+                    SELECT SUM(w."elapsedSeconds")
+                    FROM workouts w
+                    WHERE w.date::date >= months.month_start 
+                      AND w.date::date <= (months.month_start + interval '1 month - 1 day')::date
+                      AND w."userUid" = '${parent.uid}'
+                  ), 0)::INTEGER AS elapsedSeconds,
+                  COALESCE(SUM(
+                    CASE 
+                      WHEN e."weightUnit" = 'kg' THEN (e.weight * e.sets * e.reps)::INTEGER
+                      WHEN e."weightUnit" = 'lb' THEN ((e.weight * 0.45359237) * e.sets * e.reps)::INTEGER
+                      ELSE 0
+                    END
+                  ), 0) AS workCapacityKg
+                FROM months_in_year months
+                LEFT JOIN workouts w ON w.date::date >= months.month_start AND w.date::date <= (months.month_start + interval '1 month - 1 day')::date
+                  AND w."userUid" = '${parent.uid}'
+                LEFT JOIN exercises e ON w.uid = e."workoutUid"
+                GROUP BY months.month_start
+              )
+              SELECT 
+                TO_CHAR(month_start, 'YYYY-MM-DD') || ',' || TO_CHAR(month_end, 'YYYY-MM-DD') AS "dateRange",
+                elapsedSeconds AS "elapsedSeconds",
+                workCapacityKg AS "workCapacityKg"
+              FROM monthly_stats
+              ORDER BY month_start;
+          `)
+          ).rows;
+          const yearlyDateRange = getRangeFromData(yearlyData);
+
+          return {
+            period: annualPeriod,
+            dateRange: yearlyDateRange,
+            data: yearlyData,
+          };
+
         case "Lifetime":
-          break;
-      }
+          const lifetimePeriod = "lifetime";
+          const lifetimeData: AtAGlanceData[] = (
+            await knexInstance.raw(`
+              WITH year_range AS (
+                SELECT generate_series(
+                  date_trunc('year', (SELECT MIN(date::date) FROM workouts WHERE "userUid" = '${parent.uid}'))::date,
+                  date_trunc('year', CURRENT_DATE)::date,
+                  interval '1 year'
+                ) AS year_start
+              ),
+              yearly_elapsed_seconds AS (
+                SELECT 
+                  date_trunc('year', w.date::date)::date AS year_start,
+                  SUM(w."elapsedSeconds")::INTEGER AS elapsedSeconds
+                FROM workouts w
+                WHERE w."userUid" = '${parent.uid}'
+                GROUP BY date_trunc('year', w.date::date)
+              ),
+              yearly_work_capacity AS (
+                SELECT 
+                  date_trunc('year', w.date::date)::date AS year_start,
+                  SUM(
+                    CASE 
+                      WHEN e."weightUnit" = 'kg' THEN (e.weight * e.sets * e.reps)::INTEGER
+                      WHEN e."weightUnit" = 'lb' THEN ((e.weight * 0.45359237) * e.sets * e.reps)::INTEGER
+                      ELSE 0
+                    END
+                  )::INTEGER AS workCapacityKg
+                FROM workouts w
+                LEFT JOIN exercises e ON w.uid = e."workoutUid"
+                WHERE w."userUid" = '${parent.uid}'
+                GROUP BY date_trunc('year', w.date::date)
+              ),
+              yearly_stats AS (
+                SELECT 
+                  yr.year_start,
+                  (yr.year_start + interval '1 year - 1 day')::date AS year_end,
+                  COALESCE(ys.elapsedSeconds, 0) AS elapsedSeconds,
+                  COALESCE(yw.workCapacityKg, 0) AS workCapacityKg
+                FROM year_range yr
+                LEFT JOIN yearly_elapsed_seconds ys ON yr.year_start = ys.year_start
+                LEFT JOIN yearly_work_capacity yw ON yr.year_start = yw.year_start
+              )
+              SELECT 
+                TO_CHAR(year_start, 'YYYY-MM-DD') || ',' || TO_CHAR(year_end, 'YYYY-MM-DD') AS "dateRange",
+                elapsedSeconds AS "elapsedSeconds",
+                workCapacityKg AS "workCapacityKg"
+              FROM yearly_stats
+              ORDER BY year_start;
+          `)
+          ).rows;
+          const lifetimeDateRange = getRangeFromData(lifetimeData);
 
-      const weeklyResponseExample = {
-        period: "weekly",
-        dateRange: "2025-01-01,2025-01-31",
-        data: [
-          // data is broken up by the day
-          {
-            dateRange: "2025-01-01,2025-01-01",
-            elapsedSeconds: 0,
-            workCapacityKg: 0,
-          },
-          {
-            dateRange: "2025-01-02,2025-01-02",
-            elapsedSeconds: 0,
-            workCapacityKg: 0,
-          },
-          {
-            dateRange: "2025-01-03,2025-01-03",
-            elapsedSeconds: 45 * 60, // 45 mins
-            workCapacityKg: 5800,
-          },
-          {
-            dateRange: "2025-01-04,2025-01-04",
-            elapsedSeconds: 0,
-            workCapacityKg: 0,
-          },
-          {
-            dateRange: "2025-01-05,2025-01-05",
-            elapsedSeconds: 20 * 60,
-            workCapacityKg: 2210,
-          },
-          {
-            dateRange: "2025-01-06,2025-01-06",
-            elapsedSeconds: 0,
-            workCapacityKg: 0,
-          },
-          {
-            dateRange: "2025-01-07,2025-01-07",
-            elapsedSeconds: 0,
-            workCapacityKg: 0,
-          },
-        ],
-      };
-
-      const montlyResponseExample = {
-        period: "monthly",
-        dateRange: "2024-12-30,2025-02-02",
-        data: [
-          // Data is broken up by the week
-          {
-            dateRange: "2024-12-30,2025-01-05",
-            elapsedSeconds: 5172,
-            workCapacityKg: 23400,
-          },
-          {
-            dateRange: "2025-01-06,2025-01-12",
-            elapsedSeconds: 4524,
-            workCapacityKg: 15600,
-          },
-          {
-            dateRange: "2025-01-13,2025-01-19",
-            elapsedSeconds: 12360,
-            workCapacityKg: 43400,
-          },
-          {
-            dateRange: "2025-01-20,2025-01-26",
-            elapsedSeconds: 5095,
-            workCapacityKg: 23999,
-          },
-          {
-            dateRange: "2025-01-27,2025-02-02", // Notice this week overlaps 2 months
-            elapsedSeconds: 3245,
-            workCapacityKg: 13450,
-          },
-        ],
-      };
-
-      const annualResponseExample = {
-        period: "annually",
-        dateRange: "2025-01-01,2025-12-31",
-        data: [
-          // Data is broken up by the month
-          {
-            dateRange: "2025-01-01,2025-01-31",
-            elapsedSeconds: 51372,
-            workCapacityKg: 234030,
-          },
-          {
-            dateRange: "2025-02-01,2025-02-28",
-            elapsedSeconds: 0,
-            workCapacityKg: 0,
-          },
-          {
-            dateRange: "2025-03-01,2025-03-31",
-            elapsedSeconds: 0,
-            workCapacityKg: 0,
-          },
-          {
-            dateRange: "2025-04-01,2025-04-30",
-            elapsedSeconds: 0,
-            workCapacityKg: 0,
-          },
-          {
-            dateRange: "2025-05-01,2025-05-30",
-            elapsedSeconds: 0,
-            workCapacityKg: 0,
-          },
-          {
-            dateRange: "2025-06-01,2025-06-30",
-            elapsedSeconds: 0,
-            workCapacityKg: 0,
-          },
-          {
-            dateRange: "2025-07-01,2025-07-30",
-            elapsedSeconds: 0,
-            workCapacityKg: 0,
-          },
-          {
-            dateRange: "2025-08-01,2025-08-30",
-            elapsedSeconds: 0,
-            workCapacityKg: 0,
-          },
-          {
-            dateRange: "2025-09-01,2025-09-30",
-            elapsedSeconds: 0,
-            workCapacityKg: 0,
-          },
-          {
-            dateRange: "2025-10-01,2025-10-30",
-            elapsedSeconds: 0,
-            workCapacityKg: 0,
-          },
-          {
-            dateRange: "2025-11-01,2025-11-30",
-            elapsedSeconds: 0,
-            workCapacityKg: 0,
-          },
-          {
-            dateRange: "2025-12-01,2025-12-30",
-            elapsedSeconds: 0,
-            workCapacityKg: 0,
-          },
-        ],
-      };
-
-      const lifetimeResponseExample = {
-        period: "lifetime",
-        dateRange: "2021-01-01,2025-12-31",
-        data: [
-          // Data is broken up by the year
-          {
-            dateRange: "2021-01-01,2021-12-31",
-            elapsedSeconds: 11372,
-            workCapacityKg: 89030,
-          },
-          {
-            dateRange: "2022-01-01,2022-12-31",
-            elapsedSeconds: 23324,
-            workCapacityKg: 176500,
-          },
-          {
-            dateRange: "2023-01-01,2023-12-31",
-            elapsedSeconds: 27360,
-            workCapacityKg: 203400,
-          },
-          {
-            dateRange: "2024-01-01,2024-12-31",
-            elapsedSeconds: 34595,
-            workCapacityKg: 233999,
-          },
-          {
-            dateRange: "2025-01-01,2025-12-31",
-            elapsedSeconds: 3245,
-            workCapacityKg: 13450,
-          },
-        ],
-      };
-
-      switch (period) {
-        // case "Week":
-        // default:
-        //   return weeklyResponseExample;
-        case "Month":
-        default:
-          return montlyResponseExample;
-        case "Year":
-          return annualResponseExample;
-        case "Lifetime":
-          return lifetimeResponseExample;
+          return {
+            period: lifetimePeriod,
+            dateRange: lifetimeDateRange,
+            data: lifetimeData,
+          };
       }
     },
   },

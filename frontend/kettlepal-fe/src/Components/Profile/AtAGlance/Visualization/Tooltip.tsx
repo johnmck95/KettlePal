@@ -21,7 +21,7 @@ export default function Tooltip({ content, position }: TooltipProps) {
       backgroundColor={theme.colors.white}
       zIndex={2}
       minWidth="250px"
-      maxHeight="125px"
+      minHeight="125px"
     >
       <VStack alignItems="flex-start" w="100%">
         <Text>

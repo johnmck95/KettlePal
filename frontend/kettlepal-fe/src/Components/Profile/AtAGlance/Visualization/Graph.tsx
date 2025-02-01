@@ -128,11 +128,16 @@ export default function Graph({ data, period, visualizeField }: GraphProps) {
 
     // Set up scales
     const x = d3.scaleBand().domain(xAxisLabels).range([0, width]);
+
+    const allZero = formattedData.every((entry) => yAxisValue(entry) === 0);
     const y = d3
       .scaleLinear()
       .domain([
         0,
-        (d3.max(formattedData, (entry) => yAxisValue(entry)) as number) * 1.1,
+        allZero
+          ? 1
+          : (d3.max(formattedData, (entry) => yAxisValue(entry)) as number) *
+            1.1,
       ])
       .range([height, 0]);
 

@@ -65,6 +65,28 @@ export default function AtAGlance() {
     0
   );
 
+  const largestTitleMapper = {
+    Week: "Day",
+    Month: "Week",
+    Year: "Month",
+    Lifetime: "Year",
+  };
+  const largestXTitle =
+    largestTitleMapper[
+      selectedPeriod as "Week" | "Month" | "Year" | "Lifetime"
+    ];
+
+  const largestValue =
+    data?.user?.atAGlance?.data.reduce((largest, item) => {
+      const value =
+        selectedMetric === "Time" ? item?.elapsedSeconds : item?.workCapacityKg;
+      return Math.max(largest, value ?? 0);
+    }, 0) ?? 0;
+  const formattedLargestValue =
+    selectedMetric === "Time"
+      ? formatTime(largestValue, true)
+      : largestValue.toLocaleString() + " kg";
+
   return (
     <Box
       bg={theme.colors.white}
@@ -72,9 +94,16 @@ export default function AtAGlance() {
       boxShadow={`0px 1px 2px ${theme.colors.grey[400]}`}
       p="1rem"
     >
-      <HStack mb="1rem">
-        <Heading fontSize="xl">Your {selectedPeriod} At a Glance</Heading>
-      </HStack>
+      <Heading
+        fontSize="2xl"
+        fontWeight="bold"
+        pb="0.5rem"
+        mb="0.5rem"
+        textAlign="center"
+        borderBottom={`1px solid ${theme.colors.green[50]}`}
+      >
+        Your {selectedPeriod} At a Glance
+      </Heading>
       {showServerError && (
         <Alert
           status="error"
@@ -103,6 +132,11 @@ export default function AtAGlance() {
           <Detail
             title="Total Work Capacity"
             value={(totalWorkCapacityKg ?? 0).toLocaleString() + " kg"}
+            variant="sm"
+          />
+          <Detail
+            title={`Largest ${largestXTitle}`}
+            value={formattedLargestValue}
             variant="sm"
           />
         </HStack>
