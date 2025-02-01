@@ -339,7 +339,6 @@ export const resolvers = {
             LEFT JOIN daily_elapsed_seconds des ON dr.day = des.date
             LEFT JOIN daily_work_capacity dwc ON dr.day = dwc.date
             ORDER BY dr.day;
-            
             `)
           ).rows;
           const weeklyDateRange = getRangeFromData(weeklyData);
@@ -398,7 +397,6 @@ export const resolvers = {
                 workCapacityKg as "workCapacityKg"
               FROM weekly_stats
               ORDER BY week_start;
-
             `)
           ).rows;
           const monthlyDateRange = getRangeFromData(monthlyData);

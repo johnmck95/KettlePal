@@ -43,9 +43,7 @@ export default function Graph({ data, period, visualizeField }: GraphProps) {
   useEffect(() => {
     if (!data || data.length === 0 || !svgRef.current) return;
 
-    /////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////// Prepare Data & Labels /////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////////////////////////
 
     const dayLabels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
     const weekLabels = data.map((entry, index) => `Week ${index + 1}`);
@@ -63,9 +61,7 @@ export default function Graph({ data, period, visualizeField }: GraphProps) {
       "Nov",
       "Dec",
     ];
-    const yearLabels = data.map(
-      (entry, index) => entry?.dateRange.slice(0, 4) ?? ""
-    );
+    const yearLabels = data.map((entry) => entry?.dateRange.slice(0, 4) ?? "");
 
     const largestTimeFromData = data.reduce(
       (max, entry) => Math.max(max, entry?.elapsedSeconds ?? 0),
@@ -115,9 +111,7 @@ export default function Graph({ data, period, visualizeField }: GraphProps) {
         ? monthLabels
         : yearLabels;
 
-    /////////////////////////////////////////////////////////////////////////////////////////
     ///////////////////////////// D3 Visualization Code /////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////////////////////////
 
     const svg = d3.select(svgRef.current);
     // Clear previous content
