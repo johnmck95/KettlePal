@@ -46,20 +46,20 @@ Development and production environments.
 
 ### Authenticated User Profiles
 
-<img src="image-9.png" alt="alt text" width="400" >
+<img src="image-9.png" alt="alt text" width="500" >
 
 ### Design and Track Workouts
 
-<img src="image-6.png" alt="alt text" width="400" >
+<img src="image-6.png" alt="alt text" width="750" >
 
 ### Review, Analyze and Update Past Workouts
 
-<img src="image-7.png" alt="alt text" width="400" >
+<img src="image-7.png" alt="alt text" width="750" >
 
 ### Analyze Your Progress Over Time
 
-<img src="image-8.png" alt="alt text" width="400" >
+<img src="image-8.png" alt="alt text" width="750" >
 
 ### Access on Mobile or Desktop Devices
 
-<img src="image-10.png" alt="alt text" width="400" >
+<img src="image-10.png" alt="alt text" width="750" >
