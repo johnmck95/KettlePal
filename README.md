@@ -44,7 +44,7 @@ Development and production environments.
 
 ## Application Introducion
 
-### Athenticated User Profiles
+### Authenticated User Profiles
 
 <img src="image-9.png" alt="alt text" width="400" >
 
