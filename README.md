@@ -50,16 +50,16 @@ Development and production environments.
 
 ### Design and Track Workouts
 
-<img src="image-6.png" alt="alt text" width="750" >
+<img src="image-6.png" alt="alt text" width="850" >
 
 ### Review, Analyze and Update Past Workouts
 
-<img src="image-7.png" alt="alt text" width="750" >
+<img src="image-7.png" alt="alt text" width="850" >
 
 ### Analyze Your Progress Over Time
 
-<img src="image-8.png" alt="alt text" width="750" >
+<img src="image-8.png" alt="alt text" width="850" >
 
 ### Access on Mobile or Desktop Devices
 
-<img src="image-10.png" alt="alt text" width="750" >
+<img src="image-10.png" alt="alt text" width="400" >
