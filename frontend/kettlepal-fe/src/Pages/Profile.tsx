@@ -1,7 +1,7 @@
 import { Grid, GridItem, useBreakpointValue } from "@chakra-ui/react";
 import React from "react";
 import UserStats from "../Components/Profile/UserStats";
-import AtAGlance from "../Components/Profile/AtAGlance";
+import AtAGlance from "../Components/Profile/AtAGlance/AtAGlance";
 import YourProgression from "../Components/Profile/YourProgression";
 
 export default function Profile() {

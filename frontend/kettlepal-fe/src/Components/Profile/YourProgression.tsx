@@ -34,7 +34,14 @@ export default function YourProgression() {
       boxShadow={`0px 1px 2px ${theme.colors.grey[400]}`}
       p="1rem"
     >
-      <Heading fontSize="xl" mb="1rem">
+      <Heading
+        fontSize="2xl"
+        fontWeight="bold"
+        pb="0.5rem"
+        mb="0.5rem"
+        textAlign="center"
+        borderBottom={`1px solid ${theme.colors.green[50]}`}
+      >
         Your {selectedPeriod} {selectedExercise} Progression
       </Heading>
       <Flex

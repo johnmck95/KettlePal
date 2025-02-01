@@ -9,6 +9,19 @@ type User {
   createdAt: String!
   tokenCount: Int!
   userStats: UserStats
+  atAGlance(period: String!, dateRange: String!): AtAGlance
+}
+
+type AtAGlance {
+  period: String!
+  dateRange: String!
+  data: [AtAGlanceData]!
+}
+
+type AtAGlanceData {
+  dateRange: String!
+  elapsedSeconds: Int!
+  workCapacityKg: Int!
 }
 
 type UserStats {

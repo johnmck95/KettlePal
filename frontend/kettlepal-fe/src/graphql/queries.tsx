@@ -101,3 +101,19 @@ const USER_STATS_QUERY = gql`
     }
   }
 `;
+
+const AT_A_GLANCE_QUERY = gql`
+  query AtAGlance($uid: ID!, $period: String!, $dateRange: String!) {
+    user(uid: $uid) {
+      atAGlance(period: $period, dateRange: $dateRange) {
+        period
+        dateRange
+        data {
+          dateRange
+          elapsedSeconds
+          workCapacityKg
+        }
+      }
+    }
+  }
+`;

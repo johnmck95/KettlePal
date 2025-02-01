@@ -63,7 +63,15 @@ export default function UserStats() {
       p="0"
     >
       <VStack py="1rem">
-        <Heading fontSize="2xl">
+        <Heading
+          w="90%"
+          fontSize="2xl"
+          fontWeight="bold"
+          pb="0.5rem"
+          mb="0.5rem"
+          textAlign="center"
+          borderBottom={`1px solid ${theme.colors.green[50]}`}
+        >
           {user?.firstName + " " + user?.lastName}
         </Heading>
         {showServerError && (

@@ -16,13 +16,14 @@ An overbuilt "just-for-me" learning project that is made to keep track of my per
 
 ## Feature List
 
-- JWT Authentication, Login/Logout, Hashing. (Sign Up is intentionally witheld until further securtiy testing is done.)
+- JWT Authentication, Login/Logout, Hashing. (Sign Up is intentionally witheldfor the time being.)
 - Design new workouts, track progress, and save to the database.
   - Client-side and server-side validation.
 - Edit past workouts.
 - View historical workout data.
 - Fuzzy-Search historical workouts/exercises.
 - View specific workouts in greater detail with computed information.
+- Analyze histocial data visually.
 
 ## Road Map
 
@@ -41,8 +42,24 @@ Development and production environments.
 - Frontend
   - Hosted on Netlify
 
-## Overview
+## Application Introducion
 
-| Login                                             | View Workouts                                       | Edit Past Workout                                   | View Detailed Workout                               | Create New Workout                                  |
-| ------------------------------------------------- | --------------------------------------------------- | --------------------------------------------------- | --------------------------------------------------- | --------------------------------------------------- |
-| <img src="image.png" alt="alt text" width="200" > | <img src="image-1.png" alt="alt text" width="200" > | <img src="image-2.png" alt="alt text" width="200" > | <img src="image-3.png" alt="alt text" width="200" > | <img src="image-4.png" alt="alt text" width="200" > |
+### Athenticated User Profiles
+
+<img src="image-9.png" alt="alt text" width="400" >
+
+### Design and Track Workouts
+
+<img src="image-6.png" alt="alt text" width="400" >
+
+### Review, Analyze and Update Past Workouts
+
+<img src="image-7.png" alt="alt text" width="400" >
+
+### Analyze Your Progress Over Time
+
+<img src="image-8.png" alt="alt text" width="400" >
+
+### Access on Mobile or Desktop Devices
+
+<img src="image-10.png" alt="alt text" width="400" >
