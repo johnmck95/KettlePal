@@ -10,9 +10,11 @@ import {
 } from "@chakra-ui/react";
 import theme from "../../../Constants/theme";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import { createDateRangeString } from "../../../utils/Time/time";
 
 interface WeeklyRangeSelectorProps {
-  selectedPeriod: "Week" | "Month" | "Year" | "Lifetime";
+  dateRange: string;
+  setDateRange: (newDateRange: string) => void;
 }
 /**
  * WEEKLY *
@@ -26,108 +28,135 @@ Since slider values are numbers we can use dayjs to add/subtract the offset from
 
 */
 export default function WeeklyRangeSelector({
-  selectedPeriod,
+  dateRange,
+  setDateRange,
 }: WeeklyRangeSelectorProps) {
   const [center, setCenter] = useState<number>(0);
   const [sliderHandleValues, setSliderHandleValues] = useState<number[]>([
     center - 3,
     center + 3,
   ]);
-  const min = -7;
-  const max = 7;
+  const [min, setMin] = useState(-7);
+  const [max, setMax] = useState(7);
 
+  // Adjusts view in daily increments. 15 days is maximally viewable.
   const handleSliderChange = (newValues: number[]) => {
     setSliderHandleValues(newValues);
   };
 
-  const refetch = () => {
-    console.log("done changing");
+  // Formats to "YYYY-MM-DD,YYYY-MM-DD" based on UI changes
+  const updateDateRange = (
+    newCenter: number,
+    newSliderMin: number,
+    newSliderMax: number
+  ) => {
+    const formattedDateRange = createDateRangeString(
+      newSliderMin,
+      newSliderMax
+    );
+    setDateRange(formattedDateRange);
   };
 
+  // Shifts selected range one week back in time.
   const shiftLeft = () => {
-    setCenter((prevCenter) => prevCenter - 1);
-    setSliderHandleValues([
-      sliderHandleValues[0] - 1,
-      sliderHandleValues[1] - 1,
-    ]);
-    refetch();
+    const newCenter = center - 7;
+    const newSliderMin = sliderHandleValues[0] - 7;
+    const newSliderMax = sliderHandleValues[1] - 7;
+
+    setCenter(newCenter);
+    setMin((prevMin) => prevMin - 7);
+    setMax((prevMax) => prevMax - 7);
+    setSliderHandleValues([newSliderMin, newSliderMax]);
+    updateDateRange(newCenter, newSliderMin, newSliderMax);
   };
+  // Shifts selected range one week ahead in time.
   const shiftRight = () => {
-    setCenter((prevCenter) => prevCenter + 1);
-    setSliderHandleValues([
-      sliderHandleValues[0] + 1,
-      sliderHandleValues[1] + 1,
-    ]);
-    refetch();
+    const newCenter = center + 7;
+    const newSliderMin = sliderHandleValues[0] + 7;
+    const newSliderMax = sliderHandleValues[1] + 7;
+
+    setCenter(newCenter);
+    setMin((prevMin) => prevMin + 7);
+    setMax((prevMax) => prevMax + 7);
+    setSliderHandleValues([newSliderMin, newSliderMax]);
+    updateDateRange(newCenter, newSliderMin, newSliderMax);
   };
 
   return (
-    <HStack m="1.5rem 1rem" w="100%">
-      <IconButton
-        variant="secondary"
-        aria-label="One week back"
-        size="sm"
-        icon={<FaArrowLeft />}
-        onClick={shiftLeft}
-        isDisabled={sliderHandleValues[0] === min}
-      />
-      <RangeSlider
-        aria-label={["min", "max"]}
-        value={sliderHandleValues}
-        onChange={handleSliderChange}
-        onChangeEnd={refetch}
-        min={min}
-        max={max}
-        m="1rem"
-      >
-        <RangeSliderTrack>
-          <RangeSliderFilledTrack bg={theme.colors.green[300]} />
-        </RangeSliderTrack>
-        <RangeSliderThumb
-          boxSize={6}
-          index={0}
-          bgColor={theme.colors.feldgrau[200]}
-          _focus={{
-            boxShadow: `0 0 0 3px ${theme.colors.green[50]}`,
-          }}
+    <>
+      <HStack m="1.5rem 1rem" w="100%">
+        <IconButton
+          variant="secondary"
+          aria-label="Shift graph one week back"
+          size="sm"
+          icon={<FaArrowLeft />}
+          onClick={shiftLeft}
         />
-        <RangeSliderThumb
-          boxSize={6}
-          index={1}
-          bgColor={theme.colors.feldgrau[200]}
-          _focus={{
-            boxShadow: `0 0 0 3px ${theme.colors.green[50]}`,
-          }}
-        />
+        <RangeSlider
+          aria-label={["min", "max"]}
+          value={sliderHandleValues}
+          onChange={handleSliderChange}
+          onChangeEnd={() =>
+            updateDateRange(
+              center,
+              sliderHandleValues[0],
+              sliderHandleValues[1]
+            )
+          }
+          min={min}
+          max={max}
+          m="1rem"
+        >
+          <RangeSliderTrack>
+            <RangeSliderFilledTrack bg={theme.colors.green[300]} />
+          </RangeSliderTrack>
+          <RangeSliderThumb
+            boxSize={6}
+            index={0}
+            bgColor={theme.colors.feldgrau[200]}
+            _focus={{
+              boxShadow: `0 0 0 3px ${theme.colors.green[50]}`,
+            }}
+          />
+          <RangeSliderThumb
+            boxSize={6}
+            index={1}
+            bgColor={theme.colors.feldgrau[200]}
+            _focus={{
+              boxShadow: `0 0 0 3px ${theme.colors.green[50]}`,
+            }}
+          />
 
-        <RangeSliderMark
-          value={sliderHandleValues[0]}
-          mt="3"
-          ml="-2.5"
-          fontSize="sm"
-        >
-          {sliderHandleValues[0]}
-        </RangeSliderMark>
-        <RangeSliderMark value={center} mt="3" ml="-2.5" fontSize="sm">
-          {center}
-        </RangeSliderMark>
-        <RangeSliderMark
-          value={sliderHandleValues[1]}
-          mt="3"
-          ml="-2.5"
-          fontSize="sm"
-        >
-          {sliderHandleValues[1]}
-        </RangeSliderMark>
-      </RangeSlider>
-      <IconButton
-        variant="secondary"
-        aria-label="One week forward"
-        size="sm"
-        icon={<FaArrowRight />}
-        onClick={shiftRight}
-        isDisabled={sliderHandleValues[1] === max}
-      />
-    </HStack>
+          {/* <RangeSliderMark
+            value={sliderHandleValues[0]}
+            mt="3"
+            ml="-2.5"
+            fontSize="sm"
+          >
+            {sliderHandleValues[0]}
+          </RangeSliderMark>
+          <RangeSliderMark value={center} mt="3" ml="-2.5" fontSize="sm">
+            {center}
+          </RangeSliderMark>
+          <RangeSliderMark
+            value={sliderHandleValues[1]}
+            mt="3"
+            ml="-2.5"
+            fontSize="sm"
+          >
+            {sliderHandleValues[1]}
+          </RangeSliderMark> */}
+        </RangeSlider>
+
+        <IconButton
+          variant="secondary"
+          aria-label="Shift graph one week forward"
+          size="sm"
+          icon={<FaArrowRight />}
+          onClick={shiftRight}
+        />
+      </HStack>
+      <h2>{dateRange}</h2>
+    </>
   );
 }

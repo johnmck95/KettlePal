@@ -253,49 +253,95 @@ export const resolvers = {
                 case "Week":
                 default:
                     const weeklyPeriod = "weekly";
+                    // const weeklyData: AtAGlanceData[] = (
+                    //   await knexInstance.raw(`
+                    //   WITH date_range AS (
+                    //     SELECT generate_series(
+                    //       DATE(SPLIT_PART(:${dateRange}, ',', 1))::date,
+                    //       DATE(SPLIT_PART(:${dateRange}, ',', 2))::date,
+                    //       interval '1 day'
+                    //     )::date AS day
+                    //   ),
+                    //   daily_elapsed_seconds AS (
+                    //     SELECT
+                    //       w.date::date,
+                    //       SUM(w."elapsedSeconds") AS elapsedSeconds
+                    //     FROM workouts w
+                    //     WHERE w."userUid" = '${parent.uid}'
+                    //       AND w.date::date >= DATE(SPLIT_PART(:${dateRange}, ',', 1))::date
+                    //       AND w.date::date <= DATE(SPLIT_PART(:${dateRange}, ',', 2))::date
+                    //     GROUP BY w.date::date
+                    //   ),
+                    //   daily_work_capacity AS (
+                    //     SELECT
+                    //       w.date::date,
+                    //       SUM(
+                    //         CASE
+                    //           WHEN e."weightUnit" = 'kg' THEN (e.weight * e.sets * e.reps)::INTEGER
+                    //           WHEN e."weightUnit" = 'lb' THEN ((e.weight * 0.45359237) * e.sets * e.reps)::INTEGER
+                    //           ELSE 0
+                    //         END
+                    //       ) AS workCapacityKg
+                    //     FROM workouts w
+                    //     LEFT JOIN exercises e ON w.uid = e."workoutUid"
+                    //     WHERE w."userUid" = '${parent.uid}'
+                    //       AND w.date::date >= DATE(SPLIT_PART(:${dateRange}, ',', 1))::date
+                    //       AND w.date::date <= DATE(SPLIT_PART(:${dateRange}, ',', 2))::date
+                    //     GROUP BY w.date::date
+                    //   )
+                    //   SELECT
+                    //     TO_CHAR(dr.day, 'YYYY-MM-DD') || ',' || TO_CHAR(dr.day, 'YYYY-MM-DD') AS "dateRange",
+                    //     COALESCE(des.elapsedSeconds, 0) AS "elapsedSeconds",
+                    //     COALESCE(dwc.workCapacityKg, 0) AS "workCapacityKg"
+                    //   FROM date_range dr
+                    //   LEFT JOIN daily_elapsed_seconds des ON dr.day = des.date
+                    //   LEFT JOIN daily_work_capacity dwc ON dr.day = dwc.date
+                    //   ORDER BY dr.day;
+                    // `)
+                    // ).rows;
                     const weeklyData = (await knexInstance.raw(`
-            WITH date_range AS (
-              SELECT generate_series(
-                date_trunc('week', CURRENT_DATE)::date,
-                date_trunc('week', CURRENT_DATE)::date + interval '6 days',
-                interval '1 day'
-              )::date AS day
-            ),
-            daily_elapsed_seconds AS (
-              SELECT 
-                w.date::date,
-                SUM(w."elapsedSeconds") AS elapsedSeconds
-              FROM workouts w
-              WHERE w."userUid" = '${parent.uid}'
-                AND w.date::date >= date_trunc('week', CURRENT_DATE)::date
-                AND w.date::date < (date_trunc('week', CURRENT_DATE) + interval '1 week')::date
-              GROUP BY w.date::date
-            ),
-            daily_work_capacity AS (
-              SELECT 
-                w.date::date,
-                SUM(
-                  CASE 
-                    WHEN e."weightUnit" = 'kg' THEN (e.weight * e.sets * e.reps)::INTEGER
-                    WHEN e."weightUnit" = 'lb' THEN ((e.weight * 0.45359237) * e.sets * e.reps)::INTEGER
-                    ELSE 0
-                  END
-                ) AS workCapacityKg
-              FROM workouts w
-              LEFT JOIN exercises e ON w.uid = e."workoutUid"
-              WHERE w."userUid" = '${parent.uid}'
-                AND w.date::date >= date_trunc('week', CURRENT_DATE)::date
-                AND w.date::date < (date_trunc('week', CURRENT_DATE) + interval '1 week')::date
-              GROUP BY w.date::date
-            )
-            SELECT 
-              TO_CHAR(dr.day, 'YYYY-MM-DD') || ',' || TO_CHAR(dr.day, 'YYYY-MM-DD') AS "dateRange",
-              COALESCE(des.elapsedSeconds, 0) AS "elapsedSeconds",
-              COALESCE(dwc.workCapacityKg, 0) AS "workCapacityKg"
-            FROM date_range dr
-            LEFT JOIN daily_elapsed_seconds des ON dr.day = des.date
-            LEFT JOIN daily_work_capacity dwc ON dr.day = dwc.date
-            ORDER BY dr.day;
+              WITH date_range AS (
+                SELECT generate_series(
+                  date_trunc('week', CURRENT_DATE)::date,
+                  date_trunc('week', CURRENT_DATE)::date + interval '6 days',
+                  interval '1 day'
+                )::date AS day
+              ),
+              daily_elapsed_seconds AS (
+                SELECT
+                  w.date::date,
+                  SUM(w."elapsedSeconds") AS elapsedSeconds
+                FROM workouts w
+                WHERE w."userUid" = '${parent.uid}'
+                  AND w.date::date >= date_trunc('week', CURRENT_DATE)::date
+                  AND w.date::date < (date_trunc('week', CURRENT_DATE) + interval '1 week')::date
+                GROUP BY w.date::date
+              ),
+              daily_work_capacity AS (
+                SELECT
+                  w.date::date,
+                  SUM(
+                    CASE
+                      WHEN e."weightUnit" = 'kg' THEN (e.weight * e.sets * e.reps)::INTEGER
+                      WHEN e."weightUnit" = 'lb' THEN ((e.weight * 0.45359237) * e.sets * e.reps)::INTEGER
+                      ELSE 0
+                    END
+                  ) AS workCapacityKg
+                FROM workouts w
+                LEFT JOIN exercises e ON w.uid = e."workoutUid"
+                WHERE w."userUid" = '${parent.uid}'
+                  AND w.date::date >= date_trunc('week', CURRENT_DATE)::date
+                  AND w.date::date < (date_trunc('week', CURRENT_DATE) + interval '1 week')::date
+                GROUP BY w.date::date
+              )
+              SELECT
+                TO_CHAR(dr.day, 'YYYY-MM-DD') || ',' || TO_CHAR(dr.day, 'YYYY-MM-DD') AS "dateRange",
+                COALESCE(des.elapsedSeconds, 0) AS "elapsedSeconds",
+                COALESCE(dwc.workCapacityKg, 0) AS "workCapacityKg"
+              FROM date_range dr
+              LEFT JOIN daily_elapsed_seconds des ON dr.day = des.date
+              LEFT JOIN daily_work_capacity dwc ON dr.day = dwc.date
+              ORDER BY dr.day;
             `)).rows;
                     const weeklyDateRange = getRangeFromData(weeklyData);
                     return {

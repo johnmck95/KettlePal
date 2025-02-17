@@ -18,13 +18,19 @@ import { useUser } from "../../../Contexts/UserContext";
 import LoadingSpinner from "../../LoadingSpinner";
 import Graph from "./Visualization/Graph";
 import Detail from "../../ViewWorkouts/ViewDetailedWorkoutModal/Detail";
-import { formatTime } from "../../../utils/Time/time";
+import {
+  formatTime,
+  getMonSunYYYYMMDDOfCurrentWeek,
+} from "../../../utils/Time/time";
 import WeeklyRangeSelector from "./AtAGlanceSlider";
 
 export default function AtAGlance() {
   const [selectedPeriod, setSelectedPeriod] = React.useState<
     "Week" | "Month" | "Year" | "Lifetime"
   >("Week");
+  const [dateRange, setDateRange] = React.useState<string>(
+    selectedPeriod === "Week" ? getMonSunYYYYMMDDOfCurrentWeek() : "TODO"
+  );
   const periods = ["Week", "Month", "Year", "Lifetime"];
   const handlePeriodClick = (period: string) => {
     setSelectedPeriod(period as "Week" | "Month" | "Year" | "Lifetime");
@@ -43,7 +49,7 @@ export default function AtAGlance() {
     variables: {
       uid: user?.uid ?? "",
       period: selectedPeriod,
-      dateRange: "TODO",
+      dateRange: dateRange,
     },
   });
 
@@ -177,7 +183,10 @@ export default function AtAGlance() {
             selected={selectedMetric}
             handleClick={handleMetricClick}
           />
-          <WeeklyRangeSelector selectedPeriod={selectedPeriod} />
+          <WeeklyRangeSelector
+            dateRange={dateRange}
+            setDateRange={setDateRange}
+          />
         </HStack>
       </VStack>
     </Box>
