@@ -19,6 +19,7 @@ import LoadingSpinner from "../../LoadingSpinner";
 import Graph from "./Visualization/Graph";
 import Detail from "../../ViewWorkouts/ViewDetailedWorkoutModal/Detail";
 import { formatTime } from "../../../utils/Time/time";
+import WeeklyRangeSelector from "./AtAGlanceSlider";
 
 export default function AtAGlance() {
   const [selectedPeriod, setSelectedPeriod] = React.useState<
@@ -157,24 +158,28 @@ export default function AtAGlance() {
           </Box>
         )}
       </VStack>
-      <HStack
-        mt="0.5rem"
-        mb="0rem"
-        justifyContent={"space-evenly"}
-        flexWrap="wrap"
-        gap="1rem"
-      >
-        <RadioGroup
-          items={periods}
-          selected={selectedPeriod}
-          handleClick={handlePeriodClick}
-        />
-        <RadioGroup
-          items={metrics}
-          selected={selectedMetric}
-          handleClick={handleMetricClick}
-        />
-      </HStack>
+      <VStack>
+        <HStack
+          mt="0.5rem"
+          mb="0rem"
+          justifyContent={"space-evenly"}
+          flexWrap="wrap"
+          gap="1rem"
+          w="100%"
+        >
+          <RadioGroup
+            items={periods}
+            selected={selectedPeriod}
+            handleClick={handlePeriodClick}
+          />
+          <RadioGroup
+            items={metrics}
+            selected={selectedMetric}
+            handleClick={handleMetricClick}
+          />
+          <WeeklyRangeSelector selectedPeriod={selectedPeriod} />
+        </HStack>
+      </VStack>
     </Box>
   );
 }
