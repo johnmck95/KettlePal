@@ -3,6 +3,7 @@ import * as d3 from "d3";
 import { AtAGlanceQuery } from "../../../../generated/frontend-types";
 import theme from "../../../../Constants/theme";
 import Tooltip from "./Tooltip";
+import { useMediaQuery } from "@chakra-ui/react";
 
 type AtAGlanceData = NonNullable<
   NonNullable<NonNullable<AtAGlanceQuery["user"]>["atAGlance"]>["data"]
@@ -40,12 +41,27 @@ export default function Graph({ data, period, visualizeField }: GraphProps) {
       | "elapsedSeconds"
       | "workCapacityKg") ?? "elapsedSeconds";
 
+  const [isSmallScreen] = useMediaQuery("(max-width: 1200px)");
+
   useEffect(() => {
     if (!data || data.length === 0 || !svgRef.current) return;
 
     ///////////////////////////// Prepare Data & Labels /////////////////////////////////////
 
-    const dayLabels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+    const dayLabels = data.map((entry, i) => {
+      const date = new Date(entry?.dateRange.split(",")[0] + ":12:00" ?? "");
+      return date.toLocaleDateString(
+        "en-US",
+        isSmallScreen
+          ? data.length > 7
+            ? { day: "numeric" }
+            : { weekday: "short" }
+          : data.length > 7
+          ? { month: "short", day: "numeric" }
+          : { weekday: "short", month: "short", day: "numeric" }
+      );
+    });
+
     const weekLabels = data.map((entry, index) => `Week ${index + 1}`);
     const monthLabels = [
       "Jan",
@@ -325,7 +341,14 @@ export default function Graph({ data, period, visualizeField }: GraphProps) {
 
     // Add y axis
     svgGroup.append("g").call(d3.axisLeft(y));
-  }, [data, visualizeField, visualizationField, period, MAX_SECONDS]);
+  }, [
+    data,
+    visualizeField,
+    visualizationField,
+    period,
+    MAX_SECONDS,
+    isSmallScreen,
+  ]);
 
   return (
     <div style={{ position: "relative" }}>

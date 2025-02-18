@@ -18,12 +18,19 @@ import { useUser } from "../../../Contexts/UserContext";
 import LoadingSpinner from "../../LoadingSpinner";
 import Graph from "./Visualization/Graph";
 import Detail from "../../ViewWorkouts/ViewDetailedWorkoutModal/Detail";
-import { formatTime } from "../../../utils/Time/time";
+import {
+  formatTime,
+  getMonSunYYYYMMDDOfCurrentWeek,
+} from "../../../utils/Time/time";
+import WeeklyRangeSelector from "./WeeklyRangeSelector";
 
 export default function AtAGlance() {
   const [selectedPeriod, setSelectedPeriod] = React.useState<
     "Week" | "Month" | "Year" | "Lifetime"
   >("Week");
+  const [dateRange, setDateRange] = React.useState<string>(
+    selectedPeriod === "Week" ? getMonSunYYYYMMDDOfCurrentWeek() : "TODO"
+  );
   const periods = ["Week", "Month", "Year", "Lifetime"];
   const handlePeriodClick = (period: string) => {
     setSelectedPeriod(period as "Week" | "Month" | "Year" | "Lifetime");
@@ -42,7 +49,7 @@ export default function AtAGlance() {
     variables: {
       uid: user?.uid ?? "",
       period: selectedPeriod,
-      dateRange: "TODO",
+      dateRange: dateRange,
     },
   });
 
@@ -157,24 +164,33 @@ export default function AtAGlance() {
           </Box>
         )}
       </VStack>
-      <HStack
-        mt="0.5rem"
-        mb="0rem"
-        justifyContent={"space-evenly"}
-        flexWrap="wrap"
-        gap="1rem"
-      >
-        <RadioGroup
-          items={periods}
-          selected={selectedPeriod}
-          handleClick={handlePeriodClick}
-        />
-        <RadioGroup
-          items={metrics}
-          selected={selectedMetric}
-          handleClick={handleMetricClick}
-        />
-      </HStack>
+      <VStack>
+        <HStack
+          mt="0.5rem"
+          mb="0rem"
+          justifyContent={"space-evenly"}
+          flexWrap="wrap"
+          gap="1rem"
+          w="100%"
+        >
+          <RadioGroup
+            items={periods}
+            selected={selectedPeriod}
+            handleClick={handlePeriodClick}
+          />
+          <RadioGroup
+            items={metrics}
+            selected={selectedMetric}
+            handleClick={handleMetricClick}
+          />
+          {selectedPeriod === "Week" && (
+            <WeeklyRangeSelector
+              dateRange={dateRange}
+              setDateRange={setDateRange}
+            />
+          )}
+        </HStack>
+      </VStack>
     </Box>
   );
 }

@@ -27,7 +27,12 @@ export default function Tooltip({ content, position }: TooltipProps) {
         <Text>
           <b>Date:</b>{" "}
           {content.startDate.getTime() === content.endDate.getTime()
-            ? formatDate(content.startDate)
+            ? content.startDate.toLocaleDateString("en-us", {
+                weekday: "short",
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+              })
             : `${formatDate(content.startDate)} - ${formatDate(
                 content.endDate
               )}`}

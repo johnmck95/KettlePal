@@ -1,6 +1,9 @@
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import isoWeek from "dayjs/plugin/isoWeek";
+
+dayjs.extend(isoWeek);
 
 // Postgres timestamps are in UTC
 dayjs.extend(utc);
@@ -236,4 +239,30 @@ export function formatDate(date: Date) {
   };
 
   return `${month} ${day}${suffix(day)}, ${year}`;
+}
+
+// YYYY-MM-DD,YYYY-MM-DD of the current week. Mon-Sun.
+export function getMonSunYYYYMMDDOfCurrentWeek() {
+  const today = dayjs();
+  const monday = today.startOf("isoWeek");
+  const sunday = today.endOf("isoWeek");
+
+  const mondayFormatted = monday.format("YYYY-MM-DD");
+  const sundayFormatted = sunday.format("YYYY-MM-DD");
+
+  return `${mondayFormatted},${sundayFormatted}`;
+}
+
+/**
+ * @param min The number of days ahead or behind today
+ * @param max The number of days ahead or behind today
+ * @returns A string in the format "YYYY-MM-DD,YYYY-MM-DD" representing the "MIN,MAX" date range.
+ */
+export function createDateRangeString(min: number, max: number) {
+  const centerDate = dayjs().isoWeekday(4);
+  const minDate = centerDate.add(min, "day");
+  const maxDate = centerDate.add(max, "day");
+  const formattedMinDate = minDate.format("YYYY-MM-DD");
+  const formattedMaxDate = maxDate.format("YYYY-MM-DD");
+  return `${formattedMinDate},${formattedMaxDate}`;
 }

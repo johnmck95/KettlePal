@@ -124,6 +124,16 @@ const theme = extendTheme({
         },
       },
     },
+    IconButton: {
+      variants: {
+        primary: (props: any) => ({
+          ...theme.components.Button.variants.primary(props),
+        }),
+        secondary: (props: any) => ({
+          ...theme.components.Button.variants.secondary(props),
+        }),
+      },
+    },
     Editable: {
       padding: "0rem",
       baseStyle: {
