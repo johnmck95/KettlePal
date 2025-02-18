@@ -276,12 +276,12 @@ export const resolvers = {
       }
     },
     // period: "Week" | "Month" | "Year" | "Lifetime" --> the type of data queried.
-    // dateRange: "2021-01-01,2021-01-31" --> for custom date range, default is the latest. YYYY-MM-DD,YYYY-MM-DD
+    // dateRange: Must be of the form: "YYYY-MM-DD,YYYY-MM-DD"
     async atAGlance(
       parent: User,
       {
         period,
-        dateRange, // TODO: Implement custom date range
+        dateRange,
       }: { period: "Week" | "Month" | "Year" | "Lifetime"; dateRange: string }
     ) {
       function getRangeFromData(queriedData: AtAGlanceData[]) {

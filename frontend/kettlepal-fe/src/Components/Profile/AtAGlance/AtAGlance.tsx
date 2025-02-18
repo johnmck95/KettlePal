@@ -22,7 +22,7 @@ import {
   formatTime,
   getMonSunYYYYMMDDOfCurrentWeek,
 } from "../../../utils/Time/time";
-import WeeklyRangeSelector from "./AtAGlanceSlider";
+import WeeklyRangeSelector from "./WeeklyRangeSelector";
 
 export default function AtAGlance() {
   const [selectedPeriod, setSelectedPeriod] = React.useState<
@@ -183,10 +183,12 @@ export default function AtAGlance() {
             selected={selectedMetric}
             handleClick={handleMetricClick}
           />
-          <WeeklyRangeSelector
-            dateRange={dateRange}
-            setDateRange={setDateRange}
-          />
+          {selectedPeriod === "Week" && (
+            <WeeklyRangeSelector
+              dateRange={dateRange}
+              setDateRange={setDateRange}
+            />
+          )}
         </HStack>
       </VStack>
     </Box>

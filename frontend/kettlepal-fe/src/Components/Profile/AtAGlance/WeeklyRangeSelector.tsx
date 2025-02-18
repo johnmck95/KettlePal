@@ -17,17 +17,16 @@ interface WeeklyRangeSelectorProps {
   dateRange: string;
   setDateRange: (newDateRange: string) => void;
 }
+
 /**
- * WEEKLY *
-The center of the range slider is at value = 0. 
-The min and max of the range slider are +/-7 days from the center. Meaning the user
-can see up to 2 weeks of "days" at a time.  Since the slider starts at -3, 3 by default, they see Mon-Sun.
-By dragging the slider, additional days will come into view.
-
-To shift the entire time scale left or right, the user can click the left or right arrow buttons respectively.
-Since slider values are numbers we can use dayjs to add/subtract the offset from 0 before requerying the DB for updates.
-
-*/
+ * The center of the range slider is at value = 0.
+ * The min and max of the range slider are +/-7 days from the center. Meaning the user
+ * can see a max of 2 weeks of data" at a time.  Since the slider starts at -3, 3 by default,
+ * they see Mon-Sun. By dragging the slider, additional days will come into view.
+ *
+ * To shift the entire time 'window' left or right by one week, the user can click the
+ * arrows on the left and right of the slider respectively.
+ */
 export default function WeeklyRangeSelector({
   dateRange,
   setDateRange,
