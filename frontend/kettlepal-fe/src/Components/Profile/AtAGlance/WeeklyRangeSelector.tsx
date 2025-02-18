@@ -21,8 +21,8 @@ interface WeeklyRangeSelectorProps {
 /**
  * The center of the range slider is at value = 0.
  * The min and max of the range slider are +/-7 days from the center. Meaning the user
- * can see a max of 2 weeks of data" at a time.  Since the slider starts at -3, 3 by default,
- * they see Mon-Sun. By dragging the slider, additional days will come into view.
+ * can see a max of 2 weeks of data at a time.  Since the slider is initialized at -3, 3,
+ * they see Mon-Sun. By dragging the slider, additional days will come & go from view.
  *
  * To shift the entire time 'window' left or right by one week, the user can click the
  * arrows on the left and right of the slider respectively.
