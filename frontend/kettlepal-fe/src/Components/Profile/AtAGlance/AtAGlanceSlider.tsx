@@ -4,9 +4,10 @@ import {
   RangeSliderFilledTrack,
   RangeSliderTrack,
   RangeSliderThumb,
-  RangeSliderMark,
+  Heading,
   HStack,
   IconButton,
+  VStack,
 } from "@chakra-ui/react";
 import theme from "../../../Constants/theme";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
@@ -45,11 +46,7 @@ export default function WeeklyRangeSelector({
   };
 
   // Formats to "YYYY-MM-DD,YYYY-MM-DD" based on UI changes
-  const updateDateRange = (
-    newCenter: number,
-    newSliderMin: number,
-    newSliderMax: number
-  ) => {
+  const updateDateRange = (newSliderMin: number, newSliderMax: number) => {
     const formattedDateRange = createDateRangeString(
       newSliderMin,
       newSliderMax
@@ -67,7 +64,7 @@ export default function WeeklyRangeSelector({
     setMin((prevMin) => prevMin - 7);
     setMax((prevMax) => prevMax - 7);
     setSliderHandleValues([newSliderMin, newSliderMax]);
-    updateDateRange(newCenter, newSliderMin, newSliderMax);
+    updateDateRange(newSliderMin, newSliderMax);
   };
   // Shifts selected range one week ahead in time.
   const shiftRight = () => {
@@ -79,11 +76,11 @@ export default function WeeklyRangeSelector({
     setMin((prevMin) => prevMin + 7);
     setMax((prevMax) => prevMax + 7);
     setSliderHandleValues([newSliderMin, newSliderMax]);
-    updateDateRange(newCenter, newSliderMin, newSliderMax);
+    updateDateRange(newSliderMin, newSliderMax);
   };
 
   return (
-    <>
+    <VStack w="100%" spacing={0}>
       <HStack m="1.5rem 1rem" w="100%">
         <IconButton
           variant="secondary"
@@ -97,15 +94,11 @@ export default function WeeklyRangeSelector({
           value={sliderHandleValues}
           onChange={handleSliderChange}
           onChangeEnd={() =>
-            updateDateRange(
-              center,
-              sliderHandleValues[0],
-              sliderHandleValues[1]
-            )
+            updateDateRange(sliderHandleValues[0], sliderHandleValues[1])
           }
           min={min}
           max={max}
-          m="1rem"
+          mx="1rem"
         >
           <RangeSliderTrack>
             <RangeSliderFilledTrack bg={theme.colors.green[300]} />
@@ -126,26 +119,6 @@ export default function WeeklyRangeSelector({
               boxShadow: `0 0 0 3px ${theme.colors.green[50]}`,
             }}
           />
-
-          {/* <RangeSliderMark
-            value={sliderHandleValues[0]}
-            mt="3"
-            ml="-2.5"
-            fontSize="sm"
-          >
-            {sliderHandleValues[0]}
-          </RangeSliderMark>
-          <RangeSliderMark value={center} mt="3" ml="-2.5" fontSize="sm">
-            {center}
-          </RangeSliderMark>
-          <RangeSliderMark
-            value={sliderHandleValues[1]}
-            mt="3"
-            ml="-2.5"
-            fontSize="sm"
-          >
-            {sliderHandleValues[1]}
-          </RangeSliderMark> */}
         </RangeSlider>
 
         <IconButton
@@ -156,7 +129,9 @@ export default function WeeklyRangeSelector({
           onClick={shiftRight}
         />
       </HStack>
-      <h2>{dateRange}</h2>
-    </>
+      <Heading size="sm" m="-0.25rem 0 0.75rem 0">{`${
+        dateRange.split(",")[0]
+      } - ${dateRange.split(",")[1]}`}</Heading>
+    </VStack>
   );
 }
