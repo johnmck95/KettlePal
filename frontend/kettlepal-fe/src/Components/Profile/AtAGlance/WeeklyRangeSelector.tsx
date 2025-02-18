@@ -89,7 +89,6 @@ export default function WeeklyRangeSelector({
           onClick={shiftLeft}
         />
         <RangeSlider
-          aria-label={["min", "max"]}
           value={sliderHandleValues}
           onChange={handleSliderChange}
           onChangeEnd={() =>
