@@ -9,37 +9,45 @@ import {
   IconButton,
   VStack,
 } from "@chakra-ui/react";
-import theme from "../../../Constants/theme";
+import theme from "../../../../Constants/theme";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
-import { createDateRangeString } from "../../../utils/Time/time";
+import { createDateRangeString } from "../../../../utils/Time/time";
 
-interface WeeklyRangeSelectorProps {
+interface AtAGlanceRangeSliderProps {
   dateRange: string;
   setDateRange: (newDateRange: string) => void;
+  min: number;
+  max: number;
+  sliderHandleValues: [number, number];
 }
 
 /**
  * The center of the range slider is at value = 0.
- * The min and max of the range slider are +/-7 days from the center. Meaning the user
- * can see a max of 2 weeks of data at a time.  Since the slider is initialized at -3, 3,
- * they see Mon-Sun. By dragging the slider, additional days will come & go from view.
+ * The min and max of the range slider are initMin/initMax time units from the center.
+ * Meaning the user can see a max of initMin -> initMax units of data at a time.
+ * The slider is initialized at initSliderHandleValues, for exmaple, to see Mon-Sun.
+ * By dragging the slider, additional units will come & go from view.
  *
- * To shift the entire time 'window' left or right by one week, the user can click the
- * arrows on the left and right of the slider respectively.
+ * To shift the entire time 'window' left or right by one initMin/initMax unit,
+ * the user can click the arrows on the left and right of the slider respectively.
  */
-export default function WeeklyRangeSelector({
+
+export default function AtAGlanceRangeSlider({
   dateRange,
   setDateRange,
-}: WeeklyRangeSelectorProps) {
+  min: initMin,
+  max: initMax,
+  sliderHandleValues: initSliderHandleValues,
+}: AtAGlanceRangeSliderProps) {
   const [center, setCenter] = useState<number>(0);
   const [sliderHandleValues, setSliderHandleValues] = useState<number[]>([
-    center - 3,
-    center + 3,
+    center + initSliderHandleValues[0],
+    center + initSliderHandleValues[1],
   ]);
-  const [min, setMin] = useState(-7);
-  const [max, setMax] = useState(7);
+  const [min, setMin] = useState(initMin);
+  const [max, setMax] = useState(initMax);
 
-  // Adjusts view in daily increments. 15 days is maximally viewable.
+  // Adjusts view in individual increments. min -> max maximally viewable.
   const handleSliderChange = (newValues: number[]) => {
     setSliderHandleValues(newValues);
   };
@@ -55,25 +63,25 @@ export default function WeeklyRangeSelector({
 
   // Shifts selected range one week back in time.
   const shiftLeft = () => {
-    const newCenter = center - 7;
-    const newSliderMin = sliderHandleValues[0] - 7;
-    const newSliderMax = sliderHandleValues[1] - 7;
+    const newCenter = center + initMin;
+    const newSliderMin = sliderHandleValues[0] + initMin;
+    const newSliderMax = sliderHandleValues[1] + initMin;
 
     setCenter(newCenter);
-    setMin((prevMin) => prevMin - 7);
-    setMax((prevMax) => prevMax - 7);
+    setMin((prevMin) => prevMin + initMin);
+    setMax((prevMax) => prevMax + initMin);
     setSliderHandleValues([newSliderMin, newSliderMax]);
     updateDateRange(newSliderMin, newSliderMax);
   };
   // Shifts selected range one week ahead in time.
   const shiftRight = () => {
-    const newCenter = center + 7;
-    const newSliderMin = sliderHandleValues[0] + 7;
-    const newSliderMax = sliderHandleValues[1] + 7;
+    const newCenter = center + initMax;
+    const newSliderMin = sliderHandleValues[0] + initMax;
+    const newSliderMax = sliderHandleValues[1] + initMax;
 
     setCenter(newCenter);
-    setMin((prevMin) => prevMin + 7);
-    setMax((prevMax) => prevMax + 7);
+    setMin((prevMin) => prevMin + initMax);
+    setMax((prevMax) => prevMax + initMax);
     setSliderHandleValues([newSliderMin, newSliderMax]);
     updateDateRange(newSliderMin, newSliderMax);
   };
@@ -83,7 +91,7 @@ export default function WeeklyRangeSelector({
       <HStack m="1.5rem 1rem" w="100%">
         <IconButton
           variant="secondary"
-          aria-label="Shift graph one week back"
+          aria-label="Shift graph back"
           size="sm"
           icon={<FaArrowLeft />}
           onClick={shiftLeft}
@@ -121,7 +129,7 @@ export default function WeeklyRangeSelector({
 
         <IconButton
           variant="secondary"
-          aria-label="Shift graph one week forward"
+          aria-label="Shift graph forward"
           size="sm"
           icon={<FaArrowRight />}
           onClick={shiftRight}
