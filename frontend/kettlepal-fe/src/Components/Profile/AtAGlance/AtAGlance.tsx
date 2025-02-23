@@ -22,7 +22,8 @@ import {
   formatTime,
   getMonSunYYYYMMDDOfCurrentWeek,
 } from "../../../utils/Time/time";
-import WeeklyRangeSelector from "./WeeklyRangeSelector";
+import WeeklyRangeSelector from "./RangeSliders/WeeklyRangeSelector";
+import MonthlyRangeSelector from "./RangeSliders/MonthlyRangeSelector";
 
 export default function AtAGlance() {
   const [selectedPeriod, setSelectedPeriod] = React.useState<
@@ -38,7 +39,7 @@ export default function AtAGlance() {
 
   const [selectedMetric, setSelectedMetric] = React.useState<
     "Time" | "Work Capacity"
-  >("Time");
+  >("Work Capacity");
   const metrics = ["Time", "Work Capacity"];
   const handleMetricClick = (metric: string) => {
     setSelectedMetric(metric as "Time" | "Work Capacity");
@@ -185,6 +186,12 @@ export default function AtAGlance() {
           />
           {selectedPeriod === "Week" && (
             <WeeklyRangeSelector
+              dateRange={dateRange}
+              setDateRange={setDateRange}
+            />
+          )}
+          {selectedPeriod === "Month" && (
+            <MonthlyRangeSelector
               dateRange={dateRange}
               setDateRange={setDateRange}
             />
