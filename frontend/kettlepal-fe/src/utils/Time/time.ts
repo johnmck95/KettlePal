@@ -253,16 +253,100 @@ export function getMonSunYYYYMMDDOfCurrentWeek() {
   return `${mondayFormatted},${sundayFormatted}`;
 }
 
+export function getFirstLastWeekYYYYMMDDOfMonth(): string {
+  const today = dayjs();
+  const firstDayOfMonth = today.startOf("month");
+  const lastDayOfMonth = today.endOf("month");
+
+  // Find the Monday of the week containing the first day of the month
+  const firstDay = firstDayOfMonth.startOf("isoWeek");
+
+  // Find the Sunday of the week containing the last day of the month
+  const lastDay = lastDayOfMonth.endOf("isoWeek");
+
+  const firstDayFormatted = firstDay.format("YYYY-MM-DD");
+  const lastDayFormatted = lastDay.format("YYYY-MM-DD");
+
+  return `${firstDayFormatted},${lastDayFormatted}`;
+}
+
+// Week --> YYYY-MM-DD,YYYY-MM-DD of the current week. Mon-Sun.
+// Month --> YYYY-MM-DD,YYYY-MM-DD of the current month. First Monday - Last Sunday.
+// Year --> YYYY-MM-DD,YYYY-MM-DD of the current year. Jan 1st-Dec 31st.
+// Lifetime --> YYYY-MM-DD,YYYY-MM-DD of the first workout to now.
+export function getDateRangeByPeriod(
+  selectedPeriod: "Week" | "Month" | "Year" | "Lifetime"
+) {
+  switch (selectedPeriod) {
+    case "Week":
+    default:
+      return getMonSunYYYYMMDDOfCurrentWeek();
+    case "Month":
+      return getFirstLastWeekYYYYMMDDOfMonth();
+    case "Year":
+      return "TODO,TODO";
+    case "Lifetime":
+      return "TODO,TODO";
+  }
+}
+
 /**
  * @param min The number of days ahead or behind today
  * @param max The number of days ahead or behind today
  * @returns A string in the format "YYYY-MM-DD,YYYY-MM-DD" representing the "MIN,MAX" date range.
  */
-export function createDateRangeString(min: number, max: number) {
+export function createWeeklyDateRangeString(min: number, max: number) {
   const centerDate = dayjs().isoWeekday(4);
   const minDate = centerDate.add(min, "day");
   const maxDate = centerDate.add(max, "day");
   const formattedMinDate = minDate.format("YYYY-MM-DD");
   const formattedMaxDate = maxDate.format("YYYY-MM-DD");
   return `${formattedMinDate},${formattedMaxDate}`;
+}
+
+/**
+ * @param min The number of weeks ahead or behind today
+ * @param max The number of weeks ahead or behind today
+ * @returns A string in the format "YYYY-MM-DD,YYYY-MM-DD" representing the "MIN,MAX" date range.
+ */
+export function createMonthlyDateRangeString(min: number, max: number) {
+  const centralWeek = dayjs().isoWeekday(4); // middle of current week
+  const minWeek = centralWeek.add(min - 2, "week");
+  const maxWeek = centralWeek.add(max - 2, "week");
+  const minWeekMonday = minWeek.startOf("isoWeek");
+  const maxWeekSunday = maxWeek.endOf("isoWeek");
+  const formattedMinDate = minWeekMonday.format("YYYY-MM-DD");
+  const formattedMaxDate = maxWeekSunday.format("YYYY-MM-DD");
+  return `${formattedMinDate},${formattedMaxDate}`;
+}
+
+export function createYearlyDateRangeString(min: number, max: number) {
+  return "todo";
+}
+
+export function createLifetimeDateRangeString(min: number, max: number) {
+  return "todo";
+}
+
+/**
+ * @param min The number of days ahead or behind today
+ * @param max The number of days ahead or behind today
+ * @returns A string in the format "YYYY-MM-DD,YYYY-MM-DD" representing the "MIN,MAX" date range.
+ */
+export function createDateRangeString(
+  min: number,
+  max: number,
+  selectedPeriod: "Week" | "Month" | "Year" | "Lifetime"
+) {
+  switch (selectedPeriod) {
+    case "Week":
+    default:
+      return createWeeklyDateRangeString(min, max);
+    case "Month":
+      return createMonthlyDateRangeString(min, max);
+    case "Year":
+      return createYearlyDateRangeString(min, max);
+    case "Lifetime":
+      return createLifetimeDateRangeString(min, max);
+  }
 }

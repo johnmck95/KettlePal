@@ -24,10 +24,6 @@ export default function WeeklyRangeSelector({
   const max = 7;
   const sliderHandleValues: [number, number] = [-3, 3];
 
-  // useEffect(() => {
-  //   setDateRange("TODO,TODO");
-  // });
-
   return (
     <AtAGlanceRangeSlider
       min={min}
@@ -35,6 +31,7 @@ export default function WeeklyRangeSelector({
       sliderHandleValues={sliderHandleValues}
       dateRange={dateRange}
       setDateRange={setDateRange}
+      selectedDateRange="Week"
     />
   );
 }

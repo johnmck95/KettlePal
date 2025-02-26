@@ -18,10 +18,7 @@ import { useUser } from "../../../Contexts/UserContext";
 import LoadingSpinner from "../../LoadingSpinner";
 import Graph from "./Visualization/Graph";
 import Detail from "../../ViewWorkouts/ViewDetailedWorkoutModal/Detail";
-import {
-  formatTime,
-  getMonSunYYYYMMDDOfCurrentWeek,
-} from "../../../utils/Time/time";
+import { formatTime, getDateRangeByPeriod } from "../../../utils/Time/time";
 import WeeklyRangeSelector from "./RangeSliders/WeeklyRangeSelector";
 import MonthlyRangeSelector from "./RangeSliders/MonthlyRangeSelector";
 
@@ -30,7 +27,7 @@ export default function AtAGlance() {
     "Week" | "Month" | "Year" | "Lifetime"
   >("Week");
   const [dateRange, setDateRange] = React.useState<string>(
-    selectedPeriod === "Week" ? getMonSunYYYYMMDDOfCurrentWeek() : "TODO"
+    getDateRangeByPeriod(selectedPeriod)
   );
   const periods = ["Week", "Month", "Year", "Lifetime"];
   const handlePeriodClick = (period: string) => {
@@ -44,6 +41,10 @@ export default function AtAGlance() {
   const handleMetricClick = (metric: string) => {
     setSelectedMetric(metric as "Time" | "Work Capacity");
   };
+
+  useEffect(() => {
+    setDateRange(getDateRangeByPeriod(selectedPeriod));
+  }, [selectedPeriod]);
 
   const user = useUser().user;
   const { loading, error, data } = useAtAGlanceQuery({

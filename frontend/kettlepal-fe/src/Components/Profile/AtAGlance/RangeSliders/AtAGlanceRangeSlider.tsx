@@ -19,6 +19,7 @@ interface AtAGlanceRangeSliderProps {
   min: number;
   max: number;
   sliderHandleValues: [number, number];
+  selectedDateRange: "Week" | "Month" | "Year" | "Lifetime";
 }
 
 /**
@@ -38,6 +39,7 @@ export default function AtAGlanceRangeSlider({
   min: initMin,
   max: initMax,
   sliderHandleValues: initSliderHandleValues,
+  selectedDateRange,
 }: AtAGlanceRangeSliderProps) {
   const [center, setCenter] = useState<number>(0);
   const [sliderHandleValues, setSliderHandleValues] = useState<number[]>([
@@ -46,17 +48,20 @@ export default function AtAGlanceRangeSlider({
   ]);
   const [min, setMin] = useState(initMin);
   const [max, setMax] = useState(initMax);
+  // console.log("min, max:", min, max);
+  // console.log("sliderHandleValues:", sliderHandleValues);
 
   // Adjusts view in individual increments. min -> max maximally viewable.
   const handleSliderChange = (newValues: number[]) => {
     setSliderHandleValues(newValues);
   };
 
-  // Formats to "YYYY-MM-DD,YYYY-MM-DD" based on UI changes
+  // Formats to "YYYY-MM-DD,YYYY-MM-DD" based on UI settings.
   const updateDateRange = (newSliderMin: number, newSliderMax: number) => {
     const formattedDateRange = createDateRangeString(
       newSliderMin,
-      newSliderMax
+      newSliderMax,
+      selectedDateRange
     );
     setDateRange(formattedDateRange);
   };

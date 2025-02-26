@@ -1,22 +1,33 @@
 import { useEffect } from "react";
 import AtAGlanceRangeSlider from "./AtAGlanceRangeSlider";
+import dayjs from "dayjs";
+import isoWeek from "dayjs/plugin/isoWeek";
 
 interface MonthlyRangeSelectorProps {
   dateRange: string;
   setDateRange: (newDateRange: string) => void;
 }
 
+dayjs.extend(isoWeek);
+
 export default function MonthlyRangeSelector({
   dateRange,
   setDateRange,
 }: MonthlyRangeSelectorProps) {
-  const min = -2;
-  const max = 2;
-  const sliderHandleValues: [number, number] = [-2, 2];
+  const middleOfMonth = dayjs()
+    .startOf("month")
+    .add(Math.floor(dayjs().daysInMonth() / 2), "day");
+  const firstMondayOfMonth = dayjs().startOf("month").startOf("isoWeek");
+  const weeksFromFirstMonday = -middleOfMonth.diff(firstMondayOfMonth, "week");
+  const lastSundayOfMonth = dayjs().endOf("month").endOf("isoWeek");
+  const weeksFromLastSunday = -middleOfMonth.diff(lastSundayOfMonth, "week");
 
-  // useEffect(() => {
-  //   setDateRange("TODO,TODO");
-  // });
+  const min = -4;
+  const max = 4;
+  const sliderHandleValues: [number, number] = [
+    weeksFromFirstMonday,
+    weeksFromLastSunday,
+  ];
 
   return (
     <AtAGlanceRangeSlider
@@ -25,6 +36,7 @@ export default function MonthlyRangeSelector({
       sliderHandleValues={sliderHandleValues}
       dateRange={dateRange}
       setDateRange={setDateRange}
+      selectedDateRange="Month"
     />
   );
 }
