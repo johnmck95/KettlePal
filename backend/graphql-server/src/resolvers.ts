@@ -225,7 +225,7 @@ export const resolvers = {
                   SUM(
                     sets * reps * 
                     CASE 
-                      WHEN "weightUnit" = 'lbs' THEN weight * 0.45359237
+                      WHEN "weightUnit" = 'lb' THEN weight * 0.45359237
                       ELSE weight
                     END
                   ) AS workCapacity
