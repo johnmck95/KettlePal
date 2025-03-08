@@ -1,28 +1,24 @@
 export const ExerciseTitles = [
-  "Single Arm Swing",
   "Swing",
+  "Single Arm Swing",
   "Press",
-  "Push Up",
-  "Push Up - Offset",
-  "Goblet Squat",
   "Pistol Squat",
+  "Goblet Squat",
+  "Racked Squat",
   "Turkish Get Up",
   "Snatch",
   "Clean",
   "Clean & Press",
-  "Racked Squat",
-  "Kickstand Squat",
-  "Halo",
+  "Push Up",
+  "Push Up - Offset",
+  "Pull Up",
+  "Chin Up",
   "Plank",
-  "Single Leg Deadlift",
-  "Clam Shells",
-  "Curl",
-  "Bird Dog",
-  "Baby Rolls",
-  "Glute Bridge",
   "Barbell Deadlift",
   "Barbell Squat",
   "Bench Press",
+  "Dumbbell Bench Press",
+  "Dumbbell Overhead Press",
   "Custom",
 ];
 
@@ -67,20 +63,20 @@ export const RepsDisplayOptions = [
 ];
 
 export const Preconfigurations: any = {
-  "Single Arm Swing": {
-    weightUnit: {
-      value: "kg",
-    },
-    repsDisplay: {
-      value: "l/r",
-    },
-  },
   Swing: {
     weightUnit: {
       value: "kg",
     },
     repsDisplay: {
       value: "std",
+    },
+  },
+  "Single Arm Swing": {
+    weightUnit: {
+      value: "kg",
+    },
+    repsDisplay: {
+      value: "l/r",
     },
   },
   Press: {
@@ -91,20 +87,28 @@ export const Preconfigurations: any = {
       value: "l/r",
     },
   },
-  "Push Up": {
+  "Pistol Squat": {
     weightUnit: {
       value: "",
+    },
+    repsDisplay: {
+      value: "l/r",
+    },
+  },
+  "Goblet Squat": {
+    weightUnit: {
+      value: "kg",
     },
     repsDisplay: {
       value: "std",
     },
   },
-  "Push Up - Offset": {
+  "Racked Squat": {
     weightUnit: {
-      value: "",
+      value: "kg",
     },
     repsDisplay: {
-      value: "std",
+      value: "l/r",
     },
   },
   "Turkish Get Up": {
@@ -139,41 +143,33 @@ export const Preconfigurations: any = {
       value: "l/r",
     },
   },
-  "Goblet Squat": {
+  "Push Up": {
     weightUnit: {
-      value: "kg",
+      value: "",
     },
     repsDisplay: {
       value: "std",
     },
   },
-  "Racked Squat": {
-    weightUnit: {
-      value: "kg",
-    },
-    repsDisplay: {
-      value: "l/r",
-    },
-  },
-  "Pistol Squat": {
+  "Push Up - Offset": {
     weightUnit: {
       value: "",
     },
     repsDisplay: {
-      value: "l/r",
+      value: "std",
     },
   },
-  "Kickstand Squat": {
+  "Pull Up": {
     weightUnit: {
-      value: "kg",
+      value: "",
     },
     repsDisplay: {
-      value: "l/r",
+      value: "std",
     },
   },
-  Halo: {
+  "Chin Up": {
     weightUnit: {
-      value: "kg",
+      value: "",
     },
     repsDisplay: {
       value: "std",
@@ -187,57 +183,9 @@ export const Preconfigurations: any = {
       value: "",
     },
   },
-  "Single Leg Deadlift": {
-    weightUnit: {
-      value: "kg",
-    },
-    repsDisplay: {
-      value: "l/r",
-    },
-  },
-  "Clam Shells": {
-    weightUnit: {
-      value: "",
-    },
-    repsDisplay: {
-      value: "std",
-    },
-  },
-  Curl: {
-    weightUnit: {
-      value: "",
-    },
-    repsDisplay: {
-      value: "std",
-    },
-  },
-  "Bird Dog": {
-    weightUnit: {
-      value: "",
-    },
-    repsDisplay: {
-      value: "l/r",
-    },
-  },
-  "Baby Rolls": {
-    weightUnit: {
-      value: "kg",
-    },
-    repsDisplay: {
-      value: "l/r",
-    },
-  },
-  "Glute Bridge": {
-    weightUnit: {
-      value: "kg",
-    },
-    repsDisplay: {
-      value: "std",
-    },
-  },
   "Barbell Deadlift": {
     weightUnit: {
-      value: "lbs",
+      value: "lb",
     },
     repsDisplay: {
       value: "std",
@@ -245,7 +193,7 @@ export const Preconfigurations: any = {
   },
   "Barbell Squat": {
     weightUnit: {
-      value: "lbs",
+      value: "lb",
     },
     repsDisplay: {
       value: "std",
@@ -253,7 +201,23 @@ export const Preconfigurations: any = {
   },
   "Bench Press": {
     weightUnit: {
-      value: "lbs",
+      value: "lb",
+    },
+    repsDisplay: {
+      value: "std",
+    },
+  },
+  "Dumbbell Bench Press": {
+    weightUnit: {
+      value: "lb",
+    },
+    repsDisplay: {
+      value: "std",
+    },
+  },
+  "Dumbbell Overhead Press": {
+    weightUnit: {
+      value: "lb",
     },
     repsDisplay: {
       value: "std",
