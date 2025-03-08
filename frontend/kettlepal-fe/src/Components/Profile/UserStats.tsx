@@ -109,7 +109,7 @@ export default function UserStats() {
                   />
                   <Detail
                     title="Favourite Exercise"
-                    value={topExercises[0].name ?? ""}
+                    value={topExercises[0]?.name ?? ""}
                     variant="md"
                   />
                   <Detail
@@ -212,7 +212,7 @@ export default function UserStats() {
                         return (
                           <Tr key={index}>
                             <Td fontSize={["xs", "sm", "md"]}>
-                              #{index + 1} - {exercise.name}
+                              #{index + 1} - {exercise?.name}
                             </Td>
                             <Td fontSize={["xs", "sm", "md"]}>
                               {exercise.times.toLocaleString()}
