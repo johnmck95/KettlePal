@@ -132,7 +132,6 @@ const useCreateWorkoutForm = () => {
     setState((prevState) => ({
       ...prevState,
       exercises: [
-        ...prevState.exercises,
         {
           title: "",
           weight: "",
@@ -144,6 +143,7 @@ const useCreateWorkoutForm = () => {
           elapsedSeconds: 0,
           key: `key-${Date.now()}-${Math.random().toString(36)}`,
         },
+        ...prevState.exercises,
       ],
     }));
   }
