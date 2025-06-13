@@ -101,39 +101,80 @@ export default function CreateWorkout() {
         })}
       </Box>
 
-      {/* ADD COMMENTS & TRACK WORKOUT BUTTONS */}
-      <HStack w="100%" justifyContent={"space-between"} mt="1rem">
-        <Button
-          size="sm"
-          variant="secondary"
-          onClick={() => setAddComments((prev) => !prev)}
-          textAlign="left"
-          my="0.5rem"
-          sx={{
-            _focus: {
-              borderColor: theme.colors.green[300],
-              boxShadow: `0 0 0 1px ${theme.colors.green[300]}`,
-            },
-          }}
-        >
-          {addComments ? "Hide Comments" : "Add Comments"}
-        </Button>
-        <Button
-          size="sm"
-          variant="secondary"
-          onClick={() => setShowTracking((prev) => !prev)}
-          textAlign="left"
-          my="0.5rem"
-          sx={{
-            _focus: {
-              borderColor: theme.colors.green[300],
-              boxShadow: `0 0 0 1px ${theme.colors.green[300]}`,
-            },
-          }}
-        >
-          {showTracking ? "Hide Workout Tracking" : "Track Workout"}
-        </Button>
-      </HStack>
+      <Flex w="100%" justifyContent={"space-between"} mt="1rem">
+        {/* ADD COMMENTS & TRACK WORKOUT BUTTONS */}
+        <Flex wrap={"wrap"} gap={2}>
+          <Button
+            size="sm"
+            variant="secondary"
+            onClick={() => setAddComments((prev) => !prev)}
+            textAlign="left"
+            my="0.5rem"
+            sx={{
+              _focus: {
+                borderColor: theme.colors.green[300],
+                boxShadow: `0 0 0 1px ${theme.colors.green[300]}`,
+              },
+            }}
+          >
+            {addComments ? "Hide Comments" : "Add Comments"}
+          </Button>
+          <Button
+            size="sm"
+            variant="secondary"
+            onClick={() => setShowTracking((prev) => !prev)}
+            textAlign="left"
+            my="0.5rem"
+            sx={{
+              _focus: {
+                borderColor: theme.colors.green[300],
+                boxShadow: `0 0 0 1px ${theme.colors.green[300]}`,
+              },
+            }}
+          >
+            {showTracking ? "Hide Workout Tracking" : "Track Workout"}
+          </Button>
+        </Flex>
+
+        {/* SAVE WORKOUT & ADD EXERCISE BUTTONS */}
+        <Flex wrap={"wrap"} gap={2} justifyContent="flex-end">
+          {state.exercises.length > 0 && (
+            <Button
+              variant="secondary"
+              leftIcon={<FaSave />}
+              disabled={true}
+              onClick={onOpenSaveWorkout}
+              flex="1"
+              minWidth="150px"
+              maxWidth="200px"
+              sx={{
+                _focus: {
+                  borderColor: theme.colors.green[300],
+                  boxShadow: `0 0 0 1px ${theme.colors.green[300]}`,
+                },
+              }}
+            >
+              Save Workout
+            </Button>
+          )}
+          <Button
+            variant="primary"
+            onClick={handleAddExercise}
+            leftIcon={<FaPlusCircle />}
+            flex="1"
+            minWidth="150px"
+            maxWidth="200px"
+            sx={{
+              _focus: {
+                borderColor: theme.colors.green[300],
+                boxShadow: `0 0 0 1px ${theme.colors.green[300]}`,
+              },
+            }}
+          >
+            Add Exercise
+          </Button>
+        </Flex>
+      </Flex>
 
       {/* WORKOUT COMMENT */}
       <WorkoutComment
@@ -173,38 +214,6 @@ export default function CreateWorkout() {
           })}
         </AnimatePresence>
       </Box>
-
-      <Flex w="100%" justifyContent={"space-between"}>
-        <Button
-          variant="primary"
-          onClick={handleAddExercise}
-          leftIcon={<FaPlusCircle />}
-          sx={{
-            _focus: {
-              borderColor: theme.colors.green[300],
-              boxShadow: `0 0 0 1px ${theme.colors.green[300]}`,
-            },
-          }}
-        >
-          Add Exercise
-        </Button>
-        {state.exercises.length > 0 && (
-          <Button
-            variant="secondary"
-            leftIcon={<FaSave />}
-            disabled={true}
-            onClick={onOpenSaveWorkout}
-            sx={{
-              _focus: {
-                borderColor: theme.colors.green[300],
-                boxShadow: `0 0 0 1px ${theme.colors.green[300]}`,
-              },
-            }}
-          >
-            Save Workout
-          </Button>
-        )}
-      </Flex>
 
       {error && showServerError && (
         <Alert
