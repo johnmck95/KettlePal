@@ -18,18 +18,16 @@ import { useUser } from "../../../Contexts/UserContext";
 import LoadingSpinner from "../../LoadingSpinner";
 import Graph from "./Visualization/Graph";
 import Detail from "../../ViewWorkouts/ViewDetailedWorkoutModal/Detail";
-import {
-  formatTime,
-  getMonSunYYYYMMDDOfCurrentWeek,
-} from "../../../utils/Time/time";
-import WeeklyRangeSelector from "./WeeklyRangeSelector";
+import { formatTime, getDateRangeByPeriod } from "../../../utils/Time/time";
+import WeeklyRangeSelector from "./RangeSliders/WeeklyRangeSelector";
+import MonthlyRangeSelector from "./RangeSliders/MonthlyRangeSelector";
 
 export default function AtAGlance() {
   const [selectedPeriod, setSelectedPeriod] = React.useState<
     "Week" | "Month" | "Year" | "Lifetime"
   >("Week");
   const [dateRange, setDateRange] = React.useState<string>(
-    selectedPeriod === "Week" ? getMonSunYYYYMMDDOfCurrentWeek() : "TODO"
+    getDateRangeByPeriod(selectedPeriod)
   );
   const periods = ["Week", "Month", "Year", "Lifetime"];
   const handlePeriodClick = (period: string) => {
@@ -38,11 +36,15 @@ export default function AtAGlance() {
 
   const [selectedMetric, setSelectedMetric] = React.useState<
     "Time" | "Work Capacity"
-  >("Time");
+  >("Work Capacity");
   const metrics = ["Time", "Work Capacity"];
   const handleMetricClick = (metric: string) => {
     setSelectedMetric(metric as "Time" | "Work Capacity");
   };
+
+  useEffect(() => {
+    setDateRange(getDateRangeByPeriod(selectedPeriod));
+  }, [selectedPeriod]);
 
   const user = useUser().user;
   const { loading, error, data } = useAtAGlanceQuery({
@@ -185,6 +187,12 @@ export default function AtAGlance() {
           />
           {selectedPeriod === "Week" && (
             <WeeklyRangeSelector
+              dateRange={dateRange}
+              setDateRange={setDateRange}
+            />
+          )}
+          {selectedPeriod === "Month" && (
+            <MonthlyRangeSelector
               dateRange={dateRange}
               setDateRange={setDateRange}
             />
