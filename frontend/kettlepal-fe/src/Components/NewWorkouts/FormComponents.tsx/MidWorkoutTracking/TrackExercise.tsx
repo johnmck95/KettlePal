@@ -17,7 +17,6 @@ export default function TrackExercise({
   removedASet,
   completedASet,
 }: TrackExerciseProps) {
-
   return (
     <>
       {trackWorkout && (

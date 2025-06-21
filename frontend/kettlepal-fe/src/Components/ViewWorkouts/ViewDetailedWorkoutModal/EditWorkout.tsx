@@ -154,6 +154,7 @@ export default function EditWorkout({
                   handleExercise={handleExercise}
                   deleteExercise={deleteExercise}
                   exerciseIndex={index}
+                  trackingIndex={state.exercises.length - index - 1}
                   submitted={submitted}
                   setFormHasErrors={setFormHasErrors}
                   trackWorkout={false}
