@@ -125,6 +125,11 @@ const useCreateWorkoutForm = () => {
       ...prevState,
       [name]: value,
     }));
+
+    // If you change the date with no exercises, reset workout tracking (stale browser tab).
+    if (name === "date" && state.exercises.length === 0) {
+      deleteExerciseTrackingFromSessionStorage();
+    }
   }
 
   // Initialize a new exercise object
@@ -197,6 +202,20 @@ const useCreateWorkoutForm = () => {
     [numErrors, setFormHasErrors]
   );
 
+  /**
+   * Deletes all 'completedSets-#' key-val pairs from sessionStorage, used for traacking a workout.
+   */
+  function deleteExerciseTrackingFromSessionStorage(): void {
+    const PREFIX = "completedSets-";
+
+    for (let i = 0; i < sessionStorage.length - 1; i++) {
+      const key = sessionStorage.key(i);
+      if (key?.startsWith(PREFIX)) {
+        sessionStorage.removeItem(key);
+      }
+    }
+  }
+
   // Show client-side errors, if clear, try to post to DB
   // apollo onError will handle rendering server-side errors
   async function onSaveWorkout(): Promise<void> {
@@ -216,6 +235,7 @@ const useCreateWorkoutForm = () => {
           workoutWithExercises: state,
         },
       });
+      deleteExerciseTrackingFromSessionStorage();
     } catch (err) {
       console.error("Error submitting workout with exercises: ", err);
     }

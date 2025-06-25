@@ -20,6 +20,7 @@ interface CreateExerciseProps {
   handleExercise: (name: string, value: string | number, index: number) => void;
   deleteExercise: ((index: number) => void) | (() => Promise<void>);
   exerciseIndex: number;
+  trackingIndex: number;
   submitted: boolean;
   setFormHasErrors: (value: boolean) => void;
   trackWorkout: boolean;
@@ -32,6 +33,7 @@ export default function CreateExercise({
   handleExercise,
   deleteExercise,
   exerciseIndex,
+  trackingIndex,
   submitted,
   setFormHasErrors,
   trackWorkout,
@@ -67,6 +69,7 @@ export default function CreateExercise({
   } = useCreateExerciseForm({
     exercise,
     exerciseIndex,
+    trackingIndex,
     handleExercise,
     deleteExercise,
     setFormHasErrors,

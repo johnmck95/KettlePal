@@ -8,6 +8,7 @@ import ExerciseTitles, {
 const useCreateExerciseForm = ({
   exercise,
   exerciseIndex,
+  trackingIndex,
   handleExercise,
   deleteExercise,
   setFormHasErrors,
@@ -16,9 +17,10 @@ const useCreateExerciseForm = ({
   handleExercise: (name: string, value: string | number, index: number) => void;
   deleteExercise: ((index: number) => void) | (() => Promise<void>);
   exerciseIndex: number;
+  trackingIndex: number;
   setFormHasErrors: (value: boolean) => void;
 }) => {
-  const SESSION_STORAGE_KEY = `completedSets-${exerciseIndex}`;
+  const SESSION_STORAGE_KEY = `completedSets-${trackingIndex}`;
   // Tracking a workout
   const [completedSets, setCompletedSets] = useState<number>(() => {
     const sessionVal = sessionStorage.getItem(SESSION_STORAGE_KEY);
@@ -35,8 +37,50 @@ const useCreateExerciseForm = ({
     handleExercise("comment", newComment, exerciseIndex);
   };
 
+  /**
+   * Completed sets are saved in session storage by index. When an exercise is deleted,
+   * ensure the session storage accurately reflects the deleted item without any holes.
+   */
+  function resetCompletedExercisesSessionStorage(index: number): void {
+    const PREFIX = "completedSets-";
+
+    // Collect all 'completedSets-#' key-val pairs from sessionStorage.
+    const entries: { key: string; value: string }[] = [];
+    for (let i = 0; i < sessionStorage.length; i++) {
+      const key = sessionStorage.key(i);
+      if (key?.startsWith(PREFIX)) {
+        const idx = Number(key.slice(PREFIX.length));
+        if (!Number.isNaN(idx)) {
+          entries.push({ key, value: sessionStorage.getItem(key)! });
+        }
+      }
+    }
+
+    // Sort by their numeric suffix to ensure correct order
+    entries.sort(
+      (a, b) =>
+        Number(a.key.slice(PREFIX.length)) - Number(b.key.slice(PREFIX.length))
+    );
+
+    if (entries.length === 0) return;
+
+    // Remove all 'completedSets-#' key-val pairs from sessionStorage.
+    entries.forEach(({ key }) => sessionStorage.removeItem(key));
+
+    // Re‑insert 'completedSets-#' to sessionStorage except the one we’re
+    // deleting, renumbering them to stay contiguous.
+    let newIndex = 0;
+    for (const { key, value } of entries) {
+      const oldIndex = Number(key.slice(PREFIX.length));
+      if (oldIndex === index) continue; // skip the one we’re deleting
+      sessionStorage.setItem(`${PREFIX}${newIndex}`, value);
+      newIndex++;
+    }
+  }
+
   // Removes exercise from state and handles swipe logic for mobile
   function onDeleteExercise(): void {
+    resetCompletedExercisesSessionStorage(trackingIndex);
     deleteExercise(exerciseIndex);
     onCloseDeleteExercise();
     setOffset(
