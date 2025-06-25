@@ -125,6 +125,11 @@ const useCreateWorkoutForm = () => {
       ...prevState,
       [name]: value,
     }));
+
+    // If you change the date with no exercises, reset workout tracking (stale browser tab).
+    if (name === "date" && state.exercises.length === 0) {
+      deleteExerciseTrackingFromSessionStorage();
+    }
   }
 
   // Initialize a new exercise object
