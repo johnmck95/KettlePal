@@ -27,3 +27,170 @@ NOTE: The server does _not_ hot reload. TODO.
 ## Cloning kettlepal-prod to kettlepal-dev
 
 To make `kettlebell-dev` have an identical schema & data as `kettlepal-prod`, run `npm run restore_kettlepal-dev`. This will drop the `kettlepal-dev` database, pg_dump the contents of `kettlepal-prod`, then create a new `kettlepal-dev` DB with the dumped data. Finally, it removes the data dump file.
+
+# Tables
+
+There are 3 important KettlePal postgresql tables.
+
+There is a `1 - M` relationship between the `users & workouts` tables, and another `1 - M` relationship between the `workouts & exercises` tables.
+
+## users
+
+<table border="1" cellspacing="0" cellpadding="4">
+  <thead>
+    <tr>
+      <th>uid</th>
+      <th>first_name</th>
+      <th>last_name</th>
+      <th>email</th>
+      <th>password</th>
+      <th>is_authorized</th>
+      <th>created_at</th>
+      <th>token_count</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>primary key</td>
+      <td>first name</td>
+      <td>last name</td>
+      <td>email</td>
+      <td>the hashed user password</td>
+      <td>A flag to restrict/grant access in the future</td>
+      <td>the date the account was created</td>
+      <td>used in validation</td>
+    </tr>
+    <tr>
+      <td>uuid</td>
+      <td>varchar(255)</td>
+      <td>varchar(255)</td>
+      <td>varchar(255)</td>
+      <td>varchar(255)</td>
+      <td>boolean</td>
+      <td>timestamptz</td>
+      <td>int(4)</td>
+    </tr>
+     <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td>nullable</td>
+      <td>nullable</td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+## workouts
+
+<table border="1" cellpadding="6" cellspacing="0">
+  <thead>
+    <tr>
+      <th>uid</th>
+      <th>user_uid</th>
+      <th>date</th>
+      <th>created_at</th>
+      <th>elapsed_seconds</th>
+      <th>comment</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>primary key</td>
+      <td>foreign key</td>
+      <td>the date the workout occurred on. Naively supports single timezone</td>
+      <td>the date the workout was first saved to the db</td>
+      <td>total number of seconds the workout lasted for</td>
+      <td>comment</td>
+    </tr>
+    <tr>
+      <td>uuid</td>
+      <td>uuid</td>
+      <td>varchar(255). EX: 'YYYY-MM-DD'</td>
+      <td>timestamptz</td>
+      <td>int(4)</td>
+      <td>varchar(512)</td>
+    </tr>
+        <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td>nullable</td>
+      <td>nullable</td>
+    </tr>
+  </tbody>
+</table>
+
+## exercises
+
+<table border="1" cellspacing="0" cellpadding="6">
+  <thead>
+    <tr>
+      <th>uid</th>
+      <th>workout_uid</th>
+      <th>title</th>
+      <th>created_at</th>
+      <th>weight</th>
+      <th>weight_unit</th>
+      <th>sets</th>
+      <th>reps</th>
+      <th>reps_display</th>
+      <th>elapsed_seconds</th>
+      <th>comment</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>primary key</td>
+      <td>foreign key</td>
+      <td>name of the exercise performed</td>
+      <td>the date the exercise was first saved to the db</td>
+      <td>
+        the numerical value of weight of the exercise equipment. Ex: "32" for a 32kg kettlebell. 
+        Or "225" for a 225lb barbell. Not applicable for all exercises (like pull-ups).
+      </td>
+      <td>The unit for the weight. Typically "kg" or "lb" if applicable.</td>
+      <td>The number of sets the exercise was performed for</td>
+      <td>
+        The <em>total</em> number of reps the exercise was performed for, <em>per set</em>. 
+        If reps are done on each side, EX: 3 sets x (5 presses left arm, 5 presses right arm), reps = 10.
+      </td>
+      <td>
+        The method the UI will use to display the total number of reps to the user. 
+        'std' (standard reps, like a goblet squat), 'l/r' (reps done separately on the left/right, like turkish get ups), 
+        '(1,2,3,4,5)', '(1,2,3,4)', '(1,2,3)', '(1,2)' – for Kettlebell Ladders respectively.
+      </td>
+      <td>total number of seconds the exercise lasted for</td>
+      <td>comment</td>
+    </tr>
+    <tr>
+      <td>uuid</td>
+      <td>uuid</td>
+      <td>varchar(255)</td>
+      <td>timestamptz</td>
+      <td>float(4)</td>
+      <td>varchar(255)</td>
+      <td>int(4)</td>
+      <td>int(4)</td>
+      <td>varchar(255)</td>
+      <td>int(4)</td>
+      <td>varchar(512)</td>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td>nullable</td>
+      <td>nullable</td>
+      <td>nullable</td>
+      <td>nullable</td>
+      <td>nullable</td>
+      <td>nullable</td>
+      <td>nullable</td>
+    </tr>
+  </tbody>
+</table>
