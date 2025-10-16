@@ -16,10 +16,10 @@ import {
   CloseButton,
 } from "@chakra-ui/react";
 import react, { ChangeEvent, useEffect, useState } from "react";
-import theme from "../Constants/theme";
-import { useUser } from "../Contexts/UserContext";
+import theme from "../../Constants/theme";
+import { useUser } from "../../Contexts/UserContext";
 import { useNavigate } from "react-router-dom";
-import { useLoginMutation } from "../generated/frontend-types";
+import { useLoginMutation } from "../../generated/frontend-types";
 
 export default function Login() {
   const [state, setState] = react.useState({
@@ -103,12 +103,13 @@ export default function Login() {
   }, [loading]);
 
   return (
-    <Center minH="100%" p="1rem" flexWrap="wrap" flexDirection="column">
+    <>
       <Center
         my="auto"
         bg="white"
         maxW="500px"
         w="calc(100% - 2rem)"
+        minW="430px"
         p="2rem 1rem 1rem 1rem"
         borderRadius="8px"
         boxShadow={`0px 1px 4px ${theme.colors.grey[400]}`}
@@ -190,8 +191,7 @@ export default function Login() {
           {/* CONTINUE AS GUEST */}
           <Text w="100%" mt="1rem" fontSize="xs" color={theme.colors.grey[700]}>
             <i>
-              While we're not offering new accounts at this time, feel free to
-              explore the application as a{" "}
+              Not ready to register for an account? View Kettlpal as a{" "}
               <Button
                 variant="link"
                 fontSize="sm"
@@ -232,6 +232,6 @@ export default function Login() {
           />
         </Alert>
       )}
-    </Center>
+    </>
   );
 }
