@@ -1040,6 +1040,7 @@ export const resolvers = {
         const emailTaken = await knexInstance("users")
           .where({ email: user.email })
           .first();
+
         if (emailTaken) {
           throw new Error("Email is already in use.");
         }
@@ -1057,7 +1058,10 @@ export const resolvers = {
         setRefreshToken(res, refreshToken);
 
         return insertedUser;
-      } catch (error) {}
+      } catch (error) {
+        console.error(error);
+        throw error; // Re-throw for client to see.
+      }
     },
 
     async login(

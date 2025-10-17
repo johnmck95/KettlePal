@@ -444,7 +444,6 @@ export default function SignUp({
           status="error"
           my="1rem"
           maxW="500px"
-          w="calc(100% - 2rem)"
           borderRadius={"8px"}
           justifyContent={"space-between"}
         >
