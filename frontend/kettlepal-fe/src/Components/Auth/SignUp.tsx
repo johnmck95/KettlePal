@@ -15,7 +15,7 @@ import {
   AlertDescription,
   CloseButton,
 } from "@chakra-ui/react";
-import react, { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import theme from "../../Constants/theme";
 import { useSignUpMutation } from "../../generated/frontend-types";
 import { useNavigate } from "react-router-dom";
