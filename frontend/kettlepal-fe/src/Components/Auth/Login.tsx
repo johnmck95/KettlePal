@@ -179,6 +179,12 @@ export default function Login({
             isLoading={loading}
             _hover={{ bg: theme.colors.green[100] }}
             onClick={handleSubmit}
+            sx={{
+              _focus: {
+                borderColor: theme.colors.green[300],
+                boxShadow: `0 0 0 1px ${theme.colors.green[300]}`,
+              },
+            }}
           >
             Log In
           </Button>
