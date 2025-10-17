@@ -21,7 +21,11 @@ import { useUser } from "../../Contexts/UserContext";
 import { useNavigate } from "react-router-dom";
 import { useLoginMutation } from "../../generated/frontend-types";
 
-export default function Login() {
+export default function Login({
+  handleComponentSwap,
+}: {
+  handleComponentSwap: () => void;
+}) {
   const [state, setState] = react.useState({
     email: "",
     password: "",
@@ -109,10 +113,10 @@ export default function Login() {
         bg="white"
         maxW="500px"
         w="calc(100% - 2rem)"
-        minW="430px"
+        minW={["100%", "430px"]}
         p="2rem 1rem 1rem 1rem"
-        borderRadius="8px"
-        boxShadow={`0px 1px 4px ${theme.colors.grey[400]}`}
+        borderRadius="24px"
+        boxShadow={`0px 2px 8px ${theme.colors.grey[400]}`}
       >
         <VStack w="100%" p="1rem">
           {/* TITLE */}
@@ -154,6 +158,7 @@ export default function Login() {
                   mr="0.25rem"
                   variant="secondary"
                   size="sm"
+                  tabIndex={-1}
                   onClick={() =>
                     setShowPassword((prevShowPassword) => !prevShowPassword)
                   }
@@ -188,10 +193,38 @@ export default function Login() {
             </Text>
           )}
 
-          {/* CONTINUE AS GUEST */}
-          <Text w="100%" mt="1rem" fontSize="xs" color={theme.colors.grey[700]}>
+          {/* SIGN UP HERE */}
+          <Text
+            w="100%"
+            mt="1rem"
+            fontSize="xs"
+            color={theme.colors.grey[700]}
+            textAlign={"center"}
+          >
             <i>
-              Not ready to register for an account? View Kettlpal as a{" "}
+              Don't have an account?{" "}
+              <Button
+                variant="link"
+                fontSize="sm"
+                color={theme.colors.green[900]}
+                onClick={handleComponentSwap}
+                textDecoration="underline"
+              >
+                Sign up here
+              </Button>
+            </i>
+          </Text>
+
+          {/* CONTINUE AS GUEST */}
+          <Text
+            w="100%"
+            mt="0.25rem"
+            fontSize="xs"
+            color={theme.colors.grey[700]}
+            textAlign={"center"}
+          >
+            <i>
+              Not ready to register for an account? View Kettlepal as a{" "}
               <Button
                 variant="link"
                 fontSize="sm"

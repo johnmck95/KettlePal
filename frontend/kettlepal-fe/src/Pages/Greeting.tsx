@@ -1,8 +1,8 @@
 import { Box, Heading, Center } from "@chakra-ui/react";
-import react, { useState } from "react";
+import react, { useRef, useState } from "react";
 import Login from "../Components/Auth/Login";
 import theme from "../Constants/theme";
-import Register from "../Components/Auth/Register";
+import SignUp from "../Components/Auth/SignUp";
 
 export default function Greeting() {
   const [state, setState] = useState({
@@ -10,7 +10,7 @@ export default function Greeting() {
     isLeft: false,
   });
 
-  const handleHeadingClick = () => {
+  const handleComponentSwap = () => {
     setState((prev) => ({
       formTitle:
         prev.formTitle === "Welcome Back!" ? "Join Us!" : "Welcome Back!",
@@ -20,19 +20,24 @@ export default function Greeting() {
 
   return (
     <Center
-      minH="100vh"
+      minH="100%"
+      w="100%"
       p="1rem"
       flexWrap="wrap"
       flexDirection="column"
       position="relative"
+      overflowX="hidden"
     >
+      {/* BACKGROUND CONTENT */}
       <Box
         position="absolute"
         top="0"
-        left={state.isLeft ? "0" : "auto"}
-        right={state.isLeft ? "auto" : "0"}
+        left="0"
         w={["90vw", "75vw", "65vw", "55vw"]}
         h={["90vw", "75vw", "65vw", "55vw"]}
+        padding="0px"
+        margin="0px"
+        border="0px"
         bg={theme.colors.green[100]}
         borderBottomLeftRadius={state.isLeft ? "0" : "100%"}
         borderBottomRightRadius={state.isLeft ? "100%" : "0"}
@@ -41,25 +46,47 @@ export default function Greeting() {
         display="flex"
         justifyContent={state.isLeft ? "flex-start" : "flex-end"}
         alignItems="flex-start"
-        p={["2rem", "4rem", "6rem", "10rem"]}
-        transition="all .75s ease"
         overflow="visible"
-        transform="none"
+        transition="transform 1.75s ease, border-radius 0.75s ease"
+        transform={
+          state.isLeft
+            ? "translateX(0)"
+            : [
+                "translateX(calc(100vw - 90vw))",
+                "translateX(calc(100vw - 75vw))",
+                "translateX(calc(100vw - 65vw))",
+                "translateX(calc(100vw - 55vw))",
+              ]
+        }
       >
         <Heading
-          fontSize="xl"
-          my="1rem"
+          fontSize={["2xl", "3xl", "4xl"]}
           color={theme.colors.white}
-          onClick={handleHeadingClick}
-          textDecoration="underline"
-          cursor="pointer"
+          textAlign={state.isLeft ? "left" : "right"}
+          m={["2rem", "2.5rem"]}
         >
           {state.formTitle}
         </Heading>
       </Box>
-      <Box position="relative">
-        {/* Foreground content */}
-        {state.formTitle === "Welcome Back!" ? <Login /> : <Register />}
+
+      {/* FOREGROUND CONTENT */}
+      <Box
+        position="relative"
+        minW="375px"
+        p="0"
+        m="0"
+        transition="transform 1.75s ease-in-out"
+        transform={
+          state.isLeft
+            ? ["0", "0", "translateX(25%)"]
+            : ["0", "0", "translateX(-25%)"]
+        }
+      >
+        {state.formTitle === "Welcome Back!" ? (
+          <Login handleComponentSwap={handleComponentSwap} />
+        ) : (
+          <SignUp handleComponentSwap={handleComponentSwap} />
+        )}
       </Box>
     </Center>
   );

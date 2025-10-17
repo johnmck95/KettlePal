@@ -849,7 +849,7 @@ export const resolvers = {
                 throw error;
             }
         },
-        async signUp(_, { user }) {
+        async signUp(_, { user }, { res }) {
             const hashedPassword = await bcrypt.hash(user.password, 12);
             const newUser = {
                 firstName: user.firstName,
@@ -869,6 +869,10 @@ export const resolvers = {
                     .insert(newUser)
                     .returning("*");
                 console.log("insertedUser: ", insertedUser);
+                const { refreshToken, accessToken } = createTokens(insertedUser);
+                // Set refresh token in HTTP-only cookie
+                setAccessToken(res, accessToken);
+                setRefreshToken(res, refreshToken);
                 return insertedUser;
             }
             catch (error) { }

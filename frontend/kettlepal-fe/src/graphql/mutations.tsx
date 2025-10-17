@@ -1,13 +1,26 @@
 import { gql } from "@apollo/client";
 
 /** The GQL codemon type generator is configured to create custom hooks for each
- query and mutatation is sees. Create the Query here, then call useYourQueryName 
+ query and mutatation it sees. Create the Query here, then call useYourQueryName 
  in the desired .tsx file. */
 
 const LOGIN_MUTATION = gql`
   mutation Login($email: String!, $password: String!) {
     login(email: $email, password: $password) {
       uid
+    }
+  }
+`;
+
+// TODO DUMMY -- you need to write a SIGNUP_MUTATION in order for codegen
+// to auto-generate you a custom hook to use in your SignUp component
+const SIGNUP_MUTATION = gql`
+  mutation SignUp($user: AddUserInput!) {
+    signUp(user: $user) {
+      uid
+      firstName
+      lastName
+      email
     }
   }
 `;
