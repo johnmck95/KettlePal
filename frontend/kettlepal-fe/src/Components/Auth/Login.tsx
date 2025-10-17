@@ -16,12 +16,16 @@ import {
   CloseButton,
 } from "@chakra-ui/react";
 import react, { ChangeEvent, useEffect, useState } from "react";
-import theme from "../Constants/theme";
-import { useUser } from "../Contexts/UserContext";
+import theme from "../../Constants/theme";
+import { useUser } from "../../Contexts/UserContext";
 import { useNavigate } from "react-router-dom";
-import { useLoginMutation } from "../generated/frontend-types";
+import { useLoginMutation } from "../../generated/frontend-types";
 
-export default function Login() {
+export default function Login({
+  handleComponentSwap,
+}: {
+  handleComponentSwap: () => void;
+}) {
   const [state, setState] = react.useState({
     email: "",
     password: "",
@@ -103,15 +107,16 @@ export default function Login() {
   }, [loading]);
 
   return (
-    <Center minH="100%" p="1rem" flexWrap="wrap" flexDirection="column">
+    <>
       <Center
         my="auto"
         bg="white"
         maxW="500px"
         w="calc(100% - 2rem)"
+        minW={["100%", "430px"]}
         p="2rem 1rem 1rem 1rem"
-        borderRadius="8px"
-        boxShadow={`0px 1px 4px ${theme.colors.grey[400]}`}
+        borderRadius="24px"
+        boxShadow={`0px 2px 8px ${theme.colors.grey[400]}`}
       >
         <VStack w="100%" p="1rem">
           {/* TITLE */}
@@ -153,6 +158,7 @@ export default function Login() {
                   mr="0.25rem"
                   variant="secondary"
                   size="sm"
+                  tabIndex={-1}
                   onClick={() =>
                     setShowPassword((prevShowPassword) => !prevShowPassword)
                   }
@@ -173,6 +179,12 @@ export default function Login() {
             isLoading={loading}
             _hover={{ bg: theme.colors.green[100] }}
             onClick={handleSubmit}
+            sx={{
+              _focus: {
+                borderColor: theme.colors.green[300],
+                boxShadow: `0 0 0 1px ${theme.colors.green[300]}`,
+              },
+            }}
           >
             Log In
           </Button>
@@ -187,11 +199,38 @@ export default function Login() {
             </Text>
           )}
 
-          {/* CONTINUE AS GUEST */}
-          <Text w="100%" mt="1rem" fontSize="xs" color={theme.colors.grey[700]}>
+          {/* SIGN UP HERE */}
+          <Text
+            w="100%"
+            mt="1rem"
+            fontSize="xs"
+            color={theme.colors.grey[700]}
+            textAlign={"center"}
+          >
             <i>
-              While we're not offering new accounts at this time, feel free to
-              explore the application as a{" "}
+              Don't have an account?{" "}
+              <Button
+                variant="link"
+                fontSize="sm"
+                color={theme.colors.green[900]}
+                onClick={handleComponentSwap}
+                textDecoration="underline"
+              >
+                Sign up here
+              </Button>
+            </i>
+          </Text>
+
+          {/* CONTINUE AS GUEST */}
+          <Text
+            w="100%"
+            mt="0.25rem"
+            fontSize="xs"
+            color={theme.colors.grey[700]}
+            textAlign={"center"}
+          >
+            <i>
+              Not ready to register for an account? View Kettlepal as a{" "}
               <Button
                 variant="link"
                 fontSize="sm"
@@ -232,6 +271,6 @@ export default function Login() {
           />
         </Alert>
       )}
-    </Center>
+    </>
   );
 }

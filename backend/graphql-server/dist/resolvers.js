@@ -849,7 +849,7 @@ export const resolvers = {
                 throw error;
             }
         },
-        async signUp(_, { user }) {
+        async signUp(_, { user }, { res }) {
             const hashedPassword = await bcrypt.hash(user.password, 12);
             const newUser = {
                 firstName: user.firstName,
@@ -863,15 +863,23 @@ export const resolvers = {
                     .where({ email: user.email })
                     .first();
                 if (emailTaken) {
+                    console.log("email already in use: ", user.email);
                     throw new Error("Email is already in use.");
                 }
                 const [insertedUser] = await knexInstance("users")
                     .insert(newUser)
                     .returning("*");
                 console.log("insertedUser: ", insertedUser);
+                const { refreshToken, accessToken } = createTokens(insertedUser);
+                // Set refresh token in HTTP-only cookie
+                setAccessToken(res, accessToken);
+                setRefreshToken(res, refreshToken);
                 return insertedUser;
             }
-            catch (error) { }
+            catch (error) {
+                console.error(error);
+                throw error; // Re-throw for client to see.
+            }
         },
         async login(_, { email, password }, { res }) {
             const user = await knexInstance("users").where({ email: email }).first();
