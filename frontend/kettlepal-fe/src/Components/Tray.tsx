@@ -71,7 +71,7 @@ export default function Tray() {
       )}
       <HStack
         w="100%"
-        h="3rem"
+        h="4rem"
         justifyContent="space-around"
         bg="linear-gradient(180deg, rgba(90,114,92,1) 0%, rgba(90,114,92,1) 28%, rgba(81,103,83,1) 94%)"
         color="white"
@@ -86,7 +86,7 @@ export default function Tray() {
                   sx={{
                     mt: "6px",
                     width: "1.5rem",
-                    height: "1.5rem",
+                    height: "2rem",
                   }}
                 />
                 <Text
@@ -108,7 +108,7 @@ export default function Tray() {
                   sx={{
                     mt: "6px",
                     width: "1.5rem",
-                    height: "1.5rem",
+                    height: "2rem",
                   }}
                 />
                 <Text
@@ -130,7 +130,7 @@ export default function Tray() {
                   sx={{
                     mt: "6px",
                     width: "1.5rem",
-                    height: "1.5rem",
+                    height: "2rem",
                   }}
                 />
                 <Text
@@ -152,7 +152,7 @@ export default function Tray() {
                   sx={{
                     mt: "6px",
                     width: "1.5rem",
-                    height: "1.5rem",
+                    height: "2rem",
                   }}
                 />
                 <Text

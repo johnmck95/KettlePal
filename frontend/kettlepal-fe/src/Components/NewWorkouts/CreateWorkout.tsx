@@ -68,8 +68,9 @@ export default function CreateWorkout() {
     >
       <HStack
         justifyContent={"space-between"}
+        alignItems={"flex-start"}
         mb="0.75rem"
-        h={["90px", "120px"]}
+        maxH={["90px", "120px"]}
       >
         {/* WORKOUT DATE */}
         <WorkoutDate
@@ -101,15 +102,27 @@ export default function CreateWorkout() {
         })}
       </Box>
 
-      <Flex w="100%" justifyContent={"space-between"} mt="1rem">
+      <Flex
+        w="100%"
+        justifyContent={"space-between"}
+        mt="1rem"
+        gap={1}
+        h={["74px", "86px", "42px"]}
+      >
         {/* ADD COMMENTS & TRACK WORKOUT BUTTONS */}
-        <Flex wrap={"wrap"} gap={2}>
+        <Flex
+          wrap={"wrap"}
+          gap={[2, 1, 2]}
+          justifyContent={["flex-end", "flex-start"]}
+          alignContent={["flex-start"]}
+          height="100%"
+          flexDirection={["column", "row"]}
+        >
           <Button
-            size="sm"
+            size={["sm", "md"]}
             variant="secondary"
             onClick={() => setAddComments((prev) => !prev)}
-            textAlign="left"
-            my="0.5rem"
+            w={["140px", "140px", "auto"]}
             sx={{
               _focus: {
                 borderColor: theme.colors.green[300],
@@ -120,11 +133,10 @@ export default function CreateWorkout() {
             {addComments ? "Hide Comments" : "Add Comments"}
           </Button>
           <Button
-            size="sm"
+            size={["sm", "md"]}
             variant="secondary"
             onClick={() => setShowTracking((prev) => !prev)}
-            textAlign="left"
-            my="0.5rem"
+            w={["140px", "140px", "auto"]}
             sx={{
               _focus: {
                 borderColor: theme.colors.green[300],
@@ -137,16 +149,21 @@ export default function CreateWorkout() {
         </Flex>
 
         {/* SAVE WORKOUT & ADD EXERCISE BUTTONS */}
-        <Flex wrap={"wrap"} gap={2} justifyContent="flex-end">
+        <Flex
+          wrap={"wrap"}
+          gap={[2, 1, 2]}
+          justifyContent={"flex-end"}
+          alignContent={["flex-end", "flex-start"]}
+          height="100%"
+        >
           {state.exercises.length > 0 && (
             <Button
+              size={["sm", "md"]}
               variant="secondary"
               leftIcon={<FaSave />}
               disabled={true}
               onClick={onOpenSaveWorkout}
-              flex="1"
-              minWidth="150px"
-              maxWidth="200px"
+              w={["140px", "150px", "200px"]}
               sx={{
                 _focus: {
                   borderColor: theme.colors.green[300],
@@ -158,12 +175,11 @@ export default function CreateWorkout() {
             </Button>
           )}
           <Button
+            size={["sm", "md"]}
             variant="primary"
             onClick={handleAddExercise}
             leftIcon={<FaPlusCircle />}
-            flex="1"
-            minWidth="150px"
-            maxWidth="200px"
+            w={["140px", "150px", "200px"]}
             sx={{
               _focus: {
                 borderColor: theme.colors.green[300],

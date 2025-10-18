@@ -20,6 +20,7 @@ export default function WorkoutDate({
       display="flex"
       flexDirection="column"
       justifyContent={"flex-end"}
+      w={["140px", "auto"]}
     >
       <FormLabel fontSize={["sm", "lg"]}>
         <b>Workout Date</b>
