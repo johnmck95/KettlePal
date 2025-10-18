@@ -314,13 +314,13 @@ export type UserPastWorkouts = {
 
 export type UserStats = {
   __typename?: 'UserStats';
-  largestWorkCapacityKg: Scalars['Int']['output'];
-  longestWorkout: Scalars['Int']['output'];
-  mostRepsInWorkout: Scalars['Int']['output'];
-  oldestWorkoutDate: Scalars['String']['output'];
-  topExercises: Scalars['String']['output'];
+  largestWorkCapacityKg?: Maybe<Scalars['Float']['output']>;
+  longestWorkout?: Maybe<Scalars['Int']['output']>;
+  mostRepsInWorkout?: Maybe<Scalars['Int']['output']>;
+  oldestWorkoutDate?: Maybe<Scalars['String']['output']>;
+  topExercises?: Maybe<Scalars['String']['output']>;
   totalExercises: Scalars['Int']['output'];
-  totalTime: Scalars['Int']['output'];
+  totalTime?: Maybe<Scalars['Int']['output']>;
   totalWorkouts: Scalars['Int']['output'];
 };
 
@@ -573,13 +573,13 @@ export type UserPastWorkoutsResolvers<ContextType = any, ParentType extends Reso
 }>;
 
 export type UserStatsResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserStats'] = ResolversParentTypes['UserStats']> = ResolversObject<{
-  largestWorkCapacityKg?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  longestWorkout?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  mostRepsInWorkout?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  oldestWorkoutDate?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  topExercises?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  largestWorkCapacityKg?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  longestWorkout?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  mostRepsInWorkout?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  oldestWorkoutDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  topExercises?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   totalExercises?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  totalTime?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  totalTime?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   totalWorkouts?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
