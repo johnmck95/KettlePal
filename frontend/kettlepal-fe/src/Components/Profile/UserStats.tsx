@@ -109,7 +109,7 @@ export default function UserStats() {
                   />
                   <Detail
                     title="Favourite Exercise"
-                    value={topExercises[0]?.name ?? ""}
+                    value={topExercises[0]?.name ?? "---"}
                     variant="md"
                   />
                   <Detail
@@ -143,7 +143,7 @@ export default function UserStats() {
                             First Imported Workout
                           </Td>
                           <Td fontSize={["xs", "sm", "md"]}>
-                            {userStats?.oldestWorkoutDate}
+                            {userStats?.oldestWorkoutDate ?? "---"}
                           </Td>
                         </Tr>
                       )}
@@ -162,7 +162,9 @@ export default function UserStats() {
                       <Tr>
                         <Td fontSize={["xs", "sm", "md"]}>Total Active Time</Td>
                         <Td fontSize={["xs", "sm", "md"]}>
-                          {formatTime(userStats?.totalTime ?? 0, true)}
+                          {userStats?.totalTime
+                            ? formatTime(userStats?.totalTime, true)
+                            : "---"}
                         </Td>
                       </Tr>
                     </Tbody>
@@ -178,7 +180,9 @@ export default function UserStats() {
                       <Tr>
                         <Td fontSize={["xs", "sm", "md"]}>Longest Workout</Td>
                         <Td fontSize={["xs", "sm", "md"]}>
-                          {formatTime(userStats?.longestWorkout ?? 0, true)}
+                          {userStats?.longestWorkout
+                            ? formatTime(userStats?.longestWorkout, true)
+                            : "---"}
                         </Td>
                       </Tr>
                       <Tr>
@@ -186,27 +190,30 @@ export default function UserStats() {
                           Greatest Work Capacity
                         </Td>
                         <Td fontSize={["xs", "sm", "md"]}>
-                          {userStats?.largestWorkCapacityKg?.toLocaleString()}{" "}
+                          {userStats?.largestWorkCapacityKg?.toLocaleString() ??
+                            0}{" "}
                           kg
                         </Td>
                       </Tr>
                       <Tr>
                         <Td fontSize={["xs", "sm", "md"]}>Most Reps</Td>
                         <Td fontSize={["xs", "sm", "md"]}>
-                          {userStats?.mostRepsInWorkout?.toLocaleString()}
+                          {userStats?.mostRepsInWorkout?.toLocaleString() ?? 0}
                         </Td>
                       </Tr>
                     </Tbody>
 
                     {/* FAVOURITE EXERCISES */}
-                    <Thead>
-                      <Tr>
-                        <Th fontSize={["xs", "sm", "md"]}>
-                          FAVOURITE EXERCISES
-                        </Th>
-                        <Th fontSize={["xs", "sm", "md"]}> TOTAL WORKOUTS</Th>
-                      </Tr>
-                    </Thead>
+                    {topExercises.length > 0 && (
+                      <Thead>
+                        <Tr>
+                          <Th fontSize={["xs", "sm", "md"]}>
+                            FAVOURITE EXERCISES
+                          </Th>
+                          <Th fontSize={["xs", "sm", "md"]}> TOTAL WORKOUTS</Th>
+                        </Tr>
+                      </Thead>
+                    )}
                     <Tbody>
                       {topExercises.map((exercise, index) => {
                         return (

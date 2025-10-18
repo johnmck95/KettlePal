@@ -27,12 +27,12 @@ type AtAGlanceData {
 type UserStats {
   totalWorkouts: Int!
   totalExercises: Int!
-  totalTime: Int!
-  longestWorkout: Int!
-  mostRepsInWorkout: Int!
-  largestWorkCapacityKg: Int!
-  topExercises: String!
-  oldestWorkoutDate: String!
+  totalTime: Int
+  longestWorkout: Int
+  mostRepsInWorkout: Int
+  largestWorkCapacityKg: Int
+  topExercises: String
+  oldestWorkoutDate: String
 }
 
 # Bit of a hack to let fuzzy search bypass Workouts{Exericises{}} graphql traversal.
