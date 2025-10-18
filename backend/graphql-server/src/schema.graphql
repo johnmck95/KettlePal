@@ -30,7 +30,7 @@ type UserStats {
   totalTime: Int
   longestWorkout: Int
   mostRepsInWorkout: Int
-  largestWorkCapacityKg: Int
+  largestWorkCapacityKg: Float
   topExercises: String
   oldestWorkoutDate: String
 }

@@ -314,7 +314,7 @@ export type UserPastWorkouts = {
 
 export type UserStats = {
   __typename?: 'UserStats';
-  largestWorkCapacityKg?: Maybe<Scalars['Int']['output']>;
+  largestWorkCapacityKg?: Maybe<Scalars['Float']['output']>;
   longestWorkout?: Maybe<Scalars['Int']['output']>;
   mostRepsInWorkout?: Maybe<Scalars['Int']['output']>;
   oldestWorkoutDate?: Maybe<Scalars['String']['output']>;
@@ -573,7 +573,7 @@ export type UserPastWorkoutsResolvers<ContextType = any, ParentType extends Reso
 }>;
 
 export type UserStatsResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserStats'] = ResolversParentTypes['UserStats']> = ResolversObject<{
-  largestWorkCapacityKg?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  largestWorkCapacityKg?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
   longestWorkout?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   mostRepsInWorkout?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   oldestWorkoutDate?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;

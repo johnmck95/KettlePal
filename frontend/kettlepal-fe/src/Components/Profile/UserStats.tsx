@@ -116,7 +116,7 @@ export default function UserStats() {
                     title="Days Active"
                     value={calculateTotalActiveDaysPercentage(
                       userStats?.totalWorkouts,
-                      userStats?.oldestWorkoutDate,
+                      userStats?.oldestWorkoutDate ?? undefined,
                       0
                     )}
                     variant="md"
@@ -190,8 +190,9 @@ export default function UserStats() {
                           Greatest Work Capacity
                         </Td>
                         <Td fontSize={["xs", "sm", "md"]}>
-                          {userStats?.largestWorkCapacityKg?.toLocaleString() ??
-                            0}{" "}
+                          {Math.round(
+                            userStats?.largestWorkCapacityKg ?? 0
+                          ).toLocaleString() ?? 0}{" "}
                           kg
                         </Td>
                       </Tr>

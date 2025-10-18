@@ -863,7 +863,6 @@ export const resolvers = {
                     .where({ email: user.email })
                     .first();
                 if (emailTaken) {
-                    console.log("email already in use: ", user.email);
                     throw new Error("Email is already in use.");
                 }
                 const [insertedUser] = await knexInstance("users")
