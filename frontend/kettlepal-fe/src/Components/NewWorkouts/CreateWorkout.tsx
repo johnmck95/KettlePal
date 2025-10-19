@@ -144,7 +144,7 @@ export default function CreateWorkout() {
               },
             }}
           >
-            {showTracking ? "Hide Workout Tracking" : "Track Workout"}
+            {showTracking ? "Hide Tracking" : "Track Workout"}
           </Button>
         </Flex>
 
