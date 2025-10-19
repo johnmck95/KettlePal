@@ -41,8 +41,7 @@ const LoadingSpinner = ({
         >
           KettlePal's backend service automatically spins down after a period of
           inactivity. This is because Kettlepal is built entirely on free
-          serivces. You will need to restart the application after a few
-          minutes.
+          serivces. You will need to restart the application in 30-90 seconds.
         </Text>
       )}
     </VStack>
