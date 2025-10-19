@@ -192,9 +192,9 @@ export default function Login({
             <Text fontSize="xs" color={theme.colors.grey[500]}>
               <i>
                 KettlePal's backend service automatically spins down after a
-                period of inactivity. This is a cost saving measure. Please be
-                patient while a brand new service is being spun up just for you!
-                This may take a few minutes.
+                period of inactivity. This is because Kettlepal is built
+                entirely on free serivces. You will need to restart the
+                application in 30-90 seconds.
               </i>
             </Text>
           )}
