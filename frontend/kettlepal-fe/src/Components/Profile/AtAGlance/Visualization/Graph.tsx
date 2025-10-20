@@ -49,7 +49,9 @@ export default function Graph({ data, period, visualizeField }: GraphProps) {
     ///////////////////////////// Prepare Data & Labels /////////////////////////////////////
 
     const dayLabels = data.map((entry, i) => {
-      const date = new Date(entry?.dateRange.split(",")[0] + ":12:00" ?? "");
+      const date = new Date(
+        entry?.dateRange.split(",")[0] + "T00:00:00Z" ?? ""
+      );
       return date.toLocaleDateString(
         "en-US",
         isSmallScreen

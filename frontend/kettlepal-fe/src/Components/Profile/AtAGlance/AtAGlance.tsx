@@ -143,7 +143,9 @@ export default function AtAGlance() {
           />
           <Detail
             title={`Largest ${largestXTitle}`}
-            value={formattedLargestValue}
+            value={
+              formattedLargestValue.length > 0 ? formattedLargestValue : "---"
+            }
             variant="sm"
           />
         </HStack>
