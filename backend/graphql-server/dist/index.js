@@ -14,6 +14,10 @@ import knex from "knex";
 import { allowedOrigins, backendURL } from "./utils/urls.js";
 import { readFileSync } from "fs";
 const app = express();
+// A simple /ping endpoint to help keep the production application from sleeping.
+app.get("/ping", (req, res) => {
+    res.status(200).send("pong");
+});
 // CORS configuration
 const corsOptions = {
     origin: function (origin, callback) {

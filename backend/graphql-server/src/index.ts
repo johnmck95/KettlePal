@@ -16,6 +16,12 @@ import { readFileSync } from "fs";
 
 const app = express();
 
+// A simple ping endpoint to help keep the production application
+// from sleeping, with the help of UptimeRobot.
+app.get("/ping", (req, res) => {
+  res.status(200).send("pong");
+});
+
 // CORS configuration
 const corsOptions = {
   origin: function (origin, callback) {
