@@ -105,7 +105,7 @@ export default function CreateWorkout() {
       <Flex
         w="100%"
         justifyContent={"space-between"}
-        mt="1rem"
+        my="0.5rem"
         gap={1}
         h={["74px", "86px", "42px"]}
       >
@@ -200,7 +200,7 @@ export default function CreateWorkout() {
       />
 
       {/* EXERCISES */}
-      <Box>
+      <Box mt="1.25rem">
         <AnimatePresence>
           {state.exercises.map((exercise, index) => {
             return (
