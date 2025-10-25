@@ -29,13 +29,13 @@ export default function ExerciseWeight({
       flexBasis={["35px", "55px", "75px"]}
       isInvalid={submitted && weightIsInvalid}
     >
-      <FormLabel fontSize={["12px", "14px", "16px"]} m="0">
+      <FormLabel fontSize={["14px", "16px"]} m="0">
         Weight
       </FormLabel>
       {customWeight ? (
         <Input
           size={["sm", "sm", "md"]}
-          fontSize={["12px", "14px", "16px"]}
+          fontSize={["16px"]}
           placeholder="0"
           name="weight"
           value={exercise.weight}
@@ -50,7 +50,7 @@ export default function ExerciseWeight({
       ) : (
         <Select
           size={["sm", "sm", "md"]}
-          fontSize={["12px", "14px", "16px"]}
+          fontSize={["16px"]}
           placeholder="Select Option"
           name="weight"
           value={exercise.weight}

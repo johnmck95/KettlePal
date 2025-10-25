@@ -25,11 +25,11 @@ export default function ExerciseRepsDisplay({
       flexBasis={["35px", "70px", "90px"]}
       isInvalid={submitted && repsDisplayIsInvalid}
     >
-      <FormLabel fontSize={["12px", "14px", "16px"]} m="0">
+      <FormLabel fontSize={["14px", "16px"]} m="0">
         Type
       </FormLabel>
       <Select
-        fontSize={["12px", "14px", "16px"]}
+        fontSize={["16px"]}
         size={["sm", "sm", "md"]}
         placeholder="Select Option"
         name="repsDisplay"

@@ -26,12 +26,12 @@ export default function ExerciseWeightUnit({
       flexBasis={["35px", "62px", "65px"]}
       isInvalid={submitted && weightUnitIsInvalid}
     >
-      <FormLabel fontSize={["12px", "14px", "16px"]} m="0">
+      <FormLabel fontSize={["14px", "16px"]} m="0">
         Unit
       </FormLabel>
 
       <Select
-        fontSize={["12px", "14px", "16px"]}
+        fontSize={["16px"]}
         size={["sm", "sm", "md"]}
         placeholder="Select Option"
         name="weightUnit"

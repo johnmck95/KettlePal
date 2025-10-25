@@ -24,12 +24,12 @@ export default function ExerciseSets({
       flexBasis={["30px", "35px", "55px"]}
       isInvalid={submitted && setsIsInvalid}
     >
-      <FormLabel fontSize={["12px", "14px", "16px"]} m="0">
+      <FormLabel fontSize={["14px", "16px"]} m="0">
         Sets
       </FormLabel>
       <Input
         size={["sm", "sm", "md"]}
-        fontSize={["12px", "14px", "16px"]}
+        fontSize={["16px"]}
         placeholder="0"
         padding="0.5rem"
         autoComplete="off"

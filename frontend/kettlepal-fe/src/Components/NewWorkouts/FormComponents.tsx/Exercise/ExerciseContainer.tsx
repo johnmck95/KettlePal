@@ -31,11 +31,11 @@ export function ExerciseContainer({
   const [isMobile] = useMediaQuery("(max-width: 420px)");
 
   return (
-    <Box mb="1rem" position="relative">
+    <Box mb={["0rem", "0.5rem", "1rem"]} position="relative">
       <VStack
         w={`calc(100%-0.5rem + ${swipeDistance()})`}
         borderRadius={"5px"}
-        p={["0.5rem", "1rem", "1.5rem"]}
+        p={["0.35rem", "1rem", "1.5rem"]}
         mb="0.5rem"
         boxShadow={`0px 1px 4px ${theme.colors.grey[400]}`}
         bg="white"
