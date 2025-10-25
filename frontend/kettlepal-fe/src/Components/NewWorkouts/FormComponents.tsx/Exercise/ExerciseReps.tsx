@@ -24,11 +24,11 @@ export default function ExerciseReps({
       flexBasis={["30px", "35px", "55px"]}
       isInvalid={submitted && repsIsInvalid}
     >
-      <FormLabel fontSize={["12px", "14px", "16px"]} m="0">
+      <FormLabel fontSize={["14px", "16px"]} m="0">
         <Text>Reps</Text>
       </FormLabel>
       <Input
-        fontSize={["12px", "14px", "16px"]}
+        fontSize={["16px"]}
         size={["sm", "sm", "md"]}
         type="number"
         name="reps"

@@ -54,13 +54,13 @@ export default function ExerciseTitle({
       isRequired
       isInvalid={submitted && titleIsInvalid}
     >
-      <FormLabel fontSize={["12px", "14px", "16px"]} m="0">
+      <FormLabel fontSize={["14px", "16px"]} m="0">
         Title
       </FormLabel>
       {customTitle ? (
         <Input
           size={["sm", "sm", "md"]}
-          fontSize={["12px", "14px", "16px"]}
+          fontSize={["16px"]}
           placeholder="Enter Title"
           name="title"
           value={exercise.title}
@@ -73,7 +73,7 @@ export default function ExerciseTitle({
       ) : (
         <Select
           size={["sm", "sm", "md"]}
-          fontSize={["12px", "14px", "16px"]}
+          fontSize={["16px"]}
           placeholder="Select Option"
           name="title"
           value={exercise.title}

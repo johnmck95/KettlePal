@@ -63,7 +63,7 @@ export default function CreateWorkout() {
 
   return (
     <Box
-      m={["0.5rem 1rem 1rem 1rem", "1rem"]}
+      m={["0.5rem 0.25rem 0.25rem 0.25rem", "1rem"]}
       w={["100%", "100%", "100%", "900px"]}
     >
       <HStack
