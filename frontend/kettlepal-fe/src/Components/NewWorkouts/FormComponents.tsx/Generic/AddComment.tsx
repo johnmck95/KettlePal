@@ -30,7 +30,7 @@ export default function AddComment({
       px="0.5rem"
       maxW={maxWidth}
       bg="white"
-      fontSize={["12px", "14px", "16px"]}
+      fontSize={["16px"]}
     >
       <Editable
         value={comment}

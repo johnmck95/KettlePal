@@ -88,7 +88,12 @@ export default function CreateExercise({
       swipeDistance={swipeDistance}
       onOpenDeleteExercise={onOpenDeleteExercise}
     >
-      <HStack w="100%" mb="0.25rem" flexWrap="wrap">
+      <HStack
+        w="100%"
+        mb="0.25rem"
+        flexWrap="wrap"
+        gap={["0.1rem", "0.25rem", "0.5rem"]}
+      >
         {/* TITLE */}
         <ExerciseTitle
           submitted={submitted}
