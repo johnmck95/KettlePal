@@ -14,12 +14,12 @@ export default function Detail({
   return (
     <VStack gap={0}>
       <Text
-        fontSize={variant === "sm" ? ["8px", "12px"] : ["xs", "sm"]}
+        fontSize={variant === "sm" ? ["10px", "12px"] : ["12px", "14px"]}
         color={theme.colors.grey[700]}
       >
         {title}
       </Text>
-      <Text fontSize={variant === "sm" ? ["14px", "18px"] : ["lg", "xl"]}>
+      <Text fontSize={variant === "sm" ? ["14px", "16px"] : ["16px", "20px"]}>
         <b>{value}</b>
       </Text>
     </VStack>

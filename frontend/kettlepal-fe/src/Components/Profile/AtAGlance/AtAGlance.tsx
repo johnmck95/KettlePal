@@ -91,7 +91,7 @@ export default function AtAGlance() {
     }, 0) ?? 0;
   const formattedLargestValue =
     selectedMetric === "Time"
-      ? formatTime(largestValue, true)
+      ? formatTime(largestValue, false)
       : largestValue.toLocaleString() + " kg";
 
   return (
@@ -130,10 +130,15 @@ export default function AtAGlance() {
         </Alert>
       )}
       <VStack minH="485px">
-        <HStack justifyContent="space-evenly" w="100%" h="4.325rem">
+        <HStack
+          justifyContent="space-evenly"
+          w="100%"
+          h="4.325rem"
+          gap={["0.15rem", "0.25rem", "0.5rem"]}
+        >
           <Detail
             title="Total Time"
-            value={formatTime(totalTime ?? 0, true) || "0 mins"}
+            value={formatTime(totalTime ?? 0, false) || "0 mins"}
             variant="sm"
           />
           <Detail

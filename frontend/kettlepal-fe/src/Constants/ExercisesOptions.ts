@@ -19,6 +19,7 @@ export const ExerciseTitles = [
   "Bench Press",
   "Dumbbell Bench Press",
   "Dumbbell Overhead Press",
+  "Foundations",
   "Custom",
 ];
 
@@ -218,6 +219,14 @@ export const Preconfigurations: any = {
   "Dumbbell Overhead Press": {
     weightUnit: {
       value: "lb",
+    },
+    repsDisplay: {
+      value: "std",
+    },
+  },
+  Foundations: {
+    weightUnit: {
+      value: "",
     },
     repsDisplay: {
       value: "std",
