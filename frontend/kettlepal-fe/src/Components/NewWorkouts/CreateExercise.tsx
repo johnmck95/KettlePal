@@ -1,6 +1,6 @@
 import React from "react";
 
-import { HStack } from "@chakra-ui/react";
+import { GridItem, SimpleGrid, Text } from "@chakra-ui/react";
 import AddComment from "./FormComponents.tsx/Generic/AddComment";
 import ConfirmModal from "../ConfirmModal";
 import ExerciseTitle from "./FormComponents.tsx/Exercise/ExerciseTitle";
@@ -14,6 +14,8 @@ import { ExerciseContainer } from "./FormComponents.tsx/Exercise/ExerciseContain
 import { CreateWorkoutState } from "../../Hooks/useCreateWorkoutForm";
 import useCreateExerciseForm from "../../Hooks/useCreateExerciseForm";
 import "../../Styles/CustomSelect.css";
+import { formatExerciseString } from "../../utils/Exercises/exercises";
+import theme from "../../Constants/theme";
 
 interface CreateExerciseProps {
   exercise: Omit<CreateWorkoutState["exercises"][number], "key">;
@@ -88,83 +90,102 @@ export default function CreateExercise({
       swipeDistance={swipeDistance}
       onOpenDeleteExercise={onOpenDeleteExercise}
     >
-      <HStack
-        w="100%"
-        mb="0.25rem"
-        flexWrap="wrap"
-        gap={["0.1rem", "0.25rem", "0.5rem"]}
-      >
-        {/* TITLE */}
-        <ExerciseTitle
-          submitted={submitted}
-          titleIsInvalid={titleIsInvalid}
-          customTitle={customTitle}
-          exercise={exercise}
-          exerciseIndex={exerciseIndex}
-          setCustomTitle={setCustomTitle}
-          handleExercise={handleExercise}
-        />
+      {trackWorkout ? (
+        <Text w="100%" color={theme.colors.grey[600]}>
+          <i>{formatExerciseString(exercise)}</i>
+        </Text>
+      ) : (
+        <>
+          <SimpleGrid
+            gap={1}
+            templateColumns={{
+              base: "57.5% 20% 20%",
+              lg: "35.5% 8% 8% 22% 12% 12%",
+            }}
+            w="100%"
+          >
+            {/* TITLE */}
+            <GridItem colSpan={1}>
+              <ExerciseTitle
+                submitted={submitted}
+                titleIsInvalid={titleIsInvalid}
+                customTitle={customTitle}
+                exercise={exercise}
+                exerciseIndex={exerciseIndex}
+                setCustomTitle={setCustomTitle}
+                handleExercise={handleExercise}
+              />
+            </GridItem>
 
-        {/* WEIGHT */}
-        <ExerciseWeight
-          submitted={submitted}
-          weightIsInvalid={weightIsInvalid}
-          customWeight={customWeight}
-          exercise={exercise}
-          exerciseIndex={exerciseIndex}
-          setCustomWeight={setCustomWeight}
-          handleExercise={handleExercise}
-        />
+            {/* SETS */}
+            <GridItem colSpan={1}>
+              <ExerciseSets
+                submitted={submitted}
+                setsIsInvalid={setsIsInvalid}
+                exercise={exercise}
+                exerciseIndex={exerciseIndex}
+                handleExercise={handleExercise}
+              />
+            </GridItem>
 
-        {/* WEIGHT UNIT */}
-        {!trackWorkout && (
-          <ExerciseWeightUnit
-            submitted={submitted}
-            weightUnitIsInvalid={weightUnitIsInvalid}
-            exercise={exercise}
-            exerciseIndex={exerciseIndex}
-            handleExercise={handleExercise}
-          />
-        )}
+            {/* REPS */}
+            <GridItem colSpan={1}>
+              <ExerciseReps
+                submitted={submitted}
+                repsIsInvalid={repsIsInvalid}
+                exercise={exercise}
+                exerciseIndex={exerciseIndex}
+                handleExercise={handleExercise}
+              />
+            </GridItem>
 
-        {/* SETS */}
-        <ExerciseSets
-          submitted={submitted}
-          setsIsInvalid={setsIsInvalid}
-          exercise={exercise}
-          exerciseIndex={exerciseIndex}
-          handleExercise={handleExercise}
-        />
+            {/* REPS DISPLAY */}
+            <GridItem colSpan={1}>
+              <ExerciseRepsDisplay
+                submitted={submitted}
+                repsDisplayIsInvalid={repsDisplayIsInvalid}
+                exercise={exercise}
+                exerciseIndex={exerciseIndex}
+                handleExercise={handleExercise}
+              />
+            </GridItem>
 
-        {/* REPS */}
-        <ExerciseReps
-          submitted={submitted}
-          repsIsInvalid={repsIsInvalid}
-          exercise={exercise}
-          exerciseIndex={exerciseIndex}
-          handleExercise={handleExercise}
-        />
+            {/* WEIGHT */}
+            <GridItem colSpan={1}>
+              <ExerciseWeight
+                submitted={submitted}
+                weightIsInvalid={weightIsInvalid}
+                customWeight={customWeight}
+                exercise={exercise}
+                exerciseIndex={exerciseIndex}
+                setCustomWeight={setCustomWeight}
+                handleExercise={handleExercise}
+              />
+            </GridItem>
 
-        {/* REPS DISPLAY */}
-        {!trackWorkout && (
-          <ExerciseRepsDisplay
-            submitted={submitted}
-            repsDisplayIsInvalid={repsDisplayIsInvalid}
-            exercise={exercise}
-            exerciseIndex={exerciseIndex}
-            handleExercise={handleExercise}
-          />
-        )}
-      </HStack>
+            {/* WEIGHT UNIT */}
+            <GridItem colSpan={1}>
+              <ExerciseWeightUnit
+                submitted={submitted}
+                weightUnitIsInvalid={weightUnitIsInvalid}
+                exercise={exercise}
+                exerciseIndex={exerciseIndex}
+                handleExercise={handleExercise}
+              />
+            </GridItem>
+            {/* </Flex> */}
+          </SimpleGrid>
 
-      {/* EXERCISE COMMENT */}
-      {showComments && (
-        <AddComment
-          placeholderText="Add an Exercise Comment"
-          comment={exercise.comment}
-          setComment={setExerciseComment}
-          maxWidth="100%"
-        />
+          {/* EXERCISE COMMENT */}
+          {showComments && (
+            <AddComment
+              placeholderText="Add an Exercise Comment"
+              comment={exercise.comment}
+              setComment={setExerciseComment}
+              maxWidth="100%"
+            />
+          )}
+        </>
       )}
 
       {/* SETS COMPLETED */}

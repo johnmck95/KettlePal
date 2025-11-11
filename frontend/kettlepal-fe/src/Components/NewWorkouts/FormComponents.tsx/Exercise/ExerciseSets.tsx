@@ -18,12 +18,7 @@ export default function ExerciseSets({
   handleExercise,
 }: ExerciseSetsProps) {
   return (
-    <FormControl
-      flexGrow={0.5}
-      flexShrink={0.5}
-      flexBasis={["30px", "35px", "55px"]}
-      isInvalid={submitted && setsIsInvalid}
-    >
+    <FormControl isInvalid={submitted && setsIsInvalid}>
       <FormLabel fontSize={["14px", "16px"]} m="0">
         Sets
       </FormLabel>

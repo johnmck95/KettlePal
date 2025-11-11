@@ -1,5 +1,6 @@
 import { FormLabel, VStack } from "@chakra-ui/react";
-import Stopwatch from "../Generic/Stopwatch";
+import Stopwatch, { StopwatchRef } from "../Generic/Stopwatch";
+import { forwardRef } from "react";
 
 interface WorkoutStopwatchProps {
   seconds: number;
@@ -8,19 +9,24 @@ interface WorkoutStopwatchProps {
   setTime: (elapsedSeconds: number) => void;
   handleIsActive: ((newState: boolean) => void) | null;
 }
-export default function WorkoutStopwatch({
-  seconds,
-  isActive,
-  omitControls = false,
-  setTime,
-  handleIsActive,
-}: WorkoutStopwatchProps) {
+function WorkoutStopwatch(
+  {
+    seconds,
+    isActive,
+    omitControls = false,
+    setTime,
+    handleIsActive,
+  }: WorkoutStopwatchProps,
+  ref: React.Ref<StopwatchRef>
+) {
   return (
     <VStack justifyContent={"flex-end"} alignItems={"center"}>
       <FormLabel fontSize={["sm", "lg"]} m="0px">
         <b>Elapsed Time</b>
       </FormLabel>
+
       <Stopwatch
+        ref={ref}
         seconds={seconds}
         setTime={setTime}
         isActive={isActive}
@@ -30,3 +36,5 @@ export default function WorkoutStopwatch({
     </VStack>
   );
 }
+
+export default forwardRef(WorkoutStopwatch);

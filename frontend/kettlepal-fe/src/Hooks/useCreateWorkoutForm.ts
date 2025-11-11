@@ -1,8 +1,9 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { calculateElapsedTime, getCurrentDate } from "../utils/Time/time";
 import { useAddWorkoutWithExercisesMutation } from "../generated/frontend-types";
 import { useUser } from "../Contexts/UserContext";
 import { useDisclosure } from "@chakra-ui/react";
+import { StopwatchRef } from "../Components/NewWorkouts/FormComponents.tsx/Generic/Stopwatch";
 
 const SESSION_STATE_KEY = "createWorkoutState";
 const STOPWATCH_IS_ACTIVE_KEY = "stopwatchIsActive";
@@ -49,6 +50,32 @@ const useCreateWorkoutForm = () => {
     const fromStorage = sessionStorage.getItem(STOPWATCH_IS_ACTIVE_KEY);
     return fromStorage ? true : false;
   });
+
+  // The StopWatch ref to control start/pause from CreateWorkout.tsx
+  const ref = useRef<StopwatchRef>(null);
+
+  const [workoutState, setWorkoutState] = useState<
+    "initial" | "active" | "submit"
+  >("initial");
+
+  // Toggles the Create Workout Stopwatch when Start/Pause is clicked
+  function startOrPause() {
+    setShowTracking((prev) => !prev);
+    if (showTracking) {
+      ref.current?.stop();
+    } else {
+      ref.current?.startOrResume();
+    }
+    const clockStarted = parseInt(
+      sessionStorage.getItem(STOPWATCH_TIMESTAMP_KEY) ?? "",
+      10
+    );
+    if (!!clockStarted && state.exercises.length > 0) {
+      setWorkoutState(showTracking ? "submit" : "active");
+    } else {
+      setWorkoutState("initial");
+    }
+  }
 
   const handleTimerIsActive = (newState: boolean) => {
     setTimerIsActive(newState);
@@ -191,7 +218,8 @@ const useCreateWorkoutForm = () => {
   const [numErrors, setNumErrors] = useState(0);
   const errors: string[] = [];
   if (dateIsInvalid) errors.push(WorkoutErrors.date);
-  if (timerIsInvalid) errors.push(WorkoutErrors.timer);
+  // NOW THAT START/PAUSE/FINISH CONTROL AHNDLES STOPWATCH, THIS ERROR SHOULD NOT BE POSSIBLE.
+  // if (timerIsInvalid) errors.push(WorkoutErrors.timer);
   if (numErrors !== errors.length) {
     setNumErrors(errors.length);
   }
@@ -221,6 +249,7 @@ const useCreateWorkoutForm = () => {
   async function onSaveWorkout(): Promise<void> {
     setSubmitted(true);
     onCloseSaveWorkout();
+    setWorkoutState("initial");
     if (dateIsInvalid || timerIsInvalid) {
       setFormHasErrors(true);
       return;
@@ -267,6 +296,8 @@ const useCreateWorkoutForm = () => {
     showServerError,
     timerIsActive,
     isOpenSaveWorkout,
+    workoutState,
+    ref,
     setTime,
     setComment,
     setFormHasErrors,
@@ -281,6 +312,7 @@ const useCreateWorkoutForm = () => {
     onOpenSaveWorkout,
     onCloseSaveWorkout,
     onSaveWorkout,
+    startOrPause,
   };
 };
 

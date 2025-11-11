@@ -19,19 +19,14 @@ export default function ExerciseRepsDisplay({
   handleExercise,
 }: ExerciseRepsDisplayProps) {
   return (
-    <FormControl
-      flexGrow={2}
-      flexShrink={1}
-      flexBasis={["35px", "70px", "90px"]}
-      isInvalid={submitted && repsDisplayIsInvalid}
-    >
+    <FormControl isInvalid={submitted && repsDisplayIsInvalid}>
       <FormLabel fontSize={["14px", "16px"]} m="0">
         Type
       </FormLabel>
       <Select
         fontSize={["16px"]}
         size={["sm", "sm", "md"]}
-        placeholder="Select Option"
+        placeholder="Select"
         name="repsDisplay"
         value={exercise.repsDisplay}
         onChange={(event) =>
