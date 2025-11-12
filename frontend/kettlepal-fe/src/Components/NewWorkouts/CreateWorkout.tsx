@@ -14,7 +14,6 @@ import {
   GridItem,
   HStack,
   Text,
-  useMediaQuery,
 } from "@chakra-ui/react";
 import {
   FaComment,
