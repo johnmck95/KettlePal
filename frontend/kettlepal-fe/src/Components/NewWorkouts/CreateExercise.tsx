@@ -28,6 +28,7 @@ interface CreateExerciseProps {
   trackWorkout: boolean;
   mutatingWorkout?: boolean;
   showComments: boolean;
+  renderMobileView?: boolean;
 }
 
 export default function CreateExercise({
@@ -40,6 +41,7 @@ export default function CreateExercise({
   setFormHasErrors,
   trackWorkout,
   showComments,
+  renderMobileView,
 }: CreateExerciseProps) {
   const {
     completedSets,
@@ -100,7 +102,7 @@ export default function CreateExercise({
             gap={1}
             templateColumns={{
               base: "57.5% 20% 20%",
-              lg: "35.5% 8% 8% 22% 12% 12%",
+              lg: renderMobileView ? "" : "35.5% 8% 8% 22% 12% 12%",
             }}
             w="100%"
           >
