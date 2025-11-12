@@ -96,6 +96,7 @@ const useCreateWorkoutForm = () => {
           elapsedSeconds: 0,
           exercises: [],
         });
+        setWorkoutState("initial");
         sessionStorage.removeItem(SESSION_STATE_KEY);
         setShowUploadSuccess(true);
         setTimeout(() => {
@@ -218,8 +219,7 @@ const useCreateWorkoutForm = () => {
   const [numErrors, setNumErrors] = useState(0);
   const errors: string[] = [];
   if (dateIsInvalid) errors.push(WorkoutErrors.date);
-  // NOW THAT START/PAUSE/FINISH CONTROL AHNDLES STOPWATCH, THIS ERROR SHOULD NOT BE POSSIBLE.
-  // if (timerIsInvalid) errors.push(WorkoutErrors.timer);
+  if (timerIsInvalid) errors.push(WorkoutErrors.timer);
   if (numErrors !== errors.length) {
     setNumErrors(errors.length);
   }
@@ -249,7 +249,6 @@ const useCreateWorkoutForm = () => {
   async function onSaveWorkout(): Promise<void> {
     setSubmitted(true);
     onCloseSaveWorkout();
-    setWorkoutState("initial");
     if (dateIsInvalid || timerIsInvalid) {
       setFormHasErrors(true);
       return;

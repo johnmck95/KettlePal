@@ -63,7 +63,6 @@ export default function CreateWorkout() {
     onSaveWorkout,
     startOrPause,
   } = useCreateWorkoutForm();
-  const [isMobile] = useMediaQuery("(max-width: 420px)");
 
   if (loading) {
     return (
@@ -224,6 +223,20 @@ export default function CreateWorkout() {
           </GridItem>
         )}
       </Grid>
+
+      {/* ERROR MESSAGES */}
+      <Box mt="-0.3rem">
+        {errors.map((error) => {
+          if (!submitted) {
+            return null;
+          }
+          return (
+            <Text key={error} color={theme.colors.error} fontSize="xs">
+              {error}
+            </Text>
+          );
+        })}
+      </Box>
 
       {/* WORKOUT COMMENT */}
       <WorkoutComment
