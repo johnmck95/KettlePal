@@ -140,7 +140,7 @@ export default function UserStats() {
                       {importedPastWorkouts && (
                         <Tr>
                           <Td fontSize={["xs", "sm", "md"]}>
-                            First Imported Workout
+                            First Recorded Workout
                           </Td>
                           <Td fontSize={["xs", "sm", "md"]}>
                             {userStats?.oldestWorkoutDate ?? "---"}

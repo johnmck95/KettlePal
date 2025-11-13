@@ -1,8 +1,25 @@
 ## Welcome to KettlePal!
 
-An overbuilt "just-for-me" learning project that is made to keep track of my personal kettlbell workouts. Designed primarily for mobile use, with desktop support.
+An overbuilt, "_just-for-me_" learning project that was created to keep track of my personal kettlbell workouts, and track progress over time. Designed as a progressive web app for both mobile and desktop usage. Make you you "_Add To Homescreen_" on mobile devices for the best experience.
 
 [**Live Deploy Link**](https://kettlepal.netlify.app/)
+
+## Feature List
+
+- JWT Authentication, Registration/Login/Logout, Hashing.
+- Design a workout, track sets as you complete the exercises, then save the workout.
+- View past workouts chronologically, or search by relevant details.
+- Update past workouts at any time.
+- Visualize workout trends over time.
+- See all of your personal records in one spot.
+
+## Road Map
+
+- Create a settings page, where users can customize the list of exercises and weights shown when adding an exercise.
+- Build a password reset system.
+- Complete the "_YourProgression_" visualization to gain insight on trends for a specific exercise.
+- Add filters for quick sorting of past workouts.
+- Integrate with Strava API to get data from bike rides and runs.
 
 ## Tech Stack
 
@@ -13,27 +30,11 @@ An overbuilt "just-for-me" learning project that is made to keep track of my per
 - React
 - TypeScript
 - ChakraUI
-
-## Feature List
-
-- JWT Authentication, Login/Logout, Hashing. (Sign Up is intentionally witheldfor the time being.)
-- Design new workouts, track progress, and save to the database.
-  - Client-side and server-side validation.
-- Edit past workouts.
-- View historical workout data.
-- Fuzzy-Search historical workouts/exercises.
-- View specific workouts in greater detail with computed information.
-- Analyze histocial data visually.
-
-## Road Map
-
-- Add filters for quick sorting of past workouts.
-- Use D3.js to show trends from your workout data.
-- Integrate with Strava API to get data from bike rides and runs.
+- D3.js
 
 ## Deployment
 
-Development and production environments.
+The production environment is built using entirely free services. This means down time can be expected on occasion, as CPU usage is extremely limited.
 
 - Database
   - Hosted on Neon
@@ -42,24 +43,35 @@ Development and production environments.
 - Frontend
   - Hosted on Netlify
 
-## Application Introducion
+## Application Overview
 
 ### Authenticated User Profiles
 
-<img src="image-9.png" alt="alt text" width="500" >
+<img src="image-1.png" alt="alt text" width="200" >
+<img src="image-2.png" alt="alt text" width="200" >
 
 ### Design and Track Workouts
 
-<img src="image-6.png" alt="alt text" width="850" >
+<img src="image-3.png" alt="alt text" width="200" >
+<img src="image-4.png" alt="alt text" width="200" >
+<img src="image-5.png" alt="alt text" width="200" >
+<img src="image-6.png" alt="alt text" width="200" >
 
-### Review, Analyze and Update Past Workouts
+### Review, Search, Analyze and Update Past Workouts
 
-<img src="image-7.png" alt="alt text" width="850" >
+<img src="image-7.png" alt="alt text" width="200" >
+<img src="image-10.png" alt="alt text" width="200" >
+<img src="image-8.png" alt="alt text" width="200" >
+<img src="image-9.png" alt="alt text" width="200" >
 
 ### Analyze Your Progress Over Time
 
-<img src="image-8.png" alt="alt text" width="850" >
+<img src="image-11.png" alt="alt text" width="200" >
+<img src="image-12.png" alt="alt text" width="200" >
 
-### Access on Mobile or Desktop Devices
+### Also available on Desktop
 
-<img src="image-10.png" alt="alt text" width="400" >
+<img src="image-16.png" alt="alt text" width="400" >
+<img src="image-13.png" alt="alt text" width="400" >
+<img src="image-14.png" alt="alt text" width="400" >
+<img src="image-15.png" alt="alt text" width="400" >
