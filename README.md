@@ -47,31 +47,20 @@ The production environment is built using entirely free services. This means dow
 
 ### Authenticated User Profiles
 
-<img src="image-1.png" alt="alt text" width="200" >
-<img src="image-2.png" alt="alt text" width="200" >
+<img src="image-5.png" alt="alt text" width="400" >
 
 ### Design and Track Workouts
 
-<img src="image-3.png" alt="alt text" width="200" >
-<img src="image-4.png" alt="alt text" width="200" >
-<img src="image-5.png" alt="alt text" width="200" >
-<img src="image-6.png" alt="alt text" width="200" >
+<img src="image-1.png" alt="alt text" width="800" >
 
 ### Review, Search, Analyze and Update Past Workouts
 
-<img src="image-7.png" alt="alt text" width="200" >
-<img src="image-10.png" alt="alt text" width="200" >
-<img src="image-8.png" alt="alt text" width="200" >
-<img src="image-9.png" alt="alt text" width="200" >
+<img src="image-2.png" alt="alt text" width="800" >
 
 ### Analyze Your Progress Over Time
 
-<img src="image-11.png" alt="alt text" width="200" >
-<img src="image-12.png" alt="alt text" width="200" >
+<img src="image-3.png" alt="alt text" width="400" >
 
 ### Also available on Desktop
 
-<img src="image-16.png" alt="alt text" width="400" >
-<img src="image-13.png" alt="alt text" width="400" >
-<img src="image-14.png" alt="alt text" width="400" >
-<img src="image-15.png" alt="alt text" width="400" >
+<img src="image-4.png" alt="alt text" width="800" >
