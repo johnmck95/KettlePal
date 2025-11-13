@@ -1,13 +1,13 @@
 ## Welcome to KettlePal!
 
-An overbuilt, "_just-for-me_" learning project that was created to keep track of my personal kettlbell workouts, and track progress over time. Designed as a progressive web app for both mobile and desktop usage. Make you you "_Add To Homescreen_" on mobile devices for the best experience.
+An overbuilt, "_just-for-me_" learning project that was created to keep track of my personal kettlbell workouts and track progress over time. Designed as a progressive web app for both mobile and desktop usage. Make sure you "_Add To Homescreen_" on mobile devices for the best experience.
 
 [**Live Deploy Link**](https://kettlepal.netlify.app/)
 
 ## Feature List
 
 - JWT Authentication, Registration/Login/Logout, Hashing.
-- Design a workout, track sets as you complete the exercises, then save the workout.
+- Design a workout, track your sets as you complete the workout, then save the activity.
 - View past workouts chronologically, or search by relevant details.
 - Update past workouts at any time.
 - Visualize workout trends over time.
