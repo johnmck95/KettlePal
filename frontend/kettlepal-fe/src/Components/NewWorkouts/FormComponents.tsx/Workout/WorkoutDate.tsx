@@ -20,7 +20,8 @@ export default function WorkoutDate({
       display="flex"
       flexDirection="column"
       justifyContent={"flex-end"}
-      w={["140px", "auto"]}
+      w="100%"
+      maxWidth="200px"
     >
       <FormLabel fontSize={["sm", "lg"]}>
         <b>Workout Date</b>
@@ -30,7 +31,7 @@ export default function WorkoutDate({
         name="date"
         type="date"
         bg="white"
-        maxW="180px"
+        maxW="200px"
         value={date}
         onChange={handleStateChange}
         border="1px solid grey"

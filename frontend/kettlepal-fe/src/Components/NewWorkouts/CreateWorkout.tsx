@@ -10,10 +10,18 @@ import {
   Center,
   CloseButton,
   Flex,
+  Grid,
+  GridItem,
   HStack,
   Text,
 } from "@chakra-ui/react";
-import { FaPlusCircle, FaSave } from "react-icons/fa";
+import {
+  FaComment,
+  FaPause,
+  FaPlay,
+  FaPlusCircle,
+  FaSave,
+} from "react-icons/fa";
 import ConfirmModal from "../ConfirmModal";
 import LoadingSpinner from "../LoadingSpinner";
 import theme from "../../Constants/theme";
@@ -37,11 +45,12 @@ export default function CreateWorkout() {
     showServerError,
     timerIsActive,
     isOpenSaveWorkout,
+    workoutState,
+    ref,
     setTime,
     setComment,
     setShowServerError,
     setAddComments,
-    setShowTracking,
     setFormHasErrors,
     handleTimerIsActive,
     handleStateChange,
@@ -51,6 +60,7 @@ export default function CreateWorkout() {
     onOpenSaveWorkout,
     onCloseSaveWorkout,
     onSaveWorkout,
+    startOrPause,
   } = useCreateWorkoutForm();
 
   if (loading) {
@@ -63,27 +73,155 @@ export default function CreateWorkout() {
 
   return (
     <Box m={["0.5rem", "1rem"]} w={["100%", "100%", "100%", "900px"]}>
-      <HStack
-        justifyContent={"space-between"}
-        alignItems={"flex-start"}
-        mb="0.75rem"
-        maxH={["90px", "120px"]}
+      <Grid
+        w="100%"
+        templateRows={[
+          workoutState !== "submit" ? "60px 32px 32px" : "60px 32px 32px 32px",
+          workoutState !== "submit" ? "70px 42px 42px" : "70px 42px 42px 42px",
+        ]}
+        templateColumns="repeat(2, 1fr)"
+        gap={2}
+        mb="0.5rem"
       >
         {/* WORKOUT DATE */}
-        <WorkoutDate
-          submitted={submitted}
-          date={state.date}
-          handleStateChange={handleStateChange}
-        />
+        <GridItem rowStart={1} rowEnd={2} colStart={1} colEnd={1}>
+          <WorkoutDate
+            submitted={submitted}
+            date={state.date}
+            handleStateChange={handleStateChange}
+          />
+        </GridItem>
 
         {/* STOPWATCH */}
-        <WorkoutStopwatch
-          seconds={state.elapsedSeconds}
-          isActive={timerIsActive}
-          setTime={setTime}
-          handleIsActive={handleTimerIsActive}
-        />
-      </HStack>
+        <GridItem
+          justifySelf={["center", "end"]}
+          rowStart={1}
+          rowEnd={3}
+          colStart={2}
+          colEnd={2}
+        >
+          <WorkoutStopwatch
+            ref={ref}
+            seconds={state.elapsedSeconds}
+            omitControls={true}
+            isActive={timerIsActive}
+            setTime={setTime}
+            handleIsActive={handleTimerIsActive}
+          />
+        </GridItem>
+
+        {/* COMMENTS */}
+        {workoutState !== "active" && (
+          <GridItem
+            rowStart={workoutState === "initial" ? 2 : 3}
+            rowEnd={workoutState === "initial" ? 2 : 3}
+            colStart={1}
+            colEnd={1}
+          >
+            <Button
+              size={["sm", "md"]}
+              variant="secondary"
+              leftIcon={<FaComment />}
+              onClick={() => setAddComments((prev) => !prev)}
+              w="100%"
+              maxW={"200px"}
+              sx={{
+                _focus: {
+                  borderColor: theme.colors.green[300],
+                  boxShadow: `0 0 0 1px ${theme.colors.green[300]}`,
+                },
+              }}
+            >
+              {addComments ? "Hide Comments" : "Add Comments"}
+            </Button>
+          </GridItem>
+        )}
+        {workoutState !== "active" && (
+          <GridItem rowStart={3} rowEnd={3} colStart={2} colEnd={2}>
+            <Flex justify="flex-end">
+              <Button
+                size={["sm", "md"]}
+                variant="secondary"
+                onClick={handleAddExercise}
+                leftIcon={<FaPlusCircle />}
+                maxWidth="200px"
+                w="100%"
+                sx={{
+                  _focus: {
+                    borderColor: theme.colors.green[300],
+                    boxShadow: `0 0 0 1px ${theme.colors.green[300]}`,
+                  },
+                }}
+              >
+                Add Exercise
+              </Button>
+            </Flex>
+          </GridItem>
+        )}
+
+        <GridItem
+          rowStart={
+            workoutState === "active" ? 3 : workoutState === "initial" ? 3 : 4
+          }
+          rowEnd={
+            workoutState === "active" ? 3 : workoutState === "initial" ? 3 : 4
+          }
+          colStart={workoutState === "submit" ? 2 : 1}
+          colEnd={
+            workoutState === "submit" ? 3 : workoutState === "initial" ? 2 : 3
+          }
+        >
+          <Flex
+            justify={workoutState === "initial" ? "flex-start" : "flex-end"}
+          >
+            <Button
+              size={["sm", "md"]}
+              variant="primary"
+              isDisabled={state.exercises.length === 0 && !showTracking}
+              onClick={startOrPause}
+              w="100%"
+              maxWidth={workoutState === "active" ? "100%" : "200px"}
+              leftIcon={showTracking ? <FaPause /> : <FaPlay />}
+              sx={{
+                _focus: {
+                  borderColor: theme.colors.green[300],
+                  boxShadow: `0 0 0 1px ${theme.colors.green[300]}`,
+                },
+              }}
+            >
+              {workoutState === "initial"
+                ? "Start"
+                : workoutState === "active"
+                ? "Pause"
+                : "Resume"}
+            </Button>
+          </Flex>
+        </GridItem>
+
+        {workoutState === "submit" && (
+          <GridItem rowStart={4} rowEnd={4} colStart={1} colEnd={1}>
+            <Button
+              size={["sm", "md"]}
+              variant="primary"
+              leftIcon={<FaSave />}
+              onClick={onOpenSaveWorkout}
+              isDisabled={
+                workoutState !== "submit" || state.exercises.length === 0
+              }
+              maxWidth="200px"
+              w="100%"
+              sx={{
+                _focus: {
+                  borderColor: theme.colors.green[300],
+                  boxShadow: `0 0 0 1px ${theme.colors.green[300]}`,
+                },
+              }}
+            >
+              Finish
+            </Button>
+          </GridItem>
+        )}
+      </Grid>
 
       {/* ERROR MESSAGES */}
       <Box mt="-0.3rem">
@@ -99,102 +237,34 @@ export default function CreateWorkout() {
         })}
       </Box>
 
-      <Flex
-        w="100%"
-        justifyContent={"space-between"}
-        my="0.5rem"
-        gap={1}
-        h={["74px", "86px", "42px"]}
-      >
-        {/* ADD COMMENTS & TRACK WORKOUT BUTTONS */}
-        <Flex
-          wrap={"wrap"}
-          gap={[2, 1, 2]}
-          justifyContent={["flex-end", "flex-start"]}
-          alignContent={["flex-start"]}
-          height="100%"
-          flexDirection={["column", "row"]}
-        >
-          <Button
-            size={["sm", "md"]}
-            variant="secondary"
-            onClick={() => setAddComments((prev) => !prev)}
-            w={["140px", "140px", "auto"]}
-            sx={{
-              _focus: {
-                borderColor: theme.colors.green[300],
-                boxShadow: `0 0 0 1px ${theme.colors.green[300]}`,
-              },
-            }}
-          >
-            {addComments ? "Hide Comments" : "Add Comments"}
-          </Button>
-          <Button
-            size={["sm", "md"]}
-            variant="secondary"
-            onClick={() => setShowTracking((prev) => !prev)}
-            w={["140px", "140px", "auto"]}
-            sx={{
-              _focus: {
-                borderColor: theme.colors.green[300],
-                boxShadow: `0 0 0 1px ${theme.colors.green[300]}`,
-              },
-            }}
-          >
-            {showTracking ? "Hide Tracking" : "Track Workout"}
-          </Button>
-        </Flex>
-
-        {/* SAVE WORKOUT & ADD EXERCISE BUTTONS */}
-        <Flex
-          wrap={"wrap"}
-          gap={[2, 1, 2]}
-          justifyContent={"flex-end"}
-          alignContent={["flex-end", "flex-start"]}
-          height="100%"
-        >
-          {state.exercises.length > 0 && (
-            <Button
-              size={["sm", "md"]}
-              variant="secondary"
-              leftIcon={<FaSave />}
-              disabled={true}
-              onClick={onOpenSaveWorkout}
-              w={["140px", "150px", "200px"]}
-              sx={{
-                _focus: {
-                  borderColor: theme.colors.green[300],
-                  boxShadow: `0 0 0 1px ${theme.colors.green[300]}`,
-                },
-              }}
-            >
-              Save Workout
-            </Button>
-          )}
-          <Button
-            size={["sm", "md"]}
-            variant="primary"
-            onClick={handleAddExercise}
-            leftIcon={<FaPlusCircle />}
-            w={["140px", "150px", "200px"]}
-            sx={{
-              _focus: {
-                borderColor: theme.colors.green[300],
-                boxShadow: `0 0 0 1px ${theme.colors.green[300]}`,
-              },
-            }}
-          >
-            Add Exercise
-          </Button>
-        </Flex>
-      </Flex>
-
       {/* WORKOUT COMMENT */}
       <WorkoutComment
         addComments={addComments}
         comment={state.comment}
         setComment={setComment}
       />
+
+      {state.exercises.length === 0 && workoutState !== "submit" && (
+        <Center>
+          <Text
+            fontSize={["sm", "md"]}
+            color={theme.colors.gray[600]}
+            mt="3rem"
+          >
+            <i>
+              {showTracking ? (
+                <>
+                  Click <b>Pause</b>, then design your workout.
+                </>
+              ) : (
+                <>
+                  Design your workout, then click <b>Start</b>.
+                </>
+              )}
+            </i>
+          </Text>
+        </Center>
+      )}
 
       {/* EXERCISES */}
       <Box mt="1.25rem">

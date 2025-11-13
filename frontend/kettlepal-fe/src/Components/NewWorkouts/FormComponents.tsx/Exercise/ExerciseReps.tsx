@@ -18,12 +18,7 @@ export default function ExerciseReps({
   handleExercise,
 }: ExerciseRepsProps) {
   return (
-    <FormControl
-      flexGrow={0.5}
-      flexShrink={0.5}
-      flexBasis={["30px", "35px", "55px"]}
-      isInvalid={submitted && repsIsInvalid}
-    >
+    <FormControl isInvalid={submitted && repsIsInvalid}>
       <FormLabel fontSize={["14px", "16px"]} m="0">
         <Text>Reps</Text>
       </FormLabel>

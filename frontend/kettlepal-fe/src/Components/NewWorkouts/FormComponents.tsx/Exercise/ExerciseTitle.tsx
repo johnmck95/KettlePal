@@ -47,21 +47,15 @@ export default function ExerciseTitle({
   };
 
   return (
-    <FormControl
-      flexGrow={3}
-      flexShrink={1}
-      flexBasis={["50px", "90px", "160px", "180px"]}
-      isRequired
-      isInvalid={submitted && titleIsInvalid}
-    >
+    <FormControl isRequired isInvalid={submitted && titleIsInvalid}>
       <FormLabel fontSize={["14px", "16px"]} m="0">
-        Title
+        Exercise
       </FormLabel>
       {customTitle ? (
         <Input
           size={["sm", "sm", "md"]}
           fontSize={["16px"]}
-          placeholder="Enter Title"
+          placeholder="Enter Exercise"
           name="title"
           value={exercise.title}
           onChange={(event) =>
@@ -74,7 +68,7 @@ export default function ExerciseTitle({
         <Select
           size={["sm", "sm", "md"]}
           fontSize={["16px"]}
-          placeholder="Select Option"
+          placeholder="Select"
           name="title"
           value={exercise.title}
           onChange={(event) =>

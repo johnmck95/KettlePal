@@ -20,12 +20,7 @@ export default function ExerciseWeightUnit({
   handleExercise,
 }: ExerciseWeightUnitProps) {
   return (
-    <FormControl
-      flexGrow={1}
-      flexShrink={1}
-      flexBasis={["35px", "62px", "65px"]}
-      isInvalid={submitted && weightUnitIsInvalid}
-    >
+    <FormControl isInvalid={submitted && weightUnitIsInvalid}>
       <FormLabel fontSize={["14px", "16px"]} m="0">
         Unit
       </FormLabel>
@@ -33,7 +28,7 @@ export default function ExerciseWeightUnit({
       <Select
         fontSize={["16px"]}
         size={["sm", "sm", "md"]}
-        placeholder="Select Option"
+        placeholder="Select"
         name="weightUnit"
         value={exercise.weightUnit}
         onChange={(event) =>

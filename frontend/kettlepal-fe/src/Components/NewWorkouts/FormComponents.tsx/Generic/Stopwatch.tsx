@@ -1,4 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useState,
+} from "react";
 import {
   Button,
   Box,
@@ -190,14 +195,23 @@ interface StopwatchProps {
   setTime: (elapsedSeconds: number) => void;
   handleIsActive: ((newState: boolean) => void) | null;
 }
-
-export default function Stopwatch({
-  seconds,
-  isActive,
-  omitControls = false,
-  setTime,
-  handleIsActive,
-}: StopwatchProps) {
+export type StopwatchRef = {
+  start: () => void;
+  resume: () => void;
+  startOrResume: () => void;
+  reset: () => void;
+  stop: () => void;
+};
+function Stopwatch(
+  {
+    seconds,
+    isActive,
+    omitControls = false,
+    setTime,
+    handleIsActive,
+  }: StopwatchProps,
+  ref: React.Ref<StopwatchRef>
+) {
   const [startTimestamp, setStartTimestamp] = useState(() => {
     const storedTimestamp = sessionStorage.getItem(STOPWATCH_TIMESTAMP_KEY);
     return storedTimestamp ? parseInt(storedTimestamp, 10) : null;
@@ -252,6 +266,15 @@ export default function Stopwatch({
   }
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  // Expose functions to parent
+  useImperativeHandle(ref, () => ({
+    start,
+    resume,
+    startOrResume,
+    reset,
+    stop,
+  }));
 
   return (
     <Stack
@@ -317,3 +340,5 @@ export default function Stopwatch({
     </Stack>
   );
 }
+
+export default forwardRef(Stopwatch);

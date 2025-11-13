@@ -1,8 +1,9 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { calculateElapsedTime, getCurrentDate } from "../utils/Time/time";
 import { useAddWorkoutWithExercisesMutation } from "../generated/frontend-types";
 import { useUser } from "../Contexts/UserContext";
 import { useDisclosure } from "@chakra-ui/react";
+import { StopwatchRef } from "../Components/NewWorkouts/FormComponents.tsx/Generic/Stopwatch";
 
 const SESSION_STATE_KEY = "createWorkoutState";
 const STOPWATCH_IS_ACTIVE_KEY = "stopwatchIsActive";
@@ -50,6 +51,32 @@ const useCreateWorkoutForm = () => {
     return fromStorage ? true : false;
   });
 
+  // The StopWatch ref to control start/pause from CreateWorkout.tsx
+  const ref = useRef<StopwatchRef>(null);
+
+  const [workoutState, setWorkoutState] = useState<
+    "initial" | "active" | "submit"
+  >("initial");
+
+  // Toggles the Create Workout Stopwatch when Start/Pause is clicked
+  function startOrPause() {
+    setShowTracking((prev) => !prev);
+    if (showTracking) {
+      ref.current?.stop();
+    } else {
+      ref.current?.startOrResume();
+    }
+    const clockStarted = parseInt(
+      sessionStorage.getItem(STOPWATCH_TIMESTAMP_KEY) ?? "",
+      10
+    );
+    if (!!clockStarted && state.exercises.length > 0) {
+      setWorkoutState(showTracking ? "submit" : "active");
+    } else {
+      setWorkoutState("initial");
+    }
+  }
+
   const handleTimerIsActive = (newState: boolean) => {
     setTimerIsActive(newState);
     if (newState) {
@@ -69,6 +96,7 @@ const useCreateWorkoutForm = () => {
           elapsedSeconds: 0,
           exercises: [],
         });
+        setWorkoutState("initial");
         sessionStorage.removeItem(SESSION_STATE_KEY);
         setShowUploadSuccess(true);
         setTimeout(() => {
@@ -267,6 +295,8 @@ const useCreateWorkoutForm = () => {
     showServerError,
     timerIsActive,
     isOpenSaveWorkout,
+    workoutState,
+    ref,
     setTime,
     setComment,
     setFormHasErrors,
@@ -281,6 +311,7 @@ const useCreateWorkoutForm = () => {
     onOpenSaveWorkout,
     onCloseSaveWorkout,
     onSaveWorkout,
+    startOrPause,
   };
 };
 

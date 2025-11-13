@@ -89,6 +89,14 @@ const theme = extendTheme({
           _active: {
             bg: "green.800",
           },
+          _disabled: {
+            bg: "green.400",
+            color: "white",
+            opacity: 0.4,
+            cursor: "not-allowed",
+            pointerEvents: "none",
+            boxShadow: "none",
+          },
         },
         secondary: {
           bg: "white",
@@ -101,6 +109,14 @@ const theme = extendTheme({
           _active: {
             color: "#2F4B44",
             boxShadow: `0px 1px 2px #2F4B44`,
+          },
+          _disabled: {
+            bg: "white",
+            color: "#3D6158",
+            opacity: 0.4,
+            cursor: "not-allowed",
+            pointerEvents: "none",
+            boxShadow: "none",
           },
         },
         warn: {

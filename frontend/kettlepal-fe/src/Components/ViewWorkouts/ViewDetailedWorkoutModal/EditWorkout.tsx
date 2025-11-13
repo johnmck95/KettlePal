@@ -160,6 +160,7 @@ export default function EditWorkout({
                   trackWorkout={false}
                   mutatingWorkout={true}
                   showComments={true}
+                  renderMobileView={true}
                 />
               );
             })}
