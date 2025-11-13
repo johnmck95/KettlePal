@@ -61,6 +61,6 @@ The production environment is built using entirely free services. This means dow
 
 <img src="image-3.png" alt="alt text" width="400" >
 
-### Also available on Desktop
+### Also Available on Desktop
 
 <img src="image-4.png" alt="alt text" width="800" >
