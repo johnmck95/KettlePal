@@ -2,7 +2,7 @@
 
 An overbuilt, "_just-for-me_" learning project that was created to keep track of my personal kettlbell workouts and track progress over time. Designed as a progressive web app for both mobile and desktop usage. Make sure you "_Add To Homescreen_" on mobile devices for the best experience.
 
-[**Live Deploy Link**](https://kettlepal.netlify.app/)
+### [**Live Deploy Link**](https://kettlepal.netlify.app/)
 
 ## Feature List
 
