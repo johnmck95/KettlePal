@@ -2,8 +2,12 @@
 
 ## Migrations
 
+Navigate to the `kettlepal/backend/graphql-server` directory.
+
 - Make a new migration with `knex migrate:make migration_name`, this will be stored in `src/db/migrations`.
-- Run your migration with `knex migrate:up`, `:down` or `:latest`
+- View the queue of migrations with `knex migrate:list`
+- Run the next migration with `knex migrate:up`, `:down` or `:latest`
+- Run a specific migration with `knex migrate:<up or down> <migration_file_name.js>`
 
 ## Seeds
 
