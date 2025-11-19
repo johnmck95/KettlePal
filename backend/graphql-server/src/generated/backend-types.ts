@@ -277,6 +277,8 @@ export type UpdateWorkoutWithExercisesInput = {
 export type User = {
   __typename?: 'User';
   atAGlance?: Maybe<AtAGlance>;
+  bodyWeight: Scalars['Float']['output'];
+  bodyWeightUnit: Scalars['String']['output'];
   createdAt: Scalars['String']['output'];
   email: Scalars['String']['output'];
   firstName: Scalars['String']['output'];
@@ -314,6 +316,8 @@ export type UserPastWorkouts = {
 
 export type UserStats = {
   __typename?: 'UserStats';
+  bodyWeight: Scalars['Float']['output'];
+  bodyWeightUnit: Scalars['String']['output'];
   largestWorkCapacityKg?: Maybe<Scalars['Float']['output']>;
   longestWorkout?: Maybe<Scalars['Int']['output']>;
   mostRepsInWorkout?: Maybe<Scalars['Int']['output']>;
@@ -548,6 +552,8 @@ export type RefreshTokenResponseResolvers<ContextType = any, ParentType extends 
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = ResolversObject<{
   atAGlance?: Resolver<Maybe<ResolversTypes['AtAGlance']>, ParentType, ContextType, RequireFields<UserAtAGlanceArgs, 'dateRange' | 'period'>>;
+  bodyWeight?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  bodyWeightUnit?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   firstName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -573,6 +579,8 @@ export type UserPastWorkoutsResolvers<ContextType = any, ParentType extends Reso
 }>;
 
 export type UserStatsResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserStats'] = ResolversParentTypes['UserStats']> = ResolversObject<{
+  bodyWeight?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  bodyWeightUnit?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   largestWorkCapacityKg?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
   longestWorkout?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   mostRepsInWorkout?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;

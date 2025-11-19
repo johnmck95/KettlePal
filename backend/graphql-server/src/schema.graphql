@@ -10,6 +10,8 @@ type User {
   tokenCount: Int!
   userStats: UserStats
   atAGlance(period: String!, dateRange: String!): AtAGlance
+  bodyWeight: Float!
+  bodyWeightUnit: String!
 }
 
 type AtAGlance {
@@ -33,6 +35,8 @@ type UserStats {
   largestWorkCapacityKg: Float
   topExercises: String
   oldestWorkoutDate: String
+  bodyWeight: Float!
+  bodyWeightUnit: String!
 }
 
 # Bit of a hack to let fuzzy search bypass Workouts{Exericises{}} graphql traversal.

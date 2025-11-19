@@ -48,6 +48,7 @@ export const resolvers = {
         throw error;
       }
     },
+
     async pastWorkouts(
       _,
       { userUid, searchQuery, limit, offset }: QueryPastWorkoutsArgs,
@@ -66,6 +67,7 @@ export const resolvers = {
 
       return pastWorkouts;
     },
+
     async user(_, { uid }: QueryUserArgs, { req }: any) {
       if (!req.userUid || req.userUid !== uid) {
         throw new NotAuthorizedError();
@@ -85,7 +87,6 @@ export const resolvers = {
       if (!req.userUid) {
         throw new NotAuthorizedError();
       }
-
       try {
         let result;
         let query = `
@@ -115,6 +116,7 @@ export const resolvers = {
         throw error;
       }
     },
+
     async workout(_, { uid }: { uid: String }, { req }: any) {
       if (!req.userUid) {
         throw new NotAuthorizedError();
@@ -141,6 +143,7 @@ export const resolvers = {
         throw error;
       }
     },
+
     async exercise(_, { uid }: { uid: String }, { req }: any) {
       if (!req.userUid) {
         throw new NotAuthorizedError();

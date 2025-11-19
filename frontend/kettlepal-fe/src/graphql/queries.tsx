@@ -80,6 +80,8 @@ const CHECK_SESSION_QUERY = gql`
         isAuthorized
         createdAt
         tokenCount
+        bodyWeight
+        bodyWeightUnit
       }
     }
   }
