@@ -51,6 +51,8 @@ There is a `1 - M` relationship between the `users & workouts` tables, and anoth
       <th>is_authorized</th>
       <th>created_at</th>
       <th>token_count</th>
+      <th>bodyWeight</th>
+      <th>bodyWeightUnit</th>
     </tr>
   </thead>
   <tbody>
@@ -63,6 +65,8 @@ There is a `1 - M` relationship between the `users & workouts` tables, and anoth
       <td>A flag to restrict/grant access in the future</td>
       <td>the date the account was created</td>
       <td>used in validation</td>
+      <td>the weight of the user, 0 by default or if the user would not like to say</td>
+      <td>the unit of the users body weight, "lb" or "kg"</td>
     </tr>
     <tr>
       <td>uuid</td>
@@ -73,6 +77,8 @@ There is a `1 - M` relationship between the `users & workouts` tables, and anoth
       <td>boolean</td>
       <td>timestamptz</td>
       <td>int(4)</td>
+      <td>float(4)</td>
+      <td>text enum ["lb", "kg"]</td>
     </tr>
      <tr>
       <td></td>
@@ -82,6 +88,8 @@ There is a `1 - M` relationship between the `users & workouts` tables, and anoth
       <td></td>
       <td>nullable</td>
       <td>nullable</td>
+      <td></td>
+      <td></td>
       <td></td>
     </tr>
   </tbody>
@@ -195,6 +203,55 @@ There is a `1 - M` relationship between the `users & workouts` tables, and anoth
       <td>nullable</td>
       <td>nullable</td>
       <td>nullable</td>
+    </tr>
+  </tbody>
+</table>
+
+## templates
+
+<table border="1" cellpadding="6" cellspacing="0">
+  <thead>
+    <tr>
+      <th>uid</th>
+      <th>user_uid</th>
+      <th>created_at</th>
+      <th>title</th>
+      <th>weight_unit</th>
+      <th>multiplier</th>
+      <th>reps_display</th>
+      <th>index</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>primary key</td>
+      <td>foreign key</td>
+      <td>the date the exercise template was created on</td>
+      <td>exercise title</td>
+      <td>the weight unit, either "kg" or "lb" if applicable (users.bodyWeightUnit will be used for body weight exercises)</td>
+      <td>for body weight exercises, this multiplier will be used to computer work capacity. Ex: Pull Up may be 0.90 * body mass, where 0.90 is the multipler.</td>
+      <td>The method the UI will use to display the total number of reps to the user. See exercises.reps_display for full details.</td>
+      <td>The 0-based index the exercise templates should appear in an ordered list (new workout page dropdown)</td>
+    </tr>
+    <tr>
+      <td>uuid</td>
+      <td>uuid</td>
+      <td>timestamptz</td>
+      <td>varchar(255)</td>
+      <td>varchar(255)</td>
+      <td>float(4)</td>
+      <td>varchar(255)</td>
+      <td>int(4)</td>
+    </tr>
+        <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td>nullable</td>
+      <td>nullable</td>
+      <td>nullable</td>
+      <td></td>
     </tr>
   </tbody>
 </table>
