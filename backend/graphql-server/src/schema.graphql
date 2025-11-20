@@ -81,6 +81,19 @@ type Exercise {
   repsDisplay: String
   comment: String
   elapsedSeconds: Int
+  multiplier: Float!
+}
+
+type Template {
+  uid: ID!
+  userUid: ID!
+  createdAt: String!
+  title: String!
+  weightUnit: String
+  multiplier: Float!
+  repsDisplay: String
+  index: Int!
+  isBodyWeight: Boolean!
 }
 
 type CheckSessionResponse {

@@ -256,7 +256,7 @@ There is a `1 - M` relationship between the `users & workouts` tables, and anoth
       <td></td>
       <td></td>
       <td>nullable</td>
-      <td>nullable</td>
+      <td></td>
       <td>nullable</td>
       <td></td>
     </tr>

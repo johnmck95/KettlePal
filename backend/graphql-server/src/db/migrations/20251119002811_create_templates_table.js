@@ -5,7 +5,7 @@ export async function up(knex) {
     table.timestamp("createdAt").defaultTo(knex.fn.now()).notNullable();
     table.string("title", 255).notNullable();
     table.string("weightUnit", 255);
-    table.float("multiplier").defaultTo(1.0);
+    table.float("multiplier").notNullable().defaultTo(1.0);
     table.string("repsDisplay", 255);
     table.integer("index").notNullable().defaultTo(0);
     table.boolean("isBodyWeight").notNullable().defaultTo(false);
