@@ -152,6 +152,7 @@ There is a `1 - M` relationship between the `users & workouts` tables, and anoth
       <th>reps_display</th>
       <th>elapsed_seconds</th>
       <th>comment</th>
+      <th>multiplier</th>
     </tr>
   </thead>
   <tbody>
@@ -177,6 +178,7 @@ There is a `1 - M` relationship between the `users & workouts` tables, and anoth
       </td>
       <td>total number of seconds the exercise lasted for</td>
       <td>comment</td>
+      <td>a constant value that will be used to calculate work capacity. Useful for body weight exercises and compound lifts.</td>
     </tr>
     <tr>
       <td>uuid</td>
@@ -190,6 +192,7 @@ There is a `1 - M` relationship between the `users & workouts` tables, and anoth
       <td>varchar(255)</td>
       <td>int(4)</td>
       <td>varchar(512)</td>
+      <td>float(4)</td>
     </tr>
     <tr>
       <td></td>
@@ -203,6 +206,7 @@ There is a `1 - M` relationship between the `users & workouts` tables, and anoth
       <td>nullable</td>
       <td>nullable</td>
       <td>nullable</td>
+      <td></td>
     </tr>
   </tbody>
 </table>
@@ -220,6 +224,7 @@ There is a `1 - M` relationship between the `users & workouts` tables, and anoth
       <th>multiplier</th>
       <th>reps_display</th>
       <th>index</th>
+      <th>isBodyWeight</th>
     </tr>
   </thead>
   <tbody>
@@ -232,6 +237,7 @@ There is a `1 - M` relationship between the `users & workouts` tables, and anoth
       <td>for body weight exercises, this multiplier will be used to computer work capacity. Ex: Pull Up may be 0.90 * body mass, where 0.90 is the multipler.</td>
       <td>The method the UI will use to display the total number of reps to the user. See exercises.reps_display for full details.</td>
       <td>The 0-based index the exercise templates should appear in an ordered list (new workout page dropdown)</td>
+      <td>if the exercise is a body weight exercise, the exercises row with pull the weight and weightUnit from the users table</td>
     </tr>
     <tr>
       <td>uuid</td>
@@ -242,6 +248,7 @@ There is a `1 - M` relationship between the `users & workouts` tables, and anoth
       <td>float(4)</td>
       <td>varchar(255)</td>
       <td>int(4)</td>
+      <td>boolean</td>
     </tr>
         <tr>
       <td></td>
