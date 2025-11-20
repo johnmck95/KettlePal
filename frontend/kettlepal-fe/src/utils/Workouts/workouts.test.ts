@@ -33,6 +33,7 @@ describe("totalWorkoutWorkCapacity", () => {
       comment: "Exercise comment",
       elapsedSeconds: 123,
       createdAt: "2024-08-29",
+      multiplier: 1.0,
     });
     const result = totalWorkoutWorkCapacity(workoutWithExercises);
     expect(result).toBe("360 kg");
@@ -50,6 +51,7 @@ describe("totalWorkoutWorkCapacity", () => {
       comment: "Exercise comment",
       elapsedSeconds: 123,
       createdAt: "2024-08-29",
+      multiplier: 1.0,
     });
     const result = totalWorkoutWorkCapacity(workoutWithExercises);
     expect(result).toBe("750 lb");
@@ -67,6 +69,7 @@ describe("totalWorkoutWorkCapacity", () => {
       comment: "Exercise comment",
       elapsedSeconds: 123,
       createdAt: "2024-08-29",
+      multiplier: 1.0,
     });
     workoutWithExercises?.exercises?.push({
       uid: "123",
@@ -79,6 +82,7 @@ describe("totalWorkoutWorkCapacity", () => {
       comment: "Exercise comment",
       elapsedSeconds: 123,
       createdAt: "2024-08-29",
+      multiplier: 1.0,
     });
     const result = totalWorkoutWorkCapacity(workoutWithExercises);
     expect(result).toBe("4,200 kg");
@@ -96,6 +100,7 @@ describe("totalWorkoutWorkCapacity", () => {
       comment: "Exercise comment",
       elapsedSeconds: 123,
       createdAt: "2024-08-29",
+      multiplier: 1.0,
     });
     workoutWithExercises?.exercises?.push({
       uid: "123",
@@ -108,6 +113,7 @@ describe("totalWorkoutWorkCapacity", () => {
       comment: "Exercise comment",
       elapsedSeconds: 123,
       createdAt: "2024-08-29",
+      multiplier: 1.0,
     });
     const result = totalWorkoutWorkCapacity(workoutWithExercises);
     expect(result).toBe("6,220 lb");
@@ -125,6 +131,7 @@ describe("totalWorkoutWorkCapacity", () => {
       comment: "Exercise comment",
       elapsedSeconds: 123,
       createdAt: "2024-08-29",
+      multiplier: 1.0,
     });
     workoutWithExercises?.exercises?.push({
       uid: "123",
@@ -137,6 +144,7 @@ describe("totalWorkoutWorkCapacity", () => {
       comment: "Exercise comment",
       elapsedSeconds: 123,
       createdAt: "2024-08-29",
+      multiplier: 1.0,
     });
     const result = totalWorkoutWorkCapacity(workoutWithExercises);
     expect(result).toBe("3,780 kg");
@@ -154,6 +162,7 @@ describe("totalWorkoutWorkCapacity", () => {
       comment: "Exercise comment",
       elapsedSeconds: 123,
       createdAt: "2024-08-29",
+      multiplier: 1.0,
     });
     workoutWithExercises?.exercises?.push({
       uid: "123",
@@ -166,6 +175,7 @@ describe("totalWorkoutWorkCapacity", () => {
       comment: "Exercise comment",
       elapsedSeconds: 123,
       createdAt: "2024-08-29",
+      multiplier: 1.0,
     });
     workoutWithExercises?.exercises?.push({
       uid: "123",
@@ -178,6 +188,7 @@ describe("totalWorkoutWorkCapacity", () => {
       comment: "Exercise comment",
       elapsedSeconds: 123,
       createdAt: "2024-08-29",
+      multiplier: 1.0,
     });
     const result = totalWorkoutWorkCapacity(workoutWithExercises);
     expect(result).toBe("10,333 lb");
@@ -195,6 +206,7 @@ describe("totalWorkoutWorkCapacity", () => {
       comment: "Exercise comment",
       elapsedSeconds: 123,
       createdAt: "2024-08-29",
+      multiplier: 1.0,
     });
     workoutWithExercises?.exercises?.push({
       uid: "123",
@@ -207,6 +219,7 @@ describe("totalWorkoutWorkCapacity", () => {
       comment: "Exercise comment",
       elapsedSeconds: 123,
       createdAt: "2024-08-29",
+      multiplier: 1.0,
     });
     workoutWithExercises?.exercises?.push({
       uid: "123",
@@ -219,6 +232,7 @@ describe("totalWorkoutWorkCapacity", () => {
       comment: "Exercise comment",
       elapsedSeconds: 123,
       createdAt: "2024-08-29",
+      multiplier: 1.0,
     });
     const result = totalWorkoutWorkCapacity(workoutWithExercises);
     expect(result).toBe("4,580 kg");

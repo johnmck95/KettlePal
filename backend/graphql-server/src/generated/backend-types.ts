@@ -99,6 +99,7 @@ export type Exercise = {
   comment?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['String']['output'];
   elapsedSeconds?: Maybe<Scalars['Int']['output']>;
+  multiplier: Scalars['Float']['output'];
   reps?: Maybe<Scalars['Int']['output']>;
   repsDisplay?: Maybe<Scalars['String']['output']>;
   sets?: Maybe<Scalars['Int']['output']>;
@@ -252,6 +253,19 @@ export type RefreshTokenResponse = {
   __typename?: 'RefreshTokenResponse';
   message?: Maybe<Scalars['String']['output']>;
   success: Scalars['Boolean']['output'];
+};
+
+export type Template = {
+  __typename?: 'Template';
+  createdAt: Scalars['String']['output'];
+  index: Scalars['Int']['output'];
+  isBodyWeight: Scalars['Boolean']['output'];
+  multiplier: Scalars['Float']['output'];
+  repsDisplay?: Maybe<Scalars['String']['output']>;
+  title: Scalars['String']['output'];
+  uid: Scalars['ID']['output'];
+  userUid: Scalars['ID']['output'];
+  weightUnit?: Maybe<Scalars['String']['output']>;
 };
 
 export type UpdateExerciseInput = {
@@ -440,6 +454,7 @@ export type ResolversTypes = ResolversObject<{
   Query: ResolverTypeWrapper<{}>;
   RefreshTokenResponse: ResolverTypeWrapper<RefreshTokenResponse>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
+  Template: ResolverTypeWrapper<Template>;
   UpdateExerciseInput: UpdateExerciseInput;
   UpdateWorkoutWithExercisesInput: UpdateWorkoutWithExercisesInput;
   User: ResolverTypeWrapper<User>;
@@ -470,6 +485,7 @@ export type ResolversParentTypes = ResolversObject<{
   Query: {};
   RefreshTokenResponse: RefreshTokenResponse;
   String: Scalars['String']['output'];
+  Template: Template;
   UpdateExerciseInput: UpdateExerciseInput;
   UpdateWorkoutWithExercisesInput: UpdateWorkoutWithExercisesInput;
   User: User;
@@ -503,6 +519,7 @@ export type ExerciseResolvers<ContextType = any, ParentType extends ResolversPar
   comment?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   elapsedSeconds?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  multiplier?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   reps?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   repsDisplay?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   sets?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
@@ -547,6 +564,19 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
 export type RefreshTokenResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['RefreshTokenResponse'] = ResolversParentTypes['RefreshTokenResponse']> = ResolversObject<{
   message?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   success?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type TemplateResolvers<ContextType = any, ParentType extends ResolversParentTypes['Template'] = ResolversParentTypes['Template']> = ResolversObject<{
+  createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  index?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  isBodyWeight?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
+  multiplier?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  repsDisplay?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  uid?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  userUid?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  weightUnit?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
@@ -621,6 +651,7 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   RefreshTokenResponse?: RefreshTokenResponseResolvers<ContextType>;
+  Template?: TemplateResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
   UserPastWorkouts?: UserPastWorkoutsResolvers<ContextType>;
   UserStats?: UserStatsResolvers<ContextType>;

@@ -100,6 +100,7 @@ export type Exercise = {
   comment?: Maybe<Scalars['String']['output']>;
   createdAt: Scalars['String']['output'];
   elapsedSeconds?: Maybe<Scalars['Int']['output']>;
+  multiplier: Scalars['Float']['output'];
   reps?: Maybe<Scalars['Int']['output']>;
   repsDisplay?: Maybe<Scalars['String']['output']>;
   sets?: Maybe<Scalars['Int']['output']>;
@@ -253,6 +254,19 @@ export type RefreshTokenResponse = {
   __typename?: 'RefreshTokenResponse';
   message?: Maybe<Scalars['String']['output']>;
   success: Scalars['Boolean']['output'];
+};
+
+export type Template = {
+  __typename?: 'Template';
+  createdAt: Scalars['String']['output'];
+  index: Scalars['Int']['output'];
+  isBodyWeight: Scalars['Boolean']['output'];
+  multiplier: Scalars['Float']['output'];
+  repsDisplay?: Maybe<Scalars['String']['output']>;
+  title: Scalars['String']['output'];
+  uid: Scalars['ID']['output'];
+  userUid: Scalars['ID']['output'];
+  weightUnit?: Maybe<Scalars['String']['output']>;
 };
 
 export type UpdateExerciseInput = {
@@ -416,7 +430,7 @@ export type FuzzySearchQueryVariables = Exact<{
 }>;
 
 
-export type FuzzySearchQuery = { __typename?: 'Query', pastWorkouts?: { __typename?: 'UserPastWorkouts', firstName: string, lastName: string, workoutWithExercises: Array<{ __typename?: 'WorkoutWithExercises', uid: string, comment?: string | null, elapsedSeconds?: number | null, date: string, exercises: Array<{ __typename?: 'Exercise', uid: string, title: string, weight?: number | null, weightUnit?: string | null, sets?: number | null, reps?: number | null, repsDisplay?: string | null, comment?: string | null, elapsedSeconds?: number | null, createdAt: string }> } | null> } | null };
+export type FuzzySearchQuery = { __typename?: 'Query', pastWorkouts?: { __typename?: 'UserPastWorkouts', firstName: string, lastName: string, workoutWithExercises: Array<{ __typename?: 'WorkoutWithExercises', uid: string, comment?: string | null, elapsedSeconds?: number | null, date: string, exercises: Array<{ __typename?: 'Exercise', uid: string, title: string, weight?: number | null, weightUnit?: string | null, sets?: number | null, reps?: number | null, repsDisplay?: string | null, comment?: string | null, elapsedSeconds?: number | null, createdAt: string, multiplier: number }> } | null> } | null };
 
 export type UserWithWorkoutsQueryVariables = Exact<{
   uid: Scalars['ID']['input'];
@@ -425,7 +439,7 @@ export type UserWithWorkoutsQueryVariables = Exact<{
 }>;
 
 
-export type UserWithWorkoutsQuery = { __typename?: 'Query', user?: { __typename?: 'User', firstName: string, lastName: string, workouts: Array<{ __typename?: 'Workout', uid: string, comment?: string | null, elapsedSeconds?: number | null, date: string, exercises?: Array<{ __typename?: 'Exercise', uid: string, title: string, weight?: number | null, weightUnit?: string | null, sets?: number | null, reps?: number | null, repsDisplay?: string | null, comment?: string | null, elapsedSeconds?: number | null, createdAt: string }> | null } | null> } | null };
+export type UserWithWorkoutsQuery = { __typename?: 'Query', user?: { __typename?: 'User', firstName: string, lastName: string, workouts: Array<{ __typename?: 'Workout', uid: string, comment?: string | null, elapsedSeconds?: number | null, date: string, exercises?: Array<{ __typename?: 'Exercise', uid: string, title: string, weight?: number | null, weightUnit?: string | null, sets?: number | null, reps?: number | null, repsDisplay?: string | null, comment?: string | null, elapsedSeconds?: number | null, createdAt: string, multiplier: number }> | null } | null> } | null };
 
 export type CheckSessionQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -770,6 +784,7 @@ export const FuzzySearchDocument = gql`
         comment
         elapsedSeconds
         createdAt
+        multiplier
       }
     }
   }
@@ -832,6 +847,7 @@ export const UserWithWorkoutsDocument = gql`
         comment
         elapsedSeconds
         createdAt
+        multiplier
       }
     }
   }

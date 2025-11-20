@@ -35,6 +35,7 @@ const PAST_WORKOUTS_FUZZY_QUERY = gql`
           comment
           elapsedSeconds
           createdAt
+          multiplier
         }
       }
     }
@@ -62,6 +63,7 @@ const USER_WITH_WORKOUTS_QUERY = gql`
           comment
           elapsedSeconds
           createdAt
+          multiplier
         }
       }
     }
