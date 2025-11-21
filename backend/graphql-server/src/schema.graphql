@@ -220,6 +220,7 @@ input AddExerciseInput {
   comment: String
   elapsedSeconds: Int
   key: String
+  multiplier: Float
 }
 
 input EditExerciseInput {
