@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { CreateWorkoutState } from "./useCreateWorkoutForm";
 import { useDisclosure } from "@chakra-ui/react";
-import ExerciseTitles, {
+import {
   KettlbellWeightsKG,
+  Preconfigurations,
 } from "../Constants/ExercisesOptions";
 
 const useCreateExerciseForm = ({
@@ -27,7 +28,8 @@ const useCreateExerciseForm = ({
     return sessionVal ? parseInt(sessionVal) : 0;
   });
   const [customTitle, setCustomTitle] = useState(
-    exercise.title !== "" && !ExerciseTitles.includes(exercise.title)
+    exercise.title !== "" &&
+      !Object.keys(Preconfigurations).includes(exercise.title)
   );
   const [customWeight, setCustomWeight] = useState(
     exercise.weight !== "" && !KettlbellWeightsKG.includes(exercise.weight)
