@@ -23,6 +23,7 @@ export default function Greeting() {
       minH="100%"
       w="100%"
       p="1rem"
+      py={["5rem", "5rem", "1rem"]}
       flexWrap="wrap"
       flexDirection="column"
       position="relative"
@@ -71,8 +72,9 @@ export default function Greeting() {
 
       {/* FOREGROUND CONTENT */}
       <Box
+        w="calc(100% - 2rem)"
         position="relative"
-        minW="375px"
+        maxW="525px"
         p="0"
         m="0"
         transition="transform 1.75s ease-in-out"
