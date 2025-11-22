@@ -9,6 +9,8 @@ export const ExerciseTitles = [
   "Snatch",
   "Clean",
   "Clean & Press",
+  "Armor Building Complex",
+  "Double Armor Building Complex",
   "Push Up",
   "Push Up - Offset",
   "Pull Up",
@@ -23,7 +25,15 @@ export const ExerciseTitles = [
   "Custom",
 ];
 
-export const KettlbellWeightsKG = ["14", "20", "24", "28", "32", "Custom"];
+export const KettlbellWeightsKG = [
+  "14",
+  "16",
+  "20",
+  "24",
+  "28",
+  "32",
+  "Custom",
+];
 
 export const WeightOptions = [
   {
@@ -142,6 +152,22 @@ export const Preconfigurations: any = {
     },
     repsDisplay: {
       value: "l/r",
+    },
+  },
+  "Armor Building Complex": {
+    weightUnit: {
+      value: "kg",
+    },
+    repsDisplay: {
+      value: "std",
+    },
+  },
+  "Double Armor Building Complex": {
+    weightUnit: {
+      value: "kg",
+    },
+    repsDisplay: {
+      value: "std",
     },
   },
   "Push Up": {

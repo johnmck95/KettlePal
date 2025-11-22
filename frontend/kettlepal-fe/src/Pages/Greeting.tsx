@@ -22,7 +22,7 @@ export default function Greeting() {
     <Center
       minH="100%"
       w="100%"
-      p="1rem"
+      py={["5rem", "5rem", "1rem"]}
       flexWrap="wrap"
       flexDirection="column"
       position="relative"
@@ -71,10 +71,11 @@ export default function Greeting() {
 
       {/* FOREGROUND CONTENT */}
       <Box
+        w="calc(100% - 2rem)"
         position="relative"
-        minW="375px"
-        p="0"
-        m="0"
+        maxW="500px"
+        p={["0", "1rem", "0"]}
+        m="0rem"
         transition="transform 1.75s ease-in-out"
         transform={
           state.isLeft
