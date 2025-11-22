@@ -112,7 +112,7 @@ export default function Login({
         my="auto"
         bg="white"
         maxW="500px"
-        w="calc(100% - 2rem)"
+        w="100%"
         minW={["100%", "430px"]}
         p="2rem 1rem 1rem 1rem"
         borderRadius="24px"
