@@ -7,6 +7,8 @@ import { StopwatchRef } from "../Components/NewWorkouts/FormComponents.tsx/Gener
 
 const SESSION_STATE_KEY = "createWorkoutState";
 const STOPWATCH_IS_ACTIVE_KEY = "stopwatchIsActive";
+const SHOW_TRACKING_KEY = "showTracking";
+const WORKOUT_STATE_KEY = "workoutState";
 export const STOPWATCH_TIMESTAMP_KEY = "stopwatchStartTimeStamp";
 
 export type CreateWorkoutState = {
@@ -38,7 +40,10 @@ const useCreateWorkoutForm = () => {
           exercises: [],
         };
   });
-  const [showTracking, setShowTracking] = useState<boolean>(false);
+  const [showTracking, setShowTracking] = useState<boolean>(() => {
+    const fromStorage = sessionStorage.getItem(SHOW_TRACKING_KEY);
+    return fromStorage ? JSON.parse(fromStorage) : false;
+  });
   const [addComments, setAddComments] = useState<boolean>(false);
   const [showUploadSuccess, setShowUploadSuccess] = useState<boolean>(false);
   const [submitted, setSubmitted] = useState(false);
@@ -56,11 +61,20 @@ const useCreateWorkoutForm = () => {
 
   const [workoutState, setWorkoutState] = useState<
     "initial" | "active" | "submit"
-  >("initial");
+  >(() => {
+    const fromStorage = sessionStorage.getItem(WORKOUT_STATE_KEY);
+    return fromStorage ? JSON.parse(fromStorage) : "initial";
+  });
+
+  const handleWorkoutState = (val: "initial" | "active" | "submit") => {
+    setWorkoutState(val);
+    sessionStorage.setItem(WORKOUT_STATE_KEY, JSON.stringify(val));
+  };
 
   // Toggles the Create Workout Stopwatch when Start/Pause is clicked
   function startOrPause() {
     setShowTracking((prev) => !prev);
+    sessionStorage.setItem(SHOW_TRACKING_KEY, JSON.stringify(!showTracking));
     if (showTracking) {
       ref.current?.stop();
     } else {
@@ -71,9 +85,9 @@ const useCreateWorkoutForm = () => {
       10
     );
     if (!!clockStarted && state.exercises.length > 0) {
-      setWorkoutState(showTracking ? "submit" : "active");
+      handleWorkoutState(showTracking ? "submit" : "active");
     } else {
-      setWorkoutState("initial");
+      handleWorkoutState("initial");
     }
   }
 
@@ -96,7 +110,7 @@ const useCreateWorkoutForm = () => {
           elapsedSeconds: 0,
           exercises: [],
         });
-        setWorkoutState("initial");
+        handleWorkoutState("initial");
         sessionStorage.removeItem(SESSION_STATE_KEY);
         setShowUploadSuccess(true);
         setTimeout(() => {
@@ -302,7 +316,6 @@ const useCreateWorkoutForm = () => {
     setFormHasErrors,
     setShowServerError,
     setAddComments,
-    setShowTracking,
     handleTimerIsActive,
     handleStateChange,
     handleAddExercise,
