@@ -4,25 +4,23 @@
 
 Navigate to the `kettlepal/backend/graphql-server` directory.
 
-- Make a new migration with `knex migrate:make migration_name`, this will be stored in `src/db/migrations`.
-- View the queue of migrations with `knex migrate:list`
-- Run the next migration with `knex migrate:up`, `:down` or `:latest`
-- Run a specific migration with `knex migrate:<up or down> <migration_file_name.js>`
+- Make a new migration with `npm run knex migrate:make migration_name`, this will be stored in `src/db/migrations`.
+- View the queue of migrations with `npm run knex migrate:list`
+- Run the next migration with `npm run knex migrate:up`, `:down` or `:latest`
+- Run a specific migration with `npm run knex migrate:<up or down> <migration_file_name.js>`
 
 ## Seeds
 
-- Make a new Seed file with `knex seed:make table_name`, this will be stored in `src/db/seeds`. IF THIS SEED FILENAME ALREADY EXISTS, IT WILL OVERWRITE THE FILE! You've been warned.
-- Run the seeding with `knex seed:run`, or a specific seed file with `knex seed:run --specific=filename.js`
+- Make a new Seed file with `npm run knex seed:make table_name`, this will be stored in `src/db/seeds`. IF THIS SEED FILENAME ALREADY EXISTS, IT WILL OVERWRITE THE FILE! You've been warned.
+- Run the seeding with `knex seed:run`, or a specific seed file with `npm run knex seed:run --specific=filename.js`
 - Note the table dependencies are ordered as such: Users -> Workouts -> Exercises
 
 # GraphQL
 
 ## Run the GraphQL Server
 
-`cd` to `kettlepal/backend/graphql-server`, then run `npm start`
+`cd` to `kettlepal/backend/graphql-server`, then run `npm run dev`. This supports hot reload, unlike `npm start`.
 You can now open `http://localhost:4000/graphql` in the browser to use Apollo Server to test your backend server.
-
-NOTE: The server does _not_ hot reload. TODO.
 
 ## Selecting the Database
 
