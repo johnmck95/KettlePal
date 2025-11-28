@@ -58,7 +58,7 @@ const MonthMapping = {
   dec: "12",
 };
 
-const titleMapping = {
+const TitleMapping = {
   "sa deadlift": "Single Leg Deadlift",
   "sa swing": "Single Arm Swing",
   "s/a swing": "Single Arm Swing",
@@ -73,7 +73,7 @@ function parseOpeningWorkoutLine(line: string) {
   const date =
     RUN_FOR_YEAR +
     "-" +
-    MonthMapping[components[0]?.toLowerCase()] +
+    MonthMapping[components[0]?.toLowerCase() as keyof typeof MonthMapping] +
     "-" +
     components[1]?.toLowerCase().padStart(2, "0");
   const workoutComment =
@@ -88,7 +88,10 @@ function parseExerciseLeftOfColon(leftOfColon: string) {
 
   if (match) {
     return {
-      title: titleMapping[match[1]?.trim().toLowerCase()] || match[1]?.trim(),
+      title:
+        TitleMapping[
+          match[1]?.trim().toLowerCase() as keyof typeof TitleMapping
+        ] || match[1]?.trim(),
       weight: match[2],
       weightUnit: match[3],
     };
@@ -99,7 +102,7 @@ function parseExerciseLeftOfColon(leftOfColon: string) {
 
 function parseExerciseRightOfColon(rightOfColon: string) {
   const parts = rightOfColon?.trim().split(" ");
-  if (!!parts === false) {
+  if (parts.length === 0) {
     return {};
   }
   let setRepsPart = parts[0];
@@ -165,7 +168,7 @@ function parseExerciseLine(line: string) {
 }
 
 function readAndParseWorkoutFile(filePath: string): void {
-  let workouts;
+  let workouts: string[] = [];
   try {
     const fileContent = fs.readFileSync(filePath, "utf-8");
     workouts = fileContent.split("\n\n");
@@ -178,7 +181,7 @@ function readAndParseWorkoutFile(filePath: string): void {
 
   for (let workout of workouts) {
     // Create new workout object
-    let workoutWithExercises = {
+    let workoutWithExercises: AddWorkoutWithExercisesInput = {
       date: "",
       comment: "",
       elapsedSeconds: 0,

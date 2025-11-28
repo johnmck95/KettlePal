@@ -150,10 +150,30 @@ type Mutation {
   login(email: String!, password: String!): User
   refreshToken: RefreshTokenResponse!
   invalidateToken: Boolean!
+
+  addOrUpdateSettings(
+    userUid: ID!
+    settings: AddOrUpdateSettingsInput!
+  ): Boolean!
 }
 
-# Input types omit data fields we want the system to generate (like uids)
+# Input types omit data fields because we want the system to generate them (EX: uids)
 # Edits often vary from inputs, because we don't want to require all fields
+
+input AddOrUpdateSettingsInput {
+  bodyWeight: Float
+  bodyWeightUnit: String
+  templates: [AddOrUpdateTemplateInput!]!
+}
+
+input AddOrUpdateTemplateInput {
+  title: String!
+  weightUnit: String
+  multiplier: Float
+  repsDisplay: String
+  index: Int!
+  isBodyWeight: Boolean!
+}
 
 input AddOrEditUserInput {
   firstName: String!

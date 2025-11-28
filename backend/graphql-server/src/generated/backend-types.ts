@@ -20,6 +20,7 @@ export type AddExerciseInput = {
   comment?: InputMaybe<Scalars['String']['input']>;
   elapsedSeconds?: InputMaybe<Scalars['Int']['input']>;
   key?: InputMaybe<Scalars['String']['input']>;
+  multiplier?: InputMaybe<Scalars['Float']['input']>;
   reps?: InputMaybe<Scalars['String']['input']>;
   repsDisplay?: InputMaybe<Scalars['String']['input']>;
   sets?: InputMaybe<Scalars['String']['input']>;
@@ -40,6 +41,21 @@ export type AddOrEditWorkoutInput = {
   comment?: InputMaybe<Scalars['String']['input']>;
   date: Scalars['String']['input'];
   elapsedSeconds?: InputMaybe<Scalars['Int']['input']>;
+};
+
+export type AddOrUpdateSettingsInput = {
+  bodyWeight?: InputMaybe<Scalars['Float']['input']>;
+  bodyWeightUnit?: InputMaybe<Scalars['String']['input']>;
+  templates: Array<AddOrUpdateTemplateInput>;
+};
+
+export type AddOrUpdateTemplateInput = {
+  index: Scalars['Int']['input'];
+  isBodyWeight: Scalars['Boolean']['input'];
+  multiplier?: InputMaybe<Scalars['Float']['input']>;
+  repsDisplay?: InputMaybe<Scalars['String']['input']>;
+  title: Scalars['String']['input'];
+  weightUnit?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type AddUserInput = {
@@ -113,6 +129,7 @@ export type Exercise = {
 export type Mutation = {
   __typename?: 'Mutation';
   addExercise?: Maybe<Exercise>;
+  addOrUpdateSettings: Scalars['Boolean']['output'];
   addUser?: Maybe<User>;
   addWorkout?: Maybe<Workout>;
   addWorkoutWithExercises: Workout;
@@ -134,6 +151,12 @@ export type Mutation = {
 export type MutationAddExerciseArgs = {
   exercise: AddExerciseInput;
   workoutUid: Scalars['ID']['input'];
+};
+
+
+export type MutationAddOrUpdateSettingsArgs = {
+  settings: AddOrUpdateSettingsInput;
+  userUid: Scalars['ID']['input'];
 };
 
 
@@ -438,6 +461,8 @@ export type ResolversTypes = ResolversObject<{
   AddExerciseInput: AddExerciseInput;
   AddOrEditUserInput: AddOrEditUserInput;
   AddOrEditWorkoutInput: AddOrEditWorkoutInput;
+  AddOrUpdateSettingsInput: AddOrUpdateSettingsInput;
+  AddOrUpdateTemplateInput: AddOrUpdateTemplateInput;
   AddUserInput: AddUserInput;
   AddWorkoutWithExercisesInput: AddWorkoutWithExercisesInput;
   AtAGlance: ResolverTypeWrapper<AtAGlance>;
@@ -469,6 +494,8 @@ export type ResolversParentTypes = ResolversObject<{
   AddExerciseInput: AddExerciseInput;
   AddOrEditUserInput: AddOrEditUserInput;
   AddOrEditWorkoutInput: AddOrEditWorkoutInput;
+  AddOrUpdateSettingsInput: AddOrUpdateSettingsInput;
+  AddOrUpdateTemplateInput: AddOrUpdateTemplateInput;
   AddUserInput: AddUserInput;
   AddWorkoutWithExercisesInput: AddWorkoutWithExercisesInput;
   AtAGlance: AtAGlance;
@@ -533,6 +560,7 @@ export type ExerciseResolvers<ContextType = any, ParentType extends ResolversPar
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
   addExercise?: Resolver<Maybe<ResolversTypes['Exercise']>, ParentType, ContextType, RequireFields<MutationAddExerciseArgs, 'exercise' | 'workoutUid'>>;
+  addOrUpdateSettings?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationAddOrUpdateSettingsArgs, 'settings' | 'userUid'>>;
   addUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationAddUserArgs, 'user'>>;
   addWorkout?: Resolver<Maybe<ResolversTypes['Workout']>, ParentType, ContextType, RequireFields<MutationAddWorkoutArgs, 'userUid' | 'workout'>>;
   addWorkoutWithExercises?: Resolver<ResolversTypes['Workout'], ParentType, ContextType, RequireFields<MutationAddWorkoutWithExercisesArgs, 'userUid' | 'workoutWithExercises'>>;

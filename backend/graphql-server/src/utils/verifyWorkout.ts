@@ -1,8 +1,4 @@
-type WorkoutfromClient = {
-  date: string;
-  elapsedSeconds?: number;
-  comment?: string;
-};
+import { FormattedWorkout } from "./formatDataForDB";
 
 // Validates YYYY-MM-DD format
 export function isValidDateFormat(dateString: string) {
@@ -31,7 +27,7 @@ export function isValidDateFormat(dateString: string) {
   return day > 0 && day <= monthLength[month - 1];
 }
 
-export function verifyWorkout(workout: WorkoutfromClient): {
+export function verifyWorkout(workout: FormattedWorkout): {
   result: boolean;
   reason: string;
 } {
@@ -48,7 +44,11 @@ export function verifyWorkout(workout: WorkoutfromClient): {
     };
   }
 
-  if (elapsedSeconds < 0 || typeof elapsedSeconds !== "number") {
+  if (
+    elapsedSeconds == null ||
+    elapsedSeconds < 0 ||
+    typeof elapsedSeconds !== "number"
+  ) {
     return {
       result: false,
       reason: `Workout Elapsed Seconds must be a numerical value greater than or equal to 0.`,

@@ -1,17 +1,17 @@
 import knex from "knex";
 
 export default async function getFuzzyWorkoutSearchResults({
-  searchQuery,
+  searchQuery = "",
   userUid,
   knexInstance,
   limit,
   offset,
 }: {
-  searchQuery: string;
+  searchQuery?: string;
   userUid: string;
   knexInstance: any;
-  limit: number;
-  offset: number;
+  limit?: number;
+  offset?: number;
 }) {
   const user = await knexInstance("users").where("uid", userUid).first();
 
@@ -20,6 +20,7 @@ export default async function getFuzzyWorkoutSearchResults({
     .leftJoin("exercises", "workouts.uid", "exercises.workoutUid")
     .where("workouts.userUid", userUid)
     .andWhere(function () {
+      // @ts-ignore
       this.whereRaw("LOWER(workouts.comment) LIKE ?", [
         `%${searchQuery.toLowerCase()}%`,
       ])
