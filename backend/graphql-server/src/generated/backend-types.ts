@@ -322,6 +322,7 @@ export type User = {
   isAuthorized: Scalars['Boolean']['output'];
   lastName: Scalars['String']['output'];
   password: Scalars['String']['output'];
+  templates: Array<Template>;
   tokenCount: Scalars['Int']['output'];
   uid: Scalars['ID']['output'];
   userStats?: Maybe<UserStats>;
@@ -626,6 +627,7 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   isAuthorized?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   lastName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   password?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  templates?: Resolver<Array<ResolversTypes['Template']>, ParentType, ContextType>;
   tokenCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   uid?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   userStats?: Resolver<Maybe<ResolversTypes['UserStats']>, ParentType, ContextType>;

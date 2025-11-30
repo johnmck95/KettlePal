@@ -12,6 +12,7 @@ type User {
   atAGlance(period: String!, dateRange: String!): AtAGlance
   bodyWeight: Float!
   bodyWeightUnit: String!
+  templates: [Template!]!
 }
 
 type AtAGlance {

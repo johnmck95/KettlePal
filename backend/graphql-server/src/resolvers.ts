@@ -225,6 +225,24 @@ export const resolvers = {
         throw error;
       }
     },
+    async templates(
+      parent: User,
+      __: any,
+      { req }: { req: AuthenticatedRequest }
+    ) {
+      const userUid = parent.uid;
+      if (!req.userUid || req.userUid !== userUid) {
+        throw new NotAuthorizedError();
+      }
+      try {
+        return await knexInstance("templates").where({
+          userUid,
+        });
+      } catch (e) {
+        console.error(`Error fetching templates for user ${userUid}:`, e);
+        throw e;
+      }
+    },
     async userStats(parent: User) {
       try {
         return (

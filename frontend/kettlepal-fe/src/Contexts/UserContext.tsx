@@ -5,12 +5,15 @@ import React, {
   ReactNode,
   useEffect,
 } from "react";
-import { User } from "../generated/frontend-types";
+import { CheckSessionQuery } from "../generated/frontend-types";
 import { useCheckSession } from "../Hooks/useCheckSession";
 
 const SESSION_STORAGE_USER_KEY = "user";
 
-type UserInContext = Omit<User, "password" | "workouts"> | undefined | null;
+type UserInContext =
+  | CheckSessionQuery["checkSession"]["user"]
+  | null
+  | undefined;
 
 interface UserProviderProps {
   user: UserInContext;

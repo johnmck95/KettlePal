@@ -84,6 +84,14 @@ const CHECK_SESSION_QUERY = gql`
         tokenCount
         bodyWeight
         bodyWeightUnit
+        templates {
+          title
+          weightUnit
+          multiplier
+          repsDisplay
+          index
+          isBodyWeight
+        }
       }
     }
   }
