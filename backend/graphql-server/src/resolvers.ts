@@ -246,7 +246,7 @@ export const resolvers = {
                 SELECT 
                   "workoutUid", 
                   SUM(
-                    sets * reps * 
+                    sets * reps * multiplier *
                     CASE 
                       WHEN "weightUnit" = 'lb' THEN weight * 0.45359237
                       ELSE weight
@@ -342,8 +342,8 @@ export const resolvers = {
                   w.date::date,
                   SUM(
                     CASE
-                      WHEN e."weightUnit" = 'kg' THEN (e.weight * e.sets * e.reps)::INTEGER
-                      WHEN e."weightUnit" = 'lb' THEN ((e.weight * 0.45359237) * e.sets * e.reps)::INTEGER
+                      WHEN e."weightUnit" = 'kg' THEN (e.weight * e.sets * e.reps * e.multiplier)::INTEGER
+                      WHEN e."weightUnit" = 'lb' THEN (e.weight * 0.45359237 * e.sets * e.reps * e.multiplier)::INTEGER
                       ELSE 0
                     END
                   ) AS workCapacityKg
@@ -403,8 +403,8 @@ export const resolvers = {
                   ), 0) AS elapsedSeconds,
                   COALESCE(SUM(
                     CASE 
-                      WHEN e."weightUnit" = 'kg' THEN (e.weight * e.sets * e.reps)::INTEGER
-                      WHEN e."weightUnit" = 'lb' THEN ((e.weight * 0.45359237) * e.sets * e.reps)::INTEGER
+                      WHEN e."weightUnit" = 'kg' THEN (e.weight * e.sets * e.reps * e.multiplier)::INTEGER
+                      WHEN e."weightUnit" = 'lb' THEN (e.weight * 0.45359237 * e.sets * e.reps * e.multiplier)::INTEGER
                       ELSE 0
                     END
                   ), 0) AS workCapacityKg
@@ -459,8 +459,8 @@ export const resolvers = {
                   ), 0)::INTEGER AS elapsedSeconds,
                   COALESCE(SUM(
                     CASE 
-                      WHEN e."weightUnit" = 'kg' THEN (e.weight * e.sets * e.reps)::INTEGER
-                      WHEN e."weightUnit" = 'lb' THEN ((e.weight * 0.45359237) * e.sets * e.reps)::INTEGER
+                      WHEN e."weightUnit" = 'kg' THEN (e.weight * e.sets * e.reps * e.multiplier)::INTEGER
+                      WHEN e."weightUnit" = 'lb' THEN (e.weight * 0.45359237 * e.sets * e.reps * e.multiplier)::INTEGER
                       ELSE 0
                     END
                   ), 0) AS workCapacityKg
@@ -510,8 +510,8 @@ export const resolvers = {
                   date_trunc('year', w.date::date)::date AS year_start,
                   SUM(
                     CASE 
-                      WHEN e."weightUnit" = 'kg' THEN (e.weight * e.sets * e.reps)::INTEGER
-                      WHEN e."weightUnit" = 'lb' THEN ((e.weight * 0.45359237) * e.sets * e.reps)::INTEGER
+                      WHEN e."weightUnit" = 'kg' THEN (e.weight * e.sets * e.reps * e.multiplier)::INTEGER
+                      WHEN e."weightUnit" = 'lb' THEN (e.weight * 0.45359237 * e.sets * e.reps * e.multiplier)::INTEGER
                       ELSE 0
                     END
                   )::INTEGER AS workCapacityKg

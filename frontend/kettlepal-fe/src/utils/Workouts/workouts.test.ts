@@ -21,6 +21,44 @@ describe("totalWorkoutWorkCapacity", () => {
     expect(result).toBe("0 kg");
   });
 
+  // When a bodyWeight exercise is chosen, weight and weightUnit are added to the exercise table
+  // based on the values from the users table. We don't reference the users table to compute.
+  it("correctly references exercise when a bodyWeight template is applied", () => {
+    workoutWithExercises?.exercises?.push({
+      uid: "123",
+      title: "Pull Up",
+      weight: 185,
+      weightUnit: "lb",
+      sets: 5,
+      reps: 5,
+      repsDisplay: "std",
+      comment: "Exercise comment",
+      elapsedSeconds: 123,
+      createdAt: "2024-08-29",
+      multiplier: 0.95,
+    });
+    const result = totalWorkoutWorkCapacity(workoutWithExercises);
+    expect(result).toBe("4,394 lb");
+  });
+
+  it("correctly applies the multiplier", () => {
+    workoutWithExercises?.exercises?.push({
+      uid: "123",
+      title: "ABC",
+      weight: 24,
+      weightUnit: "kg",
+      sets: 3,
+      reps: 5,
+      repsDisplay: "std",
+      comment: "Exercise comment",
+      elapsedSeconds: 123,
+      createdAt: "2024-08-29",
+      multiplier: 6.0,
+    });
+    const result = totalWorkoutWorkCapacity(workoutWithExercises);
+    expect(result).toBe("2,160 kg");
+  });
+
   it("correctly calculates work capacity with one exercise in kg", () => {
     workoutWithExercises?.exercises?.push({
       uid: "123",

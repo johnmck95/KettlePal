@@ -1,18 +1,17 @@
 import { Text, VStack, Flex } from "@chakra-ui/react";
 import React from "react";
 import theme from "../../../Constants/theme";
-import { formatExerciseString } from "../../../utils/Exercises/exercises";
+import {
+  calculateExerciseWorkCapacity,
+  formatExerciseString,
+} from "../../../utils/Exercises/exercises";
 import { formatDurationShort } from "../../../utils/Time/time";
-import { UserWithWorkoutsQuery } from "../../../generated/frontend-types";
+import { Exercise } from "../../../generated/frontend-types";
 
 import Detail from "./Detail";
 
 interface ViewDetailedExerciseProps {
-  exercise: NonNullable<
-    NonNullable<
-      NonNullable<UserWithWorkoutsQuery["user"]>["workouts"][0]
-    >["exercises"]
-  >[0];
+  exercise: Omit<Exercise, "workoutUid">;
   showDetails: boolean;
 }
 
@@ -65,7 +64,9 @@ export default function ViewDetailedExercise({
           {!!sets && !!reps && !!weight && !!weightUnit && (
             <Detail
               title={"Work Capacity"}
-              value={`${(sets * reps * weight).toLocaleString()} ${weightUnit}`}
+              value={`${calculateExerciseWorkCapacity(
+                exercise
+              ).toLocaleString()} ${weightUnit}`}
             />
           )}
         </Flex>

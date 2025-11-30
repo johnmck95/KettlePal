@@ -92,3 +92,10 @@ export function formatExerciseString(
     return "";
   }
 }
+
+export function calculateExerciseWorkCapacity(
+  exercise: Omit<Exercise, "workoutUid">
+): number {
+  const { sets, reps, weight, multiplier } = exercise;
+  return (sets ?? 0) * (reps ?? 0) * (weight ?? 0) * multiplier;
+}
