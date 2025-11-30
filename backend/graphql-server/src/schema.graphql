@@ -124,6 +124,11 @@ type RefreshTokenResponse {
   message: String
 }
 
+type UserWithTemplates {
+  user: User!
+  templates: [Template!]!
+}
+
 type Mutation {
   deleteUser(uid: ID!): [User]!
   deleteWorkout(uid: ID!): [Workout]!
@@ -154,7 +159,7 @@ type Mutation {
   addOrUpdateSettings(
     userUid: ID!
     settings: AddOrUpdateSettingsInput!
-  ): Boolean!
+  ): UserWithTemplates!
 }
 
 # Input types omit data fields because we want the system to generate them (EX: uids)

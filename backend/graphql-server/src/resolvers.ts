@@ -2,7 +2,7 @@ import knex from "knex";
 import * as bcrypt from "bcrypt";
 import { verifyExercises } from "./utils/verifyExercises.js";
 import { verifyWorkout } from "./utils/verifyWorkout.js";
-import { verifyTemplates } from "./utils/verifyTemplates.js";
+import { verifyTemplates, verifyUserSettings } from "./utils/verifySettings.js";
 import { Response } from "express";
 import {
   formatExercisesForDB,
@@ -1180,25 +1180,6 @@ export const resolvers = {
       }
     },
 
-    /**
--- IN PROGRESS -- These are the relevant GQL schema notes --
-# When Add/Or Update settings endpoint is created, ALL templates are deleted. user weight also updated.
-input AddOrUpdateSettingsInput {
-  bodyWeight: Float # users table. resolver sets to 0 when not provided
-  bodyWeightUnit: String # users table. resolver sets to 'kg' when not provided
-  templates: [AddOrUpdateTemplateInput!]! # templates table
-}
-
-#userUid will come from the session, not the input
-input AddOrUpdateTemplateInput {
-  title: String! # templates table
-  weightUnit: String # templates table. Has to be null if isBodyWeight=true
-  multiplier: Float # templates table. set to 1 if not provided
-  repsDisplay: String # templates table. nullable
-  index: Int! # templates table. Ensure all indices are ordered integers 0-n, no holes.
-  isBodyWeight: Boolean! # templates table. If true, weightUnit MUST be null (grab from users table)
-}
-     */
     async addOrUpdateSettings(
       _: any,
       {
@@ -1207,24 +1188,80 @@ input AddOrUpdateTemplateInput {
       }: { userUid: string; settings: AddOrUpdateSettingsInput },
       { req }: { req: AuthenticatedRequest }
     ) {
-      // 1. Validate request is authorized
       if (!userUid) {
         throw new Error("userUid required to add or update settings.");
       }
+
+      // 1. Validate request is authorized
       if (!req.userUid || req.userUid !== userUid) {
         throw new NotAuthorizedError();
       }
-      // 2. Validate you have bodyWeight, you also have bodyWeightUnit (need both or neither)
-      if (!!settings.bodyWeight !== !!settings.bodyWeightUnit) {
-        throw new Error(
-          "Both bodyWeight and bodyWeightUnit must be provided, or neither."
-        );
+
+      // 2. Validate user settings input provided
+      const areUserSettingsValid = verifyUserSettings(settings);
+      if (areUserSettingsValid.result === false) {
+        throw new Error(areUserSettingsValid.reason);
       }
-      // 3. Validate for each tempalte: a) title provided b) isBodyWeight and weightUnit c) repsDisplay valid d) indices 0-n
+
+      // 3. Validate templates are valid
       const areTemplatesValid = verifyTemplates(settings.templates);
       if (areTemplatesValid.result === false) {
         throw new Error(areTemplatesValid.reason);
       }
+
+      // 4. Start transaction to update user weight & templates in db
+      await knexInstance.transaction(async function (trx) {
+        try {
+          // a) Update user body weight & unit if provided
+          let userUpdates: Partial<User> = {
+            bodyWeight: settings.bodyWeight ?? 0,
+            bodyWeightUnit: settings.bodyWeightUnit ?? "kg",
+          };
+          await trx("users").where({ uid: userUid }).update(userUpdates);
+
+          // b) Delete existing templates for user
+          await trx("templates").where({ userUid: userUid }).del();
+
+          // c) Insert new templates
+          for (let template of settings.templates) {
+            const newTemplate = {
+              ...template,
+              userUid: userUid,
+              weightUnit: template.isBodyWeight ? null : template.weightUnit,
+              multiplier: template.multiplier ?? 1.0,
+            };
+            await trx("templates").insert(newTemplate);
+          }
+
+          await trx.commit();
+        } catch (error) {
+          await trx.rollback();
+          if (error instanceof Error) {
+            console.log(error.message);
+          } else {
+            console.log(error);
+          }
+          throw new Error("Failed to add or update settings.");
+        }
+      });
+
+      // 5. Fetch and return user + templates
+      const user = await knexInstance<User>("users")
+        .where({ uid: userUid })
+        .first();
+
+      if (!user) {
+        throw new Error("User not found after updating settings.");
+      }
+
+      const templates = await knexInstance("templates")
+        .where({ userUid })
+        .orderBy("index", "asc");
+
+      return {
+        user,
+        templates,
+      };
     },
   },
 };

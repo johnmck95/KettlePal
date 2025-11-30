@@ -129,7 +129,7 @@ export type Exercise = {
 export type Mutation = {
   __typename?: 'Mutation';
   addExercise?: Maybe<Exercise>;
-  addOrUpdateSettings: Scalars['Boolean']['output'];
+  addOrUpdateSettings: UserWithTemplates;
   addUser?: Maybe<User>;
   addWorkout?: Maybe<Workout>;
   addWorkoutWithExercises: Workout;
@@ -365,6 +365,12 @@ export type UserStats = {
   totalWorkouts: Scalars['Int']['output'];
 };
 
+export type UserWithTemplates = {
+  __typename?: 'UserWithTemplates';
+  templates: Array<Template>;
+  user: User;
+};
+
 export type Workout = {
   __typename?: 'Workout';
   comment?: Maybe<Scalars['String']['output']>;
@@ -485,6 +491,7 @@ export type ResolversTypes = ResolversObject<{
   User: ResolverTypeWrapper<User>;
   UserPastWorkouts: ResolverTypeWrapper<UserPastWorkouts>;
   UserStats: ResolverTypeWrapper<UserStats>;
+  UserWithTemplates: ResolverTypeWrapper<UserWithTemplates>;
   Workout: ResolverTypeWrapper<Workout>;
   WorkoutWithExercises: ResolverTypeWrapper<WorkoutWithExercises>;
 }>;
@@ -518,6 +525,7 @@ export type ResolversParentTypes = ResolversObject<{
   User: User;
   UserPastWorkouts: UserPastWorkouts;
   UserStats: UserStats;
+  UserWithTemplates: UserWithTemplates;
   Workout: Workout;
   WorkoutWithExercises: WorkoutWithExercises;
 }>;
@@ -560,7 +568,7 @@ export type ExerciseResolvers<ContextType = any, ParentType extends ResolversPar
 
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
   addExercise?: Resolver<Maybe<ResolversTypes['Exercise']>, ParentType, ContextType, RequireFields<MutationAddExerciseArgs, 'exercise' | 'workoutUid'>>;
-  addOrUpdateSettings?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationAddOrUpdateSettingsArgs, 'settings' | 'userUid'>>;
+  addOrUpdateSettings?: Resolver<ResolversTypes['UserWithTemplates'], ParentType, ContextType, RequireFields<MutationAddOrUpdateSettingsArgs, 'settings' | 'userUid'>>;
   addUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationAddUserArgs, 'user'>>;
   addWorkout?: Resolver<Maybe<ResolversTypes['Workout']>, ParentType, ContextType, RequireFields<MutationAddWorkoutArgs, 'userUid' | 'workout'>>;
   addWorkoutWithExercises?: Resolver<ResolversTypes['Workout'], ParentType, ContextType, RequireFields<MutationAddWorkoutWithExercisesArgs, 'userUid' | 'workoutWithExercises'>>;
@@ -650,6 +658,12 @@ export type UserStatsResolvers<ContextType = any, ParentType extends ResolversPa
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type UserWithTemplatesResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserWithTemplates'] = ResolversParentTypes['UserWithTemplates']> = ResolversObject<{
+  templates?: Resolver<Array<ResolversTypes['Template']>, ParentType, ContextType>;
+  user?: Resolver<ResolversTypes['User'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type WorkoutResolvers<ContextType = any, ParentType extends ResolversParentTypes['Workout'] = ResolversParentTypes['Workout']> = ResolversObject<{
   comment?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -683,6 +697,7 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   User?: UserResolvers<ContextType>;
   UserPastWorkouts?: UserPastWorkoutsResolvers<ContextType>;
   UserStats?: UserStatsResolvers<ContextType>;
+  UserWithTemplates?: UserWithTemplatesResolvers<ContextType>;
   Workout?: WorkoutResolvers<ContextType>;
   WorkoutWithExercises?: WorkoutWithExercisesResolvers<ContextType>;
 }>;
