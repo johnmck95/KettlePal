@@ -108,6 +108,7 @@ type Query {
   user(uid: ID!): User
   workouts(offset: Int, limit: Int): [Workout]
   workout(uid: ID!): Workout
+  uniqueExerciseTitles(userUid: ID!): [String!]!
   exercises: [Exercise]
   exercise(uid: ID!): Exercise
 

@@ -1,29 +1,4 @@
-export const ExerciseTitles = [
-  "Swing",
-  "Single Arm Swing",
-  "Press",
-  "Pistol Squat",
-  "Goblet Squat",
-  "Racked Squat",
-  "Turkish Get Up",
-  "Snatch",
-  "Clean",
-  "Clean & Press",
-  "Armor Building Complex",
-  "Double Armor Building Complex",
-  "Push Up",
-  "Push Up - Offset",
-  "Pull Up",
-  "Chin Up",
-  "Plank",
-  "Barbell Deadlift",
-  "Barbell Squat",
-  "Bench Press",
-  "Dumbbell Bench Press",
-  "Dumbbell Overhead Press",
-  "Foundations",
-  "Custom",
-];
+import { Template } from "../generated/frontend-types";
 
 export const KettlbellWeightsKG = [
   "14",
@@ -73,13 +48,16 @@ export const RepsDisplayOptions = [
   },
 ];
 
-export const Preconfigurations: any = {
+export const GenericPreconfigurations: any = {
   Swing: {
     weightUnit: {
       value: "kg",
     },
     repsDisplay: {
       value: "std",
+    },
+    multiplier: {
+      value: 1.0,
     },
   },
   "Single Arm Swing": {
@@ -89,6 +67,9 @@ export const Preconfigurations: any = {
     repsDisplay: {
       value: "l/r",
     },
+    multiplier: {
+      value: 1.0,
+    },
   },
   Press: {
     weightUnit: {
@@ -97,13 +78,8 @@ export const Preconfigurations: any = {
     repsDisplay: {
       value: "l/r",
     },
-  },
-  "Pistol Squat": {
-    weightUnit: {
-      value: "",
-    },
-    repsDisplay: {
-      value: "l/r",
+    multiplier: {
+      value: 1.0,
     },
   },
   "Goblet Squat": {
@@ -113,6 +89,9 @@ export const Preconfigurations: any = {
     repsDisplay: {
       value: "std",
     },
+    multiplier: {
+      value: 1.0,
+    },
   },
   "Racked Squat": {
     weightUnit: {
@@ -121,21 +100,8 @@ export const Preconfigurations: any = {
     repsDisplay: {
       value: "l/r",
     },
-  },
-  "Turkish Get Up": {
-    weightUnit: {
-      value: "kg",
-    },
-    repsDisplay: {
-      value: "std",
-    },
-  },
-  Snatch: {
-    weightUnit: {
-      value: "kg",
-    },
-    repsDisplay: {
-      value: "l/r",
+    multiplier: {
+      value: 1.0,
     },
   },
   Clean: {
@@ -145,6 +111,9 @@ export const Preconfigurations: any = {
     repsDisplay: {
       value: "l/r",
     },
+    multiplier: {
+      value: 1.0,
+    },
   },
   "Clean & Press": {
     weightUnit: {
@@ -153,111 +122,119 @@ export const Preconfigurations: any = {
     repsDisplay: {
       value: "l/r",
     },
+    multiplier: {
+      value: 1.0,
+    },
   },
-  "Armor Building Complex": {
+  "Turkish Get Up": {
     weightUnit: {
       value: "kg",
     },
     repsDisplay: {
       value: "std",
     },
+    multiplier: {
+      value: 1.0,
+    },
   },
-  "Double Armor Building Complex": {
+  Snatch: {
     weightUnit: {
       value: "kg",
     },
     repsDisplay: {
-      value: "std",
+      value: "l/r",
     },
-  },
-  "Push Up": {
-    weightUnit: {
-      value: "",
-    },
-    repsDisplay: {
-      value: "std",
-    },
-  },
-  "Push Up - Offset": {
-    weightUnit: {
-      value: "",
-    },
-    repsDisplay: {
-      value: "std",
-    },
-  },
-  "Pull Up": {
-    weightUnit: {
-      value: "",
-    },
-    repsDisplay: {
-      value: "std",
-    },
-  },
-  "Chin Up": {
-    weightUnit: {
-      value: "",
-    },
-    repsDisplay: {
-      value: "std",
-    },
-  },
-  Plank: {
-    weightUnit: {
-      value: "",
-    },
-    repsDisplay: {
-      value: "",
-    },
-  },
-  "Barbell Deadlift": {
-    weightUnit: {
-      value: "lb",
-    },
-    repsDisplay: {
-      value: "std",
-    },
-  },
-  "Barbell Squat": {
-    weightUnit: {
-      value: "lb",
-    },
-    repsDisplay: {
-      value: "std",
-    },
-  },
-  "Bench Press": {
-    weightUnit: {
-      value: "lb",
-    },
-    repsDisplay: {
-      value: "std",
-    },
-  },
-  "Dumbbell Bench Press": {
-    weightUnit: {
-      value: "lb",
-    },
-    repsDisplay: {
-      value: "std",
-    },
-  },
-  "Dumbbell Overhead Press": {
-    weightUnit: {
-      value: "lb",
-    },
-    repsDisplay: {
-      value: "std",
-    },
-  },
-  Foundations: {
-    weightUnit: {
-      value: "",
-    },
-    repsDisplay: {
-      value: "std",
+    multiplier: {
+      value: 1.0,
     },
   },
 };
 
-export default ExerciseTitles;
+type Preconfigurations = {
+  [title: string]: {
+    weightUnit: { value: string };
+    repsDisplay: { value: string };
+    multiplier: { value: number };
+    weight: { value: number };
+  };
+};
+
+// Creates an array of exercise titles from templates or by default, sorted by index.
+export function createExerciseTitles(
+  templates: Omit<Template, "createdAt" | "uid" | "userUid">[],
+  withCustom = true
+) {
+  const sortedTemplates = [...templates].sort((a, b) => a.index - b.index);
+
+  if (withCustom) {
+    return sortedTemplates?.length > 0
+      ? [...sortedTemplates.map((t) => t.title), "Custom"]
+      : [...Object.keys(GenericPreconfigurations), "Custom"];
+  } else {
+    return sortedTemplates?.length > 0
+      ? [...sortedTemplates.map((t) => t.title)]
+      : [...Object.keys(GenericPreconfigurations)];
+  }
+}
+
+// Formats the templates into consumable JSON
+function createPreconfigurationsFromTemplates(
+  templates: Omit<Template, "createdAt" | "uid" | "userUid">[],
+  user: { bodyWeight: number; bodyWeightUnit: string }
+) {
+  const sortedTemplates = [...templates].sort((a, b) => a.index - b.index);
+
+  const preconfigs: Preconfigurations = {};
+  sortedTemplates.forEach((template) => {
+    preconfigs[template.title] = {
+      weightUnit: { value: template.weightUnit ?? "" },
+      repsDisplay: { value: template.repsDisplay ?? "" },
+      multiplier: { value: template.multiplier },
+      weight: { value: 1 },
+      ...(template.isBodyWeight &&
+        user?.bodyWeightUnit &&
+        user.bodyWeight && {
+          weight: { value: user.bodyWeight },
+          weightUnit: { value: user.bodyWeightUnit },
+        }),
+    };
+  });
+
+  return preconfigs;
+}
+
+// Returns a JSON object that is used to pre-populate new exercise fields.
+// If no templates are provided (sorted by index), returns generic preconfigurations.
+export function getConfigurations(
+  templates: Omit<Template, "createdAt" | "uid" | "userUid">[],
+  user: { bodyWeight: number; bodyWeightUnit: string },
+  withCustom = true
+): Preconfigurations {
+  const preconfigsFromTemplates = createPreconfigurationsFromTemplates(
+    templates,
+    {
+      bodyWeight: user?.bodyWeight ?? 0,
+      bodyWeightUnit: user?.bodyWeightUnit ?? "kg",
+    }
+  );
+
+  const preconfigs =
+    Object.keys(preconfigsFromTemplates).length > 0
+      ? preconfigsFromTemplates
+      : GenericPreconfigurations;
+
+  return {
+    ...preconfigs,
+    ...(withCustom
+      ? {}
+      : {
+          Custom: {
+            weight: { value: 1.0 },
+            weightUnit: { value: "" },
+            repsDisplay: { value: "" },
+            multiplier: { value: 1.0 },
+          },
+        }),
+  };
+}
+export default getConfigurations;

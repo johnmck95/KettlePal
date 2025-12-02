@@ -129,3 +129,9 @@ const AT_A_GLANCE_QUERY = gql`
     }
   }
 `;
+
+const UNQIUE_EXERCISE_TITLES_QUERY = gql`
+  query unqiueExerciseTitles($userUid: ID!) {
+    uniqueExerciseTitles(userUid: $userUid)
+  }
+`;

@@ -16,6 +16,7 @@ import useCreateExerciseForm from "../../Hooks/useCreateExerciseForm";
 import "../../Styles/CustomSelect.css";
 import { formatExerciseString } from "../../utils/Exercises/exercises";
 import theme from "../../Constants/theme";
+import { useUser } from "../../Contexts/UserContext";
 
 interface CreateExerciseProps {
   exercise: Omit<CreateWorkoutState["exercises"][number], "key">;
@@ -43,6 +44,7 @@ export default function CreateExercise({
   showComments,
   renderMobileView,
 }: CreateExerciseProps) {
+  const user = useUser().user;
   const {
     completedSets,
     customTitle,
@@ -71,6 +73,7 @@ export default function CreateExercise({
     setOffset,
     swipeDistance,
   } = useCreateExerciseForm({
+    user,
     exercise,
     exerciseIndex,
     trackingIndex,

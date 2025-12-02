@@ -2,6 +2,7 @@ import { FormControl, FormLabel, Input, Select } from "@chakra-ui/react";
 import theme from "../../../../Constants/theme";
 import { KettlbellWeightsKG } from "../../../../Constants/ExercisesOptions";
 import { CreateWorkoutState } from "../../../../Hooks/useCreateWorkoutForm";
+import { useUser } from "../../../../Contexts/UserContext";
 
 interface ExerciseWeightProps {
   submitted: boolean;
@@ -22,12 +23,31 @@ export default function ExerciseWeight({
   setCustomWeight,
   handleExercise,
 }: ExerciseWeightProps) {
+  const usingBodyWeight = useUser().user?.templates?.some(
+    (template) => template.isBodyWeight && template.title === exercise.title
+  );
   return (
     <FormControl isInvalid={submitted && weightIsInvalid}>
       <FormLabel fontSize={["14px", "16px"]} m="0">
         Weight
       </FormLabel>
-      {customWeight ? (
+      {usingBodyWeight ? (
+        <Input
+          size={["sm", "sm", "md"]}
+          fontSize={["16px"]}
+          placeholder="0"
+          name="weight"
+          value={exercise.weight}
+          onChange={(event) =>
+            handleExercise(event.target.name, event.target.value, exerciseIndex)
+          }
+          focusBorderColor={theme.colors.green[300]}
+          color={
+            !!exercise.weight ? theme.colors.black : theme.colors.grey[500]
+          }
+          disabled={usingBodyWeight}
+        />
+      ) : customWeight ? (
         <Input
           size={["sm", "sm", "md"]}
           fontSize={["16px"]}

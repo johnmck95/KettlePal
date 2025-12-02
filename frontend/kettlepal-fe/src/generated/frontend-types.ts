@@ -238,6 +238,7 @@ export type Query = {
   exercise?: Maybe<Exercise>;
   exercises?: Maybe<Array<Maybe<Exercise>>>;
   pastWorkouts?: Maybe<UserPastWorkouts>;
+  uniqueExerciseTitles: Array<Scalars['String']['output']>;
   user?: Maybe<User>;
   users?: Maybe<Array<Maybe<User>>>;
   workout?: Maybe<Workout>;
@@ -254,6 +255,11 @@ export type QueryPastWorkoutsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   searchQuery?: InputMaybe<Scalars['String']['input']>;
+  userUid: Scalars['ID']['input'];
+};
+
+
+export type QueryUniqueExerciseTitlesArgs = {
   userUid: Scalars['ID']['input'];
 };
 
@@ -491,6 +497,13 @@ export type AtAGlanceQueryVariables = Exact<{
 
 
 export type AtAGlanceQuery = { __typename?: 'Query', user?: { __typename?: 'User', atAGlance?: { __typename?: 'AtAGlance', period: string, dateRange: string, data: Array<{ __typename?: 'AtAGlanceData', dateRange: string, elapsedSeconds: number, workCapacityKg: number } | null> } | null } | null };
+
+export type UnqiueExerciseTitlesQueryVariables = Exact<{
+  userUid: Scalars['ID']['input'];
+}>;
+
+
+export type UnqiueExerciseTitlesQuery = { __typename?: 'Query', uniqueExerciseTitles: Array<string> };
 
 
 export const LoginDocument = gql`
@@ -1075,3 +1088,41 @@ export type AtAGlanceQueryHookResult = ReturnType<typeof useAtAGlanceQuery>;
 export type AtAGlanceLazyQueryHookResult = ReturnType<typeof useAtAGlanceLazyQuery>;
 export type AtAGlanceSuspenseQueryHookResult = ReturnType<typeof useAtAGlanceSuspenseQuery>;
 export type AtAGlanceQueryResult = Apollo.QueryResult<AtAGlanceQuery, AtAGlanceQueryVariables>;
+export const UnqiueExerciseTitlesDocument = gql`
+    query unqiueExerciseTitles($userUid: ID!) {
+  uniqueExerciseTitles(userUid: $userUid)
+}
+    `;
+
+/**
+ * __useUnqiueExerciseTitlesQuery__
+ *
+ * To run a query within a React component, call `useUnqiueExerciseTitlesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUnqiueExerciseTitlesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUnqiueExerciseTitlesQuery({
+ *   variables: {
+ *      userUid: // value for 'userUid'
+ *   },
+ * });
+ */
+export function useUnqiueExerciseTitlesQuery(baseOptions: Apollo.QueryHookOptions<UnqiueExerciseTitlesQuery, UnqiueExerciseTitlesQueryVariables> & ({ variables: UnqiueExerciseTitlesQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<UnqiueExerciseTitlesQuery, UnqiueExerciseTitlesQueryVariables>(UnqiueExerciseTitlesDocument, options);
+      }
+export function useUnqiueExerciseTitlesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UnqiueExerciseTitlesQuery, UnqiueExerciseTitlesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<UnqiueExerciseTitlesQuery, UnqiueExerciseTitlesQueryVariables>(UnqiueExerciseTitlesDocument, options);
+        }
+export function useUnqiueExerciseTitlesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<UnqiueExerciseTitlesQuery, UnqiueExerciseTitlesQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<UnqiueExerciseTitlesQuery, UnqiueExerciseTitlesQueryVariables>(UnqiueExerciseTitlesDocument, options);
+        }
+export type UnqiueExerciseTitlesQueryHookResult = ReturnType<typeof useUnqiueExerciseTitlesQuery>;
+export type UnqiueExerciseTitlesLazyQueryHookResult = ReturnType<typeof useUnqiueExerciseTitlesLazyQuery>;
+export type UnqiueExerciseTitlesSuspenseQueryHookResult = ReturnType<typeof useUnqiueExerciseTitlesSuspenseQuery>;
+export type UnqiueExerciseTitlesQueryResult = Apollo.QueryResult<UnqiueExerciseTitlesQuery, UnqiueExerciseTitlesQueryVariables>;

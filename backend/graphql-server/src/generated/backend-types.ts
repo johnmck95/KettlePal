@@ -237,6 +237,7 @@ export type Query = {
   exercise?: Maybe<Exercise>;
   exercises?: Maybe<Array<Maybe<Exercise>>>;
   pastWorkouts?: Maybe<UserPastWorkouts>;
+  uniqueExerciseTitles: Array<Scalars['String']['output']>;
   user?: Maybe<User>;
   users?: Maybe<Array<Maybe<User>>>;
   workout?: Maybe<Workout>;
@@ -253,6 +254,11 @@ export type QueryPastWorkoutsArgs = {
   limit?: InputMaybe<Scalars['Int']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   searchQuery?: InputMaybe<Scalars['String']['input']>;
+  userUid: Scalars['ID']['input'];
+};
+
+
+export type QueryUniqueExerciseTitlesArgs = {
   userUid: Scalars['ID']['input'];
 };
 
@@ -592,6 +598,7 @@ export type QueryResolvers<ContextType = any, ParentType extends ResolversParent
   exercise?: Resolver<Maybe<ResolversTypes['Exercise']>, ParentType, ContextType, RequireFields<QueryExerciseArgs, 'uid'>>;
   exercises?: Resolver<Maybe<Array<Maybe<ResolversTypes['Exercise']>>>, ParentType, ContextType>;
   pastWorkouts?: Resolver<Maybe<ResolversTypes['UserPastWorkouts']>, ParentType, ContextType, RequireFields<QueryPastWorkoutsArgs, 'userUid'>>;
+  uniqueExerciseTitles?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType, RequireFields<QueryUniqueExerciseTitlesArgs, 'userUid'>>;
   user?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<QueryUserArgs, 'uid'>>;
   users?: Resolver<Maybe<Array<Maybe<ResolversTypes['User']>>>, ParentType, ContextType>;
   workout?: Resolver<Maybe<ResolversTypes['Workout']>, ParentType, ContextType, RequireFields<QueryWorkoutArgs, 'uid'>>;

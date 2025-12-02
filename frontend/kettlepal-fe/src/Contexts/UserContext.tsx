@@ -10,7 +10,7 @@ import { useCheckSession } from "../Hooks/useCheckSession";
 
 const SESSION_STORAGE_USER_KEY = "user";
 
-type UserInContext =
+export type UserInContext =
   | CheckSessionQuery["checkSession"]["user"]
   | null
   | undefined;

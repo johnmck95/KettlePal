@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { CreateWorkoutState } from "./useCreateWorkoutForm";
 import { useDisclosure } from "@chakra-ui/react";
-import {
+import getConfigurations, {
   KettlbellWeightsKG,
-  Preconfigurations,
 } from "../Constants/ExercisesOptions";
+import { UserInContext } from "../Contexts/UserContext";
 
 const useCreateExerciseForm = ({
+  user,
   exercise,
   exerciseIndex,
   trackingIndex,
@@ -14,6 +15,7 @@ const useCreateExerciseForm = ({
   deleteExercise,
   setFormHasErrors,
 }: {
+  user: UserInContext;
   exercise: Omit<CreateWorkoutState["exercises"][number], "key">;
   handleExercise: (name: string, value: string | number, index: number) => void;
   deleteExercise: ((index: number) => void) | (() => Promise<void>);
@@ -29,8 +31,14 @@ const useCreateExerciseForm = ({
   });
   const [customTitle, setCustomTitle] = useState(
     exercise.title !== "" &&
-      !Object.keys(Preconfigurations).includes(exercise.title)
+      !Object.keys(
+        getConfigurations(user?.templates ?? [], {
+          bodyWeight: user?.bodyWeight ?? 0,
+          bodyWeightUnit: user?.bodyWeightUnit ?? "kg",
+        })
+      ).includes(exercise.title)
   );
+
   const [customWeight, setCustomWeight] = useState(
     exercise.weight !== "" && !KettlbellWeightsKG.includes(exercise.weight)
   );

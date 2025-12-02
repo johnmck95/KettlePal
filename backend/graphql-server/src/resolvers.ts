@@ -148,6 +148,37 @@ export const resolvers = {
       }
     },
 
+    async uniqueExerciseTitles(
+      _: any,
+      { userUid }: { userUid: string },
+      { req }: { req: AuthenticatedRequest }
+    ) {
+      if (!req.userUid || req.userUid !== userUid) {
+        throw new NotAuthorizedError();
+      }
+      try {
+        // Returns a list of all recorded exercises titles, by frequencey then alphabetically.
+        const titles = await knexInstance("exercises as e")
+          .select(
+            knexInstance.raw(
+              `INITCAP(REGEXP_REPLACE(TRIM(LOWER(e.title)), '\\s+', ' ', 'g')) AS title`
+            ),
+            knexInstance.raw("COUNT(*) AS freq")
+          )
+          .join("workouts as w", "e.workoutUid", "w.uid")
+          .where("w.userUid", userUid)
+          .groupByRaw("REGEXP_REPLACE(TRIM(LOWER(e.title)), '\\s+', ' ', 'g')")
+          .orderBy([
+            { column: "freq", order: "desc" },
+            { column: "title", order: "asc" },
+          ]);
+        return titles.map((row) => row.title);
+      } catch (error) {
+        console.error("Error fetching unique exercise titles:", error);
+        throw error;
+      }
+    },
+
     async exercises(_: any, __: any, { req }: { req: AuthenticatedRequest }) {
       if (!req.userUid) {
         throw new NotAuthorizedError();

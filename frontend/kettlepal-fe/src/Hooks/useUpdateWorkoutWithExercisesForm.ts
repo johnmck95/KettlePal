@@ -15,6 +15,7 @@ export type UpdateWorkoutState = {
     repsDisplay: string;
     comment: string;
     elapsedSeconds: number;
+    multiplier: number;
     key: string;
   }>;
 };
@@ -45,6 +46,7 @@ const useUpdateWorkoutWithExercisesForm = ({
         repsDisplay: exercise.repsDisplay ?? "",
         comment: exercise.comment ?? "",
         elapsedSeconds: exercise.elapsedSeconds ?? 0,
+        multiplier: 1,
         key: `key-${Date.now()}-${Math.random().toString(36)}`,
       };
     }),

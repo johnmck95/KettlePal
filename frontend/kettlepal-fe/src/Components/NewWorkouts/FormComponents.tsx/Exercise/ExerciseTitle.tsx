@@ -1,9 +1,11 @@
 import { FormControl, FormLabel, Input, Select } from "@chakra-ui/react";
 import theme from "../../../../Constants/theme";
-import ExerciseTitles, {
-  Preconfigurations,
+import {
+  createExerciseTitles,
+  getConfigurations,
 } from "../../../../Constants/ExercisesOptions";
 import { CreateWorkoutState } from "../../../../Hooks/useCreateWorkoutForm";
+import { useUser } from "../../../../Contexts/UserContext";
 
 interface ExerciseTitleProps {
   submitted: boolean;
@@ -24,6 +26,15 @@ export default function ExerciseTitle({
   setCustomTitle,
   handleExercise,
 }: ExerciseTitleProps) {
+  const user = useUser().user;
+  const templates = useUser().user?.templates ?? [];
+
+  const ExerciseTitles = createExerciseTitles(templates);
+  const Preconfigurations = getConfigurations(templates, {
+    bodyWeight: user?.bodyWeight ?? 0,
+    bodyWeightUnit: user?.bodyWeightUnit ?? "kg",
+  });
+
   // Sets the title and preconfigured weight unit and reps display in state, if available.
   const setTitleAndPreconfigurations = (
     event:
@@ -32,16 +43,27 @@ export default function ExerciseTitle({
   ) => {
     const name = event.target.name;
     const value = event.target.value;
-    // Set the Title
+
+    // Set all preconfigurations based on chosen exercise title.
     handleExercise(name, value, exerciseIndex);
     handleExercise(
       "weightUnit",
-      Preconfigurations[value]?.weightUnit.value ?? "",
+      Preconfigurations[value]?.weightUnit?.value ?? "",
       exerciseIndex
     );
     handleExercise(
       "repsDisplay",
-      Preconfigurations[value]?.repsDisplay.value ?? "",
+      Preconfigurations[value]?.repsDisplay?.value ?? "",
+      exerciseIndex
+    );
+    handleExercise(
+      "weight",
+      Preconfigurations[value]?.weight?.value ?? "",
+      exerciseIndex
+    );
+    handleExercise(
+      "multiplier",
+      Preconfigurations[value]?.multiplier?.value ?? 1.0,
       exerciseIndex
     );
   };
