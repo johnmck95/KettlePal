@@ -10,6 +10,7 @@ import PrivateRoute from "./Components/Auth/PrivateRoute";
 import SessionChecker from "./Components/Auth/SessionChecker";
 import Profile from "./Pages/Profile";
 import Greeting from "./Pages/Greeting";
+import Settings from "./Pages/Settings";
 
 export const App = () => {
   return (
@@ -44,6 +45,14 @@ export const App = () => {
               element={
                 <PrivateRoute>
                   <Profile />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/settings"
+              element={
+                <PrivateRoute>
+                  <Settings />
                 </PrivateRoute>
               }
             />
