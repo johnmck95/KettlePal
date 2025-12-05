@@ -1,5 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
+import EditSettings from "../Components/Settings/EditSettings";
+import ViewSettings from "../Components/Settings/ViewSettings";
 
+export type SettingsState = {
+  edit: boolean;
+};
 export default function Settings() {
-  return <h1> Settings page</h1>;
+  const [state, setState] = useState<SettingsState>({ edit: false });
+  return state.edit ? (
+    <EditSettings state={state} handleState={setState} />
+  ) : (
+    <ViewSettings handleState={setState} />
+  );
 }
