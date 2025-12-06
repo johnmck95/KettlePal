@@ -2,14 +2,12 @@ import React, { useState } from "react";
 import EditSettings from "../Components/Settings/EditSettings";
 import ViewSettings from "../Components/Settings/ViewSettings";
 
-export type SettingsState = {
-  edit: boolean;
-};
 export default function Settings() {
-  const [state, setState] = useState<SettingsState>({ edit: false });
-  return state.edit ? (
-    <EditSettings state={state} handleState={setState} />
+  const [editMode, setEditMode] = useState(false);
+
+  return editMode ? (
+    <EditSettings toggleEditMode={() => setEditMode((prev) => !prev)} />
   ) : (
-    <ViewSettings handleState={setState} />
+    <ViewSettings toggleEditMode={() => setEditMode((prev) => !prev)} />
   );
 }

@@ -8,17 +8,16 @@ import {
   Icon,
 } from "@chakra-ui/react";
 import React from "react";
-import { SettingsState } from "../../Pages/Settings";
 import theme from "../../Constants/theme";
 import { FaPencilAlt } from "react-icons/fa";
 import { useUser } from "../../Contexts/UserContext";
 import { RepsDisplayOptions } from "../../Constants/ExercisesOptions";
 
 interface ViewSettingsProps {
-  handleState: React.Dispatch<React.SetStateAction<SettingsState>>;
+  toggleEditMode: () => void;
 }
 
-export default function ViewSettings({ handleState }: ViewSettingsProps) {
+export default function ViewSettings({ toggleEditMode }: ViewSettingsProps) {
   const user = useUser().user;
   const templates = user?.templates || [];
 
@@ -44,7 +43,7 @@ export default function ViewSettings({ handleState }: ViewSettingsProps) {
         <IconButton
           aria-label="Settings"
           icon={<FaPencilAlt />}
-          onClick={() => handleState((prev) => ({ ...prev, edit: !prev.edit }))}
+          onClick={toggleEditMode}
           variant="secondary"
           size="sm"
           px={0}
