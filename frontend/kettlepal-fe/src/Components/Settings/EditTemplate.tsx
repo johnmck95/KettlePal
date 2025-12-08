@@ -37,6 +37,7 @@ export default function EditTemplate({
       offset={offset}
       setOffset={setOffset}
       minSwipeDistance={minSwipeDistance}
+      templateIndex={templateIndex}
       onTouchStart={onTouchStart}
       onTouchMove={onTouchMove}
       onTouchEnd={onTouchEnd}
