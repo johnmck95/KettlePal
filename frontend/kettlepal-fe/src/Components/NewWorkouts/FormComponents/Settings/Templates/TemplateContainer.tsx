@@ -21,9 +21,10 @@ interface CreateTemplateProps {
   onTouchMove: any;
   onTouchEnd: any;
   templateIndex: number;
-  setOffset: (offset: number) => void;
+  numTemplates: number;
   onOpenDeleteTemplate: () => void;
   swipeDistance: () => number;
+  moveTemplateIndex: (templateIndex: number, direction: "up" | "down") => void;
 }
 
 export default function TemplateContainer({
@@ -32,12 +33,14 @@ export default function TemplateContainer({
   submitted,
   offset,
   templateIndex,
+  numTemplates,
   minSwipeDistance,
   onTouchStart,
   onTouchMove,
   onTouchEnd,
   onOpenDeleteTemplate,
   swipeDistance,
+  moveTemplateIndex,
 }: CreateTemplateProps) {
   const [isMobile] = useMediaQuery("(max-width: 420px)");
 
@@ -60,6 +63,8 @@ export default function TemplateContainer({
             m={0}
             p={0}
             border="none"
+            onClick={() => moveTemplateIndex(templateIndex, "up")}
+            isDisabled={templateIndex === 0}
           />
           <Text fontWeight={"bold"}> {templateIndex} </Text>
           <IconButton
@@ -68,6 +73,8 @@ export default function TemplateContainer({
             icon={<FaArrowDown />}
             size="lg"
             border="none"
+            onClick={() => moveTemplateIndex(templateIndex, "down")}
+            isDisabled={templateIndex === numTemplates - 1}
           />
         </VStack>
         <VStack

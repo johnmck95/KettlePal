@@ -21,7 +21,8 @@ interface EditSettingsProps {
 }
 
 export default function EditSettings({ toggleEditMode }: EditSettingsProps) {
-  const { state, user, handleStateChange, deleteTemplate } = useEditSettings();
+  const { state, user, handleStateChange, deleteTemplate, moveTemplateIndex } =
+    useEditSettings();
 
   return (
     <VStack maxW={"1086px"} mx="auto" my="1rem">
@@ -93,7 +94,9 @@ export default function EditSettings({ toggleEditMode }: EditSettingsProps) {
                 <EditTemplate
                   template={template}
                   templateIndex={index}
+                  numTemplates={state.templates.length}
                   deleteTemplate={deleteTemplate}
+                  moveTemplateIndex={moveTemplateIndex}
                 />
               </motion.div>
             );

@@ -7,13 +7,17 @@ import ConfirmModal from "../ConfirmModal";
 interface CreateTemplateProps {
   template: EditSettingsState["templates"][0];
   templateIndex: number;
+  numTemplates: number;
   deleteTemplate: (index: number) => void;
+  moveTemplateIndex: (templateIndex: number, direction: "up" | "down") => void;
 }
 
 export default function EditTemplate({
   template,
   templateIndex,
+  numTemplates,
   deleteTemplate,
+  moveTemplateIndex,
 }: CreateTemplateProps) {
   const {
     errors,
@@ -21,7 +25,6 @@ export default function EditTemplate({
     minSwipeDistance,
     onDeleteTemplate,
     isOpenDeleteTemplate,
-    setOffset,
     onTouchStart,
     customOnCloseDeleteTemplate,
     onTouchMove,
@@ -35,14 +38,15 @@ export default function EditTemplate({
       errors={errors}
       submitted={false}
       offset={offset}
-      setOffset={setOffset}
       minSwipeDistance={minSwipeDistance}
       templateIndex={templateIndex}
+      numTemplates={numTemplates}
       onTouchStart={onTouchStart}
       onTouchMove={onTouchMove}
       onTouchEnd={onTouchEnd}
       swipeDistance={swipeDistance}
       onOpenDeleteTemplate={onOpenDeleteTemplate}
+      moveTemplateIndex={moveTemplateIndex}
     >
       <h1>{template.title}</h1>
 

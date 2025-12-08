@@ -42,12 +42,38 @@ const useEditSettings = () => {
         };
   });
 
+  console.log(state);
   // Deletes a template from state
   function deleteTemplate(index: number): void {
     setState((prevState) => ({
       ...prevState,
-      templates: prevState?.templates?.filter((_, i) => i !== index),
+      templates: prevState?.templates
+        ?.filter((_, i) => i !== index)
+        .map((t, i) => ({ ...t, index: i })),
     }));
+  }
+
+  function moveTemplateIndex(templateIndex: number, direction: "up" | "down") {
+    setState((prev) => {
+      const templates = [...prev.templates];
+      const targetIndex =
+        direction === "up"
+          ? templateIndex - 1
+          : direction === "down"
+          ? templateIndex + 1
+          : templateIndex;
+      if (targetIndex < 0 || targetIndex >= templates.length) {
+        return prev;
+      }
+
+      // swap templates & re-index
+      const temp = templates[templateIndex];
+      templates[templateIndex] = templates[targetIndex];
+      templates[targetIndex] = temp;
+      const reindexed = templates.map((t, i) => ({ ...t, index: i }));
+
+      return { ...prev, templates: reindexed };
+    });
   }
 
   // Sync edited state back to sessionStorage
@@ -71,6 +97,7 @@ const useEditSettings = () => {
     user,
     handleStateChange,
     deleteTemplate,
+    moveTemplateIndex,
   };
 };
 
