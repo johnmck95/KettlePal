@@ -9,7 +9,6 @@ import {
 } from "@chakra-ui/react";
 import { FaArrowDown, FaArrowUp, FaTimes } from "react-icons/fa";
 import theme from "../../../../../Constants/theme";
-import ConfirmModal from "../../../../ConfirmModal";
 
 interface CreateTemplateProps {
   children: React.ReactNode;
@@ -45,7 +44,7 @@ export default function TemplateContainer({
   const [isMobile] = useMediaQuery("(max-width: 420px)");
 
   return (
-    <Box mb={["0.75rem", "1rem"]} position="relative" h="180px">
+    <Box mb={["0.75rem", "1rem"]} position="relative" h="120px">
       <HStack w="100%" h="100%">
         <VStack
           flex="0 0 auto"
@@ -123,18 +122,6 @@ export default function TemplateContainer({
             </Text>
           );
         })}
-
-        {/* DELETE Template MODAL */}
-        <ConfirmModal
-          isOpen={false}
-          onClose={() => console.log("TODO")}
-          onConfirmation={() => console.log("TODO")}
-          ModalTitle="Delete Template"
-          ModalBodyText="Are you sure you would like to delete this Exercise Template? This cannot be undone."
-          CloseText="Cancel"
-          ProceedText="Delete"
-          variant="warn"
-        />
       </HStack>
     </Box>
   );

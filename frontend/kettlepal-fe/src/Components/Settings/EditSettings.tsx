@@ -6,10 +6,11 @@ import {
   Heading,
   IconButton,
   VStack,
+  Button,
 } from "@chakra-ui/react";
 import React from "react";
 import theme from "../../Constants/theme";
-import { FaTimes } from "react-icons/fa";
+import { FaPlusCircle, FaSave, FaTimes } from "react-icons/fa";
 import BodyWeightSettings from "../NewWorkouts/FormComponents/Settings/User/BodyWeightSettings";
 import BodyWeightUnitSettings from "../NewWorkouts/FormComponents/Settings/User/BodyWeightUnitSettings";
 import { AnimatePresence, motion } from "framer-motion";
@@ -21,8 +22,14 @@ interface EditSettingsProps {
 }
 
 export default function EditSettings({ toggleEditMode }: EditSettingsProps) {
-  const { state, user, handleStateChange, deleteTemplate, moveTemplateIndex } =
-    useEditSettings();
+  const {
+    state,
+    user,
+    handleStateChange,
+    deleteTemplate,
+    moveTemplateIndex,
+    handleAddTemplate,
+  } = useEditSettings();
 
   return (
     <VStack maxW={"1086px"} mx="auto" my="1rem">
@@ -102,6 +109,45 @@ export default function EditSettings({ toggleEditMode }: EditSettingsProps) {
             );
           })}
         </AnimatePresence>
+
+        {/* ADD TEMPLATE & SAVE SETTINGS BUTTONS */}
+        <HStack w="100%" justifyContent="space-between">
+          <Button
+            size={["sm", "md"]}
+            variant="secondary"
+            leftIcon={<FaSave />}
+            // onClick={onOpenSaveWorkout}
+            // isDisabled={
+            //   workoutState !== "submit" || state.exercises.length === 0
+            // }
+            maxWidth="200px"
+            w="100%"
+            sx={{
+              _focus: {
+                borderColor: theme.colors.green[300],
+                boxShadow: `0 0 0 1px ${theme.colors.green[300]}`,
+              },
+            }}
+          >
+            Save Settings
+          </Button>
+          <Button
+            size={["sm", "md"]}
+            variant="primary"
+            onClick={handleAddTemplate}
+            leftIcon={<FaPlusCircle />}
+            maxWidth="200px"
+            w="100%"
+            sx={{
+              _focus: {
+                borderColor: theme.colors.green[300],
+                boxShadow: `0 0 0 1px ${theme.colors.green[300]}`,
+              },
+            }}
+          >
+            Add Template
+          </Button>
+        </HStack>
       </Box>
     </VStack>
   );

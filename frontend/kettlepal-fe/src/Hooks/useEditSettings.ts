@@ -43,6 +43,26 @@ const useEditSettings = () => {
   });
 
   console.log(state);
+
+  // Initialize a new template and add to state
+  function handleAddTemplate() {
+    setState((prevState) => ({
+      ...prevState,
+      templates: [
+        ...prevState.templates,
+        {
+          title: "",
+          repsDisplay: "",
+          weightUnit: "",
+          multiplier: 1.0,
+          isBodyWeight: false,
+          index: prevState.templates.length,
+          key: `key-${Date.now()}-${Math.random().toString(36)}`,
+        },
+      ],
+    }));
+  }
+
   // Deletes a template from state
   function deleteTemplate(index: number): void {
     setState((prevState) => ({
@@ -98,6 +118,7 @@ const useEditSettings = () => {
     handleStateChange,
     deleteTemplate,
     moveTemplateIndex,
+    handleAddTemplate,
   };
 };
 
