@@ -1,6 +1,6 @@
 import { FormControl, FormLabel, Input } from "@chakra-ui/react";
 import { ChangeEvent } from "react";
-import theme from "../../../../Constants/theme";
+import theme from "../../../../../Constants/theme";
 
 interface WorkoutDateProps {
   submitted: boolean;

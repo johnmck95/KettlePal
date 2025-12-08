@@ -1,16 +1,16 @@
 import React from "react";
 
 import { GridItem, SimpleGrid, Text } from "@chakra-ui/react";
-import AddComment from "./FormComponents.tsx/Generic/AddComment";
+import AddComment from "./FormComponents/NewWorkout/Generic/AddComment";
 import ConfirmModal from "../ConfirmModal";
-import ExerciseTitle from "./FormComponents.tsx/Exercise/ExerciseTitle";
-import ExerciseWeight from "./FormComponents.tsx/Exercise/ExerciseWeight";
-import ExerciseSets from "./FormComponents.tsx/Exercise/ExerciseSets";
-import ExerciseReps from "./FormComponents.tsx/Exercise/ExerciseReps";
-import ExerciseRepsDisplay from "./FormComponents.tsx/Exercise/ExerciseRepsDisplay";
-import ExerciseWeightUnit from "./FormComponents.tsx/Exercise/ExerciseWeightUnit";
-import TrackExercise from "./FormComponents.tsx/MidWorkoutTracking/TrackExercise";
-import { ExerciseContainer } from "./FormComponents.tsx/Exercise/ExerciseContainer";
+import ExerciseTitle from "./FormComponents/NewWorkout/Exercise/ExerciseTitle";
+import ExerciseWeight from "./FormComponents/NewWorkout/Exercise/ExerciseWeight";
+import ExerciseSets from "./FormComponents/NewWorkout/Exercise/ExerciseSets";
+import ExerciseReps from "./FormComponents/NewWorkout/Exercise/ExerciseReps";
+import ExerciseRepsDisplay from "./FormComponents/NewWorkout/Exercise/ExerciseRepsDisplay";
+import ExerciseWeightUnit from "./FormComponents/NewWorkout/Exercise/ExerciseWeightUnit";
+import TrackExercise from "./FormComponents/NewWorkout/MidWorkoutTracking/TrackExercise";
+import { ExerciseContainer } from "./FormComponents/NewWorkout/Exercise/ExerciseContainer";
 import { CreateWorkoutState } from "../../Hooks/useCreateWorkoutForm";
 import useCreateExerciseForm from "../../Hooks/useCreateExerciseForm";
 import "../../Styles/CustomSelect.css";

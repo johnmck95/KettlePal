@@ -1,5 +1,5 @@
 import { Box, IconButton, Text, VStack, useMediaQuery } from "@chakra-ui/react";
-import theme from "../../../../Constants/theme";
+import theme from "../../../../../Constants/theme";
 import { FaTimes } from "react-icons/fa";
 
 interface ExerciseContainerProps {

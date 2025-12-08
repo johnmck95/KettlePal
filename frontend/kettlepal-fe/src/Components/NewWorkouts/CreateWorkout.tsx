@@ -28,10 +28,10 @@ import LoadingSpinner from "../LoadingSpinner";
 import theme from "../../Constants/theme";
 import { formatExerciseString } from "../../utils/Exercises/exercises";
 import dayjs from "dayjs";
-import WorkoutDate from "./FormComponents.tsx/Workout/WorkoutDate";
-import WorkoutComment from "./FormComponents.tsx/Workout/WorkoutComment";
+import WorkoutDate from "./FormComponents/NewWorkout/Workout/WorkoutDate";
+import WorkoutComment from "./FormComponents/NewWorkout/Workout/WorkoutComment";
 import useCreateWorkoutForm from "../../Hooks/useCreateWorkoutForm";
-import WorkoutStopwatch from "./FormComponents.tsx/Workout/WorkoutStopwatch";
+import WorkoutStopwatch from "./FormComponents/NewWorkout/Workout/WorkoutStopwatch";
 import { useNavigate } from "react-router-dom";
 
 export default function CreateWorkout() {

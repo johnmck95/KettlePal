@@ -1,7 +1,7 @@
 import { FormControl, FormLabel, Select } from "@chakra-ui/react";
-import { RepsDisplayOptions } from "../../../../Constants/ExercisesOptions";
-import theme from "../../../../Constants/theme";
-import { CreateWorkoutState } from "../../../../Hooks/useCreateWorkoutForm";
+import { RepsDisplayOptions } from "../../../../../Constants/ExercisesOptions";
+import theme from "../../../../../Constants/theme";
+import { CreateWorkoutState } from "../../../../../Hooks/useCreateWorkoutForm";
 
 interface ExerciseRepsDisplayProps {
   submitted: boolean;

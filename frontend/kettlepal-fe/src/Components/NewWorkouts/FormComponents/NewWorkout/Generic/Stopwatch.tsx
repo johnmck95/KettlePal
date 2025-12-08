@@ -13,15 +13,15 @@ import {
   EditablePreview,
   EditableInput,
 } from "@chakra-ui/react";
-import theme from "../../../../Constants/theme";
+import theme from "../../../../../Constants/theme";
 import {
   calculateElapsedTime,
   computeSeconds,
   formatTime,
   formatTimeInput,
-} from "../../../../utils/Time/time";
-import ConfirmModal from "../../../ConfirmModal";
-import { STOPWATCH_TIMESTAMP_KEY } from "../../../../Hooks/useCreateWorkoutForm";
+} from "../../../../../utils/Time/time";
+import ConfirmModal from "../../../../ConfirmModal";
+import { STOPWATCH_TIMESTAMP_KEY } from "../../../../../Hooks/useCreateWorkoutForm";
 
 function EditableText({
   fontSize,

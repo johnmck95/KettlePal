@@ -1,6 +1,6 @@
 import { FormLabel, HStack, IconButton } from "@chakra-ui/react";
 import { FaMinus, FaPlus } from "react-icons/fa";
-import theme from "../../../../Constants/theme";
+import theme from "../../../../../Constants/theme";
 
 interface TrackExerciseProps {
   trackWorkout: boolean;

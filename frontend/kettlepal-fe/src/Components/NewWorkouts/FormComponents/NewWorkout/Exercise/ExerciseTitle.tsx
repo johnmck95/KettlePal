@@ -1,11 +1,11 @@
 import { FormControl, FormLabel, Input, Select } from "@chakra-ui/react";
-import theme from "../../../../Constants/theme";
+import theme from "../../../../../Constants/theme";
 import {
   createExerciseTitles,
   getConfigurations,
-} from "../../../../Constants/ExercisesOptions";
-import { CreateWorkoutState } from "../../../../Hooks/useCreateWorkoutForm";
-import { useUser } from "../../../../Contexts/UserContext";
+} from "../../../../../Constants/ExercisesOptions";
+import { CreateWorkoutState } from "../../../../../Hooks/useCreateWorkoutForm";
+import { useUser } from "../../../../../Contexts/UserContext";
 
 interface ExerciseTitleProps {
   submitted: boolean;

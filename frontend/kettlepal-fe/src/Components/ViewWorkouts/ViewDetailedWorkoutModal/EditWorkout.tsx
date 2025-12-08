@@ -7,8 +7,8 @@ import {
   AlertDescription,
   CloseButton,
 } from "@chakra-ui/react";
-import WorkoutComment from "../../NewWorkouts/FormComponents.tsx/Workout/WorkoutComment";
-import WorkoutDate from "../../NewWorkouts/FormComponents.tsx/Workout/WorkoutDate";
+import WorkoutComment from "../../NewWorkouts/FormComponents/NewWorkout/Workout/WorkoutComment";
+import WorkoutDate from "../../NewWorkouts/FormComponents/NewWorkout/Workout/WorkoutDate";
 import { useState } from "react";
 import {
   FuzzySearchQuery,
@@ -20,7 +20,7 @@ import useUpdateWorkoutWithExercisesForm from "../../../Hooks/useUpdateWorkoutWi
 import ConfirmModal from "../../ConfirmModal";
 import BeforeAfterConfirmModalConent from "./BeforeAfterConfirmModalContent";
 import LoadingSpinner from "../../LoadingSpinner";
-import WorkoutStopwatch from "../../NewWorkouts/FormComponents.tsx/Workout/WorkoutStopwatch";
+import WorkoutStopwatch from "../../NewWorkouts/FormComponents/NewWorkout/Workout/WorkoutStopwatch";
 
 interface EditWorkoutProps {
   workoutWithExercises: NonNullable<
