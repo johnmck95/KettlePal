@@ -52,8 +52,8 @@ export default function ViewSettings({ toggleEditMode }: ViewSettingsProps) {
         />
       </Grid>
 
-      {/* BODY WEIGHT */}
       <Box w={["96%", "90%"]} m={2} color="gray.700">
+        {/* BODY WEIGHT */}
         <Text fontSize={["xs", "sm", "md"]}>
           <b>BODY WEIGHT: </b> {user?.bodyWeight + " " + user?.bodyWeightUnit}
         </Text>

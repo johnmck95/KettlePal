@@ -1,15 +1,105 @@
-import { Button, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Text,
+  Grid,
+  HStack,
+  Heading,
+  IconButton,
+  VStack,
+} from "@chakra-ui/react";
 import React from "react";
+import theme from "../../Constants/theme";
+import { FaTimes } from "react-icons/fa";
+import BodyWeightSettings from "../NewWorkouts/FormComponents/Settings/User/BodyWeightSettings";
+import BodyWeightUnitSettings from "../NewWorkouts/FormComponents/Settings/User/BodyWeightUnitSettings";
+import { AnimatePresence, motion } from "framer-motion";
+import useEditSettings from "../../Hooks/useEditSettings";
+import EditTemplate from "./EditTemplate";
 
 interface EditSettingsProps {
   toggleEditMode: () => void;
 }
 
 export default function EditSettings({ toggleEditMode }: EditSettingsProps) {
+  const { state, user, handleStateChange, deleteTemplate } = useEditSettings();
+
   return (
-    <VStack>
-      <Button onClick={toggleEditMode}>View Settings</Button>
-      <h1>Edit Settings Component</h1>;
+    <VStack maxW={"1086px"} mx="auto" my="1rem">
+      {/* USERNAME & CONTROLS */}
+      <Grid
+        w={["96%", "90%"]}
+        borderBottom={`2px solid ${theme.colors.green[600]}`}
+        templateColumns="1fr auto 1fr"
+        alignItems="center"
+        p="0.5rem"
+      >
+        <Box />
+        <Heading
+          fontSize="2xl"
+          fontWeight="bold"
+          textAlign="center"
+          justifySelf="center"
+        >
+          {user?.firstName + " " + user?.lastName}
+        </Heading>
+        <IconButton
+          aria-label="Settings"
+          icon={<FaTimes />}
+          onClick={toggleEditMode}
+          variant="secondary"
+          size="sm"
+          px={0}
+          mx={0}
+          justifySelf="end"
+        />
+      </Grid>
+
+      {/* USER VALUES */}
+      <HStack w={["96%", "90%"]}>
+        <BodyWeightSettings
+          state={state}
+          handleStateChange={handleStateChange}
+        />
+        <BodyWeightUnitSettings
+          state={state}
+          handleStateChange={handleStateChange}
+        />
+      </HStack>
+
+      <Box w={["96%", "90%"]} m={2} color="gray.700">
+        <Box
+          borderBottom={`2px solid ${theme.colors.green[100]}`}
+          mt={6}
+          mb={4}
+          fontWeight="bold"
+        >
+          <Text fontSize={["md", "lg", "xl"]}>EXERCISE TEMPLATES</Text>
+        </Box>
+
+        {/* TEMPLATES */}
+        <AnimatePresence>
+          {state.templates.map((template, index) => {
+            return (
+              <motion.div
+                key={`${template.key}`}
+                initial={{ opacity: 0, x: 200 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -200 }}
+                transition={{
+                  duration: 0.5,
+                  ease: [0.4, 0, 0.2, 1],
+                }}
+              >
+                <EditTemplate
+                  template={template}
+                  templateIndex={index}
+                  deleteTemplate={deleteTemplate}
+                />
+              </motion.div>
+            );
+          })}
+        </AnimatePresence>
+      </Box>
     </VStack>
   );
 }
