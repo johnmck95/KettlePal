@@ -25,6 +25,7 @@ export default function EditSettings({ toggleEditMode }: EditSettingsProps) {
   const {
     state,
     user,
+    handleTemplate,
     handleStateChange,
     deleteTemplate,
     moveTemplateIndex,
@@ -104,6 +105,7 @@ export default function EditSettings({ toggleEditMode }: EditSettingsProps) {
                   numTemplates={state.templates.length}
                   deleteTemplate={deleteTemplate}
                   moveTemplateIndex={moveTemplateIndex}
+                  handleTemplate={handleTemplate}
                 />
               </motion.div>
             );

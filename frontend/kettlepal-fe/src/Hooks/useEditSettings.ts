@@ -73,6 +73,26 @@ const useEditSettings = () => {
     }));
   }
 
+  // Updates all per-template state properties based on the index.
+  function handleTemplate(
+    name: string,
+    value: string | number | boolean,
+    index: number
+  ): void {
+    setState((prevState) => ({
+      ...prevState,
+      templates: prevState.templates.map((template, i) => {
+        if (i === index) {
+          return {
+            ...template,
+            [name]: value,
+          };
+        }
+        return template;
+      }),
+    }));
+  }
+
   function moveTemplateIndex(templateIndex: number, direction: "up" | "down") {
     setState((prev) => {
       const templates = [...prev.templates];
@@ -115,6 +135,7 @@ const useEditSettings = () => {
   return {
     state,
     user,
+    handleTemplate,
     handleStateChange,
     deleteTemplate,
     moveTemplateIndex,

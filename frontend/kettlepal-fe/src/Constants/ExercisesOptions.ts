@@ -21,6 +21,17 @@ export const WeightOptions = [
   },
 ];
 
+export const ResistanceOptions = [
+  {
+    value: "bodyWeight",
+    label: "Body Weight",
+  },
+  {
+    value: "weighted",
+    label: "Weighted",
+  },
+];
+
 export const RepsDisplayOptions = [
   {
     value: "std",

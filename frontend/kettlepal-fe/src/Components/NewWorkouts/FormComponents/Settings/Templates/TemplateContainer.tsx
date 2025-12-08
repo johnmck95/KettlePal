@@ -44,7 +44,7 @@ export default function TemplateContainer({
   const [isMobile] = useMediaQuery("(max-width: 420px)");
 
   return (
-    <Box mb={["0.75rem", "1rem"]} position="relative" h="120px">
+    <Box mb={["0.75rem", "1rem"]} position="relative">
       <HStack w="100%" h="100%">
         <VStack
           flex="0 0 auto"
