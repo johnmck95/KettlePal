@@ -1,5 +1,6 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { useUser } from "../Contexts/UserContext";
+import { useDisclosure } from "@chakra-ui/react";
 
 const EDIT_SETTINGS_STATE_KEY = "editSettingsState";
 
@@ -16,6 +17,13 @@ export type EditSettingsState = {
     key: string;
   }>;
 };
+
+export enum SettingErrors {
+  bodyWeight = "Body Weight must be a realistic, positive number. If you prefer not to set a body weight, leave the field blank.",
+  bodyWeightUnit = "Unit must be 'lb' or 'kg'. If you prefer not to set a body weight unit, leave the field blank.",
+  unitRequiredWithWeight = "Unit is required when a Body Weight is specified.",
+  bodyWeightRequiredWithUnit = "Body Weight is required when a Unit is specified.",
+}
 
 const useEditSettings = () => {
   const user = useUser().user;
@@ -41,6 +49,9 @@ const useEditSettings = () => {
             }) ?? [],
         };
   });
+  const [submitted, setSubmitted] = useState(false);
+  const [numErrors, setNumErrors] = useState(0);
+  const [formHasErrors, setFormHasErrors] = useState(false);
 
   console.log(state);
 
@@ -61,6 +72,59 @@ const useEditSettings = () => {
         },
       ],
     }));
+  }
+
+  // User-Settings Validation (Template Validation is handled in child component)
+  const errors: string[] = [];
+  const bodyWeightIsInvalid =
+    Number.isNaN(Number(state.bodyWeight)) ||
+    Number(state.bodyWeight) < 0 ||
+    Number(state.bodyWeight) > 1400;
+  const bodyWeightUnitIsInvalid = !["lb", "kg", ""].includes(
+    state.bodyWeightUnit
+  );
+  const bodyWeightNoUnitIsInvalid =
+    state.bodyWeight !== "" && state.bodyWeightUnit === "";
+  const unitNoBodyWeightIsInvalid =
+    state.bodyWeight === "" && state.bodyWeightUnit !== "";
+  if (bodyWeightIsInvalid) errors.push(SettingErrors.bodyWeight);
+  if (bodyWeightUnitIsInvalid) errors.push(SettingErrors.bodyWeightUnit);
+  if (bodyWeightNoUnitIsInvalid)
+    errors.push(SettingErrors.unitRequiredWithWeight);
+  if (unitNoBodyWeightIsInvalid)
+    errors.push(SettingErrors.bodyWeightRequiredWithUnit);
+  if (numErrors !== errors.length) {
+    setNumErrors(errors.length);
+  }
+
+  // Client-side error handling
+  useEffect(
+    () => setFormHasErrors(numErrors > 0),
+    [numErrors, setFormHasErrors]
+  );
+
+  // Show client-side errors, if clear, try to post to DB
+  // apollo onError will handle rendering server-side errors
+  async function onSaveSettings(): Promise<void> {
+    setSubmitted(true);
+    onCloseSaveSettings();
+    if (
+      bodyWeightIsInvalid ||
+      bodyWeightUnitIsInvalid ||
+      bodyWeightNoUnitIsInvalid ||
+      unitNoBodyWeightIsInvalid
+    ) {
+      setFormHasErrors(true);
+      return;
+    }
+    if (formHasErrors) {
+      return;
+    }
+    // TODO: COMPLETE ME...
+    // try{
+    //   post to database..
+    // } catch (error) {
+    // }
   }
 
   // Deletes a template from state
@@ -132,9 +196,22 @@ const useEditSettings = () => {
     }));
   }
 
+  // Save Workout Modal Controls
+  const {
+    isOpen: isOpenSaveSettings,
+    onOpen: onOpenSaveSettings,
+    onClose: onCloseSaveSettings,
+  } = useDisclosure();
+
   return {
     state,
     user,
+    isOpenSaveSettings,
+    errors,
+    submitted,
+    onSaveSettings,
+    onCloseSaveSettings,
+    onOpenSaveSettings,
     handleTemplate,
     handleStateChange,
     deleteTemplate,

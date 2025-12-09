@@ -15,7 +15,8 @@ export default function TemplatesMultiplier({
 }: TemplatesMultiplierProps) {
   return (
     <FormControl
-    // isInvalid={submitted && setsIsInvalid}
+      isRequired
+      // isInvalid={submitted && setsIsInvalid}
     >
       <FormLabel fontSize={["14px", "16px"]} m="0">
         Multiplier

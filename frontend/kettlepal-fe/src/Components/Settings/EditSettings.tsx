@@ -14,8 +14,9 @@ import { FaPlusCircle, FaSave, FaTimes } from "react-icons/fa";
 import BodyWeightSettings from "../NewWorkouts/FormComponents/Settings/User/BodyWeightSettings";
 import BodyWeightUnitSettings from "../NewWorkouts/FormComponents/Settings/User/BodyWeightUnitSettings";
 import { AnimatePresence, motion } from "framer-motion";
-import useEditSettings from "../../Hooks/useEditSettings";
+import useEditSettings, { SettingErrors } from "../../Hooks/useEditSettings";
 import EditTemplate from "./EditTemplate";
+import ConfirmModal from "../ConfirmModal";
 
 interface EditSettingsProps {
   toggleEditMode: () => void;
@@ -25,6 +26,12 @@ export default function EditSettings({ toggleEditMode }: EditSettingsProps) {
   const {
     state,
     user,
+    isOpenSaveSettings,
+    errors,
+    submitted,
+    onOpenSaveSettings,
+    onSaveSettings,
+    onCloseSaveSettings,
     handleTemplate,
     handleStateChange,
     deleteTemplate,
@@ -67,13 +74,41 @@ export default function EditSettings({ toggleEditMode }: EditSettingsProps) {
       <HStack w={["96%", "90%"]}>
         <BodyWeightSettings
           state={state}
+          isInvalid={
+            submitted &&
+            [
+              SettingErrors.bodyWeight,
+              SettingErrors.bodyWeightRequiredWithUnit,
+            ].some((e) => errors.includes(e))
+          }
           handleStateChange={handleStateChange}
         />
         <BodyWeightUnitSettings
           state={state}
+          isInvalid={
+            submitted &&
+            [
+              SettingErrors.bodyWeightUnit,
+              SettingErrors.unitRequiredWithWeight,
+            ].some((e) => errors.includes(e))
+          }
           handleStateChange={handleStateChange}
         />
       </HStack>
+
+      {/* BODY WEIGHT ERROR MESSAGES */}
+      <Box w={["96%", "90%"]}>
+        {errors.map((error) => {
+          if (!submitted) {
+            return null;
+          }
+          return (
+            <Text key={error} color={theme.colors.error} fontSize="xs">
+              {error}
+            </Text>
+          );
+        })}
+      </Box>
 
       <Box w={["96%", "90%"]} m={2} color="gray.700">
         <Box
@@ -118,10 +153,7 @@ export default function EditSettings({ toggleEditMode }: EditSettingsProps) {
             size={["sm", "md"]}
             variant="secondary"
             leftIcon={<FaSave />}
-            // onClick={onOpenSaveWorkout}
-            // isDisabled={
-            //   workoutState !== "submit" || state.exercises.length === 0
-            // }
+            onClick={onOpenSaveSettings}
             maxWidth="200px"
             w="100%"
             sx={{
@@ -131,7 +163,7 @@ export default function EditSettings({ toggleEditMode }: EditSettingsProps) {
               },
             }}
           >
-            Save Settings
+            Update Settings
           </Button>
           <Button
             size={["sm", "md"]}
@@ -151,6 +183,29 @@ export default function EditSettings({ toggleEditMode }: EditSettingsProps) {
           </Button>
         </HStack>
       </Box>
+
+      {/* SAVE SETTINGS MODAL */}
+      <ConfirmModal
+        isOpen={isOpenSaveSettings}
+        onClose={onCloseSaveSettings}
+        onConfirmation={onSaveSettings}
+        ModalTitle="Update Settings"
+        ModalBodyText={
+          <>
+            <Text mb="1rem">
+              Are you sure your settings are finalized, and ready to be saved?
+              This will overwrite your existing settings.
+            </Text>
+            <Text>
+              Existing workouts will remain unchanged. Your new settings will
+              only impact future workouts.
+            </Text>
+          </>
+        }
+        CloseText="Cancel"
+        ProceedText="Update"
+        variant="confirm"
+      />
     </VStack>
   );
 }

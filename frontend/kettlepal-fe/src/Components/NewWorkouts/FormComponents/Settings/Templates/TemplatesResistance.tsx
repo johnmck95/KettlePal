@@ -20,7 +20,8 @@ export default function TemplatesResistance({
 }: TemplatesResistanceProps) {
   return (
     <FormControl
-    // isInvalid={submitted && weightUnitIsInvalid}
+      isRequired
+      // isInvalid={submitted && weightUnitIsInvalid}
     >
       <FormLabel fontSize={["14px", "16px"]} m="0">
         Resistance

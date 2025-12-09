@@ -25,7 +25,7 @@ export default function TemplatesTitle({
       <Input
         size={["sm", "sm", "md"]}
         fontSize={["16px"]}
-        placeholder="Enter Exercise"
+        placeholder="Exercise Title"
         name="title"
         value={template.title}
         onChange={(event) =>

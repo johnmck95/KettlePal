@@ -6,6 +6,7 @@ import { ChangeEvent } from "react";
 
 interface BodyWeightUnitSettingsProps {
   state: EditSettingsState;
+  isInvalid: boolean;
   handleStateChange: (
     event: ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => void;
@@ -13,13 +14,11 @@ interface BodyWeightUnitSettingsProps {
 
 export default function BodyWeightUnitSettings({
   state,
+  isInvalid,
   handleStateChange,
 }: BodyWeightUnitSettingsProps) {
   return (
-    <FormControl
-      maxW="105px"
-      // isInvalid={submitted && weightUnitIsInvalid}
-    >
+    <FormControl maxW="105px" isInvalid={isInvalid}>
       <FormLabel fontSize={["14px", "16px"]} m="0">
         Unit
       </FormLabel>
@@ -33,7 +32,9 @@ export default function BodyWeightUnitSettings({
         onChange={(event) => handleStateChange(event)}
         focusBorderColor={theme.colors.green[300]}
         color={
-          !!state.bodyWeightUnit ? theme.colors.black : theme.colors.grey[500]
+          state.bodyWeightUnit !== ""
+            ? theme.colors.black
+            : theme.colors.grey[500]
         }
         bg={theme.colors.white}
         borderRadius={"5px"}
