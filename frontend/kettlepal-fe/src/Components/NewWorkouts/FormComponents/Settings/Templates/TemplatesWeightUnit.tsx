@@ -6,18 +6,18 @@ import theme from "../../../../../Constants/theme";
 interface TemplatesWeightUnitProps {
   template: EditSettingsState["templates"][0];
   templateIndex: number;
+  isInvalid: boolean;
   handleTemplate: (name: string, value: string | number, index: number) => void;
 }
 
 export default function TemplatesWeightUnit({
   template,
   templateIndex,
+  isInvalid,
   handleTemplate,
 }: TemplatesWeightUnitProps) {
   return (
-    <FormControl
-    // isInvalid={submitted && weightUnitIsInvalid}
-    >
+    <FormControl isInvalid={isInvalid}>
       <FormLabel fontSize={["14px", "16px"]} m="0">
         Unit
       </FormLabel>

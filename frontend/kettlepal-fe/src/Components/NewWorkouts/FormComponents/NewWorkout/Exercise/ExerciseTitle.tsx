@@ -6,6 +6,7 @@ import {
 } from "../../../../../Constants/ExercisesOptions";
 import { CreateWorkoutState } from "../../../../../Hooks/useCreateWorkoutForm";
 import { useUser } from "../../../../../Contexts/UserContext";
+import { capitalizeWords } from "../../../../../utils/textFormatters";
 
 interface ExerciseTitleProps {
   submitted: boolean;
@@ -80,9 +81,10 @@ export default function ExerciseTitle({
           placeholder="Enter Exercise"
           name="title"
           value={exercise.title}
-          onChange={(event) =>
-            handleExercise(event.target.name, event.target.value, exerciseIndex)
-          }
+          onChange={(event) => {
+            const capitalizedValue = capitalizeWords(event.target.value);
+            handleExercise(event.target.name, capitalizedValue, exerciseIndex);
+          }}
           color={!!exercise.title ? theme.colors.black : theme.colors.grey[500]}
           focusBorderColor={theme.colors.green[300]}
         />

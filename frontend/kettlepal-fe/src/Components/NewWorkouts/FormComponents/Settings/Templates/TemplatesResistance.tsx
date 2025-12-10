@@ -6,6 +6,7 @@ import theme from "../../../../../Constants/theme";
 interface TemplatesResistanceProps {
   template: EditSettingsState["templates"][0];
   templateIndex: number;
+  isInvalid: boolean;
   handleTemplate: (
     name: string,
     value: string | number | boolean,
@@ -16,13 +17,23 @@ interface TemplatesResistanceProps {
 export default function TemplatesResistance({
   template,
   templateIndex,
+  isInvalid,
   handleTemplate,
 }: TemplatesResistanceProps) {
+  function handleResistanceState(event: React.ChangeEvent<HTMLSelectElement>) {
+    handleTemplate(
+      "isBodyWeight",
+      event.target.value === "bodyWeight" ? true : false,
+      templateIndex
+    );
+    // If switching to body weight, clear the weightUnit (KettlePal uses user.boddyWeight)
+    if (event.target.value === "bodyWeight") {
+      handleTemplate("weightUnit", "", templateIndex);
+    }
+  }
+
   return (
-    <FormControl
-      isRequired
-      // isInvalid={submitted && weightUnitIsInvalid}
-    >
+    <FormControl isRequired isInvalid={isInvalid}>
       <FormLabel fontSize={["14px", "16px"]} m="0">
         Resistance
       </FormLabel>
@@ -32,13 +43,7 @@ export default function TemplatesResistance({
         size={["sm", "sm", "md"]}
         name="isBodyWeight"
         value={template.isBodyWeight ? "bodyWeight" : "weighted"}
-        onChange={(event) =>
-          handleTemplate(
-            "isBodyWeight",
-            event.target.value === "bodyWeight" ? true : false,
-            templateIndex
-          )
-        }
+        onChange={(event) => handleResistanceState(event)}
         focusBorderColor={theme.colors.green[300]}
         color={theme.colors.black}
       >

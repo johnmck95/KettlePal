@@ -275,7 +275,7 @@ export default function CreateWorkout() {
         )}
 
         {/* EXERCISES */}
-        <Box mt="1.25rem">
+        <Box>
           <AnimatePresence>
             {state.exercises.map((exercise, index) => {
               return (

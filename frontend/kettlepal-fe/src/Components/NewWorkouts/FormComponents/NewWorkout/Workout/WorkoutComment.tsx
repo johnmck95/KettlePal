@@ -15,7 +15,7 @@ export default function WorkoutComment({
   setComment,
 }: WorkoutCommentProps) {
   return (
-    <FormControl mb="1rem">
+    <FormControl mt="0.5rem">
       {showLabel && (
         <FormLabel fontSize={["sm", "lg"]} mb="4px" alignSelf="flex-start">
           <b>Workout Comment</b>

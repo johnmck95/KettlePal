@@ -5,19 +5,18 @@ import theme from "../../../../../Constants/theme";
 interface TemplatesMultiplierProps {
   template: EditSettingsState["templates"][0];
   templateIndex: number;
+  isInvalid: boolean;
   handleTemplate: (name: string, value: string | number, index: number) => void;
 }
 
 export default function TemplatesMultiplier({
   template,
   templateIndex,
+  isInvalid,
   handleTemplate,
 }: TemplatesMultiplierProps) {
   return (
-    <FormControl
-      isRequired
-      // isInvalid={submitted && setsIsInvalid}
-    >
+    <FormControl isRequired isInvalid={isInvalid}>
       <FormLabel fontSize={["14px", "16px"]} m="0">
         Multiplier
       </FormLabel>

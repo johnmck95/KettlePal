@@ -37,6 +37,7 @@ export default function EditSettings({ toggleEditMode }: EditSettingsProps) {
     deleteTemplate,
     moveTemplateIndex,
     handleAddTemplate,
+    setFormHasErrors,
   } = useEditSettings();
 
   return (
@@ -136,11 +137,14 @@ export default function EditSettings({ toggleEditMode }: EditSettingsProps) {
               >
                 <EditTemplate
                   template={template}
+                  submitted={submitted}
+                  templateTitles={state.templates.map((t) => t.title)}
                   templateIndex={index}
                   numTemplates={state.templates.length}
                   deleteTemplate={deleteTemplate}
                   moveTemplateIndex={moveTemplateIndex}
                   handleTemplate={handleTemplate}
+                  setFormHasErrors={setFormHasErrors}
                 />
               </motion.div>
             );

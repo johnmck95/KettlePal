@@ -1,7 +1,7 @@
 import React from "react";
 import { EditSettingsState } from "../../Hooks/useEditSettings";
 import TemplateContainer from "../NewWorkouts/FormComponents/Settings/Templates/TemplateContainer";
-import useEditTemplate from "../../Hooks/useEditTemplate";
+import useEditTemplate, { TemplateErrors } from "../../Hooks/useEditTemplate";
 import ConfirmModal from "../ConfirmModal";
 import { Grid, GridItem } from "@chakra-ui/react";
 import TemplateTitle from "../NewWorkouts/FormComponents/Settings/Templates/TemplatesTitle";
@@ -14,6 +14,8 @@ interface CreateTemplateProps {
   template: EditSettingsState["templates"][0];
   templateIndex: number;
   numTemplates: number;
+  submitted: boolean;
+  templateTitles: string[];
   deleteTemplate: (index: number) => void;
   moveTemplateIndex: (templateIndex: number, direction: "up" | "down") => void;
   handleTemplate: (
@@ -21,34 +23,44 @@ interface CreateTemplateProps {
     value: string | number | boolean,
     index: number
   ) => void;
+  setFormHasErrors: (value: boolean) => void;
 }
 
 export default function EditTemplate({
   template,
+  templateTitles,
   templateIndex,
   numTemplates,
+  submitted,
   deleteTemplate,
   moveTemplateIndex,
   handleTemplate,
+  setFormHasErrors,
 }: CreateTemplateProps) {
   const {
     errors,
     offset,
     minSwipeDistance,
-    onDeleteTemplate,
     isOpenDeleteTemplate,
+    onDeleteTemplate,
     onTouchStart,
     customOnCloseDeleteTemplate,
     onTouchMove,
     onTouchEnd,
     swipeDistance,
     onOpenDeleteTemplate,
-  } = useEditTemplate({ templateIndex, deleteTemplate });
+  } = useEditTemplate({
+    template,
+    templateTitles,
+    templateIndex,
+    deleteTemplate,
+    setFormHasErrors,
+  });
 
   return (
     <TemplateContainer
       errors={errors}
-      submitted={false}
+      submitted={submitted}
       offset={offset}
       minSwipeDistance={minSwipeDistance}
       templateIndex={templateIndex}
@@ -67,6 +79,12 @@ export default function EditTemplate({
             <TemplateTitle
               template={template}
               templateIndex={templateIndex}
+              isInvalid={
+                submitted &&
+                [TemplateErrors.title, TemplateErrors.titleNotUnique].some(
+                  (e) => errors.includes(e)
+                )
+              }
               handleTemplate={handleTemplate}
             />
           </GridItem>
@@ -74,6 +92,10 @@ export default function EditTemplate({
             <TemplateRepsDisplay
               template={template}
               templateIndex={templateIndex}
+              isInvalid={
+                submitted &&
+                [TemplateErrors.repsDisplay].some((e) => errors.includes(e))
+              }
               handleTemplate={handleTemplate}
             />
           </GridItem>
@@ -85,6 +107,13 @@ export default function EditTemplate({
             <TemplatesWeightUnit
               template={template}
               templateIndex={templateIndex}
+              isInvalid={
+                submitted &&
+                [
+                  TemplateErrors.weightUnit,
+                  TemplateErrors.noUnitWhenBodyWeight,
+                ].some((e) => errors.includes(e))
+              }
               handleTemplate={handleTemplate}
             />
           </GridItem>
@@ -92,6 +121,10 @@ export default function EditTemplate({
             <TemplatesMultiplier
               template={template}
               templateIndex={templateIndex}
+              isInvalid={
+                submitted &&
+                [TemplateErrors.multiplier].some((e) => errors.includes(e))
+              }
               handleTemplate={handleTemplate}
             />
           </GridItem>
@@ -99,6 +132,10 @@ export default function EditTemplate({
             <TemplatesResistance
               template={template}
               templateIndex={templateIndex}
+              isInvalid={
+                submitted &&
+                [TemplateErrors.resistance].some((e) => errors.includes(e))
+              }
               handleTemplate={handleTemplate}
             />
           </GridItem>

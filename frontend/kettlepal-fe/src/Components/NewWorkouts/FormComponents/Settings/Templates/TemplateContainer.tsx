@@ -44,12 +44,8 @@ export default function TemplateContainer({
   const [isMobile] = useMediaQuery("(max-width: 420px)");
 
   return (
-    <Box
-      mb={["0.75rem", "1rem"]}
-      position="relative"
-      h={["135px", "160px", "190px"]}
-    >
-      <HStack w="100%" h="100%" flex="1">
+    <Box my="1.25rem" mx="0.15rem">
+      <HStack w="100%" flex="1" h={["135px", "160px", "190px"]}>
         <VStack
           justifyContent="space-between"
           h="100%"
@@ -113,8 +109,9 @@ export default function TemplateContainer({
           )}
           {children}
         </VStack>
-
-        {/* ERROR MESSAGES */}
+      </HStack>
+      {/* ERROR MESSAGES */}
+      <Box w={"calc(100% - 3.5rem)"} mt={1} ml="3.5rem">
         {errors.map((error) => {
           if (!submitted) {
             return null;
@@ -125,7 +122,7 @@ export default function TemplateContainer({
             </Text>
           );
         })}
-      </HStack>
+      </Box>
     </Box>
   );
 }

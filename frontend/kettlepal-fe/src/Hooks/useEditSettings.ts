@@ -217,6 +217,7 @@ const useEditSettings = () => {
     deleteTemplate,
     moveTemplateIndex,
     handleAddTemplate,
+    setFormHasErrors,
   };
 };
 

@@ -7,18 +7,18 @@ import theme from "../../../../../Constants/theme";
 interface TemplatesTitleProps {
   template: EditSettingsState["templates"][0];
   templateIndex: number;
+  isInvalid: boolean;
   handleTemplate: (name: string, value: string | number, index: number) => void;
 }
 
 export default function TemplatesRepsDisplay({
   template,
   templateIndex,
+  isInvalid,
   handleTemplate,
 }: TemplatesTitleProps) {
   return (
-    <FormControl
-    // isInvalid={submitted && repsDisplayIsInvalid}
-    >
+    <FormControl isInvalid={isInvalid}>
       <FormLabel fontSize={["14px", "16px"]} m="0">
         Type
       </FormLabel>
