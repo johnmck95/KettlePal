@@ -26,7 +26,15 @@ export enum SettingErrors {
   bodyWeightRequiredWithUnit = "Body Weight is required when a Unit is specified.",
 }
 
-const useEditSettings = () => {
+interface UseEditSettingsProps {
+  setShowUploadSuccess: (show: boolean) => void;
+  toggleEditMode: () => void;
+}
+
+const useEditSettings = ({
+  setShowUploadSuccess,
+  toggleEditMode,
+}: UseEditSettingsProps) => {
   const { user, refetch: refetchUser } = useUser();
   // Initlialize state from session storage (if exists) or user context
   const [state, setState] = useState<EditSettingsState>(() => {
@@ -53,7 +61,6 @@ const useEditSettings = () => {
   const [submitted, setSubmitted] = useState(false);
   const [numErrors, setNumErrors] = useState(0);
   const [formHasErrors, setFormHasErrors] = useState(false);
-  const [showUploadSuccess, setShowUploadSuccess] = useState(false);
   const [showServerError, setShowServerError] = useState(true);
 
   // Initialize a new template and add to state
@@ -111,10 +118,10 @@ const useEditSettings = () => {
         setShowUploadSuccess(true);
         setTimeout(() => {
           setShowUploadSuccess(false);
-        }, 5000);
+        }, 8000);
         setSubmitted(false);
         refetchUser();
-        // TODO: go back to the ViewSettings component
+        toggleEditMode();
       },
       onError() {
         setShowServerError(true);
@@ -248,12 +255,12 @@ const useEditSettings = () => {
   return {
     state,
     user,
+    loading,
     isOpenSaveSettings,
     serverError,
     errors,
     showServerError,
     submitted,
-    showUploadSuccess,
     onSaveSettings,
     setShowServerError,
     onCloseSaveSettings,

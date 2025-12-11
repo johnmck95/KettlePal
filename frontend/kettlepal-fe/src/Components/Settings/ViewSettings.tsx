@@ -6,6 +6,8 @@ import {
   Box,
   Grid,
   Icon,
+  Alert,
+  AlertIcon,
 } from "@chakra-ui/react";
 import React from "react";
 import theme from "../../Constants/theme";
@@ -14,10 +16,14 @@ import { useUser } from "../../Contexts/UserContext";
 import { RepsDisplayOptions } from "../../Constants/ExercisesOptions";
 
 interface ViewSettingsProps {
+  showUploadSuccess: boolean;
   toggleEditMode: () => void;
 }
 
-export default function ViewSettings({ toggleEditMode }: ViewSettingsProps) {
+export default function ViewSettings({
+  showUploadSuccess,
+  toggleEditMode,
+}: ViewSettingsProps) {
   const user = useUser().user;
   const templates = user?.templates || [];
 
@@ -125,6 +131,15 @@ export default function ViewSettings({ toggleEditMode }: ViewSettingsProps) {
               ))}
             </VStack>
           </>
+        )}
+        {showUploadSuccess && (
+          <Alert status="success" my="1rem" borderRadius={"8px"} bg="green.50">
+            <AlertIcon />
+            <VStack ml="1rem" align={"flex-start"}>
+              <Text fontWeight="semibold">Settings Updated Successfully!</Text>
+              <Text>Log a new workout to see your templates in action.</Text>
+            </VStack>
+          </Alert>
         )}
       </Box>
     </VStack>

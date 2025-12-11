@@ -11,6 +11,7 @@ import {
   AlertIcon,
   AlertDescription,
   CloseButton,
+  Center,
 } from "@chakra-ui/react";
 import React from "react";
 import theme from "../../Constants/theme";
@@ -21,21 +22,26 @@ import { AnimatePresence, motion } from "framer-motion";
 import useEditSettings, { SettingErrors } from "../../Hooks/useEditSettings";
 import EditTemplate from "./EditTemplate";
 import ConfirmModal from "../ConfirmModal";
+import LoadingSpinner from "../LoadingSpinner";
 
 interface EditSettingsProps {
   toggleEditMode: () => void;
+  setShowUploadSuccess: (show: boolean) => void;
 }
 
-export default function EditSettings({ toggleEditMode }: EditSettingsProps) {
+export default function EditSettings({
+  setShowUploadSuccess,
+  toggleEditMode,
+}: EditSettingsProps) {
   const {
     state,
     user,
+    loading,
     isOpenSaveSettings,
     serverError,
     showServerError,
     errors,
     submitted,
-    showUploadSuccess,
     setShowServerError,
     onOpenSaveSettings,
     onSaveSettings,
@@ -46,7 +52,7 @@ export default function EditSettings({ toggleEditMode }: EditSettingsProps) {
     moveTemplateIndex,
     handleAddTemplate,
     setFormHasErrors,
-  } = useEditSettings();
+  } = useEditSettings({ setShowUploadSuccess, toggleEditMode });
 
   const bodyWeightExercisesWithoutUserWeight = state.templates.reduce(
     (acc, template) => {
@@ -63,6 +69,14 @@ export default function EditSettings({ toggleEditMode }: EditSettingsProps) {
   );
   const pluralBodyWeightExercises =
     state.templates.filter((t) => t.isBodyWeight).length > 1;
+
+  if (loading) {
+    return (
+      <Center h="100%" w="100%">
+        <LoadingSpinner />
+      </Center>
+    );
+  }
 
   return (
     <VStack maxW={"1086px"} mx="auto" my="1rem">
@@ -190,13 +204,6 @@ export default function EditSettings({ toggleEditMode }: EditSettingsProps) {
               alignSelf="flex-start"
               onClick={() => setShowServerError(false)}
             />
-          </Alert>
-        )}
-
-        {showUploadSuccess && (
-          <Alert status="success" my="1rem" borderRadius={"8px"} bg="green.50">
-            <AlertIcon />
-            Settings Updated Successfully!
           </Alert>
         )}
 
