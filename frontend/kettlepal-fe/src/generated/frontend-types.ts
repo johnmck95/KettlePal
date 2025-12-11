@@ -458,6 +458,14 @@ export type UpdateWorkoutWithExercisesMutationVariables = Exact<{
 
 export type UpdateWorkoutWithExercisesMutation = { __typename?: 'Mutation', updateWorkoutWithExercises?: { __typename?: 'Workout', date: string, comment?: string | null, exercises?: Array<{ __typename?: 'Exercise', title: string, reps?: number | null, sets?: number | null }> | null } | null };
 
+export type AddOrUpdateSettingsMutationVariables = Exact<{
+  userUid: Scalars['ID']['input'];
+  settings: AddOrUpdateSettingsInput;
+}>;
+
+
+export type AddOrUpdateSettingsMutation = { __typename?: 'Mutation', addOrUpdateSettings: { __typename?: 'UserWithTemplates', user: { __typename?: 'User', firstName: string, lastName: string, bodyWeight: number, bodyWeightUnit: string }, templates: Array<{ __typename?: 'Template', title: string, weightUnit?: string | null, multiplier: number, repsDisplay?: string | null, index: number, isBodyWeight: boolean }> } };
+
 export type FuzzySearchQueryVariables = Exact<{
   userUid: Scalars['ID']['input'];
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -801,6 +809,53 @@ export function useUpdateWorkoutWithExercisesMutation(baseOptions?: Apollo.Mutat
 export type UpdateWorkoutWithExercisesMutationHookResult = ReturnType<typeof useUpdateWorkoutWithExercisesMutation>;
 export type UpdateWorkoutWithExercisesMutationResult = Apollo.MutationResult<UpdateWorkoutWithExercisesMutation>;
 export type UpdateWorkoutWithExercisesMutationOptions = Apollo.BaseMutationOptions<UpdateWorkoutWithExercisesMutation, UpdateWorkoutWithExercisesMutationVariables>;
+export const AddOrUpdateSettingsDocument = gql`
+    mutation addOrUpdateSettings($userUid: ID!, $settings: AddOrUpdateSettingsInput!) {
+  addOrUpdateSettings(userUid: $userUid, settings: $settings) {
+    user {
+      firstName
+      lastName
+      bodyWeight
+      bodyWeightUnit
+    }
+    templates {
+      title
+      weightUnit
+      multiplier
+      repsDisplay
+      index
+      isBodyWeight
+    }
+  }
+}
+    `;
+export type AddOrUpdateSettingsMutationFn = Apollo.MutationFunction<AddOrUpdateSettingsMutation, AddOrUpdateSettingsMutationVariables>;
+
+/**
+ * __useAddOrUpdateSettingsMutation__
+ *
+ * To run a mutation, you first call `useAddOrUpdateSettingsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddOrUpdateSettingsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addOrUpdateSettingsMutation, { data, loading, error }] = useAddOrUpdateSettingsMutation({
+ *   variables: {
+ *      userUid: // value for 'userUid'
+ *      settings: // value for 'settings'
+ *   },
+ * });
+ */
+export function useAddOrUpdateSettingsMutation(baseOptions?: Apollo.MutationHookOptions<AddOrUpdateSettingsMutation, AddOrUpdateSettingsMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddOrUpdateSettingsMutation, AddOrUpdateSettingsMutationVariables>(AddOrUpdateSettingsDocument, options);
+      }
+export type AddOrUpdateSettingsMutationHookResult = ReturnType<typeof useAddOrUpdateSettingsMutation>;
+export type AddOrUpdateSettingsMutationResult = Apollo.MutationResult<AddOrUpdateSettingsMutation>;
+export type AddOrUpdateSettingsMutationOptions = Apollo.BaseMutationOptions<AddOrUpdateSettingsMutation, AddOrUpdateSettingsMutationVariables>;
 export const FuzzySearchDocument = gql`
     query FuzzySearch($userUid: ID!, $offset: Int, $limit: Int, $searchQuery: String) {
   pastWorkouts(

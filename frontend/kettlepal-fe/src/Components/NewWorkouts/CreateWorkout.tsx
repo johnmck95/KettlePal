@@ -311,7 +311,7 @@ export default function CreateWorkout() {
           <Center mt="auto">
             <Text
               my="1rem"
-              fontSize={["xs", "sm"]}
+              fontSize={["sm", "md"]}
               color={theme.colors.gray[500]}
               textAlign="center"
               whiteSpace="normal"

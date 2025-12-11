@@ -1,6 +1,7 @@
 import React, { ChangeEvent, useEffect, useState } from "react";
 import { useUser } from "../Contexts/UserContext";
 import { useDisclosure } from "@chakra-ui/react";
+import { useAddOrUpdateSettingsMutation } from "../generated/frontend-types";
 
 const EDIT_SETTINGS_STATE_KEY = "editSettingsState";
 
@@ -11,7 +12,7 @@ export type EditSettingsState = {
     title: string;
     repsDisplay: string;
     weightUnit: string;
-    multiplier: number;
+    multiplier: string;
     isBodyWeight: boolean;
     index: number;
     key: string;
@@ -26,7 +27,7 @@ export enum SettingErrors {
 }
 
 const useEditSettings = () => {
-  const user = useUser().user;
+  const { user, refetch: refetchUser } = useUser();
   // Initlialize state from session storage (if exists) or user context
   const [state, setState] = useState<EditSettingsState>(() => {
     const fromStorage = sessionStorage.getItem(EDIT_SETTINGS_STATE_KEY);
@@ -52,8 +53,8 @@ const useEditSettings = () => {
   const [submitted, setSubmitted] = useState(false);
   const [numErrors, setNumErrors] = useState(0);
   const [formHasErrors, setFormHasErrors] = useState(false);
-
-  console.log(state);
+  const [showUploadSuccess, setShowUploadSuccess] = useState(false);
+  const [showServerError, setShowServerError] = useState(true);
 
   // Initialize a new template and add to state
   function handleAddTemplate() {
@@ -65,7 +66,7 @@ const useEditSettings = () => {
           title: "",
           repsDisplay: "",
           weightUnit: "",
-          multiplier: 1.0,
+          multiplier: "1.0",
           isBodyWeight: false,
           index: prevState.templates.length,
           key: `key-${Date.now()}-${Math.random().toString(36)}`,
@@ -103,6 +104,23 @@ const useEditSettings = () => {
     [numErrors, setFormHasErrors]
   );
 
+  const [addOrUpdateSettings, { loading, error: serverError }] =
+    useAddOrUpdateSettingsMutation({
+      onCompleted() {
+        sessionStorage.removeItem(EDIT_SETTINGS_STATE_KEY);
+        setShowUploadSuccess(true);
+        setTimeout(() => {
+          setShowUploadSuccess(false);
+        }, 5000);
+        setSubmitted(false);
+        refetchUser();
+        // TODO: go back to the ViewSettings component
+      },
+      onError() {
+        setShowServerError(true);
+      },
+    });
+
   // Show client-side errors, if clear, try to post to DB
   // apollo onError will handle rendering server-side errors
   async function onSaveSettings(): Promise<void> {
@@ -120,11 +138,35 @@ const useEditSettings = () => {
     if (formHasErrors) {
       return;
     }
-    // TODO: COMPLETE ME...
-    // try{
-    //   post to database..
-    // } catch (error) {
-    // }
+    try {
+      addOrUpdateSettings({
+        variables: {
+          userUid: user?.uid ?? "",
+          settings: {
+            bodyWeight:
+              state.bodyWeight === ""
+                ? null
+                : parseFloat(parseFloat(state.bodyWeight).toFixed(2)),
+            bodyWeightUnit:
+              state.bodyWeightUnit === "" ? null : state.bodyWeightUnit,
+            templates: state.templates.map((template) => ({
+              title: template.title,
+              repsDisplay:
+                template.repsDisplay === "" ? null : template.repsDisplay,
+              weightUnit:
+                template.weightUnit === "" ? null : template.weightUnit,
+              multiplier: parseFloat(
+                parseFloat(template.multiplier).toFixed(2)
+              ),
+              isBodyWeight: template.isBodyWeight,
+              index: template.index,
+            })),
+          },
+        },
+      });
+    } catch (error) {
+      console.error("Error updating settings: ", error);
+    }
   }
 
   // Deletes a template from state
@@ -196,7 +238,7 @@ const useEditSettings = () => {
     }));
   }
 
-  // Save Workout Modal Controls
+  // Save Settings Modal Controls
   const {
     isOpen: isOpenSaveSettings,
     onOpen: onOpenSaveSettings,
@@ -207,9 +249,13 @@ const useEditSettings = () => {
     state,
     user,
     isOpenSaveSettings,
+    serverError,
     errors,
+    showServerError,
     submitted,
+    showUploadSuccess,
     onSaveSettings,
+    setShowServerError,
     onCloseSaveSettings,
     onOpenSaveSettings,
     handleTemplate,

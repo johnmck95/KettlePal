@@ -166,7 +166,7 @@ type Preconfigurations = {
     weightUnit: { value: string };
     repsDisplay: { value: string };
     multiplier: { value: number };
-    weight: { value: number };
+    weight: { value: string };
   };
 };
 
@@ -201,11 +201,11 @@ function createPreconfigurationsFromTemplates(
       weightUnit: { value: template.weightUnit ?? "" },
       repsDisplay: { value: template.repsDisplay ?? "" },
       multiplier: { value: template.multiplier },
-      weight: { value: 1 },
+      weight: { value: "" },
       ...(template.isBodyWeight &&
         user?.bodyWeightUnit &&
         user.bodyWeight && {
-          weight: { value: user.bodyWeight },
+          weight: { value: user.bodyWeight.toString() },
           weightUnit: { value: user.bodyWeightUnit },
         }),
     };
@@ -240,7 +240,7 @@ export function getConfigurations(
       ? {}
       : {
           Custom: {
-            weight: { value: 1.0 },
+            weight: { value: "" },
             weightUnit: { value: "" },
             repsDisplay: { value: "" },
             multiplier: { value: 1.0 },

@@ -19,6 +19,7 @@ interface UserProviderProps {
   user: UserInContext;
   login: () => void;
   logout: () => void;
+  refetch: () => void;
   isLoading: boolean;
   error: any;
 }
@@ -27,6 +28,7 @@ const defaultContextValue: UserProviderProps = {
   user: null,
   login: () => {},
   logout: () => {},
+  refetch: () => {},
   isLoading: true,
   error: null,
 };
@@ -74,6 +76,7 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({
     user,
     login,
     logout,
+    refetch,
     isLoading: loading,
     error,
   };

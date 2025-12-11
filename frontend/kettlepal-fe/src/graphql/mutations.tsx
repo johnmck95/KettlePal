@@ -103,3 +103,27 @@ const UPDATE_WORKOUT_WITH_EXERCISES = gql`
     }
   }
 `;
+
+const ADD_OR_UPDATE_SETTINGS = gql`
+  mutation addOrUpdateSettings(
+    $userUid: ID!
+    $settings: AddOrUpdateSettingsInput!
+  ) {
+    addOrUpdateSettings(userUid: $userUid, settings: $settings) {
+      user {
+        firstName
+        lastName
+        bodyWeight
+        bodyWeightUnit
+      }
+      templates {
+        title
+        weightUnit
+        multiplier
+        repsDisplay
+        index
+        isBodyWeight
+      }
+    }
+  }
+`;

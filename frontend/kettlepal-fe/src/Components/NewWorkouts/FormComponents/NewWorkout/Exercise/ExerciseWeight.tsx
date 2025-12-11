@@ -26,6 +26,7 @@ export default function ExerciseWeight({
   const usingBodyWeight = useUser().user?.templates?.some(
     (template) => template.isBodyWeight && template.title === exercise.title
   );
+
   return (
     <FormControl isInvalid={submitted && weightIsInvalid}>
       <FormLabel fontSize={["14px", "16px"]} m="0">

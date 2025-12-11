@@ -7,6 +7,10 @@ import {
   IconButton,
   VStack,
   Button,
+  Alert,
+  AlertIcon,
+  AlertDescription,
+  CloseButton,
 } from "@chakra-ui/react";
 import React from "react";
 import theme from "../../Constants/theme";
@@ -27,8 +31,12 @@ export default function EditSettings({ toggleEditMode }: EditSettingsProps) {
     state,
     user,
     isOpenSaveSettings,
+    serverError,
+    showServerError,
     errors,
     submitted,
+    showUploadSuccess,
+    setShowServerError,
     onOpenSaveSettings,
     onSaveSettings,
     onCloseSaveSettings,
@@ -39,6 +47,22 @@ export default function EditSettings({ toggleEditMode }: EditSettingsProps) {
     handleAddTemplate,
     setFormHasErrors,
   } = useEditSettings();
+
+  const bodyWeightExercisesWithoutUserWeight = state.templates.reduce(
+    (acc, template) => {
+      if (
+        !acc &&
+        template.isBodyWeight &&
+        (state.bodyWeight === "" || state.bodyWeight === "0")
+      ) {
+        return true;
+      }
+      return acc;
+    },
+    false
+  );
+  const pluralBodyWeightExercises =
+    state.templates.filter((t) => t.isBodyWeight).length > 1;
 
   return (
     <VStack maxW={"1086px"} mx="auto" my="1rem">
@@ -151,6 +175,31 @@ export default function EditSettings({ toggleEditMode }: EditSettingsProps) {
           })}
         </AnimatePresence>
 
+        {serverError && showServerError && (
+          <Alert
+            status="error"
+            my="1rem"
+            borderRadius={"8px"}
+            justifyContent={"space-between"}
+          >
+            <HStack>
+              <AlertIcon />
+              <AlertDescription>{serverError?.message}</AlertDescription>
+            </HStack>
+            <CloseButton
+              alignSelf="flex-start"
+              onClick={() => setShowServerError(false)}
+            />
+          </Alert>
+        )}
+
+        {showUploadSuccess && (
+          <Alert status="success" my="1rem" borderRadius={"8px"} bg="green.50">
+            <AlertIcon />
+            Settings Updated Successfully!
+          </Alert>
+        )}
+
         {/* ADD TEMPLATE & SAVE SETTINGS BUTTONS */}
         <HStack w="100%" justifyContent="space-between">
           <Button
@@ -204,6 +253,29 @@ export default function EditSettings({ toggleEditMode }: EditSettingsProps) {
               Existing workouts will remain unchanged. Your new settings will
               only impact future workouts.
             </Text>
+            {bodyWeightExercisesWithoutUserWeight && (
+              <Alert status="warning" mt="1rem" borderRadius={"8px"}>
+                <AlertIcon />
+                <AlertDescription>
+                  <Text mb="1rem">
+                    {`${pluralBodyWeightExercises ? "" : "A"} Body Weight  ${
+                      pluralBodyWeightExercises
+                        ? "templates were"
+                        : "template was"
+                    } added without a Body Weight.
+                  `}
+                  </Text>
+
+                  <Text>
+                    {`KettlePal will not be able to calculate work capacity for ${
+                      pluralBodyWeightExercises
+                        ? "these exercises"
+                        : "this exercise"
+                    }. Was this a mistake?`}{" "}
+                  </Text>
+                </AlertDescription>
+              </Alert>
+            )}
           </>
         }
         CloseText="Cancel"
