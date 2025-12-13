@@ -1,5 +1,8 @@
 import React from "react";
-import { EditSettingsState } from "../../../../../Hooks/useEditSettings";
+import {
+  EditSettingsState,
+  TemplateEditableField,
+} from "../../../../../Hooks/useEditSettings";
 import { FormControl, FormLabel, Select } from "@chakra-ui/react";
 import { RepsDisplayOptions } from "../../../../../Constants/ExercisesOptions";
 import theme from "../../../../../Constants/theme";
@@ -8,7 +11,11 @@ interface TemplatesTitleProps {
   template: EditSettingsState["templates"][0];
   templateIndex: number;
   isInvalid: boolean;
-  handleTemplate: (name: string, value: string | number, index: number) => void;
+  handleTemplate: (
+    name: TemplateEditableField,
+    value: string | number,
+    index: number
+  ) => void;
 }
 
 export default function TemplatesRepsDisplay({
@@ -27,9 +34,9 @@ export default function TemplatesRepsDisplay({
         size={["sm", "sm", "md"]}
         placeholder="Select"
         name="repsDisplay"
-        value={template.repsDisplay}
+        value={template.repsDisplay.value}
         onChange={(event) =>
-          handleTemplate(event.target.name, event.target.value, templateIndex)
+          handleTemplate("repsDisplay", event.target.value, templateIndex)
         }
         focusBorderColor={theme.colors.green[300]}
         color={

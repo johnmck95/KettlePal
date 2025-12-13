@@ -1,6 +1,9 @@
 import { FormControl, FormLabel, Select } from "@chakra-ui/react";
 import { ResistanceOptions } from "../../../../../Constants/ExercisesOptions";
-import { EditSettingsState } from "../../../../../Hooks/useEditSettings";
+import {
+  EditSettingsState,
+  TemplateEditableField,
+} from "../../../../../Hooks/useEditSettings";
 import theme from "../../../../../Constants/theme";
 
 interface TemplatesResistanceProps {
@@ -8,7 +11,7 @@ interface TemplatesResistanceProps {
   templateIndex: number;
   isInvalid: boolean;
   handleTemplate: (
-    name: string,
+    name: TemplateEditableField,
     value: string | number | boolean,
     index: number
   ) => void;
@@ -42,7 +45,7 @@ export default function TemplatesResistance({
         fontSize={["16px"]}
         size={["sm", "sm", "md"]}
         name="isBodyWeight"
-        value={template.isBodyWeight ? "bodyWeight" : "weighted"}
+        value={template.isBodyWeight.value ? "bodyWeight" : "weighted"}
         onChange={(event) => handleResistanceState(event)}
         focusBorderColor={theme.colors.green[300]}
         color={theme.colors.black}

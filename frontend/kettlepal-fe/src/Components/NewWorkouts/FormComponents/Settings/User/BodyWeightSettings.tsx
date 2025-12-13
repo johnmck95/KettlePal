@@ -29,11 +29,13 @@ export default function BodyWeightSettings({
         autoComplete="off"
         type="number"
         name="bodyWeight"
-        value={state.bodyWeight}
+        value={state.bodyWeight.value}
         onChange={(event) => handleStateChange(event)}
         focusBorderColor={theme.colors.green[300]}
         color={
-          state.bodyWeight !== "" ? theme.colors.black : theme.colors.grey[500]
+          state.bodyWeight.value !== ""
+            ? theme.colors.black
+            : theme.colors.grey[500]
         }
         bg={theme.colors.white}
         borderRadius={"5px"}

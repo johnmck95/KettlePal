@@ -1,14 +1,21 @@
 import { FormControl, FormLabel, Input } from "@chakra-ui/react";
 import React from "react";
 import theme from "../../../../../Constants/theme";
-import { EditSettingsState } from "../../../../../Hooks/useEditSettings";
+import {
+  EditSettingsState,
+  TemplateEditableField,
+} from "../../../../../Hooks/useEditSettings";
 import { capitalizeWords } from "../../../../../utils/textFormatters";
 
 interface TemplatesTitleProps {
   template: EditSettingsState["templates"][0];
   templateIndex: number;
   isInvalid: boolean;
-  handleTemplate: (name: string, value: string | number, index: number) => void;
+  handleTemplate: (
+    name: TemplateEditableField,
+    value: string | number,
+    index: number
+  ) => void;
 }
 
 export default function TemplatesTitle({
@@ -27,10 +34,10 @@ export default function TemplatesTitle({
         fontSize={["16px"]}
         placeholder="Exercise Title"
         name="title"
-        value={template.title}
+        value={template.title.value}
         onChange={(event) => {
           const capitalizedValue = capitalizeWords(event.target.value);
-          handleTemplate(event.target.name, capitalizedValue, templateIndex);
+          handleTemplate("title", capitalizedValue, templateIndex);
         }}
         color={!!template.title ? theme.colors.black : theme.colors.grey[500]}
         focusBorderColor={theme.colors.green[300]}

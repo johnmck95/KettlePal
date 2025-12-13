@@ -1,20 +1,29 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import { useUser } from "../Contexts/UserContext";
 import { useDisclosure } from "@chakra-ui/react";
 import { useAddOrUpdateSettingsMutation } from "../generated/frontend-types";
+import {
+  RepsDisplayOptions,
+  WeightOptions,
+} from "../Constants/ExercisesOptions";
 
 const EDIT_SETTINGS_STATE_KEY = "editSettingsState";
 
+export type TemplateEditableField = Exclude<
+  keyof EditSettingsState["templates"][number],
+  "key"
+>;
+
 export type EditSettingsState = {
-  bodyWeight: string;
-  bodyWeightUnit: string;
+  bodyWeight: { value: string; errors: string[] };
+  bodyWeightUnit: { value: string; errors: string[] };
   templates: Array<{
-    title: string;
-    repsDisplay: string;
-    weightUnit: string;
-    multiplier: string;
-    isBodyWeight: boolean;
-    index: number;
+    title: { value: string; errors: string[] };
+    repsDisplay: { value: string; errors: string[] };
+    weightUnit: { value: string; errors: string[] };
+    multiplier: { value: string; errors: string[] };
+    isBodyWeight: { value: boolean; errors: string[] };
+    index: { value: number; errors: string[] };
     key: string;
   }>;
 };
@@ -24,6 +33,15 @@ export enum SettingErrors {
   bodyWeightUnit = "Unit must be 'lb' or 'kg'. If you prefer not to set a body weight unit, leave the field blank.",
   unitRequiredWithWeight = "Unit is required when a Body Weight is specified.",
   bodyWeightRequiredWithUnit = "Body Weight is required when a Unit is specified.",
+}
+export enum TemplateErrors {
+  title = "Title is required.",
+  titleNotUnique = "Each title must be unique, case insensitive.",
+  repsDisplay = "Type must be one of the options from the drop down.",
+  weightUnit = "Weight Unit option is invalid.",
+  multiplier = "Multiplier must be a realistic, positive number.",
+  resistance = "Resistance type is invalid.",
+  noUnitWhenBodyWeight = "Unit must be blank for Body Weight Exercises. KettlePal will automatically use your Body Weight.",
 }
 
 interface UseEditSettingsProps {
@@ -42,26 +60,44 @@ const useEditSettings = ({
     return fromStorage
       ? JSON.parse(fromStorage)
       : {
-          bodyWeight: user?.bodyWeight ? user.bodyWeight.toString() : "",
-          bodyWeightUnit: user?.bodyWeightUnit ?? "lb",
+          bodyWeight: {
+            value: user?.bodyWeight ? user.bodyWeight.toString() : "",
+            errors: [],
+          },
+          bodyWeightUnit: { value: user?.bodyWeightUnit ?? "lb", errors: [] },
           templates:
             user?.templates.map((template) => {
               return {
-                title: template.title,
-                repsDisplay: template.repsDisplay ?? "",
-                weightUnit: template.weightUnit ?? "",
-                multiplier: template.multiplier,
-                isBodyWeight: template.isBodyWeight,
-                index: template.index,
+                title: { value: template.title, errors: [] },
+                repsDisplay: {
+                  value: template.repsDisplay ?? "",
+                  errors: [],
+                },
+                weightUnit: { value: template.weightUnit ?? "", errors: [] },
+                multiplier: { value: template.multiplier, errors: [] },
+                isBodyWeight: { value: template.isBodyWeight, errors: [] },
+                index: { value: template.index, errors: [] },
                 key: `key-${Date.now()}-${Math.random().toString(36)}`,
               };
             }) ?? [],
         };
   });
   const [submitted, setSubmitted] = useState(false);
-  const [numErrors, setNumErrors] = useState(0);
-  const [formHasErrors, setFormHasErrors] = useState(false);
   const [showServerError, setShowServerError] = useState(true);
+
+  const formHasErrors = () =>
+    state.bodyWeight.errors.length > 0 ||
+    state.bodyWeightUnit.errors.length > 0 ||
+    state.templates.some((t) =>
+      [
+        t.title,
+        t.repsDisplay,
+        t.weightUnit,
+        t.multiplier,
+        t.isBodyWeight,
+        t.index,
+      ].some((f) => f.errors.length > 0)
+    );
 
   // Initialize a new template and add to state
   function handleAddTemplate() {
@@ -70,47 +106,19 @@ const useEditSettings = ({
       templates: [
         ...prevState.templates,
         {
-          title: "",
-          repsDisplay: "",
-          weightUnit: "",
-          multiplier: "1.0",
-          isBodyWeight: false,
-          index: prevState.templates.length,
+          title: { value: "", errors: [] },
+          repsDisplay: { value: "", errors: [] },
+          weightUnit: { value: "", errors: [] },
+          multiplier: { value: "1.0", errors: [] },
+          isBodyWeight: { value: false, errors: [] },
+          index: { value: prevState.templates.length, errors: [] },
           key: `key-${Date.now()}-${Math.random().toString(36)}`,
         },
       ],
     }));
   }
 
-  // User-Settings Validation (Template Validation is handled in child component)
-  const errors: string[] = [];
-  const bodyWeightIsInvalid =
-    Number.isNaN(Number(state.bodyWeight)) ||
-    Number(state.bodyWeight) < 0 ||
-    Number(state.bodyWeight) > 1400;
-  const bodyWeightUnitIsInvalid = !["lb", "kg", ""].includes(
-    state.bodyWeightUnit
-  );
-  const bodyWeightNoUnitIsInvalid =
-    state.bodyWeight !== "" && state.bodyWeightUnit === "";
-  const unitNoBodyWeightIsInvalid =
-    state.bodyWeight === "" && state.bodyWeightUnit !== "";
-  if (bodyWeightIsInvalid) errors.push(SettingErrors.bodyWeight);
-  if (bodyWeightUnitIsInvalid) errors.push(SettingErrors.bodyWeightUnit);
-  if (bodyWeightNoUnitIsInvalid)
-    errors.push(SettingErrors.unitRequiredWithWeight);
-  if (unitNoBodyWeightIsInvalid)
-    errors.push(SettingErrors.bodyWeightRequiredWithUnit);
-  if (numErrors !== errors.length) {
-    setNumErrors(errors.length);
-  }
-
-  // Client-side error handling
-  useEffect(
-    () => setFormHasErrors(numErrors > 0),
-    [numErrors, setFormHasErrors]
-  );
-
+  // GQL Mutation
   const [addOrUpdateSettings, { loading, error: serverError }] =
     useAddOrUpdateSettingsMutation({
       onCompleted() {
@@ -128,45 +136,42 @@ const useEditSettings = ({
       },
     });
 
-  // Show client-side errors, if clear, try to post to DB
-  // apollo onError will handle rendering server-side errors
+  // Show client-side errors, if no-errors, try to post to DB
   async function onSaveSettings(): Promise<void> {
     setSubmitted(true);
     onCloseSaveSettings();
-    if (
-      bodyWeightIsInvalid ||
-      bodyWeightUnitIsInvalid ||
-      bodyWeightNoUnitIsInvalid ||
-      unitNoBodyWeightIsInvalid
-    ) {
-      setFormHasErrors(true);
+    if (formHasErrors()) {
       return;
     }
-    if (formHasErrors) {
-      return;
-    }
+
     try {
       addOrUpdateSettings({
         variables: {
           userUid: user?.uid ?? "",
           settings: {
             bodyWeight:
-              state.bodyWeight === ""
+              state.bodyWeight.value === ""
                 ? null
-                : parseFloat(parseFloat(state.bodyWeight).toFixed(2)),
+                : parseFloat(parseFloat(state.bodyWeight.value).toFixed(2)),
             bodyWeightUnit:
-              state.bodyWeightUnit === "" ? null : state.bodyWeightUnit,
+              state.bodyWeightUnit.value === ""
+                ? null
+                : state.bodyWeightUnit.value,
             templates: state.templates.map((template) => ({
-              title: template.title,
+              title: template.title.value,
               repsDisplay:
-                template.repsDisplay === "" ? null : template.repsDisplay,
+                template.repsDisplay.value === ""
+                  ? null
+                  : template.repsDisplay.value,
               weightUnit:
-                template.weightUnit === "" ? null : template.weightUnit,
+                template.weightUnit.value === ""
+                  ? null
+                  : template.weightUnit.value,
               multiplier: parseFloat(
-                parseFloat(template.multiplier).toFixed(2)
+                parseFloat(template.multiplier.value).toFixed(2)
               ),
-              isBodyWeight: template.isBodyWeight,
-              index: template.index,
+              isBodyWeight: template.isBodyWeight.value,
+              index: template.index.value,
             })),
           },
         },
@@ -182,27 +187,188 @@ const useEditSettings = ({
       ...prevState,
       templates: prevState?.templates
         ?.filter((_, i) => i !== index)
-        .map((t, i) => ({ ...t, index: i })),
+        .map((t, i) => ({ ...t, index: { value: i, errors: t.index.errors } })),
     }));
   }
 
-  // Updates all per-template state properties based on the index.
-  function handleTemplate(
-    name: string,
+  type TemplateErrors = {
+    title: string[];
+    repsDisplay: string[];
+    weightUnit: string[];
+    multiplier: string[];
+    isBodyWeight: string[];
+  };
+  type ValidationResult = {
+    root: {
+      bodyWeight: string[];
+      bodyWeightUnit: string[];
+    };
+    templates: TemplateErrors[];
+  };
+
+  function validateState(state: EditSettingsState): ValidationResult {
+    const result: ValidationResult = {
+      root: {
+        bodyWeight: [],
+        bodyWeightUnit: [],
+      },
+      templates: state.templates.map(() => ({
+        title: [],
+        repsDisplay: [],
+        weightUnit: [],
+        multiplier: [],
+        isBodyWeight: [],
+      })),
+    };
+
+    // User-level validations
+    if (
+      Number.isNaN(Number(state.bodyWeight.value)) ||
+      Number(state.bodyWeight.value) < 0 ||
+      Number(state.bodyWeight.value) > 1400
+    ) {
+      result.root.bodyWeight.push(SettingErrors.bodyWeight);
+    }
+    if (!["lb", "kg", ""].includes(state.bodyWeightUnit.value)) {
+      result.root.bodyWeightUnit.push(SettingErrors.bodyWeightUnit);
+    }
+    if (state.bodyWeight.value !== "" && state.bodyWeightUnit.value === "") {
+      result.root.bodyWeightUnit.push(SettingErrors.unitRequiredWithWeight);
+    }
+    if (state.bodyWeight.value === "" && state.bodyWeightUnit.value !== "") {
+      result.root.bodyWeight.push(SettingErrors.bodyWeightRequiredWithUnit);
+    }
+
+    // Template-level validations
+    state.templates.forEach((t, i) => {
+      if (t.title.value.trim() === "") {
+        result.templates[i].title.push(TemplateErrors.title);
+      }
+      if (
+        state.templates
+          .map((t) => t.title.value)
+          .filter(
+            (title) => title.toLowerCase() === t.title.value.toLowerCase()
+          ).length > 1
+      ) {
+        result.templates[i].title.push(TemplateErrors.titleNotUnique);
+      }
+      if (
+        !RepsDisplayOptions.map((option) => option.value).includes(
+          t.repsDisplay.value
+        ) &&
+        t.repsDisplay.value !== ""
+      ) {
+        result.templates[i].repsDisplay.push(TemplateErrors.repsDisplay);
+      }
+      if (
+        !WeightOptions.map((option) => option.value).includes(
+          t.weightUnit.value
+        ) &&
+        t.weightUnit.value !== ""
+      ) {
+        result.templates[i].weightUnit.push(TemplateErrors.weightUnit);
+      }
+      if (
+        Number.isNaN(Number(t.multiplier.value)) ||
+        Number(t.multiplier.value) < 0 ||
+        Number(t.multiplier.value) > 100
+      ) {
+        result.templates[i].multiplier.push(TemplateErrors.multiplier);
+      }
+      if (typeof t.isBodyWeight.value !== "boolean") {
+        result.templates[i].isBodyWeight.push(TemplateErrors.resistance);
+      }
+      if (t.isBodyWeight.value && t.weightUnit.value !== "") {
+        result.templates[i].weightUnit.push(
+          TemplateErrors.noUnitWhenBodyWeight
+        );
+      }
+    });
+
+    return result;
+  }
+  function updateState(
+    producer: (prev: EditSettingsState) => EditSettingsState
+  ) {
+    setState((prev) => {
+      const next = producer(prev);
+      const validation = validateState(next);
+
+      return {
+        ...next,
+        bodyWeight: {
+          ...next.bodyWeight,
+          errors: validation.root.bodyWeight,
+        },
+        bodyWeightUnit: {
+          ...next.bodyWeightUnit,
+          errors: validation.root.bodyWeightUnit,
+        },
+        templates: next.templates.map((t, i) => ({
+          ...t,
+          title: {
+            ...t.title,
+            errors: validation.templates[i].title,
+          },
+          repsDisplay: {
+            ...t.repsDisplay,
+            errors: validation.templates[i].repsDisplay,
+          },
+          weightUnit: {
+            ...t.weightUnit,
+            errors: validation.templates[i].weightUnit,
+          },
+          multiplier: {
+            ...t.multiplier,
+            errors: validation.templates[i].multiplier,
+          },
+          isBodyWeight: {
+            ...t.isBodyWeight,
+            errors: validation.templates[i].isBodyWeight,
+          },
+        })),
+      };
+    });
+  }
+
+  // Handles changes to template fields in state
+  function handleTemplateStateChange(
+    name: TemplateEditableField,
     value: string | number | boolean,
     index: number
   ): void {
-    setState((prevState) => ({
-      ...prevState,
-      templates: prevState.templates.map((template, i) => {
-        if (i === index) {
-          return {
-            ...template,
-            [name]: value,
-          };
-        }
-        return template;
-      }),
+    updateState((prev) => ({
+      ...prev,
+      templates: prev.templates.map((template, i) =>
+        i === index
+          ? {
+              ...template,
+              [name]: {
+                ...template[name],
+                value,
+              },
+            }
+          : template
+      ),
+    }));
+  }
+
+  // Handles changes to user-level fields in state
+  function handleUserStateChange(
+    event: ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ): void {
+    const { name, value } = event.target;
+    if (name !== "bodyWeight" && name !== "bodyWeightUnit") {
+      return;
+    }
+
+    updateState((prev) => ({
+      ...prev,
+      [name]: {
+        ...prev[name as "bodyWeight" | "bodyWeightUnit"],
+        value,
+      },
     }));
   }
 
@@ -223,7 +389,10 @@ const useEditSettings = ({
       const temp = templates[templateIndex];
       templates[templateIndex] = templates[targetIndex];
       templates[targetIndex] = temp;
-      const reindexed = templates.map((t, i) => ({ ...t, index: i }));
+      const reindexed = templates.map((t, i) => ({
+        ...t,
+        index: { value: i, errors: t.index.errors },
+      }));
 
       return { ...prev, templates: reindexed };
     });
@@ -233,17 +402,6 @@ const useEditSettings = ({
   React.useEffect(() => {
     sessionStorage.setItem(EDIT_SETTINGS_STATE_KEY, JSON.stringify(state));
   }, [state]);
-
-  // Generic Template state setter function
-  function handleStateChange(
-    event: ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ): void {
-    const { name, value } = event.target;
-    setState((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  }
 
   // Save Settings Modal Controls
   const {
@@ -258,20 +416,18 @@ const useEditSettings = ({
     loading,
     isOpenSaveSettings,
     serverError,
-    errors,
     showServerError,
     submitted,
+    formHasErrors,
     onSaveSettings,
     setShowServerError,
     onCloseSaveSettings,
     onOpenSaveSettings,
-    handleTemplate,
-    handleStateChange,
+    handleTemplate: handleTemplateStateChange,
+    handleStateChange: handleUserStateChange,
     deleteTemplate,
     moveTemplateIndex,
     handleAddTemplate,
-    setFormHasErrors,
   };
 };
-
 export default useEditSettings;

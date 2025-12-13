@@ -1,7 +1,10 @@
 import React from "react";
-import { EditSettingsState } from "../../Hooks/useEditSettings";
+import {
+  EditSettingsState,
+  TemplateEditableField,
+} from "../../Hooks/useEditSettings";
 import TemplateContainer from "../NewWorkouts/FormComponents/Settings/Templates/TemplateContainer";
-import useEditTemplate, { TemplateErrors } from "../../Hooks/useEditTemplate";
+import useEditTemplate from "../../Hooks/useEditTemplate";
 import ConfirmModal from "../ConfirmModal";
 import { Grid, GridItem } from "@chakra-ui/react";
 import TemplateTitle from "../NewWorkouts/FormComponents/Settings/Templates/TemplatesTitle";
@@ -15,30 +18,25 @@ interface CreateTemplateProps {
   templateIndex: number;
   numTemplates: number;
   submitted: boolean;
-  templateTitles: string[];
   deleteTemplate: (index: number) => void;
   moveTemplateIndex: (templateIndex: number, direction: "up" | "down") => void;
   handleTemplate: (
-    name: string,
+    name: TemplateEditableField,
     value: string | number | boolean,
     index: number
   ) => void;
-  setFormHasErrors: (value: boolean) => void;
 }
 
 export default function EditTemplate({
   template,
-  templateTitles,
   templateIndex,
   numTemplates,
   submitted,
   deleteTemplate,
   moveTemplateIndex,
   handleTemplate,
-  setFormHasErrors,
 }: CreateTemplateProps) {
   const {
-    errors,
     offset,
     minSwipeDistance,
     isOpenDeleteTemplate,
@@ -50,12 +48,17 @@ export default function EditTemplate({
     swipeDistance,
     onOpenDeleteTemplate,
   } = useEditTemplate({
-    template,
-    templateTitles,
     templateIndex,
     deleteTemplate,
-    setFormHasErrors,
   });
+  const errors = [
+    template.title,
+    template.repsDisplay,
+    template.weightUnit,
+    template.multiplier,
+    template.isBodyWeight,
+    template.index,
+  ].flatMap((f) => f.errors);
 
   return (
     <TemplateContainer
@@ -79,12 +82,7 @@ export default function EditTemplate({
             <TemplateTitle
               template={template}
               templateIndex={templateIndex}
-              isInvalid={
-                submitted &&
-                [TemplateErrors.title, TemplateErrors.titleNotUnique].some(
-                  (e) => errors.includes(e)
-                )
-              }
+              isInvalid={submitted && template.title.errors.length > 0}
               handleTemplate={handleTemplate}
             />
           </GridItem>
@@ -92,10 +90,7 @@ export default function EditTemplate({
             <TemplateRepsDisplay
               template={template}
               templateIndex={templateIndex}
-              isInvalid={
-                submitted &&
-                [TemplateErrors.repsDisplay].some((e) => errors.includes(e))
-              }
+              isInvalid={submitted && template.repsDisplay.errors.length > 0}
               handleTemplate={handleTemplate}
             />
           </GridItem>
@@ -107,13 +102,7 @@ export default function EditTemplate({
             <TemplatesWeightUnit
               template={template}
               templateIndex={templateIndex}
-              isInvalid={
-                submitted &&
-                [
-                  TemplateErrors.weightUnit,
-                  TemplateErrors.noUnitWhenBodyWeight,
-                ].some((e) => errors.includes(e))
-              }
+              isInvalid={submitted && template.weightUnit.errors.length > 0}
               handleTemplate={handleTemplate}
             />
           </GridItem>
@@ -121,10 +110,7 @@ export default function EditTemplate({
             <TemplatesMultiplier
               template={template}
               templateIndex={templateIndex}
-              isInvalid={
-                submitted &&
-                [TemplateErrors.multiplier].some((e) => errors.includes(e))
-              }
+              isInvalid={submitted && template.multiplier.errors.length > 0}
               handleTemplate={handleTemplate}
             />
           </GridItem>
@@ -132,10 +118,7 @@ export default function EditTemplate({
             <TemplatesResistance
               template={template}
               templateIndex={templateIndex}
-              isInvalid={
-                submitted &&
-                [TemplateErrors.resistance].some((e) => errors.includes(e))
-              }
+              isInvalid={template.isBodyWeight.errors.length > 0}
               handleTemplate={handleTemplate}
             />
           </GridItem>

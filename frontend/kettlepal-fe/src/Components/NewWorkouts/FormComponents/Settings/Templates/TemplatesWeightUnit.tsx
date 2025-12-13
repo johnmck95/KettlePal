@@ -1,13 +1,20 @@
 import { FormControl, FormLabel, Select } from "@chakra-ui/react";
 import { WeightOptions } from "../../../../../Constants/ExercisesOptions";
-import { EditSettingsState } from "../../../../../Hooks/useEditSettings";
+import {
+  EditSettingsState,
+  TemplateEditableField,
+} from "../../../../../Hooks/useEditSettings";
 import theme from "../../../../../Constants/theme";
 
 interface TemplatesWeightUnitProps {
   template: EditSettingsState["templates"][0];
   templateIndex: number;
   isInvalid: boolean;
-  handleTemplate: (name: string, value: string | number, index: number) => void;
+  handleTemplate: (
+    name: TemplateEditableField,
+    value: string | number,
+    index: number
+  ) => void;
 }
 
 export default function TemplatesWeightUnit({
@@ -27,9 +34,9 @@ export default function TemplatesWeightUnit({
         size={["sm", "sm", "md"]}
         placeholder="Select"
         name="weightUnit"
-        value={template.weightUnit}
+        value={template.weightUnit.value}
         onChange={(event) =>
-          handleTemplate(event.target.name, event.target.value, templateIndex)
+          handleTemplate("weightUnit", event.target.value, templateIndex)
         }
         focusBorderColor={theme.colors.green[300]}
         color={

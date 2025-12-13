@@ -19,7 +19,7 @@ import { FaPlusCircle, FaSave, FaTimes } from "react-icons/fa";
 import BodyWeightSettings from "../NewWorkouts/FormComponents/Settings/User/BodyWeightSettings";
 import BodyWeightUnitSettings from "../NewWorkouts/FormComponents/Settings/User/BodyWeightUnitSettings";
 import { AnimatePresence, motion } from "framer-motion";
-import useEditSettings, { SettingErrors } from "../../Hooks/useEditSettings";
+import useEditSettings from "../../Hooks/useEditSettings";
 import EditTemplate from "./EditTemplate";
 import ConfirmModal from "../ConfirmModal";
 import LoadingSpinner from "../LoadingSpinner";
@@ -40,7 +40,6 @@ export default function EditSettings({
     isOpenSaveSettings,
     serverError,
     showServerError,
-    errors,
     submitted,
     setShowServerError,
     onOpenSaveSettings,
@@ -51,15 +50,15 @@ export default function EditSettings({
     deleteTemplate,
     moveTemplateIndex,
     handleAddTemplate,
-    setFormHasErrors,
+    formHasErrors,
   } = useEditSettings({ setShowUploadSuccess, toggleEditMode });
 
   const bodyWeightExercisesWithoutUserWeight = state.templates.reduce(
     (acc, template) => {
       if (
         !acc &&
-        template.isBodyWeight &&
-        (state.bodyWeight === "" || state.bodyWeight === "0")
+        template.isBodyWeight.value &&
+        (state.bodyWeight.value === "" || state.bodyWeight.value === "0")
       ) {
         return true;
       }
@@ -68,7 +67,7 @@ export default function EditSettings({
     false
   );
   const pluralBodyWeightExercises =
-    state.templates.filter((t) => t.isBodyWeight).length > 1;
+    state.templates.filter((t) => t.isBodyWeight.value).length > 1;
 
   if (loading) {
     return (
@@ -113,40 +112,30 @@ export default function EditSettings({
       <HStack w={["96%", "90%"]}>
         <BodyWeightSettings
           state={state}
-          isInvalid={
-            submitted &&
-            [
-              SettingErrors.bodyWeight,
-              SettingErrors.bodyWeightRequiredWithUnit,
-            ].some((e) => errors.includes(e))
-          }
+          isInvalid={submitted && state.bodyWeight.errors.length > 0}
           handleStateChange={handleStateChange}
         />
         <BodyWeightUnitSettings
           state={state}
-          isInvalid={
-            submitted &&
-            [
-              SettingErrors.bodyWeightUnit,
-              SettingErrors.unitRequiredWithWeight,
-            ].some((e) => errors.includes(e))
-          }
+          isInvalid={submitted && state.bodyWeightUnit.errors.length > 0}
           handleStateChange={handleStateChange}
         />
       </HStack>
 
       {/* BODY WEIGHT ERROR MESSAGES */}
       <Box w={["96%", "90%"]}>
-        {errors.map((error) => {
-          if (!submitted) {
-            return null;
+        {[...state.bodyWeight.errors, ...state.bodyWeightUnit.errors].map(
+          (error) => {
+            if (!submitted) {
+              return null;
+            }
+            return (
+              <Text key={error} color={theme.colors.error} fontSize="xs">
+                {error}
+              </Text>
+            );
           }
-          return (
-            <Text key={error} color={theme.colors.error} fontSize="xs">
-              {error}
-            </Text>
-          );
-        })}
+        )}
       </Box>
 
       <Box w={["96%", "90%"]} m={2} color="gray.700">
@@ -176,13 +165,11 @@ export default function EditSettings({
                 <EditTemplate
                   template={template}
                   submitted={submitted}
-                  templateTitles={state.templates.map((t) => t.title)}
                   templateIndex={index}
                   numTemplates={state.templates.length}
                   deleteTemplate={deleteTemplate}
                   moveTemplateIndex={moveTemplateIndex}
                   handleTemplate={handleTemplate}
-                  setFormHasErrors={setFormHasErrors}
                 />
               </motion.div>
             );
@@ -242,6 +229,11 @@ export default function EditSettings({
             Add Template
           </Button>
         </HStack>
+        {formHasErrors() && (
+          <Text my="1rem" color={theme.colors.error} fontSize="xs">
+            Please fix the form errors before updating your settings.
+          </Text>
+        )}
       </Box>
 
       {/* SAVE SETTINGS MODAL */}

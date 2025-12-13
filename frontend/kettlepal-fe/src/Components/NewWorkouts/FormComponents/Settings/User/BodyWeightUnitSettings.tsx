@@ -28,11 +28,11 @@ export default function BodyWeightUnitSettings({
         size={["sm", "sm", "md"]}
         placeholder="Select"
         name="bodyWeightUnit"
-        value={state.bodyWeightUnit}
+        value={state.bodyWeightUnit.value}
         onChange={(event) => handleStateChange(event)}
         focusBorderColor={theme.colors.green[300]}
         color={
-          state.bodyWeightUnit !== ""
+          state.bodyWeightUnit.value !== ""
             ? theme.colors.black
             : theme.colors.grey[500]
         }

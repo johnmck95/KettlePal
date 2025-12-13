@@ -1,12 +1,19 @@
 import { FormControl, FormLabel, Input } from "@chakra-ui/react";
-import { EditSettingsState } from "../../../../../Hooks/useEditSettings";
+import {
+  EditSettingsState,
+  TemplateEditableField,
+} from "../../../../../Hooks/useEditSettings";
 import theme from "../../../../../Constants/theme";
 
 interface TemplatesMultiplierProps {
   template: EditSettingsState["templates"][0];
   templateIndex: number;
   isInvalid: boolean;
-  handleTemplate: (name: string, value: string | number, index: number) => void;
+  handleTemplate: (
+    name: TemplateEditableField,
+    value: string | number,
+    index: number
+  ) => void;
 }
 
 export default function TemplatesMultiplier({
@@ -28,7 +35,7 @@ export default function TemplatesMultiplier({
         autoComplete="off"
         type="number"
         name="multiplier"
-        value={template.multiplier}
+        value={template.multiplier.value}
         onChange={(event) =>
           handleTemplate("multiplier", event.target.value, templateIndex)
         }
