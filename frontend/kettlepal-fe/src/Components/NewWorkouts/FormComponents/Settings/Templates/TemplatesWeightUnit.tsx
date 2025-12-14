@@ -10,6 +10,7 @@ interface TemplatesWeightUnitProps {
   template: EditSettingsState["templates"][0];
   templateIndex: number;
   isInvalid: boolean;
+  isBodyWeight: boolean;
   handleTemplate: (
     name: TemplateEditableField,
     value: string | number,
@@ -21,6 +22,7 @@ export default function TemplatesWeightUnit({
   template,
   templateIndex,
   isInvalid,
+  isBodyWeight,
   handleTemplate,
 }: TemplatesWeightUnitProps) {
   return (
@@ -31,6 +33,7 @@ export default function TemplatesWeightUnit({
       <Select
         fontSize={["16px"]}
         size={["sm", "sm", "md"]}
+        placeholder="Select"
         name="weightUnit"
         value={template.weightUnit.value}
         onChange={(event) =>
@@ -38,8 +41,11 @@ export default function TemplatesWeightUnit({
         }
         focusBorderColor={theme.colors.green[300]}
         color={
-          !!template.weightUnit ? theme.colors.black : theme.colors.grey[500]
+          !!template.weightUnit.value
+            ? theme.colors.black
+            : theme.colors.grey[500]
         }
+        isDisabled={isBodyWeight}
       >
         {WeightOptions.map((option) => {
           return (

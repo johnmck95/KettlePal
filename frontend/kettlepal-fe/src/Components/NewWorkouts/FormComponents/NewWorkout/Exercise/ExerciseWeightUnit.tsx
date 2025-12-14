@@ -2,6 +2,7 @@ import { FormControl, FormLabel, Select } from "@chakra-ui/react";
 import theme from "../../../../../Constants/theme";
 import { WeightOptions } from "../../../../../Constants/ExercisesOptions";
 import { CreateWorkoutState } from "../../../../../Hooks/useCreateWorkoutForm";
+import { useUser } from "../../../../../Contexts/UserContext";
 
 interface ExerciseWeightUnitProps {
   submitted: boolean;
@@ -16,9 +17,12 @@ export default function ExerciseWeightUnit({
   weightUnitIsInvalid,
   exercise,
   exerciseIndex,
-
   handleExercise,
 }: ExerciseWeightUnitProps) {
+  const usingBodyWeight = useUser().user?.templates?.some(
+    (template) => template.isBodyWeight && template.title === exercise.title
+  );
+
   return (
     <FormControl isInvalid={submitted && weightUnitIsInvalid}>
       <FormLabel fontSize={["14px", "16px"]} m="0">
@@ -38,6 +42,7 @@ export default function ExerciseWeightUnit({
         color={
           !!exercise.weightUnit ? theme.colors.black : theme.colors.grey[500]
         }
+        disabled={usingBodyWeight}
       >
         {WeightOptions.map((option) => {
           return (

@@ -119,6 +119,7 @@ export default function EditSettings({
           state={state}
           isInvalid={submitted && state.bodyWeightUnit.errors.length > 0}
           handleStateChange={handleStateChange}
+          handleTemplate={handleTemplate}
         />
       </HStack>
 
@@ -164,6 +165,7 @@ export default function EditSettings({
               >
                 <EditTemplate
                   template={template}
+                  bodyWeightUnit={state.bodyWeightUnit.value as "kg" | "lb"}
                   submitted={submitted}
                   templateIndex={index}
                   numTemplates={state.templates.length}

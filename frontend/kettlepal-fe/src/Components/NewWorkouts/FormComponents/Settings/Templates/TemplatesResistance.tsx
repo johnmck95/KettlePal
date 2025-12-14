@@ -10,6 +10,7 @@ interface TemplatesResistanceProps {
   template: EditSettingsState["templates"][0];
   templateIndex: number;
   isInvalid: boolean;
+  bodyWeightUnit: "kg" | "lb";
   handleTemplate: (
     name: TemplateEditableField,
     value: string | number | boolean,
@@ -19,6 +20,7 @@ interface TemplatesResistanceProps {
 
 export default function TemplatesResistance({
   template,
+  bodyWeightUnit,
   templateIndex,
   isInvalid,
   handleTemplate,
@@ -29,9 +31,9 @@ export default function TemplatesResistance({
       event.target.value === "bodyWeight" ? true : false,
       templateIndex
     );
-    // If switching to body weight, clear the weightUnit (KettlePal uses user.boddyWeight)
+    // If switching to bodyWeight, load the users bodyWeightUnit
     if (event.target.value === "bodyWeight") {
-      handleTemplate("weightUnit", "", templateIndex);
+      handleTemplate("weightUnit", bodyWeightUnit, templateIndex);
     }
   }
 

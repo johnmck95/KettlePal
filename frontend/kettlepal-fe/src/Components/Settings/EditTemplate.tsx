@@ -18,6 +18,7 @@ interface CreateTemplateProps {
   templateIndex: number;
   numTemplates: number;
   submitted: boolean;
+  bodyWeightUnit: "kg" | "lb";
   deleteTemplate: (index: number) => void;
   moveTemplateIndex: (templateIndex: number, direction: "up" | "down") => void;
   handleTemplate: (
@@ -32,6 +33,7 @@ export default function EditTemplate({
   templateIndex,
   numTemplates,
   submitted,
+  bodyWeightUnit,
   deleteTemplate,
   moveTemplateIndex,
   handleTemplate,
@@ -101,6 +103,7 @@ export default function EditTemplate({
           <GridItem>
             <TemplatesWeightUnit
               template={template}
+              isBodyWeight={template.isBodyWeight.value}
               templateIndex={templateIndex}
               isInvalid={submitted && template.weightUnit.errors.length > 0}
               handleTemplate={handleTemplate}
@@ -117,6 +120,7 @@ export default function EditTemplate({
           <GridItem>
             <TemplatesResistance
               template={template}
+              bodyWeightUnit={bodyWeightUnit}
               templateIndex={templateIndex}
               isInvalid={template.isBodyWeight.errors.length > 0}
               handleTemplate={handleTemplate}

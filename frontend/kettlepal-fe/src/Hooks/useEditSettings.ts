@@ -40,7 +40,7 @@ export enum TemplateErrors {
   weightUnit = "Weight Unit option is invalid.",
   multiplier = "Multiplier must be a realistic, positive number.",
   resistance = "Resistance type is invalid.",
-  noUnitWhenBodyWeight = "Unit must be blank for Body Weight Exercises. KettlePal will automatically use your Body Weight.",
+  bodyWeightExerciseUnit = "Body Weight Exercises must use the user's Body Weight Unit.",
 }
 
 interface UseEditSettingsProps {
@@ -72,7 +72,10 @@ const useEditSettings = ({
                   value: template.repsDisplay ?? "",
                   errors: [],
                 },
-                weightUnit: { value: template.weightUnit ?? "", errors: [] },
+                weightUnit: {
+                  value: template.weightUnit ?? user.bodyWeightUnit,
+                  errors: [],
+                },
                 multiplier: { value: template.multiplier, errors: [] },
                 isBodyWeight: { value: template.isBodyWeight, errors: [] },
                 index: { value: template.index, errors: [] },
@@ -97,25 +100,6 @@ const useEditSettings = ({
         t.index,
       ].some((f) => f.errors.length > 0)
     );
-
-  // Initialize a new template and add to state
-  function handleAddTemplate() {
-    setState((prevState) => ({
-      ...prevState,
-      templates: [
-        ...prevState.templates,
-        {
-          title: { value: "", errors: [] },
-          repsDisplay: { value: "", errors: [] },
-          weightUnit: { value: "", errors: [] },
-          multiplier: { value: "1.0", errors: [] },
-          isBodyWeight: { value: false, errors: [] },
-          index: { value: prevState.templates.length, errors: [] },
-          key: `key-${Date.now()}-${Math.random().toString(36)}`,
-        },
-      ],
-    }));
-  }
 
   // GQL Mutation
   const [addOrUpdateSettings, { loading, error: serverError }] =
@@ -163,7 +147,7 @@ const useEditSettings = ({
                   ? null
                   : template.repsDisplay.value,
               weightUnit:
-                template.weightUnit.value === ""
+                template.weightUnit.value === "" || template.isBodyWeight.value
                   ? null
                   : template.weightUnit.value,
               multiplier: parseFloat(
@@ -179,17 +163,6 @@ const useEditSettings = ({
       console.error("Error updating settings: ", error);
     }
   }
-
-  // Deletes a template from state
-  function deleteTemplate(index: number): void {
-    setState((prevState) => ({
-      ...prevState,
-      templates: prevState?.templates
-        ?.filter((_, i) => i !== index)
-        .map((t, i) => ({ ...t, index: { value: i, errors: t.index.errors } })),
-    }));
-  }
-
   type TemplateErrors = {
     title: string[];
     repsDisplay: string[];
@@ -275,15 +248,19 @@ const useEditSettings = ({
       if (typeof t.isBodyWeight.value !== "boolean") {
         result.templates[i].isBodyWeight.push(TemplateErrors.resistance);
       }
-      if (t.isBodyWeight.value && t.weightUnit.value !== "") {
+      if (
+        t.isBodyWeight.value &&
+        t.weightUnit.value !== state.bodyWeightUnit.value
+      ) {
         result.templates[i].weightUnit.push(
-          TemplateErrors.noUnitWhenBodyWeight
+          TemplateErrors.bodyWeightExerciseUnit
         );
       }
     });
 
     return result;
   }
+
   function updateState(
     producer: (prev: EditSettingsState) => EditSettingsState
   ) {
@@ -328,6 +305,35 @@ const useEditSettings = ({
     });
   }
 
+  // Adds a new template to state, with validation
+  function handleAddTemplate() {
+    updateState((prev) => ({
+      ...prev,
+      templates: [
+        ...prev.templates,
+        {
+          title: { value: "", errors: [] },
+          repsDisplay: { value: "", errors: [] },
+          weightUnit: { value: "kg", errors: [] },
+          multiplier: { value: "1.0", errors: [] },
+          isBodyWeight: { value: false, errors: [] },
+          index: { value: prev.templates.length, errors: [] },
+          key: `key-${Date.now()}-${Math.random().toString(36)}`,
+        },
+      ],
+    }));
+  }
+
+  // Deletes a template from state
+  function deleteTemplate(index: number): void {
+    updateState((prev) => ({
+      ...prev,
+      templates: prev?.templates
+        ?.filter((_, i) => i !== index)
+        .map((t, i) => ({ ...t, index: { value: i, errors: t.index.errors } })),
+    }));
+  }
+
   // Handles changes to template fields in state
   function handleTemplateStateChange(
     name: TemplateEditableField,
@@ -358,7 +364,6 @@ const useEditSettings = ({
     if (name !== "bodyWeight" && name !== "bodyWeightUnit") {
       return;
     }
-
     updateState((prev) => ({
       ...prev,
       [name]: {
@@ -369,7 +374,7 @@ const useEditSettings = ({
   }
 
   function moveTemplateIndex(templateIndex: number, direction: "up" | "down") {
-    setState((prev) => {
+    updateState((prev) => {
       const templates = [...prev.templates];
       const targetIndex =
         direction === "up"
