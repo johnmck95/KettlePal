@@ -1,6 +1,7 @@
-import { FormControl, FormLabel, Input, Text } from "@chakra-ui/react";
+import { FormControl, FormLabel, HStack, Input, Text } from "@chakra-ui/react";
 import theme from "../../../../../Constants/theme";
 import { CreateWorkoutState } from "../../../../../Hooks/useCreateWorkoutForm";
+import ToolTip from "../../../../UI/ToolTip";
 
 interface ExerciseRepsProps {
   submitted: boolean;
@@ -19,9 +20,15 @@ export default function ExerciseReps({
 }: ExerciseRepsProps) {
   return (
     <FormControl isInvalid={submitted && repsIsInvalid}>
-      <FormLabel fontSize={["14px", "16px"]} m="0">
-        <Text>Reps</Text>
-      </FormLabel>
+      <HStack>
+        <FormLabel fontSize={["14px", "16px"]} m="0">
+          <Text>Reps</Text>
+        </FormLabel>
+        <ToolTip
+          message={`The total number of reps, regardless of the "Type".`}
+        />
+      </HStack>
+
       <Input
         fontSize={["16px"]}
         size={["sm", "sm", "md"]}

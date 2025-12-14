@@ -1,10 +1,11 @@
-import { FormControl, FormLabel, Select } from "@chakra-ui/react";
+import { FormControl, FormLabel, HStack, Select } from "@chakra-ui/react";
 import { WeightOptions } from "../../../../../Constants/ExercisesOptions";
 import {
   EditSettingsState,
   TemplateEditableField,
 } from "../../../../../Hooks/useEditSettings";
 import theme from "../../../../../Constants/theme";
+import ToolTip from "../../../../UI/ToolTip";
 
 interface TemplatesWeightUnitProps {
   template: EditSettingsState["templates"][0];
@@ -27,9 +28,12 @@ export default function TemplatesWeightUnit({
 }: TemplatesWeightUnitProps) {
   return (
     <FormControl isInvalid={isInvalid}>
-      <FormLabel fontSize={["14px", "16px"]} m="0">
-        Unit
-      </FormLabel>
+      <HStack>
+        <FormLabel fontSize={["14px", "16px"]} m="0">
+          Unit
+        </FormLabel>
+        <ToolTip message="The preferred unit for the exercise. Body Weight Unit will be automatically referenced when Resistance is set to Body Weight. " />
+      </HStack>
       <Select
         fontSize={["16px"]}
         size={["sm", "sm", "md"]}

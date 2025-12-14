@@ -1,9 +1,10 @@
-import { FormControl, FormLabel, Input } from "@chakra-ui/react";
+import { FormControl, FormLabel, HStack, Input } from "@chakra-ui/react";
 import {
   EditSettingsState,
   TemplateEditableField,
 } from "../../../../../Hooks/useEditSettings";
 import theme from "../../../../../Constants/theme";
+import ToolTip from "../../../../UI/ToolTip";
 
 interface TemplatesMultiplierProps {
   template: EditSettingsState["templates"][0];
@@ -24,9 +25,13 @@ export default function TemplatesMultiplier({
 }: TemplatesMultiplierProps) {
   return (
     <FormControl isRequired isInvalid={isInvalid}>
-      <FormLabel fontSize={["14px", "16px"]} m="0">
-        Multiplier
-      </FormLabel>
+      <HStack>
+        <FormLabel fontSize={["14px", "16px"]} m="0">
+          Multiplier
+        </FormLabel>
+        <ToolTip message="Multipliers allow you to tailor the work capacity of an exercise. A Push Up moves roughly 0.7 times your body weight, so setting the multiplier to 0.7 is appropriate. Work Capacity = Sets x Reps x Weight x Multiplier. You can also use a multiplier to account for compound movements. For example, you may want to log a Clean & Press rep as twice as much work as a Should Press rep, so you would set the multiplier of the Clean & Press template to 2, and the multiplier of the Shoulder Press template to 1." />
+      </HStack>
+
       <Input
         size={["sm", "sm", "md"]}
         fontSize={["16px"]}

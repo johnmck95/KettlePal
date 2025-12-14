@@ -1,7 +1,8 @@
-import { FormControl, FormLabel, Input } from "@chakra-ui/react";
+import { FormControl, FormLabel, HStack, Input } from "@chakra-ui/react";
 import theme from "../../../../../Constants/theme";
 import { EditSettingsState } from "../../../../../Hooks/useEditSettings";
 import { ChangeEvent } from "react";
+import ToolTip from "../../../../UI/ToolTip";
 
 interface BodyWeightSettingsProps {
   state: EditSettingsState;
@@ -18,9 +19,13 @@ export default function BodyWeightSettings({
 }: BodyWeightSettingsProps) {
   return (
     <FormControl maxW="150px" isInvalid={isInvalid}>
-      <FormLabel fontSize={["14px", "16px"]} m="0">
-        Body Weight
-      </FormLabel>
+      <HStack>
+        <FormLabel fontSize={["14px", "16px"]} m="0">
+          Body Weight
+        </FormLabel>
+        <ToolTip message="Body Weight is strictly used to calculate work capacity of body weight exercises. Body Weight is not required, but if you chose to omit it, KettlePal cannot compute work capacity for body weight exercises. " />
+      </HStack>
+
       <Input
         size={["sm", "sm", "md"]}
         fontSize={["16px"]}

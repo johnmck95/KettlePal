@@ -1,4 +1,4 @@
-import { FormControl, FormLabel, Select } from "@chakra-ui/react";
+import { FormControl, FormLabel, HStack, Select } from "@chakra-ui/react";
 import {
   EditSettingsState,
   TemplateEditableField,
@@ -6,6 +6,7 @@ import {
 import theme from "../../../../../Constants/theme";
 import { WeightOptions } from "../../../../../Constants/ExercisesOptions";
 import { ChangeEvent } from "react";
+import ToolTip from "../../../../UI/ToolTip";
 
 interface BodyWeightUnitSettingsProps {
   state: EditSettingsState;
@@ -38,9 +39,12 @@ export default function BodyWeightUnitSettings({
 
   return (
     <FormControl maxW="105px" isInvalid={isInvalid}>
-      <FormLabel fontSize={["14px", "16px"]} m="0">
-        Unit
-      </FormLabel>
+      <HStack>
+        <FormLabel fontSize={["14px", "16px"]} m="0">
+          Unit
+        </FormLabel>
+        <ToolTip message="The unit of your body weight. Referenced in all body weight work capacity calculations." />
+      </HStack>
 
       <Select
         fontSize={["16px"]}

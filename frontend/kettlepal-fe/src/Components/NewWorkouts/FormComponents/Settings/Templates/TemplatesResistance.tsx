@@ -1,10 +1,11 @@
-import { FormControl, FormLabel, Select } from "@chakra-ui/react";
+import { FormControl, FormLabel, HStack, Select } from "@chakra-ui/react";
 import { ResistanceOptions } from "../../../../../Constants/ExercisesOptions";
 import {
   EditSettingsState,
   TemplateEditableField,
 } from "../../../../../Hooks/useEditSettings";
 import theme from "../../../../../Constants/theme";
+import ToolTip from "../../../../UI/ToolTip";
 
 interface TemplatesResistanceProps {
   template: EditSettingsState["templates"][0];
@@ -39,9 +40,14 @@ export default function TemplatesResistance({
 
   return (
     <FormControl isRequired isInvalid={isInvalid}>
-      <FormLabel fontSize={["14px", "16px"]} m="0">
-        Resistance
-      </FormLabel>
+      <HStack>
+        <FormLabel fontSize={["14px", "16px"]} m="0">
+          Resistance
+        </FormLabel>
+        <ToolTip
+          message={`"Weighted" exercises use weights such as kettlebells, barbells, or bands to add resistance. "Body Weight" exercises use your own body weight as resistance. Not all body weight exercises use your entire mass - you can use the "Multiplier" to account for the percentage of your body weight being used.`}
+        />
+      </HStack>
 
       <Select
         fontSize={["16px"]}

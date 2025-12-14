@@ -1,4 +1,4 @@
-import { FormControl, FormLabel, Input } from "@chakra-ui/react";
+import { Box, FormControl, FormLabel, HStack, Input } from "@chakra-ui/react";
 import React from "react";
 import theme from "../../../../../Constants/theme";
 import {
@@ -6,6 +6,7 @@ import {
   TemplateEditableField,
 } from "../../../../../Hooks/useEditSettings";
 import { capitalizeWords } from "../../../../../utils/textFormatters";
+import ToolTip from "../../../../UI/ToolTip";
 
 interface TemplatesTitleProps {
   template: EditSettingsState["templates"][0];
@@ -26,9 +27,12 @@ export default function TemplatesTitle({
 }: TemplatesTitleProps) {
   return (
     <FormControl isRequired isInvalid={isInvalid}>
-      <FormLabel fontSize={["14px", "16px"]} m="0">
-        Exercise
-      </FormLabel>
+      <HStack>
+        <FormLabel fontSize={["14px", "16px"]} m="0">
+          Exercise
+        </FormLabel>
+        <ToolTip message="The name of the exercise." />
+      </HStack>
       <Input
         size={["sm", "sm", "md"]}
         fontSize={["16px"]}

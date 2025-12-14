@@ -250,9 +250,11 @@ export default function EditSettings({
               Are you sure your settings are finalized, and ready to be saved?
               This will overwrite your existing settings.
             </Text>
-            <Text>
-              Existing workouts will remain unchanged. Your new settings will
-              only impact future workouts.
+            <Text fontWeight="semibold">
+              <i>
+                Existing workouts will remain unchanged. Your updated settings
+                will only impact future workouts.
+              </i>
             </Text>
             {bodyWeightExercisesWithoutUserWeight && (
               <Alert status="warning" mt="1rem" borderRadius={"8px"}>
