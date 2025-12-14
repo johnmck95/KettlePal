@@ -8,10 +8,13 @@ import {
   Icon,
   Alert,
   AlertIcon,
+  List,
+  ListIcon,
+  ListItem,
 } from "@chakra-ui/react";
 import React from "react";
 import theme from "../../Constants/theme";
-import { FaPencilAlt } from "react-icons/fa";
+import { FaCheckCircle, FaPencilAlt } from "react-icons/fa";
 import { useUser } from "../../Contexts/UserContext";
 import { RepsDisplayOptions } from "../../Constants/ExercisesOptions";
 
@@ -75,15 +78,70 @@ export default function ViewSettings({
         {/* USER HASN'T ADDED CUSTOM TEMPLATES */}
         {templates.length <= 0 ? (
           <>
-            <Text my="0.75rem" color="gray.600" fontSize={["xs", "sm", "md"]}>
-              Looks like you're using the default KettlePal Exercises.
+            <Text
+              my="2.5rem"
+              color="gray.600"
+              fontSize={["xs", "sm", "md"]}
+              textAlign={"center"}
+              fontWeight={"semibold"}
+            >
+              You're using the default Exercise Templates.
             </Text>
 
-            <Text color="gray.600" fontSize={["xs", "sm", "md"]}>
-              For complete control over the exercises, units, and formats you
-              see in the "New" page, click the{" "}
-              <Icon as={FaPencilAlt} mx="0.25rem" /> icon to customize your
-              experience!
+            <Text
+              m="2rem 0.5rem 1rem 0.5rem"
+              mb="1rem"
+              mt="2rem"
+              color="gray.600"
+              fontSize={["sm", "md", "lg"]}
+              fontWeight="bold"
+            >
+              <u>Custom Exercise Templates let you control:</u>
+            </Text>
+
+            <List spacing={3} mx="1.75rem" fontSize={["xs", "sm", "md"]}>
+              <ListItem>
+                <ListIcon as={FaCheckCircle} color="green.500" />
+                The exercises available in the{" "}
+                <b>
+                  <i>New Workout</i>{" "}
+                </b>
+                page.
+              </ListItem>
+              <ListItem>
+                <ListIcon as={FaCheckCircle} color="green.500" />
+                The ability to apply{" "}
+                <b>
+                  <i>Multiplers</i>
+                </b>
+                , enabling you to fine tune the work capacity of each exercise.
+              </ListItem>
+              <ListItem>
+                <ListIcon as={FaCheckCircle} color="green.500" />
+                Create{" "}
+                <b>
+                  <i>Body Weight Exercises</i>
+                </b>{" "}
+                that use your weight to compute work capacity.
+              </ListItem>
+              <ListItem>
+                <ListIcon as={FaCheckCircle} color="green.500" />
+                Choose the{" "}
+                <b>
+                  <i>Default Unit & Type</i>
+                </b>{" "}
+                per exercise to quickly format workouts.
+              </ListItem>
+            </List>
+
+            <Text
+              my="2rem"
+              mx="0.5rem"
+              color="gray.600"
+              fontSize={["xs", "sm", "md"]}
+            >
+              Click the <Icon as={FaPencilAlt} mx="0.25rem" /> icon to customize
+              your KettlePal experience by creating Exercise Templates!
             </Text>
           </>
         ) : (

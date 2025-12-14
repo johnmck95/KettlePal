@@ -28,11 +28,9 @@ export default function TemplatesWeightUnit({
       <FormLabel fontSize={["14px", "16px"]} m="0">
         Unit
       </FormLabel>
-
       <Select
         fontSize={["16px"]}
         size={["sm", "sm", "md"]}
-        placeholder="Select"
         name="weightUnit"
         value={template.weightUnit.value}
         onChange={(event) =>

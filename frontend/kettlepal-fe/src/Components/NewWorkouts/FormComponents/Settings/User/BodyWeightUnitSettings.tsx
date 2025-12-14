@@ -26,7 +26,6 @@ export default function BodyWeightUnitSettings({
       <Select
         fontSize={["16px"]}
         size={["sm", "sm", "md"]}
-        placeholder="Select"
         name="bodyWeightUnit"
         value={state.bodyWeightUnit.value}
         onChange={(event) => handleStateChange(event)}

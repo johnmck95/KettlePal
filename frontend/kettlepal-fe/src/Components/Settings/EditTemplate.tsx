@@ -131,7 +131,7 @@ export default function EditTemplate({
         onClose={customOnCloseDeleteTemplate}
         onConfirmation={onDeleteTemplate}
         ModalTitle="Delete Template"
-        ModalBodyText="Are you sure you would like to delete this Exercise Template? This cannot be undone."
+        ModalBodyText="Are you sure you would like to delete this Exercise Template?"
         CloseText="Cancel"
         ProceedText="Delete"
         variant="warn"

@@ -32,7 +32,6 @@ export enum SettingErrors {
   bodyWeight = "Body Weight must be a realistic, positive number. If you prefer not to set a body weight, leave the field blank.",
   bodyWeightUnit = "Unit must be 'lb' or 'kg'. If you prefer not to set a body weight unit, leave the field blank.",
   unitRequiredWithWeight = "Unit is required when a Body Weight is specified.",
-  bodyWeightRequiredWithUnit = "Body Weight is required when a Unit is specified.",
 }
 export enum TemplateErrors {
   title = "Title is required.",
@@ -64,7 +63,7 @@ const useEditSettings = ({
             value: user?.bodyWeight ? user.bodyWeight.toString() : "",
             errors: [],
           },
-          bodyWeightUnit: { value: user?.bodyWeightUnit ?? "lb", errors: [] },
+          bodyWeightUnit: { value: user?.bodyWeightUnit ?? "kg", errors: [] },
           templates:
             user?.templates.map((template) => {
               return {
@@ -229,14 +228,11 @@ const useEditSettings = ({
     ) {
       result.root.bodyWeight.push(SettingErrors.bodyWeight);
     }
-    if (!["lb", "kg", ""].includes(state.bodyWeightUnit.value)) {
+    if (!["lb", "kg"].includes(state.bodyWeightUnit.value)) {
       result.root.bodyWeightUnit.push(SettingErrors.bodyWeightUnit);
     }
     if (state.bodyWeight.value !== "" && state.bodyWeightUnit.value === "") {
       result.root.bodyWeightUnit.push(SettingErrors.unitRequiredWithWeight);
-    }
-    if (state.bodyWeight.value === "" && state.bodyWeightUnit.value !== "") {
-      result.root.bodyWeight.push(SettingErrors.bodyWeightRequiredWithUnit);
     }
 
     // Template-level validations

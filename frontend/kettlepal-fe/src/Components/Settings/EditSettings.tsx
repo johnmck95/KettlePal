@@ -229,7 +229,7 @@ export default function EditSettings({
             Add Template
           </Button>
         </HStack>
-        {formHasErrors() && (
+        {submitted && formHasErrors() && (
           <Text my="1rem" color={theme.colors.error} fontSize="xs">
             Please fix the form errors before updating your settings.
           </Text>
