@@ -1,40 +1,41 @@
 import {
+  AddExerciseInput,
   AddOrEditWorkoutInput,
   AddWorkoutWithExercisesInput,
+  UpdateExerciseInput,
   UpdateWorkoutWithExercisesInput,
 } from "../generated/backend-types";
 
 export interface FormattedExercise {
   uid?: string;
   title: string;
-  weight?: number | null;
-  weightUnit?: string | null | undefined;
-  sets?: number | null;
-  reps?: number | null;
-  repsDisplay?: string | null | undefined;
-  comment?: string | null | undefined;
-  elapsedSeconds?: number | null | undefined;
+  weight: number | null;
+  weightUnit: string | null | undefined;
+  sets: number | null;
+  reps: number | null;
+  repsDisplay: string | null | undefined;
+  comment: string | null | undefined;
+  elapsedSeconds: number | null | undefined;
+  multiplier: number | null | undefined;
 }
+
+type ExerciseInput = AddExerciseInput | UpdateExerciseInput;
 
 export type FormattedWorkout = AddOrEditWorkoutInput & { userUid: string };
 
 export function formatExercisesForDB(
   exercises: AddWorkoutWithExercisesInput["exercises"]
 ): FormattedExercise[];
-
 export function formatExercisesForDB(
   exercises: UpdateWorkoutWithExercisesInput["exercises"]
 ): FormattedExercise[];
-
 export function formatExercisesForDB(
   exercises:
     | AddWorkoutWithExercisesInput["exercises"]
     | UpdateWorkoutWithExercisesInput["exercises"]
 ): FormattedExercise[] {
   const formattedExercises: FormattedExercise[] = exercises
-    .filter(
-      (exercise): exercise is NonNullable<typeof exercise> => exercise != null
-    )
+    .filter((exercise): exercise is ExerciseInput => exercise != null)
     .map((exercise) => {
       const {
         title,
@@ -45,7 +46,8 @@ export function formatExercisesForDB(
         repsDisplay,
         comment,
         elapsedSeconds,
-      } = exercise;
+        multiplier,
+      } = exercise as ExerciseInput;
 
       const baseExercise = {
         title,
@@ -62,10 +64,11 @@ export function formatExercisesForDB(
         repsDisplay: repsDisplay !== "" ? repsDisplay : null,
         comment: comment !== "" ? comment : null,
         elapsedSeconds,
+        multiplier,
       };
 
       // UID will only exist when updating an exercise.
-      if ("uid" in exercise && exercise.uid) {
+      if (exercise && "uid" in exercise && typeof exercise.uid === "string") {
         return { uid: exercise.uid, ...baseExercise };
       }
       // Let the DB generate a UID for new exercises.

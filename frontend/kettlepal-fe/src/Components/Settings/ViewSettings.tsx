@@ -79,7 +79,7 @@ export default function ViewSettings({
         {templates.length <= 0 ? (
           <>
             <Text
-              my="2.5rem"
+              my="4rem"
               color="gray.600"
               fontSize={["xs", "sm", "md"]}
               textAlign={"center"}
@@ -90,8 +90,8 @@ export default function ViewSettings({
 
             <Text
               m="2rem 0.5rem 1rem 0.5rem"
-              mb="1rem"
-              mt="2rem"
+              mb="1.5rem"
+              mt="3rem"
               color="gray.600"
               fontSize={["sm", "md", "lg"]}
               fontWeight="bold"

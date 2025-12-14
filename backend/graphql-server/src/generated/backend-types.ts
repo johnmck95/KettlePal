@@ -301,6 +301,7 @@ export type UpdateExerciseInput = {
   comment?: InputMaybe<Scalars['String']['input']>;
   elapsedSeconds?: InputMaybe<Scalars['Int']['input']>;
   key?: InputMaybe<Scalars['String']['input']>;
+  multiplier: Scalars['Float']['input'];
   reps?: InputMaybe<Scalars['String']['input']>;
   repsDisplay?: InputMaybe<Scalars['String']['input']>;
   sets?: InputMaybe<Scalars['String']['input']>;

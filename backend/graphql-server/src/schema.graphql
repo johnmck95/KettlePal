@@ -235,6 +235,7 @@ input UpdateExerciseInput {
   comment: String
   elapsedSeconds: Int
   key: String
+  multiplier: Float!
 }
 
 input AddExerciseInput {

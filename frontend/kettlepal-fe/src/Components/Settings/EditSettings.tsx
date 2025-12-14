@@ -142,8 +142,6 @@ export default function EditSettings({
       <Box w={["96%", "90%"]} m={2} color="gray.700">
         <Box
           borderBottom={`2px solid ${theme.colors.green[100]}`}
-          mt={6}
-          mb={4}
           fontWeight="bold"
         >
           <Text fontSize={["md", "lg", "xl"]}>EXERCISE TEMPLATES</Text>
