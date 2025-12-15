@@ -1,4 +1,4 @@
-import { FormControl, FormLabel, Input, Select } from "@chakra-ui/react";
+import { FormControl, Text, FormLabel, Input, Select } from "@chakra-ui/react";
 import theme from "../../../../../Constants/theme";
 import { KettlbellWeightsKG } from "../../../../../Constants/ExercisesOptions";
 import { CreateWorkoutState } from "../../../../../Hooks/useCreateWorkoutForm";
@@ -30,7 +30,14 @@ export default function ExerciseWeight({
   return (
     <FormControl isInvalid={submitted && weightIsInvalid}>
       <FormLabel fontSize={["14px", "16px"]} m="0">
-        Weight
+        Weight{" "}
+        <Text
+          as="span"
+          fontSize={["11px", "14px"]}
+          color={theme.colors.feldgrau[400]}
+        >
+          (x{exercise.multiplier.toFixed(2)})
+        </Text>
       </FormLabel>
       {usingBodyWeight ? (
         <Input

@@ -24,6 +24,7 @@ export type CreateWorkoutState = {
     repsDisplay: string;
     comment: string;
     elapsedSeconds: number;
+    multiplier: number;
     key: string;
   }>;
 };
@@ -188,6 +189,7 @@ const useCreateWorkoutForm = () => {
           repsDisplay: "",
           comment: "",
           elapsedSeconds: 0,
+          multiplier: 1.0,
           key: `key-${Date.now()}-${Math.random().toString(36)}`,
         },
         ...prevState.exercises,

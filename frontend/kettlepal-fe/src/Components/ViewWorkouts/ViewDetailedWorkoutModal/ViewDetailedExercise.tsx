@@ -19,7 +19,15 @@ export default function ViewDetailedExercise({
   exercise,
   showDetails,
 }: ViewDetailedExerciseProps) {
-  const { elapsedSeconds, sets, reps, weight, weightUnit, comment } = exercise;
+  const {
+    elapsedSeconds,
+    sets,
+    reps,
+    weight,
+    weightUnit,
+    comment,
+    multiplier,
+  } = exercise;
 
   return (
     <VStack
@@ -69,6 +77,7 @@ export default function ViewDetailedExercise({
               ).toLocaleString()} ${weightUnit}`}
             />
           )}
+          <Detail title={"Multiplier"} value={multiplier.toFixed(2)} />
         </Flex>
       )}
     </VStack>
