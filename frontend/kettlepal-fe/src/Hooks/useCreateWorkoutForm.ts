@@ -3,7 +3,7 @@ import { calculateElapsedTime, getCurrentDate } from "../utils/Time/time";
 import { useAddWorkoutWithExercisesMutation } from "../generated/frontend-types";
 import { useUser } from "../Contexts/UserContext";
 import { useDisclosure } from "@chakra-ui/react";
-import { StopwatchRef } from "../Components/NewWorkouts/FormComponents.tsx/Generic/Stopwatch";
+import { StopwatchRef } from "../Components/NewWorkouts/FormComponents/NewWorkout/Generic/Stopwatch";
 
 const SESSION_STATE_KEY = "createWorkoutState";
 const STOPWATCH_IS_ACTIVE_KEY = "stopwatchIsActive";
@@ -24,6 +24,7 @@ export type CreateWorkoutState = {
     repsDisplay: string;
     comment: string;
     elapsedSeconds: number;
+    multiplier: number;
     key: string;
   }>;
 };
@@ -188,6 +189,7 @@ const useCreateWorkoutForm = () => {
           repsDisplay: "",
           comment: "",
           elapsedSeconds: 0,
+          multiplier: 1.0,
           key: `key-${Date.now()}-${Math.random().toString(36)}`,
         },
         ...prevState.exercises,

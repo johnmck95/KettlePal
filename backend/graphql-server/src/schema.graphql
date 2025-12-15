@@ -10,6 +10,9 @@ type User {
   tokenCount: Int!
   userStats: UserStats
   atAGlance(period: String!, dateRange: String!): AtAGlance
+  bodyWeight: Float!
+  bodyWeightUnit: String!
+  templates: [Template!]!
 }
 
 type AtAGlance {
@@ -33,6 +36,8 @@ type UserStats {
   largestWorkCapacityKg: Float
   topExercises: String
   oldestWorkoutDate: String
+  bodyWeight: Float!
+  bodyWeightUnit: String!
 }
 
 # Bit of a hack to let fuzzy search bypass Workouts{Exericises{}} graphql traversal.
@@ -77,6 +82,19 @@ type Exercise {
   repsDisplay: String
   comment: String
   elapsedSeconds: Int
+  multiplier: Float!
+}
+
+type Template {
+  uid: ID!
+  userUid: ID!
+  createdAt: String!
+  title: String!
+  weightUnit: String
+  multiplier: Float!
+  repsDisplay: String
+  index: Int!
+  isBodyWeight: Boolean!
 }
 
 type CheckSessionResponse {
@@ -90,6 +108,7 @@ type Query {
   user(uid: ID!): User
   workouts(offset: Int, limit: Int): [Workout]
   workout(uid: ID!): Workout
+  uniqueExerciseTitles(userUid: ID!): [String!]!
   exercises: [Exercise]
   exercise(uid: ID!): Exercise
 
@@ -105,6 +124,11 @@ type Query {
 type RefreshTokenResponse {
   success: Boolean!
   message: String
+}
+
+type UserWithTemplates {
+  user: User!
+  templates: [Template!]!
 }
 
 type Mutation {
@@ -133,10 +157,30 @@ type Mutation {
   login(email: String!, password: String!): User
   refreshToken: RefreshTokenResponse!
   invalidateToken: Boolean!
+
+  addOrUpdateSettings(
+    userUid: ID!
+    settings: AddOrUpdateSettingsInput!
+  ): UserWithTemplates!
 }
 
-# Input types omit data fields we want the system to generate (like uids)
+# Input types omit data fields because we want the system to generate them (EX: uids)
 # Edits often vary from inputs, because we don't want to require all fields
+
+input AddOrUpdateSettingsInput {
+  bodyWeight: Float
+  bodyWeightUnit: String
+  templates: [AddOrUpdateTemplateInput!]!
+}
+
+input AddOrUpdateTemplateInput {
+  title: String!
+  weightUnit: String
+  multiplier: Float
+  repsDisplay: String
+  index: Int!
+  isBodyWeight: Boolean!
+}
 
 input AddOrEditUserInput {
   firstName: String!
@@ -191,6 +235,7 @@ input UpdateExerciseInput {
   comment: String
   elapsedSeconds: Int
   key: String
+  multiplier: Float!
 }
 
 input AddExerciseInput {
@@ -203,6 +248,7 @@ input AddExerciseInput {
   comment: String
   elapsedSeconds: Int
   key: String
+  multiplier: Float
 }
 
 input EditExerciseInput {

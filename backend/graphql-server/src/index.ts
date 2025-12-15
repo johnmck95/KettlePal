@@ -2,17 +2,22 @@ import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
 import express from "express";
 import http from "http";
-import cors from "cors";
+import cors, { CorsOptions } from "cors";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import resolvers from "./resolvers.js";
 import pkg from "jsonwebtoken";
-import { refreshTokens } from "./utils/auth.js";
+import {
+  AuthenticatedRequest,
+  TokenPayload,
+  refreshTokens,
+} from "./utils/auth.js";
+import { Response, NextFunction } from "express";
 const { verify } = pkg;
-import knexConfig from "../knexfile.js";
 import knex from "knex";
 import { allowedOrigins, backendURL } from "./utils/urls.js";
 import { readFileSync } from "fs";
+import knexConfig from "./knexfile.js";
 
 const app = express();
 
@@ -23,7 +28,7 @@ app.get("/ping", (req, res) => {
 });
 
 // CORS configuration
-const corsOptions = {
+const corsOptions: CorsOptions = {
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
@@ -49,7 +54,11 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 
 // JWT verification middleware
-const jwtMiddleware = async (req, res, next) => {
+const jwtMiddleware = async (
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+) => {
   try {
     const accessToken = req.cookies["access-token"];
     const refreshToken = req.cookies["refresh-token"];
@@ -59,17 +68,27 @@ const jwtMiddleware = async (req, res, next) => {
       return next();
     }
 
+    if (
+      process.env.ACCESS_TOKEN_SECRET === undefined ||
+      process.env.REFRESH_TOKEN_SECRET === undefined
+    ) {
+      return next();
+    }
+
     // Verify the access token hasn't been tampered with. Undefined when it expires.
     let accessTokenData;
     if (accessToken !== undefined) {
-      accessTokenData = verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
+      accessTokenData = verify(
+        accessToken,
+        process.env.ACCESS_TOKEN_SECRET
+      ) as TokenPayload;
     }
 
     // Verify the refresh token hasn't been tampered with
     const refreshTokenData = verify(
       refreshToken,
       process.env.REFRESH_TOKEN_SECRET
-    );
+    ) as TokenPayload;
 
     // Check the user hasn't logged out
     const knexInstance = knex(knexConfig);
@@ -84,12 +103,16 @@ const jwtMiddleware = async (req, res, next) => {
     if (accessToken === undefined) {
       try {
         const result = await refreshTokens(req, res);
-        if (result.success && user.uid) {
+        if (result?.success && user.uid) {
           // Place the userUid on the request so we can access it in GQL
           req.userUid = user?.uid;
         }
       } catch (e) {
-        console.log("Error issuing new access token: ", e.message);
+        if (e instanceof Error) {
+          console.log("Error issuing new access token: ", e.message);
+        } else {
+          console.log("Unknown error issuing new access token:", e);
+        }
       }
       // Didn't need to generate a new access token, so we can grab it from the JWT
     } else {

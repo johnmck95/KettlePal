@@ -1,12 +1,12 @@
 import { Box, Button, HStack, Text } from "@chakra-ui/react";
 import { formatDurationShort } from "../../../utils/Time/time";
 import Detail from "./Detail";
-import { totalWorkoutWorkCapacity } from "../../../utils/Workouts/workouts";
 import { FuzzySearchQuery } from "../../../generated/frontend-types";
 import theme from "../../../Constants/theme";
 import ViewDetailedExercise from "./ViewDetailedExercise";
 import { useState } from "react";
 import dayjs from "dayjs";
+import { totalWorkoutWorkCapacity } from "../../../utils/Workouts/workouts";
 
 interface ShowWorkoutProps {
   workoutWithExercises: NonNullable<

@@ -1,8 +1,20 @@
-import { Box, Flex, Select, Heading, HStack } from "@chakra-ui/react";
-import React from "react";
+import {
+  Box,
+  Flex,
+  Select,
+  Heading,
+  HStack,
+  Alert,
+  AlertIcon,
+  AlertDescription,
+  CloseButton,
+} from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
 import theme from "../../Constants/theme";
 import { RadioGroup } from "../UI/RadioCard";
-import ExerciseTitles from "../../Constants/ExercisesOptions";
+import { useUser } from "../../Contexts/UserContext";
+import { useUnqiueExerciseTitlesQuery } from "../../generated/frontend-types";
+import LoadingSpinner from "../LoadingSpinner";
 
 export default function YourProgression() {
   const [selectedPeriod, setSelectedPeriod] = React.useState<
@@ -27,6 +39,21 @@ export default function YourProgression() {
     setSelectedMetric(metric as "Time" | "Work Capacity");
   };
 
+  const user = useUser().user;
+  const { loading, error, data } = useUnqiueExerciseTitlesQuery({
+    variables: {
+      userUid: user?.uid ?? "",
+    },
+  });
+  const uniqueExerciseTitles = data?.uniqueExerciseTitles ?? [];
+
+  const [showServerError, setShowServerError] = useState<boolean>(false);
+  useEffect(() => {
+    if (error) {
+      setShowServerError(true);
+    }
+  }, [error]);
+
   return (
     <Box
       bg={theme.colors.white}
@@ -44,6 +71,23 @@ export default function YourProgression() {
       >
         Your {selectedPeriod} {selectedExercise} Progression
       </Heading>
+      {showServerError && (
+        <Alert
+          status="error"
+          my="1rem"
+          borderRadius={"8px"}
+          justifyContent={"space-between"}
+        >
+          <HStack>
+            <AlertIcon />
+            <AlertDescription>{error?.message}</AlertDescription>
+          </HStack>
+          <CloseButton
+            alignSelf="flex-start"
+            onClick={() => setShowServerError(false)}
+          />
+        </Alert>
+      )}
       <Flex
         w="100%"
         h="350px"
@@ -53,7 +97,11 @@ export default function YourProgression() {
         alignItems={"center"}
         color={theme.colors.white}
       >
-        {selectedMetric} - Coming Soon..
+        {loading ? (
+          <LoadingSpinner size={16} disableMessage={true} />
+        ) : (
+          <>{selectedMetric} - Coming Soon..</>
+        )}
       </Flex>
 
       <HStack
@@ -75,7 +123,7 @@ export default function YourProgression() {
           onChange={(event) => handleExerciseChange(event.target.value)}
           size={["xs", "sm", "md"]}
         >
-          {ExerciseTitles.map((title) => (
+          {uniqueExerciseTitles.map((title) => (
             <option key={title} value={title}>
               {title}
             </option>

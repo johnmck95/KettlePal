@@ -1,19 +1,21 @@
-export type ExerciseFromClient = {
-  title: string;
-  weight: string | number;
-  weightUnit: string;
-  sets: string | number;
-  reps: string | number;
-  repsDisplay: string;
-  comment: string;
-  elapsedSeconds: number;
-};
+import { FormattedExercise } from "./formatDataForDB";
+
+export const validRepsDisplayed = [
+  null,
+  "",
+  "l/r",
+  "std",
+  "(1,2)",
+  "(1,2,3)",
+  "(1,2,3,4)",
+  "(1,2,3,4,5)",
+];
 
 export function verifyExercises({
   exercises,
   updatingWorkout = false,
 }: {
-  exercises: ExerciseFromClient[];
+  exercises: FormattedExercise[];
   updatingWorkout?: boolean;
 }): {
   result: boolean;
@@ -26,18 +28,8 @@ export function verifyExercises({
   }
 
   for (const exercise of exercises) {
-    let {
-      title,
-      weight,
-      sets: setsString,
-      reps: repsString,
-      repsDisplay,
-      weightUnit,
-      elapsedSeconds,
-    } = exercise;
-    // Frontend collects strings, but we store these values as floats in the DB.
-    const reps = parseFloat(repsString as string);
-    const sets = parseFloat(setsString as string);
+    let { title, weight, sets, reps, repsDisplay, weightUnit, elapsedSeconds } =
+      exercise;
 
     if (!title) {
       return {
@@ -81,24 +73,18 @@ export function verifyExercises({
       };
     }
 
-    if (elapsedSeconds < 0 || typeof elapsedSeconds !== "number") {
+    if (
+      elapsedSeconds == null ||
+      elapsedSeconds < 0 ||
+      typeof elapsedSeconds !== "number"
+    ) {
       return {
         result: false,
         reason: `Exercise Elapsed Seconds must be a numerical value greater than or equal to 0.`,
       };
     }
 
-    const validRepsDisplayed = [
-      null,
-      "",
-      "l/r",
-      "std",
-      "(1,2)",
-      "(1,2,3)",
-      "(1,2,3,4)",
-      "(1,2,3,4,5)",
-    ];
-    if (!validRepsDisplayed.includes(repsDisplay)) {
+    if (!validRepsDisplayed.includes(repsDisplay ?? null)) {
       return {
         result: false,
         reason: `Exercise Reps Display must be one of ${validRepsDisplayed.join(
@@ -107,7 +93,7 @@ export function verifyExercises({
       };
     }
 
-    if (repsDisplay === "l/r" && reps % 2 !== 0) {
+    if (reps != null && repsDisplay === "l/r" && reps % 2 !== 0) {
       return {
         result: false,
         reason: `Exercise Reps must be even when Reps Display is 'l/r'.`,

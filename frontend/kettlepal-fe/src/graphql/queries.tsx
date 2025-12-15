@@ -35,6 +35,7 @@ const PAST_WORKOUTS_FUZZY_QUERY = gql`
           comment
           elapsedSeconds
           createdAt
+          multiplier
         }
       }
     }
@@ -62,6 +63,7 @@ const USER_WITH_WORKOUTS_QUERY = gql`
           comment
           elapsedSeconds
           createdAt
+          multiplier
         }
       }
     }
@@ -80,6 +82,16 @@ const CHECK_SESSION_QUERY = gql`
         isAuthorized
         createdAt
         tokenCount
+        bodyWeight
+        bodyWeightUnit
+        templates {
+          title
+          weightUnit
+          multiplier
+          repsDisplay
+          index
+          isBodyWeight
+        }
       }
     }
   }
@@ -115,5 +127,11 @@ const AT_A_GLANCE_QUERY = gql`
         }
       }
     }
+  }
+`;
+
+const UNQIUE_EXERCISE_TITLES_QUERY = gql`
+  query unqiueExerciseTitles($userUid: ID!) {
+    uniqueExerciseTitles(userUid: $userUid)
   }
 `;

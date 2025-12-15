@@ -51,11 +51,17 @@ async function processWorkout(workout: any) {
         userUid: mockContext.req.userUid,
         workoutWithExercises: workout,
       },
+      //@ts-ignore
       mockContext
     );
     console.log(`Successfully added workout: ${result.uid}`);
   } catch (error) {
-    console.error(`Failed to add workout: ${error.message}`);
+    if (error instanceof Error) {
+      console.error(`Failed to add workout: ${error.message}`);
+    } else {
+      console.error("Failed to add workout:", error);
+    }
+
     console.log(workout);
   }
 }

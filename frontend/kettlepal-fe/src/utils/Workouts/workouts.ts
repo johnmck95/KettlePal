@@ -8,6 +8,8 @@ type Exercise = NonNullable<
     NonNullable<UserWithWorkoutsQuery["user"]>["workouts"][0]
   >["exercises"]
 >[0];
+
+// Note: BodyWeight exercises have the user weight and weightUnit saved in the exercises table.
 export function totalWorkoutWorkCapacity(
   workoutWithExercises: NonNullable<
     NonNullable<FuzzySearchQuery["pastWorkouts"]>["workoutWithExercises"]
@@ -22,7 +24,10 @@ export function totalWorkoutWorkCapacity(
 
   const computeWorkCapacity = (totalWorkCapacity: number, exercise: Exercise) =>
     totalWorkCapacity +
-    (exercise?.sets ?? 0) * (exercise?.reps ?? 0) * (exercise?.weight ?? 0);
+    (exercise?.sets ?? 0) *
+      (exercise?.reps ?? 0) *
+      (exercise?.weight ?? 0) *
+      exercise.multiplier;
 
   const totalLBWorkCapacity = exercisesInLB
     ? exercisesInLB.reduce(computeWorkCapacity, 0)

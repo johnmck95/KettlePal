@@ -15,6 +15,7 @@ import {
   AlertIcon,
   AlertDescription,
   CloseButton,
+  IconButton,
 } from "@chakra-ui/react";
 import React, { useState, useEffect } from "react";
 import { useUser } from "../../Contexts/UserContext";
@@ -27,6 +28,8 @@ import {
 } from "../../utils/Time/time";
 import { useUserStatsQuery } from "../../generated/frontend-types";
 import LoadingSpinner from "../LoadingSpinner";
+import { useNavigate } from "react-router-dom";
+import { FaCog } from "react-icons/fa";
 
 export default function UserStats() {
   const user = useUser().user;
@@ -54,6 +57,8 @@ export default function UserStats() {
     new Date(userStats?.oldestWorkoutDate ?? 0).getTime() <
     (Number(user?.createdAt) ?? 0);
 
+  const navigate = useNavigate();
+
   return (
     <Box
       h="100%"
@@ -63,17 +68,28 @@ export default function UserStats() {
       p="0"
     >
       <VStack py="1rem">
-        <Heading
+        <HStack
+          gap={4}
           w="90%"
-          fontSize="2xl"
-          fontWeight="bold"
-          pb="0.5rem"
-          mb="0.5rem"
-          textAlign="center"
           borderBottom={`1px solid ${theme.colors.green[50]}`}
+          justifyContent={"center"}
+          alignItems={"center"}
+          p="0.5rem"
         >
-          {user?.firstName + " " + user?.lastName}
-        </Heading>
+          <Heading fontSize="2xl" fontWeight="bold" textAlign="center">
+            {user?.firstName + " " + user?.lastName}
+          </Heading>
+          <IconButton
+            aria-label="Settings"
+            icon={<FaCog />}
+            onClick={() => navigate("/settings")}
+            variant="secondary"
+            size="sm"
+            px={0}
+            mx={0}
+          />
+        </HStack>
+
         {showServerError && (
           <Alert
             status="error"

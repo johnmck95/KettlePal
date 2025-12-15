@@ -1,21 +1,22 @@
 import React from "react";
 
 import { GridItem, SimpleGrid, Text } from "@chakra-ui/react";
-import AddComment from "./FormComponents.tsx/Generic/AddComment";
+import AddComment from "./FormComponents/NewWorkout/Generic/AddComment";
 import ConfirmModal from "../ConfirmModal";
-import ExerciseTitle from "./FormComponents.tsx/Exercise/ExerciseTitle";
-import ExerciseWeight from "./FormComponents.tsx/Exercise/ExerciseWeight";
-import ExerciseSets from "./FormComponents.tsx/Exercise/ExerciseSets";
-import ExerciseReps from "./FormComponents.tsx/Exercise/ExerciseReps";
-import ExerciseRepsDisplay from "./FormComponents.tsx/Exercise/ExerciseRepsDisplay";
-import ExerciseWeightUnit from "./FormComponents.tsx/Exercise/ExerciseWeightUnit";
-import TrackExercise from "./FormComponents.tsx/MidWorkoutTracking/TrackExercise";
-import { ExerciseContainer } from "./FormComponents.tsx/Exercise/ExerciseContainer";
+import ExerciseTitle from "./FormComponents/NewWorkout/Exercise/ExerciseTitle";
+import ExerciseWeight from "./FormComponents/NewWorkout/Exercise/ExerciseWeight";
+import ExerciseSets from "./FormComponents/NewWorkout/Exercise/ExerciseSets";
+import ExerciseReps from "./FormComponents/NewWorkout/Exercise/ExerciseReps";
+import ExerciseRepsDisplay from "./FormComponents/NewWorkout/Exercise/ExerciseRepsDisplay";
+import ExerciseWeightUnit from "./FormComponents/NewWorkout/Exercise/ExerciseWeightUnit";
+import TrackExercise from "./FormComponents/NewWorkout/MidWorkoutTracking/TrackExercise";
+import { ExerciseContainer } from "./FormComponents/NewWorkout/Exercise/ExerciseContainer";
 import { CreateWorkoutState } from "../../Hooks/useCreateWorkoutForm";
 import useCreateExerciseForm from "../../Hooks/useCreateExerciseForm";
 import "../../Styles/CustomSelect.css";
 import { formatExerciseString } from "../../utils/Exercises/exercises";
 import theme from "../../Constants/theme";
+import { useUser } from "../../Contexts/UserContext";
 
 interface CreateExerciseProps {
   exercise: Omit<CreateWorkoutState["exercises"][number], "key">;
@@ -43,6 +44,7 @@ export default function CreateExercise({
   showComments,
   renderMobileView,
 }: CreateExerciseProps) {
+  const user = useUser().user;
   const {
     completedSets,
     customTitle,
@@ -71,6 +73,7 @@ export default function CreateExercise({
     setOffset,
     swipeDistance,
   } = useCreateExerciseForm({
+    user,
     exercise,
     exerciseIndex,
     trackingIndex,
@@ -101,8 +104,8 @@ export default function CreateExercise({
           <SimpleGrid
             gap={1}
             templateColumns={{
-              base: "57.5% 20% 20%",
-              lg: renderMobileView ? "" : "35.5% 8% 8% 22% 12% 12%",
+              base: "47% 27% 21%",
+              lg: renderMobileView ? "" : "34% 8% 8% 20% 15% 12%",
             }}
             w="100%"
           >

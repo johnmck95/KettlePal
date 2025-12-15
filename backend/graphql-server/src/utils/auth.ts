@@ -1,11 +1,31 @@
-import pkg from "jsonwebtoken";
-import knexConfig from "../../knexfile.js";
+import jwt from "jsonwebtoken";
 import knex from "knex";
 import { User } from "../generated/backend-types.js";
+import { Request, Response } from "express";
+import knexConfig from "../knexfile.js";
+const { sign, verify } = jwt;
 
-const { sign, verify } = pkg;
+export interface TokenPayload {
+  userUid: string;
+  tokenCount: number;
+  iat?: number;
+  exp?: number;
+}
 
-export function createTokens(user: User) {
+export interface AuthenticatedRequest extends Request {
+  userUid?: string;
+}
+
+export function createTokens(user: User): {
+  refreshToken: string;
+  accessToken: string;
+} {
+  if (
+    process.env.REFRESH_TOKEN_SECRET === undefined ||
+    process.env.ACCESS_TOKEN_SECRET === undefined
+  ) {
+    return { refreshToken: "", accessToken: "" };
+  }
   const refreshToken = sign(
     { userUid: user.uid, tokenCount: user.tokenCount },
     process.env.REFRESH_TOKEN_SECRET,
@@ -27,7 +47,7 @@ export function createTokens(user: User) {
 export const REFRESH_TOKEN_COOKIE_NAME = "refresh-token";
 export const ACCESS_TOKEN_COOKIE_NAME = "access-token";
 
-export function setAccessToken(res: any, accessToken: string) {
+export function setAccessToken(res: Response, accessToken: string) {
   res.cookie(ACCESS_TOKEN_COOKIE_NAME, accessToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
@@ -37,7 +57,7 @@ export function setAccessToken(res: any, accessToken: string) {
   });
 }
 
-export function setRefreshToken(res: any, refreshToken: string) {
+export function setRefreshToken(res: Response, refreshToken: string) {
   res.cookie(REFRESH_TOKEN_COOKIE_NAME, refreshToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
@@ -47,7 +67,7 @@ export function setRefreshToken(res: any, refreshToken: string) {
   });
 }
 
-export async function refreshTokens(req, res) {
+export async function refreshTokens(req: AuthenticatedRequest, res: Response) {
   const knexInstance = knex(knexConfig);
   const refreshToken = req.cookies[REFRESH_TOKEN_COOKIE_NAME];
 
@@ -55,9 +75,16 @@ export async function refreshTokens(req, res) {
     return { success: false, message: "Refresh token not found" };
   }
 
+  if (process.env.REFRESH_TOKEN_SECRET === undefined) {
+    return;
+  }
+
   try {
     // Verify the JWT refresh token with our secret
-    const data = verify(refreshToken, process.env.REFRESH_TOKEN_SECRET);
+    const data = verify(
+      refreshToken,
+      process.env.REFRESH_TOKEN_SECRET
+    ) as TokenPayload;
 
     // Grab the user referenced in the JWT
     const user = await knexInstance("users")
@@ -65,8 +92,12 @@ export async function refreshTokens(req, res) {
       .first();
 
     // Create new tokens
+    const tokens = createTokens(user);
+    if (!tokens) {
+      return { success: false, message: "Failed to create tokens" };
+    }
     const { refreshToken: newRefreshToken, accessToken: newAccessToken } =
-      createTokens(user);
+      tokens;
 
     // Set new tokens in HTTP-only cookies
     setAccessToken(res, newAccessToken);

@@ -1,14 +1,16 @@
-import knexConfig from "../knexfile.js";
 import knex from "knex";
 import * as bcrypt from "bcrypt";
 import { verifyExercises } from "./utils/verifyExercises.js";
 import { verifyWorkout } from "./utils/verifyWorkout.js";
+import { verifyTemplates, verifyUserSettings } from "./utils/verifySettings.js";
+import { Response } from "express";
 import {
   formatExercisesForDB,
   formatWorkoutForDB,
 } from "./utils/formatDataForDB.js";
 import {
   ACCESS_TOKEN_COOKIE_NAME,
+  AuthenticatedRequest,
   REFRESH_TOKEN_COOKIE_NAME,
   createTokens,
   refreshTokens,
@@ -19,6 +21,7 @@ import { NotAuthorizedError } from "./utils/Errors/NotAuthorizedError.js";
 import {
   AddOrEditUserInput,
   AddOrEditWorkoutInput,
+  AddOrUpdateSettingsInput,
   AddWorkoutWithExercisesInput,
   AtAGlanceData,
   Exercise,
@@ -30,6 +33,7 @@ import {
   Workout,
 } from "./generated/backend-types.js";
 import getFuzzyWorkoutSearchResults from "./utils/Search/PastWorkoutsFuzzySearch.js";
+import knexConfig from "./knexfile.js";
 
 const knexInstance = knex(knexConfig);
 
@@ -37,7 +41,7 @@ const knexInstance = knex(knexConfig);
 export const resolvers = {
   // The top-level resolvers inside Query are the entry point resolvers for the graph, not nested queries like workout{ exercises{...} }
   Query: {
-    async users(_, __, { req }: any) {
+    async users(_: any, __: any, { req }: { req: AuthenticatedRequest }) {
       if (!req.userUid) {
         throw new NotAuthorizedError();
       }
@@ -48,25 +52,31 @@ export const resolvers = {
         throw error;
       }
     },
+
     async pastWorkouts(
-      _,
+      _: any,
       { userUid, searchQuery, limit, offset }: QueryPastWorkoutsArgs,
-      { req }: any
+      { req }: { req: AuthenticatedRequest }
     ) {
       if (!req.userUid || req.userUid !== userUid) {
         throw new NotAuthorizedError();
       }
       const pastWorkouts = await getFuzzyWorkoutSearchResults({
-        searchQuery,
+        searchQuery: searchQuery ?? "",
         userUid,
         knexInstance,
-        limit,
-        offset,
+        limit: limit ?? undefined,
+        offset: offset ?? undefined,
       });
 
       return pastWorkouts;
     },
-    async user(_, { uid }: QueryUserArgs, { req }: any) {
+
+    async user(
+      _: any,
+      { uid }: QueryUserArgs,
+      { req }: { req: AuthenticatedRequest }
+    ) {
       if (!req.userUid || req.userUid !== uid) {
         throw new NotAuthorizedError();
       }
@@ -81,11 +91,14 @@ export const resolvers = {
       }
     },
 
-    async workouts(_, { limit, offset }: QueryWorkoutsArgs, { req }: any) {
+    async workouts(
+      _: any,
+      { limit, offset }: QueryWorkoutsArgs,
+      { req }: { req: AuthenticatedRequest }
+    ) {
       if (!req.userUid) {
         throw new NotAuthorizedError();
       }
-
       try {
         let result;
         let query = `
@@ -98,12 +111,12 @@ export const resolvers = {
 
         if (offset !== undefined) {
           query += ` OFFSET ?`;
-          params.push(offset.toString());
+          params.push(offset?.toString() ?? "0");
         }
 
         if (limit !== undefined) {
           query += ` LIMIT ?`;
-          params.push(limit.toString());
+          params.push(limit?.toString() ?? "0");
         }
 
         result = await knexInstance.raw(query, params);
@@ -115,7 +128,12 @@ export const resolvers = {
         throw error;
       }
     },
-    async workout(_, { uid }: { uid: String }, { req }: any) {
+
+    async workout(
+      _: any,
+      { uid }: { uid: String },
+      { req }: { req: AuthenticatedRequest }
+    ) {
       if (!req.userUid) {
         throw new NotAuthorizedError();
       }
@@ -130,7 +148,38 @@ export const resolvers = {
       }
     },
 
-    async exercises(_, __, { req }: any) {
+    async uniqueExerciseTitles(
+      _: any,
+      { userUid }: { userUid: string },
+      { req }: { req: AuthenticatedRequest }
+    ) {
+      if (!req.userUid || req.userUid !== userUid) {
+        throw new NotAuthorizedError();
+      }
+      try {
+        // Returns a list of all recorded exercises titles, by frequencey then alphabetically.
+        const titles = await knexInstance("exercises as e")
+          .select(
+            knexInstance.raw(
+              `INITCAP(REGEXP_REPLACE(TRIM(LOWER(e.title)), '\\s+', ' ', 'g')) AS title`
+            ),
+            knexInstance.raw("COUNT(*) AS freq")
+          )
+          .join("workouts as w", "e.workoutUid", "w.uid")
+          .where("w.userUid", userUid)
+          .groupByRaw("REGEXP_REPLACE(TRIM(LOWER(e.title)), '\\s+', ' ', 'g')")
+          .orderBy([
+            { column: "freq", order: "desc" },
+            { column: "title", order: "asc" },
+          ]);
+        return titles.map((row) => row.title);
+      } catch (error) {
+        console.error("Error fetching unique exercise titles:", error);
+        throw error;
+      }
+    },
+
+    async exercises(_: any, __: any, { req }: { req: AuthenticatedRequest }) {
       if (!req.userUid) {
         throw new NotAuthorizedError();
       }
@@ -141,7 +190,12 @@ export const resolvers = {
         throw error;
       }
     },
-    async exercise(_, { uid }: { uid: String }, { req }: any) {
+
+    async exercise(
+      _: any,
+      { uid }: { uid: String },
+      { req }: { req: AuthenticatedRequest }
+    ) {
       if (!req.userUid) {
         throw new NotAuthorizedError();
       }
@@ -156,7 +210,7 @@ export const resolvers = {
       }
     },
 
-    checkSession(_, __, { req }) {
+    checkSession(_: any, __: any, { req }: { req: AuthenticatedRequest }) {
       // Middleware is responsible for validating JWTs
       if (req.userUid) {
         const user = knexInstance("users").where({ uid: req.userUid }).first();
@@ -185,12 +239,12 @@ export const resolvers = {
 
         if (offset !== undefined) {
           query += ` OFFSET ?`;
-          params.push(offset.toString());
+          params.push(offset?.toString() ?? "0");
         }
 
         if (limit !== undefined) {
           query += ` LIMIT ?`;
-          params.push(limit.toString());
+          params.push(limit?.toString() ?? "0");
         }
 
         result = await knexInstance.raw(query, params);
@@ -200,6 +254,24 @@ export const resolvers = {
       } catch (error) {
         console.error("Error fetching workouts:", error);
         throw error;
+      }
+    },
+    async templates(
+      parent: User,
+      __: any,
+      { req }: { req: AuthenticatedRequest }
+    ) {
+      const userUid = parent.uid;
+      if (!req.userUid || req.userUid !== userUid) {
+        throw new NotAuthorizedError();
+      }
+      try {
+        return await knexInstance("templates").where({
+          userUid,
+        });
+      } catch (e) {
+        console.error(`Error fetching templates for user ${userUid}:`, e);
+        throw e;
       }
     },
     async userStats(parent: User) {
@@ -223,7 +295,7 @@ export const resolvers = {
                 SELECT 
                   "workoutUid", 
                   SUM(
-                    sets * reps * 
+                    sets * reps * multiplier *
                     CASE 
                       WHEN "weightUnit" = 'lb' THEN weight * 0.45359237
                       ELSE weight
@@ -319,8 +391,8 @@ export const resolvers = {
                   w.date::date,
                   SUM(
                     CASE
-                      WHEN e."weightUnit" = 'kg' THEN (e.weight * e.sets * e.reps)::INTEGER
-                      WHEN e."weightUnit" = 'lb' THEN ((e.weight * 0.45359237) * e.sets * e.reps)::INTEGER
+                      WHEN e."weightUnit" = 'kg' THEN (e.weight * e.sets * e.reps * e.multiplier)::INTEGER
+                      WHEN e."weightUnit" = 'lb' THEN (e.weight * 0.45359237 * e.sets * e.reps * e.multiplier)::INTEGER
                       ELSE 0
                     END
                   ) AS workCapacityKg
@@ -380,8 +452,8 @@ export const resolvers = {
                   ), 0) AS elapsedSeconds,
                   COALESCE(SUM(
                     CASE 
-                      WHEN e."weightUnit" = 'kg' THEN (e.weight * e.sets * e.reps)::INTEGER
-                      WHEN e."weightUnit" = 'lb' THEN ((e.weight * 0.45359237) * e.sets * e.reps)::INTEGER
+                      WHEN e."weightUnit" = 'kg' THEN (e.weight * e.sets * e.reps * e.multiplier)::INTEGER
+                      WHEN e."weightUnit" = 'lb' THEN (e.weight * 0.45359237 * e.sets * e.reps * e.multiplier)::INTEGER
                       ELSE 0
                     END
                   ), 0) AS workCapacityKg
@@ -436,8 +508,8 @@ export const resolvers = {
                   ), 0)::INTEGER AS elapsedSeconds,
                   COALESCE(SUM(
                     CASE 
-                      WHEN e."weightUnit" = 'kg' THEN (e.weight * e.sets * e.reps)::INTEGER
-                      WHEN e."weightUnit" = 'lb' THEN ((e.weight * 0.45359237) * e.sets * e.reps)::INTEGER
+                      WHEN e."weightUnit" = 'kg' THEN (e.weight * e.sets * e.reps * e.multiplier)::INTEGER
+                      WHEN e."weightUnit" = 'lb' THEN (e.weight * 0.45359237 * e.sets * e.reps * e.multiplier)::INTEGER
                       ELSE 0
                     END
                   ), 0) AS workCapacityKg
@@ -487,8 +559,8 @@ export const resolvers = {
                   date_trunc('year', w.date::date)::date AS year_start,
                   SUM(
                     CASE 
-                      WHEN e."weightUnit" = 'kg' THEN (e.weight * e.sets * e.reps)::INTEGER
-                      WHEN e."weightUnit" = 'lb' THEN ((e.weight * 0.45359237) * e.sets * e.reps)::INTEGER
+                      WHEN e."weightUnit" = 'kg' THEN (e.weight * e.sets * e.reps * e.multiplier)::INTEGER
+                      WHEN e."weightUnit" = 'lb' THEN (e.weight * 0.45359237 * e.sets * e.reps * e.multiplier)::INTEGER
                       ELSE 0
                     END
                   )::INTEGER AS workCapacityKg
@@ -528,7 +600,11 @@ export const resolvers = {
 
   // This is the resolver for returning all exercises within a workout
   Workout: {
-    async exercises(parent: Workout, __: any, { req }: any) {
+    async exercises(
+      parent: Workout,
+      __: any,
+      { req }: { req: AuthenticatedRequest }
+    ) {
       if (!req.userUid || req.userUid !== parent.userUid) {
         throw new NotAuthorizedError();
       }
@@ -545,7 +621,11 @@ export const resolvers = {
 
   // Takes in the same args as our query resolvers
   Mutation: {
-    async addUser(_, { user }: { user: AddOrEditUserInput }, { req }: any) {
+    async addUser(
+      _: any,
+      { user }: { user: AddOrEditUserInput },
+      { req }: { req: AuthenticatedRequest }
+    ) {
       if (!req.userUid) {
         throw new NotAuthorizedError();
       }
@@ -572,7 +652,7 @@ export const resolvers = {
     },
 
     async addWorkoutWithExercises(
-      _,
+      _: any,
       {
         userUid,
         workoutWithExercises,
@@ -580,7 +660,7 @@ export const resolvers = {
         userUid: string;
         workoutWithExercises: AddWorkoutWithExercisesInput;
       },
-      { req }: any
+      { req }: { req: AuthenticatedRequest }
     ) {
       if (!userUid) {
         throw new Error("userUid required to addWorkoutWithExercises");
@@ -625,21 +705,29 @@ export const resolvers = {
                 exercises,
               };
             } catch (error) {
-              console.log(error.message);
+              if (error instanceof Error) {
+                console.log(error.message);
+              } else {
+                console.log(error);
+              }
               await trx.rollback();
               throw new Error("Failed to create workout with exercises.");
             }
           }
         );
       } catch (error) {
-        console.log(error.message);
+        if (error instanceof Error) {
+          console.log(error.message);
+        } else {
+          console.log(error);
+        }
         throw new Error("Failed to create workout with exercises.");
       }
       return addedWorkoutWithExercises;
     },
 
     async addWorkout(
-      _,
+      _: any,
       {
         userUid,
         workout,
@@ -647,7 +735,7 @@ export const resolvers = {
         userUid: String;
         workout: AddOrEditWorkoutInput;
       },
-      { req }: any
+      { req }: { req: AuthenticatedRequest }
     ) {
       if (!req.userUid || req.userUid !== userUid) {
         throw new NotAuthorizedError();
@@ -674,12 +762,12 @@ export const resolvers = {
     },
 
     async addExercise(
-      _,
+      _: any,
       {
         workoutUid,
         exercise,
       }: { workoutUid: String; exercise: Omit<Exercise, "uid" | "workoutUid"> },
-      { req }: any
+      { req }: { req: AuthenticatedRequest }
     ) {
       if (!req.userUid) {
         throw new NotAuthorizedError();
@@ -709,12 +797,12 @@ export const resolvers = {
     },
 
     async updateUser(
-      _,
+      _: any,
       args: {
         uid: string;
         edits: AddOrEditUserInput;
       },
-      { req }: any
+      { req }: { req: AuthenticatedRequest }
     ) {
       if (!req.userUid || req.userUid !== args.uid) {
         throw new NotAuthorizedError();
@@ -732,9 +820,9 @@ export const resolvers = {
     },
 
     async updateWorkout(
-      _,
+      _: any,
       { uid, edits }: { uid: String; edits: AddOrEditWorkoutInput },
-      { req }: any
+      { req }: { req: AuthenticatedRequest }
     ) {
       if (!req.userUid) {
         throw new NotAuthorizedError();
@@ -750,12 +838,12 @@ export const resolvers = {
     },
 
     async updateExercise(
-      _,
+      _: any,
       {
         uid,
         edits,
       }: { uid: String; edits: Omit<Exercise, "uid" | "workoutUid"> },
-      { req }: any
+      { req }: { req: AuthenticatedRequest }
     ) {
       if (!req.userUid) {
         throw new NotAuthorizedError();
@@ -803,7 +891,7 @@ export const resolvers = {
     },
 
     async updateWorkoutWithExercises(
-      _,
+      _: any,
       {
         workoutUid,
         workoutWithExercises,
@@ -811,7 +899,7 @@ export const resolvers = {
         workoutUid: String;
         workoutWithExercises: UpdateWorkoutWithExercisesInput;
       },
-      { req }: any
+      { req }: { req: AuthenticatedRequest }
     ) {
       // 1. Validate auth token
       if (!req.userUid) {
@@ -914,7 +1002,11 @@ export const resolvers = {
       return updatedWorkoutWithExercises;
     },
 
-    async deleteUser(_, { uid }: { uid: String }, { req }: any) {
+    async deleteUser(
+      _: any,
+      { uid }: { uid: String },
+      { req }: { req: AuthenticatedRequest }
+    ) {
       if (!req.userUid) {
         throw new NotAuthorizedError();
       }
@@ -925,7 +1017,7 @@ export const resolvers = {
               .count("*")
               .where({ userUid: uid })
               .first()
-          ).count
+          )?.count
         );
 
         if (workoutsCount > 0) {
@@ -949,9 +1041,9 @@ export const resolvers = {
 
     // TODO: This is safely deleting workout & exercises, but the exercises returned is an empty array
     async deleteWorkoutWithExercises(
-      _,
+      _: any,
       { workoutUid }: { workoutUid: String },
-      { req }: any
+      { req }: { req: AuthenticatedRequest }
     ) {
       if (!req.userUid) {
         throw new NotAuthorizedError();
@@ -999,7 +1091,11 @@ export const resolvers = {
       }
     },
 
-    async deleteExercise(_, { uid }: { uid: String }, { req }: any) {
+    async deleteExercise(
+      _: any,
+      { uid }: { uid: String },
+      { req }: { req: AuthenticatedRequest }
+    ) {
       if (!req.userUid) {
         throw new NotAuthorizedError();
       }
@@ -1022,12 +1118,20 @@ export const resolvers = {
         await knexInstance("exercises").where({ uid: uid }).del();
         return exercise;
       } catch (error) {
-        console.error("Error deleting exercise:", error.message);
+        if (error instanceof Error) {
+          console.error("Error deleting exercise:", error.message);
+        } else {
+          console.error("Error deleting exercise:", error);
+        }
         throw error;
       }
     },
 
-    async signUp(_, { user }: { user: AddOrEditUserInput }, { res }) {
+    async signUp(
+      _: any,
+      { user }: { user: AddOrEditUserInput },
+      { res }: { res: Response }
+    ) {
       const hashedPassword = await bcrypt.hash(user.password, 12);
       const newUser = {
         firstName: user.firstName,
@@ -1065,9 +1169,9 @@ export const resolvers = {
     },
 
     async login(
-      _,
+      _: any,
       { email, password }: { email: string; password: string },
-      { res }
+      { res }: { res: Response }
     ) {
       const user = await knexInstance("users").where({ email: email }).first();
 
@@ -1090,11 +1194,19 @@ export const resolvers = {
       return user;
     },
 
-    async refreshToken(_, __, { req, res }) {
+    async refreshToken(
+      _: any,
+      __: any,
+      { req, res }: { req: AuthenticatedRequest; res: Response }
+    ) {
       return await refreshTokens(req, res);
     },
 
-    async invalidateToken(_, __, { req, res }) {
+    async invalidateToken(
+      _: any,
+      __: any,
+      { req, res }: { req: AuthenticatedRequest; res: Response }
+    ) {
       // No user, cannot invalidate their refresh token
       if (!req.userUid) {
         throw new Error("No user found to invalidate token.");
@@ -1115,6 +1227,90 @@ export const resolvers = {
         console.error(`Error updating token count for user:`, error);
         throw error;
       }
+    },
+
+    async addOrUpdateSettings(
+      _: any,
+      {
+        userUid,
+        settings,
+      }: { userUid: string; settings: AddOrUpdateSettingsInput },
+      { req }: { req: AuthenticatedRequest }
+    ) {
+      if (!userUid) {
+        throw new Error("userUid required to add or update settings.");
+      }
+
+      // 1. Validate request is authorized
+      if (!req.userUid || req.userUid !== userUid) {
+        throw new NotAuthorizedError();
+      }
+
+      // 2. Validate user settings input provided
+      const areUserSettingsValid = verifyUserSettings(settings);
+      if (areUserSettingsValid.result === false) {
+        throw new Error(areUserSettingsValid.reason);
+      }
+
+      // 3. Validate templates are valid
+      const areTemplatesValid = verifyTemplates(settings.templates);
+      if (areTemplatesValid.result === false) {
+        throw new Error(areTemplatesValid.reason);
+      }
+
+      // 4. Start transaction to update user weight & templates in db
+      await knexInstance.transaction(async function (trx) {
+        try {
+          // a) Update user body weight & unit if provided
+          let userUpdates: Partial<User> = {
+            bodyWeight: settings.bodyWeight ?? 0,
+            bodyWeightUnit: settings.bodyWeightUnit ?? "kg",
+          };
+          await trx("users").where({ uid: userUid }).update(userUpdates);
+
+          // b) Delete existing templates for user
+          await trx("templates").where({ userUid: userUid }).del();
+
+          // c) Insert new templates
+          for (let template of settings.templates) {
+            const newTemplate = {
+              ...template,
+              userUid: userUid,
+              weightUnit: template.isBodyWeight ? null : template.weightUnit,
+              multiplier: template.multiplier ?? 1.0,
+            };
+            await trx("templates").insert(newTemplate);
+          }
+
+          await trx.commit();
+        } catch (error) {
+          await trx.rollback();
+          if (error instanceof Error) {
+            console.log(error.message);
+          } else {
+            console.log(error);
+          }
+          throw new Error("Failed to add or update settings.");
+        }
+      });
+
+      // 5. Fetch and return user + templates
+      const user = await knexInstance<User>("users")
+        .where({ uid: userUid })
+        .first();
+
+      if (!user) {
+        throw new Error("User not found after updating settings.");
+      }
+
+      const templates = await knexInstance("templates")
+        .where({ userUid })
+        .orderBy("index", "asc");
+
+      return {
+        user,
+        templates,
+      };
     },
   },
 };

@@ -2,23 +2,25 @@
 
 ## Migrations
 
-- Make a new migration with `knex migrate:make migration_name`, this will be stored in `src/db/migrations`.
-- Run your migration with `knex migrate:up`, `:down` or `:latest`
+Navigate to the `kettlepal/backend/graphql-server` directory.
+
+- Make a new migration with `npm run knex migrate:make migration_name`, this will be stored in `src/db/migrations`.
+- View the queue of migrations with `npm run knex migrate:list`
+- Run the next migration with `npm run knex migrate:up`, `:down` or `:latest`
+- Run a specific migration with `npm run knex migrate:<up or down> <migration_file_name.js>`
 
 ## Seeds
 
-- Make a new Seed file with `knex seed:make table_name`, this will be stored in `src/db/seeds`. IF THIS SEED FILENAME ALREADY EXISTS, IT WILL OVERWRITE THE FILE! You've been warned.
-- Run the seeding with `knex seed:run`, or a specific seed file with `knex seed:run --specific=filename.js`
+- Make a new Seed file with `npm run knex seed:make table_name`, this will be stored in `src/db/seeds`. IF THIS SEED FILENAME ALREADY EXISTS, IT WILL OVERWRITE THE FILE! You've been warned.
+- Run the seeding with `knex seed:run`, or a specific seed file with `npm run knex seed:run --specific=filename.js`
 - Note the table dependencies are ordered as such: Users -> Workouts -> Exercises
 
 # GraphQL
 
 ## Run the GraphQL Server
 
-`cd` to `kettlepal/backend/graphql-server`, then run `npm start`
+`cd` to `kettlepal/backend/graphql-server`, then run `npm run dev`. This supports hot reload, unlike `npm start`.
 You can now open `http://localhost:4000/graphql` in the browser to use Apollo Server to test your backend server.
-
-NOTE: The server does _not_ hot reload. TODO.
 
 ## Selecting the Database
 
@@ -47,6 +49,8 @@ There is a `1 - M` relationship between the `users & workouts` tables, and anoth
       <th>is_authorized</th>
       <th>created_at</th>
       <th>token_count</th>
+      <th>bodyWeight</th>
+      <th>bodyWeightUnit</th>
     </tr>
   </thead>
   <tbody>
@@ -59,6 +63,8 @@ There is a `1 - M` relationship between the `users & workouts` tables, and anoth
       <td>A flag to restrict/grant access in the future</td>
       <td>the date the account was created</td>
       <td>used in validation</td>
+      <td>the weight of the user, 0 by default or if the user would not like to say</td>
+      <td>the unit of the users body weight, "lb" or "kg"</td>
     </tr>
     <tr>
       <td>uuid</td>
@@ -69,6 +75,8 @@ There is a `1 - M` relationship between the `users & workouts` tables, and anoth
       <td>boolean</td>
       <td>timestamptz</td>
       <td>int(4)</td>
+      <td>float(4)</td>
+      <td>The unit for the weight. Typically "kg" or "lb" if applicable.</td>
     </tr>
      <tr>
       <td></td>
@@ -78,6 +86,8 @@ There is a `1 - M` relationship between the `users & workouts` tables, and anoth
       <td></td>
       <td>nullable</td>
       <td>nullable</td>
+      <td></td>
+      <td></td>
       <td></td>
     </tr>
   </tbody>
@@ -140,6 +150,7 @@ There is a `1 - M` relationship between the `users & workouts` tables, and anoth
       <th>reps_display</th>
       <th>elapsed_seconds</th>
       <th>comment</th>
+      <th>multiplier</th>
     </tr>
   </thead>
   <tbody>
@@ -165,6 +176,7 @@ There is a `1 - M` relationship between the `users & workouts` tables, and anoth
       </td>
       <td>total number of seconds the exercise lasted for</td>
       <td>comment</td>
+      <td>a constant value that will be used to calculate work capacity. Useful for body weight exercises and compound lifts.</td>
     </tr>
     <tr>
       <td>uuid</td>
@@ -178,6 +190,7 @@ There is a `1 - M` relationship between the `users & workouts` tables, and anoth
       <td>varchar(255)</td>
       <td>int(4)</td>
       <td>varchar(512)</td>
+      <td>float(4)</td>
     </tr>
     <tr>
       <td></td>
@@ -191,6 +204,59 @@ There is a `1 - M` relationship between the `users & workouts` tables, and anoth
       <td>nullable</td>
       <td>nullable</td>
       <td>nullable</td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
+
+## templates
+
+<table border="1" cellpadding="6" cellspacing="0">
+  <thead>
+    <tr>
+      <th>uid</th>
+      <th>user_uid</th>
+      <th>created_at</th>
+      <th>title</th>
+      <th>weight_unit</th>
+      <th>multiplier</th>
+      <th>reps_display</th>
+      <th>index</th>
+      <th>isBodyWeight</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>primary key</td>
+      <td>foreign key</td>
+      <td>the date the exercise template was created on</td>
+      <td>exercise title</td>
+      <td>the weight unit, either "kg" or "lb" if applicable (users.bodyWeightUnit will be used for body weight exercises)</td>
+      <td>for body weight exercises, this multiplier will be used to computer work capacity. Ex: Pull Up may be 0.90 * body mass, where 0.90 is the multipler.</td>
+      <td>The method the UI will use to display the total number of reps to the user. See exercises.reps_display for full details.</td>
+      <td>The 0-based index the exercise templates should appear in an ordered list (new workout page dropdown)</td>
+      <td>if the exercise is a body weight exercise, the exercises row with pull the weight and weightUnit from the users table</td>
+    </tr>
+    <tr>
+      <td>uuid</td>
+      <td>uuid</td>
+      <td>timestamptz</td>
+      <td>varchar(255)</td>
+      <td>varchar(255)</td>
+      <td>float(4)</td>
+      <td>varchar(255)</td>
+      <td>int(4)</td>
+      <td>boolean</td>
+    </tr>
+        <tr>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td>nullable</td>
+      <td></td>
+      <td>nullable</td>
+      <td></td>
     </tr>
   </tbody>
 </table>
