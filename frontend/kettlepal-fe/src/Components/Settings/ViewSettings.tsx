@@ -126,9 +126,9 @@ export default function ViewSettings({
               </ListItem>
               <ListItem>
                 <ListIcon as={FaCheckCircle} color="green.500" />
-                Choose the{" "}
+                Choose the Default{" "}
                 <b>
-                  <i>Default Unit & Type</i>
+                  <i>Unit & Type</i>
                 </b>{" "}
                 per exercise to quickly format workouts.
               </ListItem>
@@ -140,8 +140,8 @@ export default function ViewSettings({
               color="gray.600"
               fontSize={["xs", "sm", "md"]}
             >
-              Click the <Icon as={FaPencilAlt} mx="0.25rem" /> icon to customize
-              your KettlePal experience by creating Exercise Templates!
+              Click the <Icon as={FaPencilAlt} mx="0.25rem" /> icon to create
+              your Exercise Templates now!
             </Text>
           </>
         ) : (

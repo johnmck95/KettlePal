@@ -76,7 +76,7 @@ There is a `1 - M` relationship between the `users & workouts` tables, and anoth
       <td>timestamptz</td>
       <td>int(4)</td>
       <td>float(4)</td>
-      <td>text enum ["lb", "kg"]</td>
+      <td>The unit for the weight. Typically "kg" or "lb" if applicable.</td>
     </tr>
      <tr>
       <td></td>
