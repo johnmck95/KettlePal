@@ -41,6 +41,9 @@ export default function EditSettings({
     serverError,
     showServerError,
     submitted,
+    isOpenLeaveSettings,
+    onOpenLeaveSettings,
+    onCloseLeaveSettings,
     setShowServerError,
     onOpenSaveSettings,
     onSaveSettings,
@@ -99,7 +102,7 @@ export default function EditSettings({
         <IconButton
           aria-label="Settings"
           icon={<FaTimes />}
-          onClick={toggleEditMode}
+          onClick={onOpenLeaveSettings}
           variant="secondary"
           size="sm"
           px={0}
@@ -237,7 +240,25 @@ export default function EditSettings({
         )}
       </Box>
 
-      {/* SAVE SETTINGS MODAL */}
+      {/* EXIT TEMPLATE EDIT */}
+      <ConfirmModal
+        isOpen={isOpenLeaveSettings}
+        onClose={onCloseLeaveSettings}
+        onConfirmation={toggleEditMode}
+        ModalTitle="Draft Saved"
+        ModalBodyText={
+          <Text mb="1rem">
+            Your changes will be saved as long as you keep the application
+            running. Are you sure you want to leave before updating your
+            settings?
+          </Text>
+        }
+        CloseText="Cancel"
+        ProceedText="Continue"
+        variant="confirm"
+      ></ConfirmModal>
+
+      {/* UPDATE SETTINGS MODAL */}
       <ConfirmModal
         isOpen={isOpenSaveSettings}
         onClose={onCloseSaveSettings}

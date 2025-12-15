@@ -411,6 +411,13 @@ const useEditSettings = ({
     onClose: onCloseSaveSettings,
   } = useDisclosure();
 
+  // Leave Settings Modal Controls
+  const {
+    isOpen: isOpenLeaveSettings,
+    onOpen: onOpenLeaveSettings,
+    onClose: onCloseLeaveSettings,
+  } = useDisclosure();
+
   return {
     state,
     user,
@@ -419,6 +426,9 @@ const useEditSettings = ({
     serverError,
     showServerError,
     submitted,
+    isOpenLeaveSettings,
+    onOpenLeaveSettings,
+    onCloseLeaveSettings,
     formHasErrors,
     onSaveSettings,
     setShowServerError,
