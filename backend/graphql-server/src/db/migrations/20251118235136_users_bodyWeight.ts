@@ -3,7 +3,7 @@ export async function up(knex: {
 }) {
   await knex.schema.alterTable("users", function (table) {
     table.float("bodyWeight").notNullable().defaultTo(0);
-    table.enu("bodyWeightUnit", ["lb", "kg"]).notNullable().defaultTo("kg");
+    table.string("bodyWeightUnit", 255).notNullable().defaultTo("kg");
   });
 }
 

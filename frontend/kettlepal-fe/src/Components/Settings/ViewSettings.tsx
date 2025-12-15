@@ -184,7 +184,7 @@ export default function ViewSettings({
                   <Box>
                     {template.isBodyWeight ? "Body Weight" : "Weighted"}
                   </Box>
-                  <Box>{template.multiplier}</Box>
+                  <Box>{template.multiplier.toFixed(2)}</Box>
                 </Grid>
               ))}
             </VStack>

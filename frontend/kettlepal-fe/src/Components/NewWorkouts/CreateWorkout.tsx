@@ -252,26 +252,35 @@ export default function CreateWorkout() {
           setComment={setComment}
         />
 
-        {state.exercises.length === 0 && workoutState !== "submit" && (
-          <Center>
-            <Text
-              fontSize={["sm", "md"]}
-              color={theme.colors.gray[600]}
-              mt="3rem"
-            >
-              <i>
-                {showTracking ? (
-                  <>
-                    Click <b>Pause</b>, then design your workout.
-                  </>
-                ) : (
-                  <>
-                    Design your workout, then click <b>Start</b>.
-                  </>
-                )}
-              </i>
-            </Text>
-          </Center>
+        {showUploadSuccess ? (
+          <Alert status="success" mt="2rem" borderRadius={"8px"} bg="green.50">
+            <AlertIcon />
+            Workout Saved Successfully!
+          </Alert>
+        ) : (
+          <>
+            {state.exercises.length === 0 && workoutState !== "submit" && (
+              <Center>
+                <Text
+                  fontSize={["sm", "md"]}
+                  color={theme.colors.gray[600]}
+                  mt="3rem"
+                >
+                  <i>
+                    {showTracking ? (
+                      <>
+                        Click <b>Pause</b>, then design your workout.
+                      </>
+                    ) : (
+                      <>
+                        Design your workout, then click <b>Start</b>.
+                      </>
+                    )}
+                  </i>
+                </Text>
+              </Center>
+            )}
+          </>
         )}
 
         {/* EXERCISES */}
@@ -344,13 +353,6 @@ export default function CreateWorkout() {
               alignSelf="flex-start"
               onClick={() => setShowServerError(false)}
             />
-          </Alert>
-        )}
-
-        {showUploadSuccess && (
-          <Alert status="success" mt="2rem" borderRadius={"8px"} bg="green.50">
-            <AlertIcon />
-            Workout Saved Successfully!
           </Alert>
         )}
 

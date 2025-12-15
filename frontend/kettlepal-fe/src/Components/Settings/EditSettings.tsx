@@ -143,6 +143,7 @@ export default function EditSettings({
         <Box
           borderBottom={`2px solid ${theme.colors.green[100]}`}
           fontWeight="bold"
+          mb="1rem"
         >
           <Text fontSize={["md", "lg", "xl"]}>EXERCISE TEMPLATES</Text>
         </Box>
