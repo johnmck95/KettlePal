@@ -34,7 +34,7 @@ export default function ExerciseWeight({
         <Text
           as="span"
           fontSize={["11px", "14px"]}
-          color={theme.colors.feldgrau[400]}
+          color={theme.colors.feldgrau[700]}
         >
           (x{exercise.multiplier.toFixed(2)})
         </Text>
