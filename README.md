@@ -7,6 +7,7 @@ An overbuilt, "_just-for-me_" learning project that was created to keep track of
 ## Feature List
 
 - JWT Authentication, Registration/Login/Logout, Hashing.
+- Personalized exercise list with ability to personalize work capacity calculations
 - Design a workout, track your sets as you complete the workout, then save the activity.
 - View past workouts chronologically, or search by relevant details.
 - Update past workouts at any time.

@@ -72,9 +72,9 @@ export default function ViewDetailedExercise({
           {!!sets && !!reps && !!weight && !!weightUnit && (
             <Detail
               title={"Work Capacity"}
-              value={`${calculateExerciseWorkCapacity(
-                exercise
-              ).toLocaleString()} ${weightUnit}`}
+              value={`${calculateExerciseWorkCapacity(exercise).toFixed(
+                0
+              )} ${weightUnit}`}
             />
           )}
           <Detail title={"Multiplier"} value={multiplier.toFixed(2)} />

@@ -6,6 +6,32 @@ import {
   RepsDisplayOptions,
   WeightOptions,
 } from "../Constants/ExercisesOptions";
+import {
+  SESSION_STATE_KEY,
+  SHOW_TRACKING_KEY,
+  STOPWATCH_IS_ACTIVE_KEY,
+  STOPWATCH_TIMESTAMP_KEY,
+  WORKOUT_STATE_KEY,
+} from "./useCreateWorkoutForm";
+
+const COMPLETED_SETS_PREFIX = "completedSets-";
+function deleteAllCompletedSetsFromSessionStorage() {
+  Object.keys(sessionStorage).forEach((key) => {
+    if (key.startsWith(COMPLETED_SETS_PREFIX)) {
+      sessionStorage.removeItem(key);
+    }
+  });
+}
+
+function resetWorkoutSessionStorage() {
+  sessionStorage.removeItem(SESSION_STATE_KEY);
+  sessionStorage.removeItem(STOPWATCH_IS_ACTIVE_KEY);
+  sessionStorage.removeItem(STOPWATCH_TIMESTAMP_KEY);
+  sessionStorage.removeItem(SHOW_TRACKING_KEY);
+  sessionStorage.removeItem(EDIT_SETTINGS_STATE_KEY);
+  sessionStorage.removeItem(WORKOUT_STATE_KEY);
+  deleteAllCompletedSetsFromSessionStorage();
+}
 
 const EDIT_SETTINGS_STATE_KEY = "editSettingsState";
 
@@ -105,7 +131,7 @@ const useEditSettings = ({
   const [addOrUpdateSettings, { loading, error: serverError }] =
     useAddOrUpdateSettingsMutation({
       onCompleted() {
-        sessionStorage.removeItem(EDIT_SETTINGS_STATE_KEY);
+        resetWorkoutSessionStorage();
         setShowUploadSuccess(true);
         setTimeout(() => {
           setShowUploadSuccess(false);

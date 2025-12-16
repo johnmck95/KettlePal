@@ -27,7 +27,7 @@ import WeeklyRangeSelector from "./WeeklyRangeSelector";
 export default function AtAGlance() {
   const [selectedPeriod, setSelectedPeriod] = React.useState<
     "Week" | "Month" | "Year" | "Lifetime"
-  >("Week");
+  >("Month");
   const [dateRange, setDateRange] = React.useState<string>(
     selectedPeriod === "Week" ? getMonSunYYYYMMDDOfCurrentWeek() : "TODO"
   );
@@ -38,7 +38,7 @@ export default function AtAGlance() {
 
   const [selectedMetric, setSelectedMetric] = React.useState<
     "Time" | "Work Capacity"
-  >("Time");
+  >("Work Capacity");
   const metrics = ["Time", "Work Capacity"];
   const handleMetricClick = (metric: string) => {
     setSelectedMetric(metric as "Time" | "Work Capacity");

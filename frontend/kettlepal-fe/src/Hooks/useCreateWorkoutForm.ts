@@ -5,10 +5,10 @@ import { useUser } from "../Contexts/UserContext";
 import { useDisclosure } from "@chakra-ui/react";
 import { StopwatchRef } from "../Components/NewWorkouts/FormComponents/NewWorkout/Generic/Stopwatch";
 
-const SESSION_STATE_KEY = "createWorkoutState";
-const STOPWATCH_IS_ACTIVE_KEY = "stopwatchIsActive";
-const SHOW_TRACKING_KEY = "showTracking";
-const WORKOUT_STATE_KEY = "workoutState";
+export const SESSION_STATE_KEY = "createWorkoutState";
+export const STOPWATCH_IS_ACTIVE_KEY = "stopwatchIsActive";
+export const SHOW_TRACKING_KEY = "showTracking";
+export const WORKOUT_STATE_KEY = "workoutState";
 export const STOPWATCH_TIMESTAMP_KEY = "stopwatchStartTimeStamp";
 
 export type CreateWorkoutState = {
