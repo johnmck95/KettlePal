@@ -250,7 +250,7 @@ export default function Login({
           status="error"
           my="1rem"
           maxW="500px"
-          w="calc(100% - 2rem)"
+          w="100%"
           borderRadius={"8px"}
           justifyContent={"space-between"}
         >
