@@ -18,19 +18,20 @@ import { useUser } from "../../../Contexts/UserContext";
 import LoadingSpinner from "../../LoadingSpinner";
 import Graph from "./Visualization/Graph";
 import Detail from "../../ViewWorkouts/ViewDetailedWorkoutModal/Detail";
-import {
-  formatTime,
-  getMonSunYYYYMMDDOfCurrentWeek,
-} from "../../../utils/Time/time";
+import { formatTime, getCurrentPeriodYYYYMMDD } from "../../../utils/Time/time";
 import WeeklyRangeSelector from "./WeeklyRangeSelector";
 
 export default function AtAGlance() {
   const [selectedPeriod, setSelectedPeriod] = React.useState<
     "Week" | "Month" | "Year" | "Lifetime"
-  >("Month");
+  >("Week");
+  // NOTE: CANNOT initialize selectedPeriod to "lifetime" or this will throw (no valid dateRange)
   const [dateRange, setDateRange] = React.useState<string>(
-    selectedPeriod === "Week" ? getMonSunYYYYMMDDOfCurrentWeek() : "TODO"
+    selectedPeriod !== "Lifetime"
+      ? getCurrentPeriodYYYYMMDD(selectedPeriod)
+      : "TODO"
   );
+
   const periods = ["Week", "Month", "Year", "Lifetime"];
   const handlePeriodClick = (period: string) => {
     setSelectedPeriod(period as "Week" | "Month" | "Year" | "Lifetime");

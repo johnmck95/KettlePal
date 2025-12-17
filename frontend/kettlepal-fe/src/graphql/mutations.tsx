@@ -12,7 +12,6 @@ const LOGIN_MUTATION = gql`
   }
 `;
 
-// TODO DUMMY -- you need to write a SIGNUP_MUTATION in order for codegen
 // to auto-generate you a custom hook to use in your SignUp component
 const SIGNUP_MUTATION = gql`
   mutation SignUp($user: AddUserInput!) {

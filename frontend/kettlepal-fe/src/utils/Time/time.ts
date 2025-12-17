@@ -241,16 +241,34 @@ export function formatDate(date: Date) {
   return `${month} ${day}${suffix(day)}, ${year}`;
 }
 
-// YYYY-MM-DD,YYYY-MM-DD of the current week. Mon-Sun.
-export function getMonSunYYYYMMDDOfCurrentWeek() {
+/**
+ * Returns a string in the format "YYYY-MM-DD,YYYY-MM-DD" representing
+ * the start and end dates of the current Week, Month, or Year.
+ */
+type Period = "Week" | "Month" | "Year";
+export function getCurrentPeriodYYYYMMDD(period: Period): string {
   const today = dayjs();
-  const monday = today.startOf("isoWeek");
-  const sunday = today.endOf("isoWeek");
+  let start: dayjs.Dayjs;
+  let end: dayjs.Dayjs;
 
-  const mondayFormatted = monday.format("YYYY-MM-DD");
-  const sundayFormatted = sunday.format("YYYY-MM-DD");
+  switch (period) {
+    case "Week":
+      start = today.startOf("isoWeek");
+      end = today.endOf("isoWeek");
+      break;
+    case "Month":
+      start = today.startOf("month");
+      end = today.endOf("month");
+      break;
+    case "Year":
+      start = today.startOf("year");
+      end = today.endOf("year");
+      break;
+    default:
+      throw new Error(`Unsupported period: ${period}`);
+  }
 
-  return `${mondayFormatted},${sundayFormatted}`;
+  return `${start.format("YYYY-MM-DD")},${end.format("YYYY-MM-DD")}`;
 }
 
 /**
