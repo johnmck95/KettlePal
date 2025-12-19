@@ -31,6 +31,8 @@ import {
   UpdateWorkoutWithExercisesInput,
   User,
   Workout,
+  UserWorkoutTrendsArgs,
+  TimeGrain,
 } from "./generated/backend-types.js";
 import getFuzzyWorkoutSearchResults from "./utils/Search/PastWorkoutsFuzzySearch.js";
 import knexConfig from "./knexfile.js";
@@ -345,6 +347,19 @@ export const resolvers = {
       } catch (error) {
         console.error("Error fetching user stats:", error);
         throw error;
+      }
+    },
+    workoutTrends(parent: User, { grain, range }: UserWorkoutTrendsArgs) {
+      //IN PROGRESS
+      switch (grain) {
+        case TimeGrain.Day:
+        // Aggregates ElapsedSeconds and WorkCapacity per day. Range is typically Monday-Friday of the current week
+        case TimeGrain.Week:
+        // Aggregates ElapsedSeconds and WorkCapacity per week (Mon-Sun). Range is typically the past 3 months.
+        case TimeGrain.Month:
+        // Aggregates ElapsedSeconds and WorkCapacity per calendar month. Range is typically the path 12 months.
+        case TimeGrain.Year:
+        // Aggregates ElapsedSeconds and WorkCapacity per Calendar Year. Range is the lifetime of the user
       }
     },
     // period: "Week" | "Month" | "Year" | "Lifetime" --> the type of data queried.

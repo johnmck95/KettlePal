@@ -1,3 +1,12 @@
+scalar DateTime
+
+enum TimeGrain {
+  DAY
+  WEEK
+  MONTH
+  YEAR
+}
+
 type User {
   uid: ID!
   firstName: String!
@@ -13,6 +22,24 @@ type User {
   bodyWeight: Float!
   bodyWeightUnit: String!
   templates: [Template!]!
+  workoutTrends(
+    grain: TimeGrain!
+    range: DateRangeInput!
+  ): WorkoutTrendResponse!
+}
+
+type WorkoutAggregate {
+  periodStart: DateTime!
+  periodEnd: DateTime!
+  workCapacity: Float!
+  durationSeconds: Int!
+}
+
+type WorkoutTrendResponse {
+  grain: TimeGrain!
+  rangeStart: DateTime!
+  rangeEnd: DateTime!
+  buckets: [WorkoutAggregate!]!
 }
 
 type AtAGlance {
@@ -260,4 +287,9 @@ input EditExerciseInput {
   repsDisplay: String
   comment: String
   elapsedSeconds: Int
+}
+
+input DateRangeInput {
+  start: DateTime!
+  end: DateTime!
 }
