@@ -1,5 +1,3 @@
-scalar DateTime
-
 enum TimeGrain {
   DAY
   WEEK
@@ -29,16 +27,16 @@ type User {
 }
 
 type WorkoutAggregate {
-  periodStart: DateTime!
-  periodEnd: DateTime!
-  workCapacity: Float!
+  periodStart: String!
+  periodEnd: String!
+  workCapacityKg: Float!
   durationSeconds: Int!
 }
 
 type WorkoutTrendResponse {
   grain: TimeGrain!
-  rangeStart: DateTime!
-  rangeEnd: DateTime!
+  rangeStart: String!
+  rangeEnd: String!
   buckets: [WorkoutAggregate!]!
 }
 
@@ -290,6 +288,6 @@ input EditExerciseInput {
 }
 
 input DateRangeInput {
-  start: DateTime!
-  end: DateTime!
+  start: String!
+  end: String!
 }

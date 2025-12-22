@@ -9,5 +9,3 @@ generates:
       - "typescript-resolvers"
     config:
       useIndexSignature: true
-      scalars:
-        DateTime: Date

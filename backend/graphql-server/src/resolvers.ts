@@ -36,6 +36,16 @@ import {
 } from "./generated/backend-types.js";
 import getFuzzyWorkoutSearchResults from "./utils/Search/PastWorkoutsFuzzySearch.js";
 import knexConfig from "./knexfile.js";
+import {
+  validateDateFormat,
+  validateRangeEndAfterStart,
+  validateRangeEndIsLastDayOfYear,
+  validateRangeEndIsLastOfMonth,
+  validateRangeEndIsSunday,
+  validateRangeStartIsFirstDayOfYear,
+  validateRangeStartIsFirstOfMonth,
+  validateRangeStartIsMonday,
+} from "./utils/verifyWorkoutTrends.js";
 
 const knexInstance = knex(knexConfig);
 
@@ -349,17 +359,269 @@ export const resolvers = {
         throw error;
       }
     },
-    workoutTrends(parent: User, { grain, range }: UserWorkoutTrendsArgs) {
-      //IN PROGRESS
+    // Range params work on a daily basis (YYYY-MM-DD), there is no control over the specific time - only the date portion.
+    async workoutTrends(parent: User, { grain, range }: UserWorkoutTrendsArgs) {
+      validateDateFormat(range.start, "Range.start");
+      validateDateFormat(range.end, "Range.end");
+      validateRangeEndAfterStart(range);
+
+      // Aggregates ElapsedSeconds and WorkCapacity per day. Range is typically Monday-Friday of the current week
       switch (grain) {
-        case TimeGrain.Day:
-        // Aggregates ElapsedSeconds and WorkCapacity per day. Range is typically Monday-Friday of the current week
-        case TimeGrain.Week:
+        case TimeGrain.Day: {
+          const { rows } = await knexInstance.raw(
+            `
+            WITH date_range AS (
+              SELECT generate_series(
+                ?::date,
+                ?::date, 
+                interval '1 day'
+              )::date AS day
+            ),
+            daily_elapsed AS (
+              SELECT
+                w.date::date AS day,
+                SUM(w."elapsedSeconds") AS duration_seconds
+              FROM workouts w
+              WHERE w."userUid" = ?
+                AND w.date::date BETWEEN ?::date 
+                                      AND ?::date
+              GROUP BY w.date::date
+            ),
+            daily_work_capacity AS (
+              SELECT
+                w.date::date AS day,
+                SUM(
+                  CASE
+                    WHEN e."weightUnit" = 'kg'
+                      THEN e.weight * e.sets * e.reps * e.multiplier
+                    WHEN e."weightUnit" = 'lb'
+                      THEN e.weight * 0.45359237 * e.sets * e.reps * e.multiplier
+                    ELSE 0
+                  END
+                ) AS work_capacity
+              FROM workouts w
+              JOIN exercises e ON e."workoutUid" = w.uid
+              WHERE w."userUid" = ? 
+                AND w.date::date BETWEEN ?::date 
+                                      AND ?::date
+              GROUP BY w.date::date
+            )
+            SELECT
+              dr.day::text AS "periodStart",
+              dr.day::text AS "periodEnd",
+              COALESCE(dwc.work_capacity, 0) AS "workCapacityKg",
+              COALESCE(de.duration_seconds, 0) AS "durationSeconds"
+            FROM date_range dr
+            LEFT JOIN daily_elapsed de ON de.day = dr.day
+            LEFT JOIN daily_work_capacity dwc ON dwc.day = dr.day
+            ORDER BY dr.day;
+            `,
+            [
+              range.start,
+              range.end,
+              parent.uid,
+              range.start,
+              range.end,
+              parent.uid,
+              range.start,
+              range.end,
+            ]
+          );
+          return {
+            grain,
+            rangeStart: range.start,
+            rangeEnd: range.end,
+            buckets: rows,
+          };
+        }
         // Aggregates ElapsedSeconds and WorkCapacity per week (Mon-Sun). Range is typically the past 3 months.
-        case TimeGrain.Month:
-        // Aggregates ElapsedSeconds and WorkCapacity per calendar month. Range is typically the path 12 months.
-        case TimeGrain.Year:
-        // Aggregates ElapsedSeconds and WorkCapacity per Calendar Year. Range is the lifetime of the user
+        // This query will force values to always fetch mon-fri, ensuring all days of the week are accounted for.
+        case TimeGrain.Week: {
+          validateRangeStartIsMonday(range.start);
+          validateRangeEndIsSunday(range.end);
+
+          const { rows } = await knexInstance.raw(
+            `
+              WITH week_range AS (
+                SELECT generate_series(
+                  date_trunc('week', ?::date)::date,
+                  date_trunc('week', ?::date)::date,
+                  interval '1 week'
+                )::date AS week_start
+              ),
+              weekly_elapsed AS (
+                SELECT
+                  wr.week_start,
+                  SUM(w."elapsedSeconds") AS duration_seconds
+                FROM week_range wr
+                LEFT JOIN workouts w ON w."userUid" = ?
+                  AND w.date::date >= wr.week_start
+                  AND w.date::date <= wr.week_start + interval '6 days'
+                GROUP BY wr.week_start
+              ),
+              weekly_work_capacity AS (
+                SELECT
+                  wr.week_start,
+                  SUM(
+                    CASE
+                      WHEN e."weightUnit" = 'kg'
+                        THEN e.weight * e.sets * e.reps * e.multiplier
+                      WHEN e."weightUnit" = 'lb'
+                        THEN e.weight * 0.45359237 * e.sets * e.reps * e.multiplier
+                      ELSE 0
+                    END
+                  ) AS work_capacity
+                FROM week_range wr
+                LEFT JOIN workouts w ON w."userUid" = ?
+                  AND w.date::date >= wr.week_start
+                  AND w.date::date <= wr.week_start + interval '6 days'
+                LEFT JOIN exercises e ON e."workoutUid" = w.uid
+                GROUP BY wr.week_start
+              )
+              SELECT
+                wr.week_start::text AS "periodStart",
+                (wr.week_start + interval '6 days')::date::text AS "periodEnd",
+                COALESCE(wwc.work_capacity, 0) AS "workCapacityKg",
+                COALESCE(we.duration_seconds, 0) AS "durationSeconds"
+              FROM week_range wr
+              LEFT JOIN weekly_elapsed we ON we.week_start = wr.week_start
+              LEFT JOIN weekly_work_capacity wwc ON wwc.week_start = wr.week_start
+              ORDER BY wr.week_start;
+            `,
+            [range.start, range.end, parent.uid, parent.uid]
+          );
+          return {
+            grain,
+            rangeStart: range.start,
+            rangeEnd: range.end,
+            buckets: rows,
+          };
+        }
+        case TimeGrain.Month: {
+          validateRangeStartIsFirstOfMonth(range.start);
+          validateRangeEndIsLastOfMonth(range.end);
+
+          const { rows } = await knexInstance.raw(
+            `
+            WITH month_range AS (
+              SELECT generate_series(
+                date_trunc('month', ?::date)::date,
+                date_trunc('month', ?::date)::date,
+                interval '1 month'
+              )::date AS month_start
+            ),
+            monthly_elapsed AS (
+              SELECT
+                mr.month_start,
+                SUM(w."elapsedSeconds") AS duration_seconds
+              FROM month_range mr
+              LEFT JOIN workouts w ON w."userUid" = ?
+                AND w.date::date >= mr.month_start
+                AND w.date::date <= (mr.month_start + interval '1 month - 1 day')::date
+              GROUP BY mr.month_start
+            ),
+            monthly_work_capacity AS (
+              SELECT
+                mr.month_start,
+                SUM(
+                  CASE
+                    WHEN e."weightUnit" = 'kg'
+                      THEN e.weight * e.sets * e.reps * e.multiplier
+                    WHEN e."weightUnit" = 'lb'
+                      THEN e.weight * 0.45359237 * e.sets * e.reps * e.multiplier
+                    ELSE 0
+                  END
+                ) AS work_capacity
+              FROM month_range mr
+              LEFT JOIN workouts w ON w."userUid" = ?
+                AND w.date::date >= mr.month_start
+                AND w.date::date <= (mr.month_start + interval '1 month - 1 day')::date
+              LEFT JOIN exercises e ON e."workoutUid" = w.uid
+              GROUP BY mr.month_start
+            )
+            SELECT
+              mr.month_start::text AS "periodStart",
+              (mr.month_start + interval '1 month - 1 day')::date::text AS "periodEnd",
+              COALESCE(mwc.work_capacity, 0) AS "workCapacityKg",
+              COALESCE(me.duration_seconds, 0) AS "durationSeconds"
+            FROM month_range mr
+            LEFT JOIN monthly_elapsed me ON me.month_start = mr.month_start
+            LEFT JOIN monthly_work_capacity mwc ON mwc.month_start = mr.month_start
+            ORDER BY mr.month_start;
+            `,
+            [range.start, range.end, parent.uid, parent.uid]
+          );
+
+          return {
+            grain,
+            rangeStart: range.start,
+            rangeEnd: range.end,
+            buckets: rows,
+          };
+        }
+
+        case TimeGrain.Year: {
+          validateRangeStartIsFirstDayOfYear(range.start);
+          validateRangeEndIsLastDayOfYear(range.end);
+
+          const { rows } = await knexInstance.raw(
+            `
+            WITH year_range AS (
+              SELECT generate_series(
+                date_trunc('year', ?::date)::date,
+                date_trunc('year', ?::date)::date,
+                interval '1 year'
+              )::date AS year_start
+            ),
+            yearly_elapsed AS (
+              SELECT
+                yr.year_start,
+                SUM(w."elapsedSeconds") AS duration_seconds
+              FROM year_range yr
+              LEFT JOIN workouts w ON w."userUid" = ?
+                AND w.date::date >= yr.year_start
+                AND w.date::date <= (yr.year_start + interval '1 year - 1 day')::date
+              GROUP BY yr.year_start
+            ),
+            yearly_work_capacity AS (
+              SELECT
+                yr.year_start,
+                SUM(
+                  CASE
+                    WHEN e."weightUnit" = 'kg'
+                      THEN e.weight * e.sets * e.reps * e.multiplier
+                    WHEN e."weightUnit" = 'lb'
+                      THEN e.weight * 0.45359237 * e.sets * e.reps * e.multiplier
+                    ELSE 0
+                  END
+                ) AS work_capacity
+              FROM year_range yr
+              LEFT JOIN workouts w ON w."userUid" = ?
+                AND w.date::date >= yr.year_start
+                AND w.date::date <= (yr.year_start + interval '1 year - 1 day')::date
+              LEFT JOIN exercises e ON e."workoutUid" = w.uid
+              GROUP BY yr.year_start
+            )
+            SELECT
+              yr.year_start::text AS "periodStart",
+              (yr.year_start + interval '1 year - 1 day')::date::text AS "periodEnd",
+              COALESCE(ywc.work_capacity, 0) AS "workCapacityKg",
+              COALESCE(ye.duration_seconds, 0) AS "durationSeconds"
+            FROM year_range yr
+            LEFT JOIN yearly_elapsed ye ON ye.year_start = yr.year_start
+            LEFT JOIN yearly_work_capacity ywc ON ywc.year_start = yr.year_start
+            ORDER BY yr.year_start;
+            `,
+            [range.start, range.end, parent.uid, parent.uid]
+          );
+
+          return {
+            grain,
+            rangeStart: range.start,
+            rangeEnd: range.end,
+            buckets: rows,
+          };
+        }
       }
     },
     // period: "Week" | "Month" | "Year" | "Lifetime" --> the type of data queried.
