@@ -97,6 +97,24 @@ const CHECK_SESSION_QUERY = gql`
   }
 `;
 
+const GET_WORKOUT_TRENDS_QUERY = gql`
+  query WorkoutTrends($uid: ID!, $grain: TimeGrain!, $range: DateRangeInput!) {
+    user(uid: $uid) {
+      workoutTrends(grain: $grain, range: $range) {
+        grain
+        rangeStart
+        rangeEnd
+        buckets {
+          periodStart
+          periodEnd
+          workCapacityKg
+          durationSeconds
+        }
+      }
+    }
+  }
+`;
+
 const USER_STATS_QUERY = gql`
   query UserStats($uid: ID!) {
     user(uid: $uid) {

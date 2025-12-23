@@ -6,10 +6,12 @@ export default function Detail({
   title,
   value,
   variant = "sm",
+  color,
 }: {
   title: string;
   value: string;
   variant?: "sm" | "md";
+  color?: string;
 }) {
   return (
     <VStack gap={0}>
@@ -19,7 +21,10 @@ export default function Detail({
       >
         {title}
       </Text>
-      <Text fontSize={variant === "sm" ? ["14px", "16px"] : ["16px", "20px"]}>
+      <Text
+        fontSize={variant === "sm" ? ["14px", "16px"] : ["16px", "20px"]}
+        color={color}
+      >
         <b>{value}</b>
       </Text>
     </VStack>

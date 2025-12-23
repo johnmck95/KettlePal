@@ -205,7 +205,7 @@ export function epochToLongDateString(epoch: string) {
 }
 
 // EX: Sept 13th, 2024
-export function formatDate(date: Date) {
+export function formatDate(date: Date, showYear: boolean = true): string {
   const months = [
     "Jan",
     "Feb",
@@ -238,7 +238,11 @@ export function formatDate(date: Date) {
     }
   };
 
-  return `${month} ${day}${suffix(day)}, ${year}`;
+  if (showYear) {
+    return `${month} ${day}${suffix(day)}, ${year}`;
+  } else {
+    return `${month} ${day}${suffix(day)}`;
+  }
 }
 
 /**
@@ -284,3 +288,44 @@ export function createDateRangeString(min: number, max: number) {
   const formattedMaxDate = maxDate.format("YYYY-MM-DD");
   return `${formattedMinDate},${formattedMaxDate}`;
 }
+
+export function formatSelectedDateRange(
+  rangeStart: string | undefined,
+  rangeEnd: string | undefined,
+  showYear: boolean = false
+) {
+  if (!rangeStart || !rangeEnd) {
+    return "";
+  }
+
+  const startDate = new Date(rangeStart + "T12:00:00");
+  const endDate = new Date(rangeEnd + "T12:00:00");
+  // EX: Dec 31st, 2025 - Jan 6th, 2026
+  if (startDate.getFullYear() !== endDate.getFullYear()) {
+    return `${formatDate(
+      startDate,
+      showYear
+    )}, ${endDate.getFullYear()} - ${formatDate(
+      endDate,
+      showYear
+    )}, ${endDate.getFullYear()}`;
+  }
+  // EX: Jan 5th, 2026
+  if (rangeStart === rangeEnd) {
+    return `${formatDate(startDate, showYear)}, ${endDate.getFullYear()}`;
+  } // EX: Jan 5th - 12th, 2026
+  else {
+    return `${formatDate(startDate, showYear)} - ${formatDate(
+      endDate,
+      showYear
+    )}, ${endDate.getFullYear()}`;
+  }
+}
+
+//EX: 5h 07m
+export const formatHrsMins = (seconds: number): string => {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+
+  return hours > 0 ? `${pad(hours)}h ${pad(minutes)}` : `${pad(minutes)}m`;
+};
