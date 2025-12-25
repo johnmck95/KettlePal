@@ -327,5 +327,54 @@ export const formatHrsMins = (seconds: number): string => {
   const hours = Math.floor(seconds / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);
 
-  return hours > 0 ? `${pad(hours)}h ${pad(minutes)}` : `${pad(minutes)}m`;
+  return hours > 0
+    ? `${hours > 0 ? pad(hours) : hours}h ${pad(minutes)}`
+    : `${minutes > 0 ? pad(minutes) : minutes}m`;
+};
+
+// (DAY) Mon-Sun of this week
+export const getCurrentWeekRange = () => {
+  const today = dayjs();
+  const monday = today.day(1);
+  const sunday = today.add(1, "week").day(0);
+
+  return {
+    start: monday.format("YYYY-MM-DD"),
+    end: sunday.format("YYYY-MM-DD"),
+  };
+};
+
+// (WEEK) Monday 12 weeks ago, Sunday this week.
+export const getLastThreeMonthsRange = () => {
+  const today = dayjs();
+  const sunday = today.add(1, "week").day(0);
+  const monday12WeeksAgo = sunday.subtract(12, "week").day(1);
+
+  return {
+    start: monday12WeeksAgo.format("YYYY-MM-DD"),
+    end: sunday.format("YYYY-MM-DD"),
+  };
+};
+
+// (MONTH) Jan 1 to Dec 31 of current year
+export const getCurrentYearRange = () => {
+  const today = dayjs();
+  const jan1 = today.startOf("year");
+  const dec31 = today.endOf("year");
+
+  return {
+    start: jan1.format("YYYY-MM-DD"),
+    end: dec31.format("YYYY-MM-DD"),
+  };
+};
+
+// (YEAR) Jan 1st of user created year to Dec 31 of current year
+export const getUserLifetimeRange = (userCreatedAt: string) => {
+  const createdDate = dayjs(Number(userCreatedAt)).startOf("year");
+  const endOfYear = dayjs().endOf("year");
+
+  return {
+    start: createdDate.format("YYYY-MM-DD"),
+    end: endOfYear.format("YYYY-MM-DD"),
+  };
 };

@@ -23,7 +23,14 @@ import { useUser } from "../Contexts/UserContext";
 import theme from "../Constants/theme";
 import { FaCog } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import { formatHrsMins, formatSelectedDateRange } from "../utils/Time/time";
+import {
+  formatHrsMins,
+  formatSelectedDateRange,
+  getCurrentWeekRange,
+  getCurrentYearRange,
+  getLastThreeMonthsRange,
+  getUserLifetimeRange,
+} from "../utils/Time/time";
 import Detail from "../Components/ViewWorkouts/ViewDetailedWorkoutModal/Detail";
 import LoadingSpinner from "../Components/LoadingSpinner";
 
@@ -45,12 +52,33 @@ export default function Profile() {
     variables: {
       uid: user?.uid ?? "",
       grain: TimeGrain.Day,
-      range: {
-        start: "2025-06-24",
-        end: "2025-06-24",
-      },
+      range: getLastThreeMonthsRange(),
     },
   });
+
+  useEffect(() => {
+    refetch({
+      uid: user?.uid ?? "",
+      grain:
+        grain === "Daily"
+          ? TimeGrain.Day
+          : grain === "Weekly"
+          ? TimeGrain.Week
+          : grain === "Monthly"
+          ? TimeGrain.Month
+          : TimeGrain.Year,
+      range:
+        grain === "Daily"
+          ? getCurrentWeekRange()
+          : grain === "Weekly"
+          ? getLastThreeMonthsRange()
+          : grain === "Monthly"
+          ? getCurrentYearRange()
+          : getUserLifetimeRange(
+              user?.createdAt ?? new Date().getTime().toString()
+            ),
+    });
+  }, [grain, refetch, user]);
 
   const [showServerError, setShowServerError] = useState<boolean>(false);
   useEffect(() => {
@@ -68,14 +96,6 @@ export default function Profile() {
       );
     }
   }, [data]);
-
-  if (loading) {
-    return (
-      <Center h="100%" w="100%">
-        <LoadingSpinner />
-      </Center>
-    );
-  }
 
   const dataRangeShown = formatSelectedDateRange(
     bucket?.periodStart,
@@ -155,7 +175,23 @@ export default function Profile() {
           h="200px"
           border={`2px solid ${theme.colors.grey[300]}`}
           borderRadius="6px"
-        />
+        >
+          {loading ? (
+            <Center h="100%" w="100%">
+              <LoadingSpinner disableMessage={true} />
+            </Center>
+          ) : (
+            <Text
+              fontSize="lg"
+              fontWeight="medium"
+              color={theme.colors.grey[500]}
+              textAlign="center"
+              pt="80px"
+            >
+              [Graph Visualization Placeholder]
+            </Text>
+          )}
+        </Box>
       )}
 
       <HStack
