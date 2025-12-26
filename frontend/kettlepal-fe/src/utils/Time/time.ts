@@ -327,9 +327,7 @@ export const formatHrsMins = (seconds: number): string => {
   const hours = Math.floor(seconds / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);
 
-  return hours > 0
-    ? `${hours > 0 ? pad(hours) : hours}h ${pad(minutes)}`
-    : `${minutes > 0 ? pad(minutes) : minutes}m`;
+  return hours > 0 ? `${hours}h ${pad(minutes)}m` : `${minutes}m`;
 };
 
 // (DAY) Mon-Sun of this week

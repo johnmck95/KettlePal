@@ -33,6 +33,7 @@ import {
 } from "../utils/Time/time";
 import Detail from "../Components/ViewWorkouts/ViewDetailedWorkoutModal/Detail";
 import LoadingSpinner from "../Components/LoadingSpinner";
+import Visualization from "../Components/Profile/AtAGlance/Visualization/Visualization";
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -43,10 +44,6 @@ export default function Profile() {
   const [grain, setGrain] = useState<
     "Daily" | "Weekly" | "Monthly" | "Annually"
   >("Weekly");
-
-  // TODO:
-  // 1. Now that UI controls exist, configure them to format the query variables properly
-  // 2. Create the visualization that shows the data
 
   const { loading, error, data, refetch } = useWorkoutTrendsQuery({
     variables: {
@@ -101,6 +98,11 @@ export default function Profile() {
     bucket?.periodStart,
     bucket?.periodEnd
   );
+
+  useEffect(() => {
+    const firstBucket = data?.user?.workoutTrends?.buckets?.[0];
+    if (firstBucket && !bucket) setBucket(firstBucket);
+  }, [data, bucket]);
 
   return (
     <VStack maxW={"1086px"} mx="auto" my="1rem">
@@ -170,26 +172,24 @@ export default function Profile() {
           />
         </Alert>
       ) : (
-        <Box
-          w="90%"
-          h="200px"
-          border={`2px solid ${theme.colors.grey[300]}`}
-          borderRadius="6px"
-        >
+        <Box w="100%" h="200px" borderRadius="6px">
           {loading ? (
             <Center h="100%" w="100%">
               <LoadingSpinner disableMessage={true} />
             </Center>
           ) : (
-            <Text
-              fontSize="lg"
-              fontWeight="medium"
-              color={theme.colors.grey[500]}
-              textAlign="center"
-              pt="80px"
-            >
-              [Graph Visualization Placeholder]
-            </Text>
+            <>
+              {data?.user?.workoutTrends && bucket && (
+                <Visualization
+                  workoutTrends={data?.user?.workoutTrends}
+                  showTime={showTime}
+                  showWC={showWC}
+                  handleBucket={setBucket}
+                  bucket={bucket}
+                  grain={grain}
+                />
+              )}
+            </>
           )}
         </Box>
       )}
