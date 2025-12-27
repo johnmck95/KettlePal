@@ -12,14 +12,13 @@ type User {
   email: String!
   password: String!
   isAuthorized: Boolean!
-  workouts(offset: Int, limit: Int): [Workout]!
   createdAt: String!
   tokenCount: Int!
-  userStats: UserStats
-  atAGlance(period: String!, dateRange: String!): AtAGlance
   bodyWeight: Float!
   bodyWeightUnit: String!
+  workouts(offset: Int, limit: Int): [Workout]!
   templates: [Template!]!
+  userStats: UserStats
   workoutTrends(
     grain: TimeGrain!
     range: DateRangeInput!
@@ -38,18 +37,6 @@ type WorkoutTrendResponse {
   rangeStart: String!
   rangeEnd: String!
   buckets: [WorkoutAggregate!]!
-}
-
-type AtAGlance {
-  period: String!
-  dateRange: String!
-  data: [AtAGlanceData]!
-}
-
-type AtAGlanceData {
-  dateRange: String!
-  elapsedSeconds: Int!
-  workCapacityKg: Int!
 }
 
 type UserStats {
