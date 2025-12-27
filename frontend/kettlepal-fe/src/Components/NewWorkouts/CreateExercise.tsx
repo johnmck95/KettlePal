@@ -104,7 +104,7 @@ export default function CreateExercise({
           <SimpleGrid
             gap={1}
             templateColumns={{
-              base: "47% 27% 21%",
+              base: renderMobileView ? "41% 32% 24%" : "47% 27% 21%",
               lg: renderMobileView ? "" : "34% 8% 8% 20% 15% 12%",
             }}
             w="100%"

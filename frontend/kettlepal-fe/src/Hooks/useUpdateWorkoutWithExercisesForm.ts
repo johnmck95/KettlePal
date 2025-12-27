@@ -46,7 +46,7 @@ const useUpdateWorkoutWithExercisesForm = ({
         repsDisplay: exercise.repsDisplay ?? "",
         comment: exercise.comment ?? "",
         elapsedSeconds: exercise.elapsedSeconds ?? 0,
-        multiplier: 1,
+        multiplier: exercise.multiplier ?? 1,
         key: `key-${Date.now()}-${Math.random().toString(36)}`,
       };
     }),

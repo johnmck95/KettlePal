@@ -178,7 +178,6 @@ export default function ViewSettings({
                   }}
                   py={4}
                   gap={2}
-                  bg={theme.colors.white}
                   px="0.5rem"
                   borderRadius="2px"
                 >
