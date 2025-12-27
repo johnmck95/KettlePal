@@ -526,14 +526,14 @@ export type CheckSessionQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type CheckSessionQuery = { __typename?: 'Query', checkSession: { __typename?: 'CheckSessionResponse', isValid: boolean, user?: { __typename?: 'User', uid: string, firstName: string, lastName: string, email: string, isAuthorized: boolean, createdAt: string, tokenCount: number, bodyWeight: number, bodyWeightUnit: string, templates: Array<{ __typename?: 'Template', title: string, weightUnit?: string | null, multiplier: number, repsDisplay?: string | null, index: number, isBodyWeight: boolean }> } | null } };
 
-export type WorkoutTrendsQueryVariables = Exact<{
+export type ProfilePageQueryVariables = Exact<{
   uid: Scalars['ID']['input'];
   grain: TimeGrain;
   range: DateRangeInput;
 }>;
 
 
-export type WorkoutTrendsQuery = { __typename?: 'Query', user?: { __typename?: 'User', workoutTrends: { __typename?: 'WorkoutTrendResponse', grain: TimeGrain, rangeStart: string, rangeEnd: string, buckets: Array<{ __typename?: 'WorkoutAggregate', periodStart: string, periodEnd: string, workCapacityKg: number, durationSeconds: number }> } } | null };
+export type ProfilePageQuery = { __typename?: 'Query', user?: { __typename?: 'User', workoutTrends: { __typename?: 'WorkoutTrendResponse', grain: TimeGrain, rangeStart: string, rangeEnd: string, buckets: Array<{ __typename?: 'WorkoutAggregate', periodStart: string, periodEnd: string, workCapacityKg: number, durationSeconds: number }> }, userStats?: { __typename?: 'UserStats', totalWorkouts: number, totalExercises: number, totalTime?: number | null, longestWorkout?: number | null, mostRepsInWorkout?: number | null, largestWorkCapacityKg?: number | null, topExercises?: string | null, oldestWorkoutDate?: string | null } | null } | null };
 
 export type UserStatsQueryVariables = Exact<{
   uid: Scalars['ID']['input'];
@@ -1089,8 +1089,8 @@ export type CheckSessionQueryHookResult = ReturnType<typeof useCheckSessionQuery
 export type CheckSessionLazyQueryHookResult = ReturnType<typeof useCheckSessionLazyQuery>;
 export type CheckSessionSuspenseQueryHookResult = ReturnType<typeof useCheckSessionSuspenseQuery>;
 export type CheckSessionQueryResult = Apollo.QueryResult<CheckSessionQuery, CheckSessionQueryVariables>;
-export const WorkoutTrendsDocument = gql`
-    query WorkoutTrends($uid: ID!, $grain: TimeGrain!, $range: DateRangeInput!) {
+export const ProfilePageDocument = gql`
+    query ProfilePage($uid: ID!, $grain: TimeGrain!, $range: DateRangeInput!) {
   user(uid: $uid) {
     workoutTrends(grain: $grain, range: $range) {
       grain
@@ -1103,21 +1103,31 @@ export const WorkoutTrendsDocument = gql`
         durationSeconds
       }
     }
+    userStats {
+      totalWorkouts
+      totalExercises
+      totalTime
+      longestWorkout
+      mostRepsInWorkout
+      largestWorkCapacityKg
+      topExercises
+      oldestWorkoutDate
+    }
   }
 }
     `;
 
 /**
- * __useWorkoutTrendsQuery__
+ * __useProfilePageQuery__
  *
- * To run a query within a React component, call `useWorkoutTrendsQuery` and pass it any options that fit your needs.
- * When your component renders, `useWorkoutTrendsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useProfilePageQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProfilePageQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useWorkoutTrendsQuery({
+ * const { data, loading, error } = useProfilePageQuery({
  *   variables: {
  *      uid: // value for 'uid'
  *      grain: // value for 'grain'
@@ -1125,22 +1135,22 @@ export const WorkoutTrendsDocument = gql`
  *   },
  * });
  */
-export function useWorkoutTrendsQuery(baseOptions: Apollo.QueryHookOptions<WorkoutTrendsQuery, WorkoutTrendsQueryVariables> & ({ variables: WorkoutTrendsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+export function useProfilePageQuery(baseOptions: Apollo.QueryHookOptions<ProfilePageQuery, ProfilePageQueryVariables> & ({ variables: ProfilePageQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<WorkoutTrendsQuery, WorkoutTrendsQueryVariables>(WorkoutTrendsDocument, options);
+        return Apollo.useQuery<ProfilePageQuery, ProfilePageQueryVariables>(ProfilePageDocument, options);
       }
-export function useWorkoutTrendsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<WorkoutTrendsQuery, WorkoutTrendsQueryVariables>) {
+export function useProfilePageLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ProfilePageQuery, ProfilePageQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<WorkoutTrendsQuery, WorkoutTrendsQueryVariables>(WorkoutTrendsDocument, options);
+          return Apollo.useLazyQuery<ProfilePageQuery, ProfilePageQueryVariables>(ProfilePageDocument, options);
         }
-export function useWorkoutTrendsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<WorkoutTrendsQuery, WorkoutTrendsQueryVariables>) {
+export function useProfilePageSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ProfilePageQuery, ProfilePageQueryVariables>) {
           const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<WorkoutTrendsQuery, WorkoutTrendsQueryVariables>(WorkoutTrendsDocument, options);
+          return Apollo.useSuspenseQuery<ProfilePageQuery, ProfilePageQueryVariables>(ProfilePageDocument, options);
         }
-export type WorkoutTrendsQueryHookResult = ReturnType<typeof useWorkoutTrendsQuery>;
-export type WorkoutTrendsLazyQueryHookResult = ReturnType<typeof useWorkoutTrendsLazyQuery>;
-export type WorkoutTrendsSuspenseQueryHookResult = ReturnType<typeof useWorkoutTrendsSuspenseQuery>;
-export type WorkoutTrendsQueryResult = Apollo.QueryResult<WorkoutTrendsQuery, WorkoutTrendsQueryVariables>;
+export type ProfilePageQueryHookResult = ReturnType<typeof useProfilePageQuery>;
+export type ProfilePageLazyQueryHookResult = ReturnType<typeof useProfilePageLazyQuery>;
+export type ProfilePageSuspenseQueryHookResult = ReturnType<typeof useProfilePageSuspenseQuery>;
+export type ProfilePageQueryResult = Apollo.QueryResult<ProfilePageQuery, ProfilePageQueryVariables>;
 export const UserStatsDocument = gql`
     query UserStats($uid: ID!) {
   user(uid: $uid) {

@@ -2,12 +2,12 @@ import React, { useRef, useEffect } from "react";
 import * as d3 from "d3";
 import {
   WorkoutAggregate,
-  WorkoutTrendsQuery,
+  ProfilePageQuery,
 } from "../../../../generated/frontend-types";
 import theme from "../../../../Constants/theme";
 
 interface VisualizationProps {
-  workoutTrends: NonNullable<WorkoutTrendsQuery["user"]>["workoutTrends"];
+  workoutTrends: NonNullable<ProfilePageQuery["user"]>["workoutTrends"];
   showTime: boolean;
   showWC: boolean;
   handleBucket: (bucket: WorkoutAggregate) => void;

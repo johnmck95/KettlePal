@@ -97,8 +97,8 @@ const CHECK_SESSION_QUERY = gql`
   }
 `;
 
-const GET_WORKOUT_TRENDS_QUERY = gql`
-  query WorkoutTrends($uid: ID!, $grain: TimeGrain!, $range: DateRangeInput!) {
+const PROFILE_PAGE_QUERY = gql`
+  query ProfilePage($uid: ID!, $grain: TimeGrain!, $range: DateRangeInput!) {
     user(uid: $uid) {
       workoutTrends(grain: $grain, range: $range) {
         grain
@@ -110,6 +110,16 @@ const GET_WORKOUT_TRENDS_QUERY = gql`
           workCapacityKg
           durationSeconds
         }
+      }
+      userStats {
+        totalWorkouts
+        totalExercises
+        totalTime
+        longestWorkout
+        mostRepsInWorkout
+        largestWorkCapacityKg
+        topExercises
+        oldestWorkoutDate
       }
     }
   }

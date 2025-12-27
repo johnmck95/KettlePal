@@ -12,20 +12,30 @@ import {
   AlertIcon,
   AlertDescription,
   CloseButton,
+  TableContainer,
+  Thead,
+  Tbody,
+  Td,
+  Table,
+  Tr,
+  Th,
 } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import {
   TimeGrain,
   WorkoutAggregate,
-  useWorkoutTrendsQuery,
+  useProfilePageQuery,
 } from "../generated/frontend-types";
 import { useUser } from "../Contexts/UserContext";
 import theme from "../Constants/theme";
 import { FaCog } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import {
+  calculateTotalActiveDaysPercentage,
+  epochToLongDateString,
   formatHrsMins,
   formatSelectedDateRange,
+  formatTime,
   getCurrentWeekRange,
   getCurrentYearRange,
   getLastThreeMonthsRange,
@@ -38,6 +48,7 @@ import Visualization from "../Components/Profile/AtAGlance/Visualization/Visuali
 export default function Profile() {
   const navigate = useNavigate();
   const user = useUser().user;
+  const [showServerError, setShowServerError] = useState<boolean>(false);
   const [bucket, setBucket] = useState<WorkoutAggregate | undefined>(undefined);
   const [showTime, setShowTime] = useState(true);
   const [showWC, setShowWC] = useState(true);
@@ -45,7 +56,7 @@ export default function Profile() {
     "Daily" | "Weekly" | "Monthly" | "Annually"
   >("Weekly");
 
-  const { loading, error, data, refetch } = useWorkoutTrendsQuery({
+  const { loading, error, data, refetch } = useProfilePageQuery({
     variables: {
       uid: user?.uid ?? "",
       grain: TimeGrain.Day,
@@ -77,7 +88,6 @@ export default function Profile() {
     });
   }, [grain, refetch, user]);
 
-  const [showServerError, setShowServerError] = useState<boolean>(false);
   useEffect(() => {
     if (error) {
       setShowServerError(true);
@@ -85,24 +95,24 @@ export default function Profile() {
   }, [error]);
 
   useEffect(() => {
-    if (data && data.user && data.user.workoutTrends.buckets.length > 0) {
-      setBucket(
-        data.user.workoutTrends.buckets[
-          data.user.workoutTrends.buckets.length - 1
-        ]
-      );
-    }
-  }, [data]);
+    const firstBucket = data?.user?.workoutTrends?.buckets?.[0];
+    if (firstBucket && !bucket) setBucket(firstBucket);
+  }, [data, bucket]);
 
   const dataRangeShown = formatSelectedDateRange(
     bucket?.periodStart,
     bucket?.periodEnd
   );
 
-  useEffect(() => {
-    const firstBucket = data?.user?.workoutTrends?.buckets?.[0];
-    if (firstBucket && !bucket) setBucket(firstBucket);
-  }, [data, bucket]);
+  const memberSince = epochToLongDateString(user?.createdAt ?? "");
+  const topExercises =
+    data?.user?.userStats?.topExercises?.split(",").map((exercise) => {
+      const [name, times] = exercise.split(" (");
+      return { name, times: parseInt(times.replace(" times)", "")) };
+    }) ?? [];
+  const importedPastWorkouts =
+    new Date(data?.user?.userStats?.oldestWorkoutDate ?? 0).getTime() <
+    (Number(user?.createdAt) ?? 0);
 
   return (
     <VStack maxW={"1086px"} mx="auto" my="1rem">
@@ -110,11 +120,11 @@ export default function Profile() {
         gap={4}
         w="90%"
         borderBottom={`2px solid ${theme.colors.green[100]}`}
-        justifyContent={"center"}
-        alignItems={"center"}
+        justifyContent="space-between"
+        alignItems="center"
         p="0.5rem"
       >
-        <Heading fontSize="2xl" fontWeight="bold" textAlign="center">
+        <Heading fontSize="2xl" fontWeight="bold" textAlign="center" flex="1">
           {user?.firstName + " " + user?.lastName}
         </Heading>
         <IconButton
@@ -125,8 +135,10 @@ export default function Profile() {
           size="sm"
           px={0}
           mx={0}
+          flexShrink={0}
         />
       </HStack>
+
       <Heading
         size="md"
         fontWeight={"lighter"}
@@ -137,7 +149,7 @@ export default function Profile() {
       >
         {dataRangeShown}
       </Heading>
-      <HStack w="90%" justifyContent="space-evenly">
+      <HStack w="90%" justifyContent="space-evenly" mt="0.25rem">
         <Detail
           title="Time"
           value={formatHrsMins(bucket?.durationSeconds ?? 0) || "0 mins"}
@@ -172,7 +184,7 @@ export default function Profile() {
           />
         </Alert>
       ) : (
-        <Box w="100%" h="200px" borderRadius="6px">
+        <Box w="100%" h={["200px", "300px"]} borderRadius="6px">
           {loading ? (
             <Center h="100%" w="100%">
               <LoadingSpinner disableMessage={true} />
@@ -196,13 +208,15 @@ export default function Profile() {
 
       <HStack
         w="90%"
-        p={2}
-        bg="grey.50"
+        p={3}
+        bg={theme.colors.white}
         borderRadius="lg"
         borderWidth={1}
-        borderColor="grey.200"
+        boxShadow={`0px 1px 4px ${theme.colors.grey[200]}`}
+        borderColor={theme.colors.grey[200]}
+        justifyContent={"space-between"}
       >
-        <VStack alignItems="flex-start" w="50%">
+        <VStack alignItems="flex-start" w="50%" maxW="250px">
           <HStack spacing={2}>
             <Switch
               isChecked={showTime}
@@ -210,7 +224,11 @@ export default function Profile() {
               colorScheme="graphPrimary"
               size={["md", "lg"]}
             />
-            <Text fontSize={["sm", "md"]} fontWeight="medium" color="grey.700">
+            <Text
+              fontSize={["sm", "md"]}
+              fontWeight="medium"
+              color={theme.colors.grey[700]}
+            >
               Time
             </Text>
           </HStack>
@@ -222,7 +240,11 @@ export default function Profile() {
               colorScheme="graphSecondary"
               size={["md", "lg"]}
             />
-            <Text fontSize={["sm", "md"]} fontWeight="medium" color="grey.700">
+            <Text
+              fontSize={["sm", "md"]}
+              fontWeight="medium"
+              color={theme.colors.grey[700]}
+            >
               Work Capacity
             </Text>
           </HStack>
@@ -233,6 +255,7 @@ export default function Profile() {
           fontSize={["16px"]}
           name="grain"
           w="50%"
+          maxW="250px"
           borderRadius="5px"
           value={grain}
           onChange={(e) =>
@@ -252,6 +275,144 @@ export default function Profile() {
           })}
         </Select>
       </HStack>
+
+      <VStack
+        w="90%"
+        pt="2rem"
+        mt="2rem"
+        borderTop={`2px solid ${theme.colors.green[100]}`}
+      >
+        <HStack w="100%" justifyContent="space-evenly" my="0.5rem">
+          <Detail
+            title="Total Workouts"
+            value={data?.user?.userStats?.totalWorkouts.toString() ?? "0"}
+            variant="md"
+          />
+          <Detail
+            title="Favourite Exercise"
+            value={topExercises[0]?.name ?? "---"}
+            variant="md"
+          />
+          <Detail
+            title="Days Active"
+            value={calculateTotalActiveDaysPercentage(
+              data?.user?.userStats?.totalWorkouts,
+              data?.user?.userStats?.oldestWorkoutDate ?? undefined,
+              0
+            )}
+            variant="md"
+          />
+        </HStack>
+        <TableContainer>
+          <Table
+            variant="simple"
+            w="100%"
+            sx={{ tableLayout: "fixed" }}
+            my="0.5rem"
+            size={["xs", "sm", "md"]}
+          >
+            {/* LIFETIME TOTAL */}
+            <Thead>
+              <Tr>
+                <Th fontSize={["xl"]}>Lifetime Totals</Th>
+                <Th />
+              </Tr>
+            </Thead>
+            <Tbody>
+              <Tr>
+                <Td fontSize={["xs", "sm", "md"]}>Member Since</Td>
+                <Td fontSize={["xs", "sm", "md"]}>{memberSince}</Td>
+              </Tr>
+              {importedPastWorkouts && (
+                <Tr>
+                  <Td fontSize={["xs", "sm", "md"]}>First Recorded Workout</Td>
+                  <Td fontSize={["xs", "sm", "md"]}>
+                    {data?.user?.userStats?.oldestWorkoutDate ?? "---"}
+                  </Td>
+                </Tr>
+              )}
+              <Tr>
+                <Td fontSize={["xs", "sm", "md"]}>Total Workouts</Td>
+                <Td fontSize={["xs", "sm", "md"]}>
+                  {data?.user?.userStats?.totalWorkouts.toLocaleString()}
+                </Td>
+              </Tr>
+              <Tr>
+                <Td fontSize={["xs", "sm", "md"]}>Total Exercises</Td>
+                <Td fontSize={["xs", "sm", "md"]}>
+                  {data?.user?.userStats?.totalExercises.toLocaleString()}
+                </Td>
+              </Tr>
+              <Tr>
+                <Td fontSize={["xs", "sm", "md"]}>Total Active Time</Td>
+                <Td fontSize={["xs", "sm", "md"]}>
+                  {data?.user?.userStats?.totalTime
+                    ? formatTime(data?.user?.userStats?.totalTime, true)
+                    : "---"}
+                </Td>
+              </Tr>
+            </Tbody>
+
+            {/* BEST EFFORTS */}
+            <Thead>
+              <Tr>
+                <Th fontSize={["xs", "sm", "md"]}>BEST EFFORTS</Th>
+                <Th />
+              </Tr>
+            </Thead>
+            <Tbody>
+              <Tr>
+                <Td fontSize={["xs", "sm", "md"]}>Longest Workout</Td>
+                <Td fontSize={["xs", "sm", "md"]}>
+                  {data?.user?.userStats?.longestWorkout
+                    ? formatTime(data?.user?.userStats?.longestWorkout, true)
+                    : "---"}
+                </Td>
+              </Tr>
+              <Tr>
+                <Td fontSize={["xs", "sm", "md"]}>Greatest Work Capacity</Td>
+                <Td fontSize={["xs", "sm", "md"]}>
+                  {Math.round(
+                    data?.user?.userStats?.largestWorkCapacityKg ?? 0
+                  ).toLocaleString() ?? 0}{" "}
+                  kg
+                </Td>
+              </Tr>
+              <Tr>
+                <Td fontSize={["xs", "sm", "md"]}>Most Reps</Td>
+                <Td fontSize={["xs", "sm", "md"]}>
+                  {data?.user?.userStats?.mostRepsInWorkout?.toLocaleString() ??
+                    0}
+                </Td>
+              </Tr>
+            </Tbody>
+
+            {/* FAVOURITE EXERCISES */}
+            {topExercises.length > 0 && (
+              <Thead>
+                <Tr>
+                  <Th fontSize={["xs", "sm", "md"]}>FAVOURITE EXERCISES</Th>
+                  <Th fontSize={["xs", "sm", "md"]}> TOTAL WORKOUTS</Th>
+                </Tr>
+              </Thead>
+            )}
+            <Tbody>
+              {topExercises.map((exercise, index) => {
+                return (
+                  <Tr key={index}>
+                    <Td fontSize={["xs", "sm", "md"]}>
+                      #{index + 1} - {exercise?.name}
+                    </Td>
+                    <Td fontSize={["xs", "sm", "md"]}>
+                      {exercise.times.toLocaleString()}
+                    </Td>
+                  </Tr>
+                );
+              })}
+            </Tbody>
+          </Table>
+        </TableContainer>
+      </VStack>
     </VStack>
   );
 }
