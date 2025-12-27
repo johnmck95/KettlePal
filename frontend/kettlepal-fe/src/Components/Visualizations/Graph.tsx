@@ -561,7 +561,8 @@ export default function Graph({
       .attr("height", innerHeight)
       .attr("fill", "transparent")
       .style("cursor", "pointer")
-      .on("click", clickHandler);
+      .on("click", clickHandler)
+      .on("mousemove", clickHandler);
 
     return () => {
       svg.selectAll("*").remove();

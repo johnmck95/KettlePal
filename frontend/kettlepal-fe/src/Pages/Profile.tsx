@@ -149,21 +149,30 @@ export default function Profile() {
       >
         {dataRangeShown}
       </Heading>
-      <HStack w="90%" justifyContent="space-evenly" mt="0.25rem">
-        <Detail
-          title="Time"
-          value={formatHrsMins(bucket?.durationSeconds ?? 0) || "0 mins"}
-          variant="md"
-          color={theme.colors.graphPrimary[500]}
-        />
-        <Detail
-          title="Work Capacity"
-          value={
-            Math.round(bucket?.workCapacityKg ?? 0).toLocaleString() + "kg"
-          }
-          variant="md"
-          color={theme.colors.graphSecondary[500]}
-        />
+      <HStack
+        w="90%"
+        justifyContent="space-evenly"
+        mt="0.25rem"
+        h={["42px", "52px"]}
+      >
+        {showTime && (
+          <Detail
+            title="Time"
+            value={formatHrsMins(bucket?.durationSeconds ?? 0) || "0 mins"}
+            variant="md"
+            color={theme.colors.graphPrimary[500]}
+          />
+        )}
+        {showWC && (
+          <Detail
+            title="Work Capacity"
+            value={
+              Math.round(bucket?.workCapacityKg ?? 0).toLocaleString() + "kg"
+            }
+            variant="md"
+            color={theme.colors.graphSecondary[500]}
+          />
+        )}
       </HStack>
 
       {showServerError ? (
