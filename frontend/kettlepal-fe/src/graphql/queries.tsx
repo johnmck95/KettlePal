@@ -125,39 +125,6 @@ const PROFILE_PAGE_QUERY = gql`
   }
 `;
 
-const USER_STATS_QUERY = gql`
-  query UserStats($uid: ID!) {
-    user(uid: $uid) {
-      userStats {
-        totalWorkouts
-        totalExercises
-        totalTime
-        longestWorkout
-        mostRepsInWorkout
-        largestWorkCapacityKg
-        topExercises
-        oldestWorkoutDate
-      }
-    }
-  }
-`;
-
-const AT_A_GLANCE_QUERY = gql`
-  query AtAGlance($uid: ID!, $period: String!, $dateRange: String!) {
-    user(uid: $uid) {
-      atAGlance(period: $period, dateRange: $dateRange) {
-        period
-        dateRange
-        data {
-          dateRange
-          elapsedSeconds
-          workCapacityKg
-        }
-      }
-    }
-  }
-`;
-
 const UNQIUE_EXERCISE_TITLES_QUERY = gql`
   query unqiueExerciseTitles($userUid: ID!) {
     uniqueExerciseTitles(userUid: $userUid)

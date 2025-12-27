@@ -43,7 +43,7 @@ import {
 } from "../utils/Time/time";
 import Detail from "../Components/ViewWorkouts/ViewDetailedWorkoutModal/Detail";
 import LoadingSpinner from "../Components/LoadingSpinner";
-import Visualization from "../Components/Profile/AtAGlance/Visualization/Visualization";
+import WorkoutTrendsGraph from "../Components/Visualizations/WorkoutTrendsGraph";
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -192,7 +192,7 @@ export default function Profile() {
           ) : (
             <>
               {data?.user?.workoutTrends && bucket && (
-                <Visualization
+                <WorkoutTrendsGraph
                   workoutTrends={data?.user?.workoutTrends}
                   showTime={showTime}
                   showWC={showWC}

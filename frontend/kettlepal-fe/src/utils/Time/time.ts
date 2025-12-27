@@ -19,28 +19,6 @@ export function getCurrentDate(): string {
   return `${year}-${month}-${day}`;
 }
 
-export function formatDurationLong(seconds: number): string {
-  const hrs = Math.floor(seconds / 3600);
-  const mins = Math.floor((seconds % 3600) / 60);
-  const secs = seconds % 60;
-
-  let result = "";
-
-  if (hrs > 0) {
-    result += `${hrs} hour${hrs > 1 ? "s" : ""} `;
-  }
-
-  if (mins > 0 || hrs > 0) {
-    result += `${mins} minute${mins > 1 ? "s" : ""} `;
-  }
-
-  if (secs > 0) {
-    result += `${secs} second${secs > 1 ? "s" : ""}`;
-  }
-
-  return result;
-}
-
 export function formatDurationShort(seconds: number): string {
   const hrs = Math.floor(seconds / 3600);
   const mins = Math.floor((seconds % 3600) / 60);
@@ -205,7 +183,7 @@ export function epochToLongDateString(epoch: string) {
 }
 
 // EX: Sept 13th, 2024
-export function formatDate(date: Date, showYear: boolean = true): string {
+function formatDate(date: Date, showYear: boolean = true): string {
   const months = [
     "Jan",
     "Feb",
@@ -245,50 +223,7 @@ export function formatDate(date: Date, showYear: boolean = true): string {
   }
 }
 
-/**
- * Returns a string in the format "YYYY-MM-DD,YYYY-MM-DD" representing
- * the start and end dates of the current Week, Month, or Year.
- */
-type Period = "Week" | "Month" | "Year";
-export function getCurrentPeriodYYYYMMDD(period: Period): string {
-  const today = dayjs();
-  let start: dayjs.Dayjs;
-  let end: dayjs.Dayjs;
-
-  switch (period) {
-    case "Week":
-      start = today.startOf("isoWeek");
-      end = today.endOf("isoWeek");
-      break;
-    case "Month":
-      start = today.startOf("month");
-      end = today.endOf("month");
-      break;
-    case "Year":
-      start = today.startOf("year");
-      end = today.endOf("year");
-      break;
-    default:
-      throw new Error(`Unsupported period: ${period}`);
-  }
-
-  return `${start.format("YYYY-MM-DD")},${end.format("YYYY-MM-DD")}`;
-}
-
-/**
- * @param min The number of days ahead or behind today
- * @param max The number of days ahead or behind today
- * @returns A string in the format "YYYY-MM-DD,YYYY-MM-DD" representing the "MIN,MAX" date range.
- */
-export function createDateRangeString(min: number, max: number) {
-  const centerDate = dayjs().isoWeekday(4);
-  const minDate = centerDate.add(min, "day");
-  const maxDate = centerDate.add(max, "day");
-  const formattedMinDate = minDate.format("YYYY-MM-DD");
-  const formattedMaxDate = maxDate.format("YYYY-MM-DD");
-  return `${formattedMinDate},${formattedMaxDate}`;
-}
-
+// Creates a date string for the Profile page based on selected range
 export function formatSelectedDateRange(
   rangeStart: string | undefined,
   rangeEnd: string | undefined,

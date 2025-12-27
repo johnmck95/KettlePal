@@ -3,8 +3,8 @@ import * as d3 from "d3";
 import {
   WorkoutAggregate,
   ProfilePageQuery,
-} from "../../../../generated/frontend-types";
-import theme from "../../../../Constants/theme";
+} from "../../generated/frontend-types";
+import theme from "../../Constants/theme";
 
 interface VisualizationProps {
   workoutTrends: NonNullable<ProfilePageQuery["user"]>["workoutTrends"];
