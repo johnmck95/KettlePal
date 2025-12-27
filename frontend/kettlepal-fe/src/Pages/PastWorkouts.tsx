@@ -160,6 +160,9 @@ export default function PastWorkouts() {
               onClick={loadMoreWorkouts}
               isLoading={isFetchingMore || isInitialLoading}
               variant="secondary"
+              w="100%"
+              borderRadius="full"
+              my="1rem"
             >
               {isFetchingMore || isInitialLoading ? "Loading..." : "Load More"}
             </Button>

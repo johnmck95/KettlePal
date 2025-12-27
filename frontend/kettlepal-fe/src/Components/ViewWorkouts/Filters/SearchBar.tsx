@@ -52,6 +52,7 @@ export default function SearchBar({ onSearchSubmit }: SearchBarProps) {
           borderLeftRadius={0}
           borderRightRadius={30}
           variant="primary"
+          boxShadow={`0px 1px 4px ${theme.colors.grey[400]}`}
           sx={{
             _focus: {
               borderColor: theme.colors.green[300],
