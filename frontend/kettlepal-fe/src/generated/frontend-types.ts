@@ -73,20 +73,6 @@ export type AddWorkoutWithExercisesInput = {
   exercises: Array<InputMaybe<AddExerciseInput>>;
 };
 
-export type AtAGlance = {
-  __typename?: 'AtAGlance';
-  data: Array<Maybe<AtAGlanceData>>;
-  dateRange: Scalars['String']['output'];
-  period: Scalars['String']['output'];
-};
-
-export type AtAGlanceData = {
-  __typename?: 'AtAGlanceData';
-  dateRange: Scalars['String']['output'];
-  elapsedSeconds: Scalars['Int']['output'];
-  workCapacityKg: Scalars['Int']['output'];
-};
-
 export type CheckSessionResponse = {
   __typename?: 'CheckSessionResponse';
   isValid: Scalars['Boolean']['output'];
@@ -333,7 +319,6 @@ export type UpdateWorkoutWithExercisesInput = {
 
 export type User = {
   __typename?: 'User';
-  atAGlance?: Maybe<AtAGlance>;
   bodyWeight: Scalars['Float']['output'];
   bodyWeightUnit: Scalars['String']['output'];
   createdAt: Scalars['String']['output'];
@@ -348,12 +333,6 @@ export type User = {
   userStats?: Maybe<UserStats>;
   workoutTrends: WorkoutTrendResponse;
   workouts: Array<Maybe<Workout>>;
-};
-
-
-export type UserAtAGlanceArgs = {
-  dateRange: Scalars['String']['input'];
-  period: Scalars['String']['input'];
 };
 
 
@@ -534,13 +513,6 @@ export type ProfilePageQueryVariables = Exact<{
 
 
 export type ProfilePageQuery = { __typename?: 'Query', user?: { __typename?: 'User', workoutTrends: { __typename?: 'WorkoutTrendResponse', grain: TimeGrain, rangeStart: string, rangeEnd: string, buckets: Array<{ __typename?: 'WorkoutAggregate', periodStart: string, periodEnd: string, workCapacityKg: number, durationSeconds: number }> }, userStats?: { __typename?: 'UserStats', totalWorkouts: number, totalExercises: number, totalTime?: number | null, longestWorkout?: number | null, mostRepsInWorkout?: number | null, largestWorkCapacityKg?: number | null, topExercises?: string | null, oldestWorkoutDate?: string | null } | null } | null };
-
-export type UnqiueExerciseTitlesQueryVariables = Exact<{
-  userUid: Scalars['ID']['input'];
-}>;
-
-
-export type UnqiueExerciseTitlesQuery = { __typename?: 'Query', uniqueExerciseTitles: Array<string> };
 
 
 export const LoginDocument = gql`
@@ -1135,41 +1107,3 @@ export type ProfilePageQueryHookResult = ReturnType<typeof useProfilePageQuery>;
 export type ProfilePageLazyQueryHookResult = ReturnType<typeof useProfilePageLazyQuery>;
 export type ProfilePageSuspenseQueryHookResult = ReturnType<typeof useProfilePageSuspenseQuery>;
 export type ProfilePageQueryResult = Apollo.QueryResult<ProfilePageQuery, ProfilePageQueryVariables>;
-export const UnqiueExerciseTitlesDocument = gql`
-    query unqiueExerciseTitles($userUid: ID!) {
-  uniqueExerciseTitles(userUid: $userUid)
-}
-    `;
-
-/**
- * __useUnqiueExerciseTitlesQuery__
- *
- * To run a query within a React component, call `useUnqiueExerciseTitlesQuery` and pass it any options that fit your needs.
- * When your component renders, `useUnqiueExerciseTitlesQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useUnqiueExerciseTitlesQuery({
- *   variables: {
- *      userUid: // value for 'userUid'
- *   },
- * });
- */
-export function useUnqiueExerciseTitlesQuery(baseOptions: Apollo.QueryHookOptions<UnqiueExerciseTitlesQuery, UnqiueExerciseTitlesQueryVariables> & ({ variables: UnqiueExerciseTitlesQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<UnqiueExerciseTitlesQuery, UnqiueExerciseTitlesQueryVariables>(UnqiueExerciseTitlesDocument, options);
-      }
-export function useUnqiueExerciseTitlesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UnqiueExerciseTitlesQuery, UnqiueExerciseTitlesQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<UnqiueExerciseTitlesQuery, UnqiueExerciseTitlesQueryVariables>(UnqiueExerciseTitlesDocument, options);
-        }
-export function useUnqiueExerciseTitlesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<UnqiueExerciseTitlesQuery, UnqiueExerciseTitlesQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<UnqiueExerciseTitlesQuery, UnqiueExerciseTitlesQueryVariables>(UnqiueExerciseTitlesDocument, options);
-        }
-export type UnqiueExerciseTitlesQueryHookResult = ReturnType<typeof useUnqiueExerciseTitlesQuery>;
-export type UnqiueExerciseTitlesLazyQueryHookResult = ReturnType<typeof useUnqiueExerciseTitlesLazyQuery>;
-export type UnqiueExerciseTitlesSuspenseQueryHookResult = ReturnType<typeof useUnqiueExerciseTitlesSuspenseQuery>;
-export type UnqiueExerciseTitlesQueryResult = Apollo.QueryResult<UnqiueExerciseTitlesQuery, UnqiueExerciseTitlesQueryVariables>;

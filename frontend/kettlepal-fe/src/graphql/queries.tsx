@@ -124,9 +124,3 @@ const PROFILE_PAGE_QUERY = gql`
     }
   }
 `;
-
-const UNQIUE_EXERCISE_TITLES_QUERY = gql`
-  query unqiueExerciseTitles($userUid: ID!) {
-    uniqueExerciseTitles(userUid: $userUid)
-  }
-`;
