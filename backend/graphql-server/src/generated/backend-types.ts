@@ -72,24 +72,15 @@ export type AddWorkoutWithExercisesInput = {
   exercises: Array<InputMaybe<AddExerciseInput>>;
 };
 
-export type AtAGlance = {
-  __typename?: 'AtAGlance';
-  data: Array<Maybe<AtAGlanceData>>;
-  dateRange: Scalars['String']['output'];
-  period: Scalars['String']['output'];
-};
-
-export type AtAGlanceData = {
-  __typename?: 'AtAGlanceData';
-  dateRange: Scalars['String']['output'];
-  elapsedSeconds: Scalars['Int']['output'];
-  workCapacityKg: Scalars['Int']['output'];
-};
-
 export type CheckSessionResponse = {
   __typename?: 'CheckSessionResponse';
   isValid: Scalars['Boolean']['output'];
   user?: Maybe<User>;
+};
+
+export type DateRangeInput = {
+  end: Scalars['String']['input'];
+  start: Scalars['String']['input'];
 };
 
 export type EditExerciseInput = {
@@ -297,6 +288,13 @@ export type Template = {
   weightUnit?: Maybe<Scalars['String']['output']>;
 };
 
+export enum TimeGrain {
+  Day = 'DAY',
+  Month = 'MONTH',
+  Week = 'WEEK',
+  Year = 'YEAR'
+}
+
 export type UpdateExerciseInput = {
   comment?: InputMaybe<Scalars['String']['input']>;
   elapsedSeconds?: InputMaybe<Scalars['Int']['input']>;
@@ -320,7 +318,6 @@ export type UpdateWorkoutWithExercisesInput = {
 
 export type User = {
   __typename?: 'User';
-  atAGlance?: Maybe<AtAGlance>;
   bodyWeight: Scalars['Float']['output'];
   bodyWeightUnit: Scalars['String']['output'];
   createdAt: Scalars['String']['output'];
@@ -333,13 +330,14 @@ export type User = {
   tokenCount: Scalars['Int']['output'];
   uid: Scalars['ID']['output'];
   userStats?: Maybe<UserStats>;
+  workoutTrends: WorkoutTrendResponse;
   workouts: Array<Maybe<Workout>>;
 };
 
 
-export type UserAtAGlanceArgs = {
-  dateRange: Scalars['String']['input'];
-  period: Scalars['String']['input'];
+export type UserWorkoutTrendsArgs = {
+  grain: TimeGrain;
+  range: DateRangeInput;
 };
 
 
@@ -388,6 +386,22 @@ export type Workout = {
   exercises?: Maybe<Array<Exercise>>;
   uid: Scalars['ID']['output'];
   userUid: Scalars['ID']['output'];
+};
+
+export type WorkoutAggregate = {
+  __typename?: 'WorkoutAggregate';
+  durationSeconds: Scalars['Int']['output'];
+  periodEnd: Scalars['String']['output'];
+  periodStart: Scalars['String']['output'];
+  workCapacityKg: Scalars['Float']['output'];
+};
+
+export type WorkoutTrendResponse = {
+  __typename?: 'WorkoutTrendResponse';
+  buckets: Array<WorkoutAggregate>;
+  grain: TimeGrain;
+  rangeEnd: Scalars['String']['output'];
+  rangeStart: Scalars['String']['output'];
 };
 
 export type WorkoutWithExercises = {
@@ -479,10 +493,9 @@ export type ResolversTypes = ResolversObject<{
   AddOrUpdateTemplateInput: AddOrUpdateTemplateInput;
   AddUserInput: AddUserInput;
   AddWorkoutWithExercisesInput: AddWorkoutWithExercisesInput;
-  AtAGlance: ResolverTypeWrapper<AtAGlance>;
-  AtAGlanceData: ResolverTypeWrapper<AtAGlanceData>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   CheckSessionResponse: ResolverTypeWrapper<CheckSessionResponse>;
+  DateRangeInput: DateRangeInput;
   EditExerciseInput: EditExerciseInput;
   EditUserInput: EditUserInput;
   Exercise: ResolverTypeWrapper<Exercise>;
@@ -494,6 +507,7 @@ export type ResolversTypes = ResolversObject<{
   RefreshTokenResponse: ResolverTypeWrapper<RefreshTokenResponse>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   Template: ResolverTypeWrapper<Template>;
+  TimeGrain: TimeGrain;
   UpdateExerciseInput: UpdateExerciseInput;
   UpdateWorkoutWithExercisesInput: UpdateWorkoutWithExercisesInput;
   User: ResolverTypeWrapper<User>;
@@ -501,6 +515,8 @@ export type ResolversTypes = ResolversObject<{
   UserStats: ResolverTypeWrapper<UserStats>;
   UserWithTemplates: ResolverTypeWrapper<UserWithTemplates>;
   Workout: ResolverTypeWrapper<Workout>;
+  WorkoutAggregate: ResolverTypeWrapper<WorkoutAggregate>;
+  WorkoutTrendResponse: ResolverTypeWrapper<WorkoutTrendResponse>;
   WorkoutWithExercises: ResolverTypeWrapper<WorkoutWithExercises>;
 }>;
 
@@ -513,10 +529,9 @@ export type ResolversParentTypes = ResolversObject<{
   AddOrUpdateTemplateInput: AddOrUpdateTemplateInput;
   AddUserInput: AddUserInput;
   AddWorkoutWithExercisesInput: AddWorkoutWithExercisesInput;
-  AtAGlance: AtAGlance;
-  AtAGlanceData: AtAGlanceData;
   Boolean: Scalars['Boolean']['output'];
   CheckSessionResponse: CheckSessionResponse;
+  DateRangeInput: DateRangeInput;
   EditExerciseInput: EditExerciseInput;
   EditUserInput: EditUserInput;
   Exercise: Exercise;
@@ -535,21 +550,9 @@ export type ResolversParentTypes = ResolversObject<{
   UserStats: UserStats;
   UserWithTemplates: UserWithTemplates;
   Workout: Workout;
+  WorkoutAggregate: WorkoutAggregate;
+  WorkoutTrendResponse: WorkoutTrendResponse;
   WorkoutWithExercises: WorkoutWithExercises;
-}>;
-
-export type AtAGlanceResolvers<ContextType = any, ParentType extends ResolversParentTypes['AtAGlance'] = ResolversParentTypes['AtAGlance']> = ResolversObject<{
-  data?: Resolver<Array<Maybe<ResolversTypes['AtAGlanceData']>>, ParentType, ContextType>;
-  dateRange?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  period?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
-}>;
-
-export type AtAGlanceDataResolvers<ContextType = any, ParentType extends ResolversParentTypes['AtAGlanceData'] = ResolversParentTypes['AtAGlanceData']> = ResolversObject<{
-  dateRange?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  elapsedSeconds?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  workCapacityKg?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
 export type CheckSessionResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['CheckSessionResponse'] = ResolversParentTypes['CheckSessionResponse']> = ResolversObject<{
@@ -626,7 +629,6 @@ export type TemplateResolvers<ContextType = any, ParentType extends ResolversPar
 }>;
 
 export type UserResolvers<ContextType = any, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = ResolversObject<{
-  atAGlance?: Resolver<Maybe<ResolversTypes['AtAGlance']>, ParentType, ContextType, RequireFields<UserAtAGlanceArgs, 'dateRange' | 'period'>>;
   bodyWeight?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
   bodyWeightUnit?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -639,6 +641,7 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   tokenCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   uid?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   userStats?: Resolver<Maybe<ResolversTypes['UserStats']>, ParentType, ContextType>;
+  workoutTrends?: Resolver<ResolversTypes['WorkoutTrendResponse'], ParentType, ContextType, RequireFields<UserWorkoutTrendsArgs, 'grain' | 'range'>>;
   workouts?: Resolver<Array<Maybe<ResolversTypes['Workout']>>, ParentType, ContextType, Partial<UserWorkoutsArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
@@ -685,6 +688,22 @@ export type WorkoutResolvers<ContextType = any, ParentType extends ResolversPare
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type WorkoutAggregateResolvers<ContextType = any, ParentType extends ResolversParentTypes['WorkoutAggregate'] = ResolversParentTypes['WorkoutAggregate']> = ResolversObject<{
+  durationSeconds?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  periodEnd?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  periodStart?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  workCapacityKg?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type WorkoutTrendResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['WorkoutTrendResponse'] = ResolversParentTypes['WorkoutTrendResponse']> = ResolversObject<{
+  buckets?: Resolver<Array<ResolversTypes['WorkoutAggregate']>, ParentType, ContextType>;
+  grain?: Resolver<ResolversTypes['TimeGrain'], ParentType, ContextType>;
+  rangeEnd?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  rangeStart?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type WorkoutWithExercisesResolvers<ContextType = any, ParentType extends ResolversParentTypes['WorkoutWithExercises'] = ResolversParentTypes['WorkoutWithExercises']> = ResolversObject<{
   comment?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   date?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -696,8 +715,6 @@ export type WorkoutWithExercisesResolvers<ContextType = any, ParentType extends 
 }>;
 
 export type Resolvers<ContextType = any> = ResolversObject<{
-  AtAGlance?: AtAGlanceResolvers<ContextType>;
-  AtAGlanceData?: AtAGlanceDataResolvers<ContextType>;
   CheckSessionResponse?: CheckSessionResponseResolvers<ContextType>;
   Exercise?: ExerciseResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
@@ -709,6 +726,8 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   UserStats?: UserStatsResolvers<ContextType>;
   UserWithTemplates?: UserWithTemplatesResolvers<ContextType>;
   Workout?: WorkoutResolvers<ContextType>;
+  WorkoutAggregate?: WorkoutAggregateResolvers<ContextType>;
+  WorkoutTrendResponse?: WorkoutTrendResponseResolvers<ContextType>;
   WorkoutWithExercises?: WorkoutWithExercisesResolvers<ContextType>;
 }>;
 

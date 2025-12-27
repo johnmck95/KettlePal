@@ -1,3 +1,10 @@
+enum TimeGrain {
+  DAY
+  WEEK
+  MONTH
+  YEAR
+}
+
 type User {
   uid: ID!
   firstName: String!
@@ -5,26 +12,31 @@ type User {
   email: String!
   password: String!
   isAuthorized: Boolean!
-  workouts(offset: Int, limit: Int): [Workout]!
   createdAt: String!
   tokenCount: Int!
-  userStats: UserStats
-  atAGlance(period: String!, dateRange: String!): AtAGlance
   bodyWeight: Float!
   bodyWeightUnit: String!
+  workouts(offset: Int, limit: Int): [Workout]!
   templates: [Template!]!
+  userStats: UserStats
+  workoutTrends(
+    grain: TimeGrain!
+    range: DateRangeInput!
+  ): WorkoutTrendResponse!
 }
 
-type AtAGlance {
-  period: String!
-  dateRange: String!
-  data: [AtAGlanceData]!
+type WorkoutAggregate {
+  periodStart: String!
+  periodEnd: String!
+  workCapacityKg: Float!
+  durationSeconds: Int!
 }
 
-type AtAGlanceData {
-  dateRange: String!
-  elapsedSeconds: Int!
-  workCapacityKg: Int!
+type WorkoutTrendResponse {
+  grain: TimeGrain!
+  rangeStart: String!
+  rangeEnd: String!
+  buckets: [WorkoutAggregate!]!
 }
 
 type UserStats {
@@ -260,4 +272,9 @@ input EditExerciseInput {
   repsDisplay: String
   comment: String
   elapsedSeconds: Int
+}
+
+input DateRangeInput {
+  start: String!
+  end: String!
 }

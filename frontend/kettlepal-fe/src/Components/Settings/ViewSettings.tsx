@@ -63,13 +63,14 @@ export default function ViewSettings({
 
       <Box w={["96%", "90%"]} m={2} color="gray.700">
         {/* BODY WEIGHT */}
-        <Text fontSize={["xs", "sm", "md"]}>
+        <Text fontSize={["xs", "sm", "md"]} mx="0.25rem">
           <b>BODY WEIGHT: </b> {user?.bodyWeight + " " + user?.bodyWeightUnit}
         </Text>
         <Box
           borderBottom={`2px solid ${theme.colors.green[100]}`}
           mt={6}
           mb={4}
+          px="0.25rem"
           fontWeight="bold"
         >
           <Text fontSize={["md", "lg", "xl"]}>EXERCISE TEMPLATES</Text>
@@ -153,6 +154,7 @@ export default function ViewSettings({
               borderBottom={`3px solid ${theme.colors.green[50]}`}
               fontSize={["xs", "sm", "md"]}
               fontWeight="semibold"
+              px="0.25rem"
             >
               <Box>EXERCISE</Box>
               <Box>TYPE</Box>
@@ -170,9 +172,15 @@ export default function ViewSettings({
                   fontSize={["xs", "sm", "md"]}
                   alignItems="center"
                   borderBottom={`1px solid ${theme.colors.green[50]}`}
-                  _hover={{ bg: theme.colors.green[25] }}
+                  _hover={{
+                    bg: theme.colors.grey[50],
+                    color: "black",
+                  }}
                   py={4}
                   gap={2}
+                  bg={theme.colors.white}
+                  px="0.5rem"
+                  borderRadius="2px"
                 >
                   <Box>{template.title}</Box>
                   <Box>

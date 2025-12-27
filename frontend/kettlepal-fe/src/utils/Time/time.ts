@@ -19,28 +19,6 @@ export function getCurrentDate(): string {
   return `${year}-${month}-${day}`;
 }
 
-export function formatDurationLong(seconds: number): string {
-  const hrs = Math.floor(seconds / 3600);
-  const mins = Math.floor((seconds % 3600) / 60);
-  const secs = seconds % 60;
-
-  let result = "";
-
-  if (hrs > 0) {
-    result += `${hrs} hour${hrs > 1 ? "s" : ""} `;
-  }
-
-  if (mins > 0 || hrs > 0) {
-    result += `${mins} minute${mins > 1 ? "s" : ""} `;
-  }
-
-  if (secs > 0) {
-    result += `${secs} second${secs > 1 ? "s" : ""}`;
-  }
-
-  return result;
-}
-
 export function formatDurationShort(seconds: number): string {
   const hrs = Math.floor(seconds / 3600);
   const mins = Math.floor((seconds % 3600) / 60);
@@ -205,7 +183,7 @@ export function epochToLongDateString(epoch: string) {
 }
 
 // EX: Sept 13th, 2024
-export function formatDate(date: Date) {
+function formatDate(date: Date, showYear: boolean = true): string {
   const months = [
     "Jan",
     "Feb",
@@ -238,49 +216,98 @@ export function formatDate(date: Date) {
     }
   };
 
-  return `${month} ${day}${suffix(day)}, ${year}`;
+  if (showYear) {
+    return `${month} ${day}${suffix(day)}, ${year}`;
+  } else {
+    return `${month} ${day}${suffix(day)}`;
+  }
 }
 
-/**
- * Returns a string in the format "YYYY-MM-DD,YYYY-MM-DD" representing
- * the start and end dates of the current Week, Month, or Year.
- */
-type Period = "Week" | "Month" | "Year";
-export function getCurrentPeriodYYYYMMDD(period: Period): string {
-  const today = dayjs();
-  let start: dayjs.Dayjs;
-  let end: dayjs.Dayjs;
-
-  switch (period) {
-    case "Week":
-      start = today.startOf("isoWeek");
-      end = today.endOf("isoWeek");
-      break;
-    case "Month":
-      start = today.startOf("month");
-      end = today.endOf("month");
-      break;
-    case "Year":
-      start = today.startOf("year");
-      end = today.endOf("year");
-      break;
-    default:
-      throw new Error(`Unsupported period: ${period}`);
+// Creates a date string for the Profile page based on selected range
+export function formatSelectedDateRange(
+  rangeStart: string | undefined,
+  rangeEnd: string | undefined,
+  showYear: boolean = false
+) {
+  if (!rangeStart || !rangeEnd) {
+    return "";
   }
 
-  return `${start.format("YYYY-MM-DD")},${end.format("YYYY-MM-DD")}`;
+  const startDate = new Date(rangeStart + "T12:00:00");
+  const endDate = new Date(rangeEnd + "T12:00:00");
+  // EX: Dec 31st, 2025 - Jan 6th, 2026
+  if (startDate.getFullYear() !== endDate.getFullYear()) {
+    return `${formatDate(
+      startDate,
+      showYear
+    )}, ${endDate.getFullYear()} - ${formatDate(
+      endDate,
+      showYear
+    )}, ${endDate.getFullYear()}`;
+  }
+  // EX: Jan 5th, 2026
+  if (rangeStart === rangeEnd) {
+    return `${formatDate(startDate, showYear)}, ${endDate.getFullYear()}`;
+  } // EX: Jan 5th - 12th, 2026
+  else {
+    return `${formatDate(startDate, showYear)} - ${formatDate(
+      endDate,
+      showYear
+    )}, ${endDate.getFullYear()}`;
+  }
 }
 
-/**
- * @param min The number of days ahead or behind today
- * @param max The number of days ahead or behind today
- * @returns A string in the format "YYYY-MM-DD,YYYY-MM-DD" representing the "MIN,MAX" date range.
- */
-export function createDateRangeString(min: number, max: number) {
-  const centerDate = dayjs().isoWeekday(4);
-  const minDate = centerDate.add(min, "day");
-  const maxDate = centerDate.add(max, "day");
-  const formattedMinDate = minDate.format("YYYY-MM-DD");
-  const formattedMaxDate = maxDate.format("YYYY-MM-DD");
-  return `${formattedMinDate},${formattedMaxDate}`;
-}
+//EX: 5h 07m
+export const formatHrsMins = (seconds: number): string => {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+
+  return hours > 0 ? `${hours}h ${pad(minutes)}m` : `${minutes}m`;
+};
+
+// (DAY) Mon-Sun of this week
+export const getCurrentWeekRange = () => {
+  const today = dayjs();
+  const monday = today.day(1);
+  const sunday = today.add(1, "week").day(0);
+
+  return {
+    start: monday.format("YYYY-MM-DD"),
+    end: sunday.format("YYYY-MM-DD"),
+  };
+};
+
+// (WEEK) Monday 12 weeks ago, Sunday this week.
+export const getLastThreeMonthsRange = () => {
+  const today = dayjs();
+  const sunday = today.add(1, "week").day(0);
+  const monday12WeeksAgo = sunday.subtract(12, "week").day(1);
+
+  return {
+    start: monday12WeeksAgo.format("YYYY-MM-DD"),
+    end: sunday.format("YYYY-MM-DD"),
+  };
+};
+
+// (MONTH) Jan 1 to Dec 31 of current year
+export const getCurrentYearRange = () => {
+  const today = dayjs();
+  const jan1 = today.startOf("year");
+  const dec31 = today.endOf("year");
+
+  return {
+    start: jan1.format("YYYY-MM-DD"),
+    end: dec31.format("YYYY-MM-DD"),
+  };
+};
+
+// (YEAR) Jan 1st of user created year to Dec 31 of current year
+export const getUserLifetimeRange = (userCreatedAt: string) => {
+  const createdDate = dayjs(Number(userCreatedAt)).startOf("year");
+  const endOfYear = dayjs().endOf("year");
+
+  return {
+    start: createdDate.format("YYYY-MM-DD"),
+    end: endOfYear.format("YYYY-MM-DD"),
+  };
+};
