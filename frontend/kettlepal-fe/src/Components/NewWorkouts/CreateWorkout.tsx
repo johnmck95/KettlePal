@@ -13,6 +13,7 @@ import {
   Grid,
   GridItem,
   HStack,
+  Heading,
   Link,
   Text,
 } from "@chakra-ui/react";
@@ -33,6 +34,9 @@ import WorkoutComment from "./FormComponents/NewWorkout/Workout/WorkoutComment";
 import useCreateWorkoutForm from "../../Hooks/useCreateWorkoutForm";
 import WorkoutStopwatch from "./FormComponents/NewWorkout/Workout/WorkoutStopwatch";
 import { useNavigate } from "react-router-dom";
+import Detail from "../ViewWorkouts/ViewDetailedWorkoutModal/Detail";
+import { formatDurationShort } from "../../utils/Time/time";
+import { totalWorkoutWorkCapacity } from "../../utils/Workouts/workouts";
 
 export default function CreateWorkout() {
   const {
@@ -370,14 +374,42 @@ export default function CreateWorkout() {
                   <br />
                   {state.date && (
                     <>
-                      {dayjs(state.date).format("dddd, MMMM DD, YYYY")}
-                      <br />
+                      <Heading fontSize="xl" flex="1">
+                        {dayjs(state.date).format("dddd, MMMM DD, YYYY")}
+                      </Heading>
                     </>
                   )}
+
+                  <HStack w="100%" justifyContent="space-evenly" my="1rem">
+                    <Detail
+                      title={"Time"}
+                      value={formatDurationShort(state.elapsedSeconds ?? 0)}
+                      variant="sm"
+                      color={theme.colors.graphPrimary[500]}
+                    />
+                    <br />
+                    <Detail
+                      title={"Work Capacity"}
+                      value={totalWorkoutWorkCapacity({
+                        exercises: state.exercises.map((exercise) => ({
+                          weight: Number(exercise.weight),
+                          weightUnit: exercise.weightUnit,
+                          sets: Number(exercise.sets),
+                          reps: Number(exercise.reps),
+                          multiplier: Number(exercise.multiplier),
+                        })),
+                      })}
+                      variant="sm"
+                      color={theme.colors.graphSecondary[500]}
+                    />
+                  </HStack>
+
                   {state.exercises.map((exercise, index) => {
                     return (
                       <React.Fragment key={index}>
-                        {formatExerciseString(exercise)} <br />
+                        <b>
+                          {formatExerciseString(exercise)} <br />
+                        </b>
                       </React.Fragment>
                     );
                   })}

@@ -1,19 +1,17 @@
-import {
-  FuzzySearchQuery,
-  UserWithWorkoutsQuery,
-} from "../../generated/frontend-types";
+type Exercise = {
+  weight?: number | null | undefined;
+  weightUnit?: string | null | undefined;
+  sets?: number | null | undefined;
+  reps?: number | null | undefined;
+  multiplier: number;
+};
 
-type Exercise = NonNullable<
-  NonNullable<
-    NonNullable<UserWithWorkoutsQuery["user"]>["workouts"][0]
-  >["exercises"]
->[0];
+type WorkoutWithExercisesType = {
+  exercises: Array<Exercise>;
+} & Record<string, any>;
 
-// Note: BodyWeight exercises have the user weight and weightUnit saved in the exercises table.
 export function totalWorkoutWorkCapacity(
-  workoutWithExercises: NonNullable<
-    NonNullable<FuzzySearchQuery["pastWorkouts"]>["workoutWithExercises"]
-  >[0]
+  workoutWithExercises: WorkoutWithExercisesType | null
 ): string {
   const exercisesInLB = workoutWithExercises?.exercises?.filter(
     (exercise) => exercise.weightUnit === "lb"

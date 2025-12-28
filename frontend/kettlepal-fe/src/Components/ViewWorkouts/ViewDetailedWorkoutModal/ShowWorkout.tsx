@@ -36,14 +36,16 @@ export default function ShowWorkout({
       {/* ELAPSED TIME & TOTAL WORK CAPACITY */}
       <HStack w="100%" justifyContent="space-evenly" my="1rem">
         <Detail
-          title={"Elapsed Time"}
+          title={"Time"}
           value={formatDurationShort(elapsedSeconds ?? 0)}
           variant="md"
+          color={theme.colors.graphPrimary[500]}
         />
         <Detail
           title={"Work Capacity"}
           value={totalWorkoutWorkCapacity(workoutWithExercises)}
           variant="md"
+          color={theme.colors.graphSecondary[500]}
         />
       </HStack>
 

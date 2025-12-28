@@ -5,7 +5,6 @@ import {
   calculateExerciseWorkCapacity,
   formatExerciseString,
 } from "../../../utils/Exercises/exercises";
-import { formatDurationShort } from "../../../utils/Time/time";
 import { Exercise } from "../../../generated/frontend-types";
 
 import Detail from "./Detail";
@@ -19,15 +18,7 @@ export default function ViewDetailedExercise({
   exercise,
   showDetails,
 }: ViewDetailedExerciseProps) {
-  const {
-    elapsedSeconds,
-    sets,
-    reps,
-    weight,
-    weightUnit,
-    comment,
-    multiplier,
-  } = exercise;
+  const { sets, reps, weight, weightUnit, comment, multiplier } = exercise;
 
   return (
     <VStack
@@ -57,12 +48,6 @@ export default function ViewDetailedExercise({
           mt="0.5rem"
           w="100%"
         >
-          {!!elapsedSeconds && (
-            <Detail
-              title={"Elapsed Time"}
-              value={formatDurationShort(elapsedSeconds ?? 0)}
-            />
-          )}
           {!!sets && !!reps && (
             <Detail
               title={"Total Reps"}
@@ -72,9 +57,9 @@ export default function ViewDetailedExercise({
           {!!sets && !!reps && !!weight && !!weightUnit && (
             <Detail
               title={"Work Capacity"}
-              value={`${calculateExerciseWorkCapacity(exercise).toFixed(
-                0
-              )} ${weightUnit}`}
+              value={`${Math.round(
+                calculateExerciseWorkCapacity(exercise)
+              ).toLocaleString()} ${weightUnit}`}
             />
           )}
           <Detail title={"Multiplier"} value={multiplier.toFixed(2)} />
