@@ -267,9 +267,8 @@ export const formatHrsMins = (seconds: number): string => {
 
 // (DAY) Mon-Sun of this week
 export const getCurrentWeekRange = () => {
-  const today = dayjs();
-  const monday = today.day(1);
-  const sunday = today.add(1, "week").day(0);
+  const monday = dayjs().startOf("isoWeek");
+  const sunday = dayjs().endOf("isoWeek");
 
   return {
     start: monday.format("YYYY-MM-DD"),
@@ -277,15 +276,15 @@ export const getCurrentWeekRange = () => {
   };
 };
 
-// (WEEK) Monday 12 weeks ago, Sunday this week.
+// (WEEK) Monday 12 weeks ago, Sunday this week. (13 total)
 export const getLastThreeMonthsRange = () => {
-  const today = dayjs();
-  const sunday = today.add(1, "week").day(0);
-  const monday12WeeksAgo = sunday.subtract(12, "week").day(1);
+  const thisWeekMonday = dayjs().startOf("isoWeek");
+  const twelveWeeksAgoMonday = thisWeekMonday.subtract(12, "week");
+  const sundayThisWeek = thisWeekMonday.add(6, "day");
 
   return {
-    start: monday12WeeksAgo.format("YYYY-MM-DD"),
-    end: sunday.format("YYYY-MM-DD"),
+    start: twelveWeeksAgoMonday.format("YYYY-MM-DD"),
+    end: sundayThisWeek.format("YYYY-MM-DD"),
   };
 };
 
