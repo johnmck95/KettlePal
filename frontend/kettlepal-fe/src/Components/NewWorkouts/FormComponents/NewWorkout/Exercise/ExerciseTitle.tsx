@@ -9,7 +9,6 @@ import { useUser } from "../../../../../Contexts/UserContext";
 import { capitalizeWords } from "../../../../../utils/textFormatters";
 
 interface ExerciseTitleProps {
-  submitted: boolean;
   titleIsInvalid: boolean;
   customTitle: boolean;
   exercise: Omit<CreateWorkoutState["exercises"][number], "key">;
@@ -19,7 +18,6 @@ interface ExerciseTitleProps {
 }
 
 export default function ExerciseTitle({
-  submitted,
   titleIsInvalid,
   customTitle,
   exercise,
@@ -70,7 +68,7 @@ export default function ExerciseTitle({
   };
 
   return (
-    <FormControl isRequired isInvalid={submitted && titleIsInvalid}>
+    <FormControl isRequired isInvalid={titleIsInvalid}>
       <FormLabel fontSize={["14px", "16px"]} m="0">
         Exercise
       </FormLabel>
@@ -80,7 +78,7 @@ export default function ExerciseTitle({
           fontSize={["16px"]}
           placeholder="Enter Exercise"
           name="title"
-          value={exercise.title}
+          value={exercise.title.value}
           onChange={(event) => {
             const capitalizedValue = capitalizeWords(event.target.value);
             handleExercise(event.target.name, capitalizedValue, exerciseIndex);
@@ -94,7 +92,7 @@ export default function ExerciseTitle({
           fontSize={["16px"]}
           placeholder="Select"
           name="title"
-          value={exercise.title}
+          value={exercise.title.value}
           onChange={(event) =>
             event.target.value === "Custom"
               ? setCustomTitle(true)

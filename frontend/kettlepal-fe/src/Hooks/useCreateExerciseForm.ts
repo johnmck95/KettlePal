@@ -13,7 +13,6 @@ const useCreateExerciseForm = ({
   trackingIndex,
   handleExercise,
   deleteExercise,
-  setFormHasErrors,
 }: {
   user: UserInContext;
   exercise: Omit<CreateWorkoutState["exercises"][number], "key">;
@@ -21,7 +20,6 @@ const useCreateExerciseForm = ({
   deleteExercise: ((index: number) => void) | (() => Promise<void>);
   exerciseIndex: number;
   trackingIndex: number;
-  setFormHasErrors: (value: boolean) => void;
 }) => {
   const SESSION_STORAGE_KEY = `completedSets-${trackingIndex}`;
   // Tracking a workout
@@ -30,17 +28,18 @@ const useCreateExerciseForm = ({
     return sessionVal ? parseInt(sessionVal) : 0;
   });
   const [customTitle, setCustomTitle] = useState(
-    exercise.title !== "" &&
+    exercise.title.value !== "" &&
       !Object.keys(
         getConfigurations(user?.templates ?? [], {
           bodyWeight: user?.bodyWeight ?? 0,
           bodyWeightUnit: user?.bodyWeightUnit ?? "kg",
         })
-      ).includes(exercise.title)
+      ).includes(exercise.title.value)
   );
 
   const [customWeight, setCustomWeight] = useState(
-    exercise.weight !== "" && !KettlbellWeightsKG.includes(exercise.weight)
+    exercise.weight.value !== "" &&
+      !KettlbellWeightsKG.includes(exercise.weight.value)
   );
 
   const setExerciseComment = (newComment: string) => {
@@ -104,51 +103,6 @@ const useCreateExerciseForm = ({
     );
   }
 
-  // ERROR VALIDATION
-  const titleIsInvalid = !exercise.title;
-  const weightIsInvalid =
-    !!exercise.weight === false && !!exercise.weightUnit === true;
-  const weightUnitIsInvalid =
-    !!exercise.weight === true && !!exercise.weightUnit === false;
-  const setsIsInvalid =
-    (!!exercise.reps === true || !!exercise.repsDisplay === true) &&
-    !!exercise.sets === false;
-  const repsIsInvalid =
-    (!!exercise.sets === true || !!exercise.repsDisplay === true) &&
-    !!exercise.reps === false;
-  const repsDisplayIsInvalid =
-    (!!exercise.reps === true || !!exercise.sets === true) &&
-    !!exercise.repsDisplay === false;
-
-  enum ExerciseErrors {
-    title = "Title is required.",
-    weight = "Weight is required when Weight Unit is provided.",
-    weightUnit = "Weight Unit is required when Weight is proivided.",
-    sets = "Sets are required when Reps or Rep Type are provided.",
-    reps = "Reps are required when Sets or Rep Type are provided.",
-    repsDisplay = "Rep Type is required when Sets or Reps are provided.",
-  }
-
-  const [numErrors, setNumErrors] = useState(0);
-  const errors: string[] = [];
-  if (titleIsInvalid) errors.push(ExerciseErrors.title);
-  if (weightIsInvalid) errors.push(ExerciseErrors.weight);
-  if (weightUnitIsInvalid) errors.push(ExerciseErrors.weightUnit);
-  if (setsIsInvalid) errors.push(ExerciseErrors.sets);
-  if (repsIsInvalid) errors.push(ExerciseErrors.reps);
-  if (repsDisplayIsInvalid) errors.push(ExerciseErrors.repsDisplay);
-
-  if (numErrors !== errors.length) {
-    setNumErrors(errors.length);
-  }
-
-  // Flag to detect if the form has errors.
-  // Form also needs to be submitted to see the error messages.
-  useEffect(
-    () => setFormHasErrors(numErrors > 0),
-    [numErrors, setFormHasErrors]
-  );
-
   // Keep track of completed sets in session storage
   useEffect(() => {
     sessionStorage.setItem(SESSION_STORAGE_KEY, completedSets.toString());
@@ -157,9 +111,9 @@ const useCreateExerciseForm = ({
   // In workout tracking. Bump total sets if you've tracked more than state.exercise[indx].sets
   function completedASet() {
     setCompletedSets((prev) => prev + 1);
-    if (exercise.sets === "") {
+    if (exercise.sets.value === "") {
       handleExercise("sets", "1", exerciseIndex);
-    } else if (completedSets >= parseInt(exercise.sets)) {
+    } else if (completedSets >= parseInt(exercise.sets.value)) {
       handleExercise("sets", (completedSets + 1).toString(), exerciseIndex);
     }
   }
@@ -174,8 +128,8 @@ const useCreateExerciseForm = ({
 
   // Bump the number of sets if your go above the plan while tracking
   useEffect(() => {
-    if (completedSets > parseInt(exercise.sets)) {
-      setCompletedSets(parseInt(exercise.sets));
+    if (completedSets > parseInt(exercise.sets.value)) {
+      setCompletedSets(parseInt(exercise.sets.value));
     }
   }, [exercise.sets, completedSets, setCompletedSets]);
 
@@ -222,16 +176,9 @@ const useCreateExerciseForm = ({
     completedSets,
     customTitle,
     customWeight,
-    errors,
     isOpenDeleteExercise,
     minSwipeDistance,
     offset,
-    repsDisplayIsInvalid,
-    repsIsInvalid,
-    setsIsInvalid,
-    titleIsInvalid,
-    weightIsInvalid,
-    weightUnitIsInvalid,
     completedASet,
     customOnCloseDeleteExercise,
     onDeleteExercise,

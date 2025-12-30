@@ -6,6 +6,7 @@ import {
   AlertIcon,
   AlertDescription,
   CloseButton,
+  Text,
 } from "@chakra-ui/react";
 import WorkoutComment from "../../NewWorkouts/FormComponents/NewWorkout/Workout/WorkoutComment";
 import WorkoutDate from "../../NewWorkouts/FormComponents/NewWorkout/Workout/WorkoutDate";
@@ -21,6 +22,7 @@ import ConfirmModal from "../../ConfirmModal";
 import BeforeAfterConfirmModalConent from "./BeforeAfterConfirmModalContent";
 import LoadingSpinner from "../../LoadingSpinner";
 import WorkoutStopwatch from "../../NewWorkouts/FormComponents/NewWorkout/Workout/WorkoutStopwatch";
+import theme from "../../../Constants/theme";
 
 interface EditWorkoutProps {
   workoutWithExercises: NonNullable<
@@ -52,7 +54,6 @@ export default function EditWorkout({
     setComment,
     deleteExercise,
     handleExercise,
-    setFormHasErrors,
   } = useUpdateWorkoutWithExercisesForm({ workoutWithExercises });
 
   const [updateWorkoutWithExercises, { loading, error }] =
@@ -74,22 +75,46 @@ export default function EditWorkout({
     setSubmitted(true);
     onClose();
 
-    if (formHasErrors) {
+    if (formHasErrors()) {
       return;
     }
 
     try {
+      const formattedWorkoutWithExercises = {
+        date: state.date.value,
+        comment: state.comment.value,
+        elapsedSeconds: state.elapsedSeconds.value,
+        exercises: state.exercises.map((e) => {
+          return {
+            uid: e.uid,
+            title: e.title.value,
+            weight: e.weight.value,
+            weightUnit: e.weightUnit.value,
+            sets: e.sets.value,
+            reps: e.reps.value,
+            repsDisplay: e.repsDisplay.value,
+            comment: e.comment.value,
+            elapsedSeconds: e.elapsedSeconds.value,
+            multiplier: e.multiplier.value,
+            key: e.key,
+          };
+        }),
+      };
       // mutate workoutwithexercises to DB
       updateWorkoutWithExercises({
         variables: {
           workoutUid: workoutWithExercises?.uid ?? "",
-          workoutWithExercises: state,
+          workoutWithExercises: formattedWorkoutWithExercises,
         },
       });
     } catch (e) {
       console.log(e);
     }
   }
+
+  const errors = [state.date, state.comment, state.elapsedSeconds].flatMap(
+    (f) => f.errors
+  );
 
   return (
     <VStack w="100%">
@@ -124,12 +149,12 @@ export default function EditWorkout({
             <HStack mt="2.5rem" w="100%">
               <WorkoutDate
                 submitted={submitted}
-                date={state.date}
+                date={state.date.value}
                 handleStateChange={handleStateChange}
               />
               <Box w="175px">
                 <WorkoutStopwatch
-                  seconds={state.elapsedSeconds}
+                  seconds={state.elapsedSeconds.value}
                   isActive={false}
                   setTime={setTime}
                   handleIsActive={null}
@@ -139,11 +164,24 @@ export default function EditWorkout({
             </HStack>
 
             <WorkoutComment
+              commentIsInvalid={submitted && state.comment.errors.length > 0}
               addComments={true}
-              comment={state.comment}
+              comment={state.comment.value}
               showLabel={true}
               setComment={setComment}
             />
+            <VStack w="100%" spacing={0} alignItems="flex-start">
+              {errors.map((error) => {
+                if (!submitted) {
+                  return null;
+                }
+                return (
+                  <Text key={error} color={theme.colors.error} fontSize="xs">
+                    {error}
+                  </Text>
+                );
+              })}
+            </VStack>
 
             {/* EXERCISES */}
             {state.exercises?.map((exercise, index) => {
@@ -156,7 +194,6 @@ export default function EditWorkout({
                   exerciseIndex={index}
                   trackingIndex={state.exercises.length - index - 1}
                   submitted={submitted}
-                  setFormHasErrors={setFormHasErrors}
                   trackWorkout={false}
                   mutatingWorkout={true}
                   showComments={true}

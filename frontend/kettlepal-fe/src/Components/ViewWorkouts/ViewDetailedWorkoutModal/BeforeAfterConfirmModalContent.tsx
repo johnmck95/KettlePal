@@ -38,19 +38,28 @@ export default function BeforeAfterConfirmModalConent({
             {after.date && (
               <>
                 <Text fontSize="18" m="0" color={theme.colors.grey[700]}>
-                  <b>{dayjs(after.date).format("dddd, MMMM DD, YYYY")}</b>
+                  <b>{dayjs(after.date.value).format("dddd, MMMM DD, YYYY")}</b>
                 </Text>
               </>
             )}
             {after.comment && (
               <Text fontSize="14px" color={theme.colors.grey[700]}>
-                <i>{after.comment}</i>
+                <i>{after.comment.value}</i>
               </Text>
             )}
             {after?.exercises?.map((exercise, index) => {
               return (
                 <Text ml="1rem" key={index}>
-                  {formatExerciseString(exercise)} <br />
+                  {formatExerciseString({
+                    title: exercise.title.value,
+                    weight: exercise.weight.value,
+                    weightUnit: exercise.weightUnit.value,
+                    sets: exercise.sets.value,
+                    reps: exercise.reps.value,
+                    repsDisplay: exercise.repsDisplay.value,
+                    comment: exercise.comment.value,
+                  })}{" "}
+                  <br />
                 </Text>
               );
             })}
@@ -86,7 +95,16 @@ export default function BeforeAfterConfirmModalConent({
             {before?.exercises?.map((exercise, index) => {
               return (
                 <Text ml="1rem" key={index}>
-                  {formatExerciseString(exercise)} <br />
+                  {formatExerciseString({
+                    title: exercise.title,
+                    weight: exercise.weight,
+                    weightUnit: exercise.weightUnit,
+                    sets: exercise.sets,
+                    reps: exercise.reps,
+                    repsDisplay: exercise.repsDisplay,
+                    comment: exercise.comment,
+                  })}{" "}
+                  <br />
                 </Text>
               );
             })}

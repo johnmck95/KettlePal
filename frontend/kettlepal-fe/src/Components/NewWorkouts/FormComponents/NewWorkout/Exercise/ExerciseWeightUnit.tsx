@@ -5,7 +5,6 @@ import { CreateWorkoutState } from "../../../../../Hooks/useCreateWorkoutForm";
 import { useUser } from "../../../../../Contexts/UserContext";
 
 interface ExerciseWeightUnitProps {
-  submitted: boolean;
   weightUnitIsInvalid: boolean;
   exercise: Omit<CreateWorkoutState["exercises"][number], "key">;
   exerciseIndex: number;
@@ -13,18 +12,18 @@ interface ExerciseWeightUnitProps {
 }
 
 export default function ExerciseWeightUnit({
-  submitted,
   weightUnitIsInvalid,
   exercise,
   exerciseIndex,
   handleExercise,
 }: ExerciseWeightUnitProps) {
   const usingBodyWeight = useUser().user?.templates?.some(
-    (template) => template.isBodyWeight && template.title === exercise.title
+    (template) =>
+      template.isBodyWeight && template.title === exercise.title.value
   );
 
   return (
-    <FormControl isInvalid={submitted && weightUnitIsInvalid}>
+    <FormControl isInvalid={weightUnitIsInvalid}>
       <FormLabel fontSize={["14px", "16px"]} m="0">
         Unit
       </FormLabel>
@@ -34,7 +33,7 @@ export default function ExerciseWeightUnit({
         size={["sm", "sm", "md"]}
         placeholder="Select"
         name="weightUnit"
-        value={exercise.weightUnit}
+        value={exercise.weightUnit.value}
         onChange={(event) =>
           handleExercise(event.target.name, event.target.value, exerciseIndex)
         }

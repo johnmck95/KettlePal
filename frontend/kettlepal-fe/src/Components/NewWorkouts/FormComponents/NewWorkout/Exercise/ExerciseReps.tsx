@@ -4,7 +4,6 @@ import { CreateWorkoutState } from "../../../../../Hooks/useCreateWorkoutForm";
 import ToolTip from "../../../../UI/ToolTip";
 
 interface ExerciseRepsProps {
-  submitted: boolean;
   repsIsInvalid: boolean;
   exercise: Omit<CreateWorkoutState["exercises"][number], "key">;
   exerciseIndex: number;
@@ -12,14 +11,13 @@ interface ExerciseRepsProps {
 }
 
 export default function ExerciseReps({
-  submitted,
   repsIsInvalid,
   exercise,
   exerciseIndex,
   handleExercise,
 }: ExerciseRepsProps) {
   return (
-    <FormControl isInvalid={submitted && repsIsInvalid}>
+    <FormControl isInvalid={repsIsInvalid}>
       <HStack>
         <FormLabel fontSize={["14px", "16px"]} m="0">
           <Text>Reps</Text>
@@ -36,7 +34,7 @@ export default function ExerciseReps({
         name="reps"
         placeholder="0"
         padding="0.5rem"
-        value={exercise.reps}
+        value={exercise.reps.value}
         onChange={(event) =>
           handleExercise("reps", event.target.value, exerciseIndex)
         }

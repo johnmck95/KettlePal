@@ -47,7 +47,6 @@ export default function CreateWorkout() {
     addComments,
     showUploadSuccess,
     submitted,
-    errors,
     showServerError,
     timerIsActive,
     isOpenSaveWorkout,
@@ -57,7 +56,6 @@ export default function CreateWorkout() {
     setComment,
     setShowServerError,
     setAddComments,
-    setFormHasErrors,
     handleTimerIsActive,
     handleStateChange,
     handleAddExercise,
@@ -99,7 +97,7 @@ export default function CreateWorkout() {
           <GridItem rowStart={1} rowEnd={2} colStart={1} colEnd={1}>
             <WorkoutDate
               submitted={submitted}
-              date={state.date}
+              date={state.date.value}
               handleStateChange={handleStateChange}
             />
           </GridItem>
@@ -114,7 +112,7 @@ export default function CreateWorkout() {
           >
             <WorkoutStopwatch
               ref={ref}
-              seconds={state.elapsedSeconds}
+              seconds={state.elapsedSeconds.value}
               omitControls={true}
               isActive={timerIsActive}
               setTime={setTime}
@@ -237,7 +235,11 @@ export default function CreateWorkout() {
 
         {/* ERROR MESSAGES */}
         <Box mt="-0.3rem">
-          {errors.map((error) => {
+          {[
+            ...state.date.errors,
+            ...state.comment.errors,
+            ...state.elapsedSeconds.errors,
+          ].map((error) => {
             if (!submitted) {
               return null;
             }
@@ -251,8 +253,9 @@ export default function CreateWorkout() {
 
         {/* WORKOUT COMMENT */}
         <WorkoutComment
+          commentIsInvalid={submitted && state.comment.errors.length > 0}
           addComments={addComments}
-          comment={state.comment}
+          comment={state.comment.value}
           setComment={setComment}
         />
 
@@ -310,7 +313,6 @@ export default function CreateWorkout() {
                     exerciseIndex={index}
                     trackingIndex={state.exercises.length - index - 1}
                     submitted={submitted}
-                    setFormHasErrors={setFormHasErrors}
                     trackWorkout={showTracking}
                     showComments={addComments}
                   />
@@ -375,7 +377,7 @@ export default function CreateWorkout() {
                   {state.date && (
                     <>
                       <Heading fontSize="xl" flex="1">
-                        {dayjs(state.date).format("dddd, MMMM DD, YYYY")}
+                        {dayjs(state.date.value).format("dddd, MMMM DD, YYYY")}
                       </Heading>
                     </>
                   )}
@@ -383,7 +385,9 @@ export default function CreateWorkout() {
                   <HStack w="100%" justifyContent="space-evenly" my="1rem">
                     <Detail
                       title={"Time"}
-                      value={formatDurationShort(state.elapsedSeconds ?? 0)}
+                      value={formatDurationShort(
+                        state.elapsedSeconds.value ?? 0
+                      )}
                       variant="sm"
                       color={theme.colors.graphPrimary[500]}
                     />
@@ -392,11 +396,11 @@ export default function CreateWorkout() {
                       title={"Work Capacity"}
                       value={totalWorkoutWorkCapacity({
                         exercises: state.exercises.map((exercise) => ({
-                          weight: Number(exercise.weight),
-                          weightUnit: exercise.weightUnit,
-                          sets: Number(exercise.sets),
-                          reps: Number(exercise.reps),
-                          multiplier: Number(exercise.multiplier),
+                          weight: Number(exercise.weight.value),
+                          weightUnit: exercise.weightUnit.value,
+                          sets: Number(exercise.sets.value),
+                          reps: Number(exercise.reps.value),
+                          multiplier: Number(exercise.multiplier.value),
                         })),
                       })}
                       variant="sm"
@@ -408,7 +412,16 @@ export default function CreateWorkout() {
                     return (
                       <React.Fragment key={index}>
                         <b>
-                          {formatExerciseString(exercise)} <br />
+                          {formatExerciseString({
+                            title: exercise.title.value,
+                            weight: exercise.weight.value,
+                            weightUnit: exercise.weightUnit.value,
+                            sets: exercise.sets.value,
+                            reps: exercise.reps.value,
+                            repsDisplay: exercise.repsDisplay.value,
+                            comment: exercise.comment.value,
+                          })}{" "}
+                          <br />
                         </b>
                       </React.Fragment>
                     );

@@ -1,4 +1,3 @@
-import { CreateWorkoutState } from "../../Hooks/useCreateWorkoutForm";
 import { Exercise } from "../../generated/frontend-types";
 
 export function formatReps(
@@ -65,14 +64,23 @@ export function formatReps(
   }
 }
 
-export function formatExerciseString(
-  exercise:
-    | Omit<Exercise, "workoutUid">
-    | Omit<CreateWorkoutState["exercises"][number], "key">
-): string {
-  const { title, weight, weightUnit, sets, reps, repsDisplay, comment } =
-    exercise;
-
+export function formatExerciseString({
+  title,
+  weight,
+  weightUnit,
+  sets,
+  reps,
+  repsDisplay,
+  comment,
+}: {
+  title: string;
+  weight?: string | number | null | undefined;
+  weightUnit?: string | null | undefined;
+  sets?: string | number | null | undefined;
+  reps?: string | number | null | undefined;
+  repsDisplay?: string | null | undefined;
+  comment?: string | null | undefined;
+}): string {
   // EX: Swing(32kg): 10x5/5
   if (title && weight && weightUnit && sets && reps && repsDisplay) {
     return `${title} (${weight}${weightUnit}): ${sets}x${formatReps(

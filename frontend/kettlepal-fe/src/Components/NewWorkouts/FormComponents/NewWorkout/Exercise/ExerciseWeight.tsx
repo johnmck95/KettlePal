@@ -5,7 +5,6 @@ import { CreateWorkoutState } from "../../../../../Hooks/useCreateWorkoutForm";
 import { useUser } from "../../../../../Contexts/UserContext";
 
 interface ExerciseWeightProps {
-  submitted: boolean;
   weightIsInvalid: boolean;
   customWeight: boolean;
   exercise: Omit<CreateWorkoutState["exercises"][number], "key">;
@@ -13,9 +12,7 @@ interface ExerciseWeightProps {
   setCustomWeight: (value: boolean) => void;
   handleExercise: (name: string, value: string | number, index: number) => void;
 }
-
 export default function ExerciseWeight({
-  submitted,
   weightIsInvalid,
   customWeight,
   exercise,
@@ -24,11 +21,12 @@ export default function ExerciseWeight({
   handleExercise,
 }: ExerciseWeightProps) {
   const usingBodyWeight = useUser().user?.templates?.some(
-    (template) => template.isBodyWeight && template.title === exercise.title
+    (template) =>
+      template.isBodyWeight && template.title === exercise.title.value
   );
 
   return (
-    <FormControl isInvalid={submitted && weightIsInvalid}>
+    <FormControl isInvalid={weightIsInvalid}>
       <FormLabel fontSize={["14px", "16px"]} m="0">
         Weight{" "}
         <Text
@@ -36,7 +34,7 @@ export default function ExerciseWeight({
           fontSize={["11px", "14px"]}
           color={theme.colors.feldgrau[700]}
         >
-          (x{exercise.multiplier.toFixed(2)})
+          (x{exercise.multiplier.value.toFixed(2)})
         </Text>
       </FormLabel>
       {usingBodyWeight ? (
@@ -45,7 +43,7 @@ export default function ExerciseWeight({
           fontSize={["16px"]}
           placeholder="0"
           name="weight"
-          value={exercise.weight}
+          value={exercise.weight.value}
           onChange={(event) =>
             handleExercise(event.target.name, event.target.value, exerciseIndex)
           }
@@ -61,7 +59,7 @@ export default function ExerciseWeight({
           fontSize={["16px"]}
           placeholder="0"
           name="weight"
-          value={exercise.weight}
+          value={exercise.weight.value}
           onChange={(event) =>
             handleExercise(event.target.name, event.target.value, exerciseIndex)
           }
@@ -76,7 +74,7 @@ export default function ExerciseWeight({
           fontSize={["16px"]}
           placeholder="Select"
           name="weight"
-          value={exercise.weight}
+          value={exercise.weight.value}
           onChange={(event) =>
             event.target.value === "Custom"
               ? setCustomWeight(true)

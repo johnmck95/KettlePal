@@ -2,6 +2,7 @@ import { FormControl, FormLabel } from "@chakra-ui/react";
 import AddComment from "../Generic/AddComment";
 
 interface WorkoutCommentProps {
+  commentIsInvalid: boolean;
   addComments: boolean;
   comment: string;
   showLabel?: boolean;
@@ -9,13 +10,14 @@ interface WorkoutCommentProps {
 }
 
 export default function WorkoutComment({
+  commentIsInvalid,
   addComments,
   comment,
   showLabel,
   setComment,
 }: WorkoutCommentProps) {
   return (
-    <FormControl mt="0.5rem">
+    <FormControl mt="0.5rem" isInvalid={commentIsInvalid}>
       {showLabel && (
         <FormLabel fontSize={["sm", "lg"]} mb="4px" alignSelf="flex-start">
           <b>Workout Comment</b>
@@ -23,6 +25,7 @@ export default function WorkoutComment({
       )}
       {addComments && (
         <AddComment
+          isInvalid={commentIsInvalid}
           placeholderText="Add a Workout Comment"
           comment={comment}
           setComment={setComment}

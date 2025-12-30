@@ -3,7 +3,6 @@ import theme from "../../../../../Constants/theme";
 import { CreateWorkoutState } from "../../../../../Hooks/useCreateWorkoutForm";
 
 interface ExerciseSetsProps {
-  submitted: boolean;
   setsIsInvalid: boolean;
   exercise: Omit<CreateWorkoutState["exercises"][number], "key">;
   exerciseIndex: number;
@@ -11,14 +10,13 @@ interface ExerciseSetsProps {
 }
 
 export default function ExerciseSets({
-  submitted,
   setsIsInvalid,
   exercise,
   exerciseIndex,
   handleExercise,
 }: ExerciseSetsProps) {
   return (
-    <FormControl isInvalid={submitted && setsIsInvalid}>
+    <FormControl isInvalid={setsIsInvalid}>
       <FormLabel fontSize={["14px", "16px"]} m="0">
         Sets
       </FormLabel>
@@ -30,7 +28,7 @@ export default function ExerciseSets({
         autoComplete="off"
         type="number"
         name="sets"
-        value={exercise.sets}
+        value={exercise.sets.value}
         onChange={(event) =>
           handleExercise("sets", event.target.value, exerciseIndex)
         }
