@@ -361,6 +361,17 @@ const useCreateWorkoutForm = () => {
     sessionStorage.setItem(SESSION_STATE_KEY, JSON.stringify(state));
   }, [state]);
 
+  // Updates workout timer. HTML lacks name property.
+  const setTime = (elapsedSeconds: number) => {
+    updateState((prevState: CreateWorkoutState) => ({
+      ...prevState,
+      elapsedSeconds: {
+        value: elapsedSeconds,
+        errors: prevState.elapsedSeconds.errors,
+      },
+    }));
+  };
+
   // Update workout timer every 1s
   useEffect(() => {
     let interval: NodeJS.Timeout | undefined = undefined;
@@ -376,18 +387,7 @@ const useCreateWorkoutForm = () => {
       clearInterval(interval);
     }
     return () => clearInterval(interval);
-  }, [timerIsActive, state.elapsedSeconds]);
-
-  // Updates workout timer. HTML lacks name property.
-  const setTime = (elapsedSeconds: number) => {
-    updateState((prevState: CreateWorkoutState) => ({
-      ...prevState,
-      elapsedSeconds: {
-        value: elapsedSeconds,
-        errors: prevState.elapsedSeconds.errors,
-      },
-    }));
-  };
+  }, [timerIsActive, state.elapsedSeconds, setTime]);
 
   // Updates workout comment. HTML lacks name property.
   const setComment = (newComment: string) => {

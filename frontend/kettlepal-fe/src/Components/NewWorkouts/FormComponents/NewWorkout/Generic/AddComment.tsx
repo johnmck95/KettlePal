@@ -79,19 +79,6 @@ export default function AddComment({
         sx={{
           "&::-webkit-scrollbar": { display: "none" },
           boxShadow: "none !important",
-          outline: "none !important",
-          "&:focus": {
-            boxShadow: "none !important",
-            outline: "none !important",
-          },
-          "&:focus-visible": {
-            boxShadow: "none !important",
-            outline: "none !important",
-          },
-          "&:focus-within": {
-            boxShadow: "none !important",
-            outline: "none !important",
-          },
         }}
       />
     </Box>

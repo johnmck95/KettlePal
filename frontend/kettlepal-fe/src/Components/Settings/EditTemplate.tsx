@@ -53,14 +53,15 @@ export default function EditTemplate({
     templateIndex,
     deleteTemplate,
   });
+
   const errors = [
-    template.title,
-    template.repsDisplay,
-    template.weightUnit,
-    template.multiplier,
-    template.isBodyWeight,
-    template.index,
-  ].flatMap((f) => f.errors);
+    ...template.title.errors,
+    ...template.repsDisplay.errors,
+    ...template.weightUnit.errors,
+    ...template.multiplier.errors,
+    ...template.isBodyWeight.errors,
+    ...template.index.errors,
+  ];
 
   return (
     <TemplateContainer

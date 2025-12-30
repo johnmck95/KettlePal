@@ -112,9 +112,11 @@ export default function EditWorkout({
     }
   }
 
-  const errors = [state.date, state.comment, state.elapsedSeconds].flatMap(
-    (f) => f.errors
-  );
+  const errors = [
+    ...state.date.errors,
+    ...state.comment.errors,
+    ...state.elapsedSeconds.errors,
+  ];
 
   return (
     <VStack w="100%">

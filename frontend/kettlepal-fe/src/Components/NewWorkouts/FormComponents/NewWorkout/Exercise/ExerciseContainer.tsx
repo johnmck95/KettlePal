@@ -31,7 +31,7 @@ export function ExerciseContainer({
   const [isMobile] = useMediaQuery("(max-width: 420px)");
 
   return (
-    <Box my="1.25rem" mx="0.15rem">
+    <Box mx="0.15rem">
       <VStack
         w={`calc(100%-0.5rem + ${swipeDistance()})`}
         borderRadius={"5px"}

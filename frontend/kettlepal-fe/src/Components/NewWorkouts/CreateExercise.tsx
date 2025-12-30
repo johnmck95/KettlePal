@@ -72,16 +72,16 @@ export default function CreateExercise({
     deleteExercise,
   });
   const errors = [
-    exercise.title,
-    exercise.weight,
-    exercise.weightUnit,
-    exercise.sets,
-    exercise.reps,
-    exercise.repsDisplay,
-    exercise.comment,
-    exercise.elapsedSeconds,
-    exercise.multiplier,
-  ].flatMap((f) => f.errors);
+    ...exercise.title.errors,
+    ...exercise.weight.errors,
+    ...exercise.weightUnit.errors,
+    ...exercise.sets.errors,
+    ...exercise.reps.errors,
+    ...exercise.repsDisplay.errors,
+    ...exercise.comment.errors,
+    ...exercise.elapsedSeconds.errors,
+    ...exercise.multiplier.errors,
+  ];
 
   return (
     <ExerciseContainer

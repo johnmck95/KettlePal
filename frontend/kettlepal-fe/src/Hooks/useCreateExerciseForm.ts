@@ -22,6 +22,7 @@ const useCreateExerciseForm = ({
   trackingIndex: number;
 }) => {
   const SESSION_STORAGE_KEY = `completedSets-${trackingIndex}`;
+
   // Tracking a workout
   const [completedSets, setCompletedSets] = useState<number>(() => {
     const sessionVal = sessionStorage.getItem(SESSION_STORAGE_KEY);
@@ -36,7 +37,6 @@ const useCreateExerciseForm = ({
         })
       ).includes(exercise.title.value)
   );
-
   const [customWeight, setCustomWeight] = useState(
     exercise.weight.value !== "" &&
       !KettlbellWeightsKG.includes(exercise.weight.value)

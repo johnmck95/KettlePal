@@ -75,6 +75,11 @@ export default function CreateWorkout() {
       </Center>
     );
   }
+  const workoutErrors = [
+    ...state.date.errors,
+    ...state.comment.errors,
+    ...state.elapsedSeconds.errors,
+  ];
 
   return (
     <Box m={["0.5rem", "1rem"]} w={["100%", "100%", "100%", "900px"]}>
@@ -235,11 +240,7 @@ export default function CreateWorkout() {
 
         {/* ERROR MESSAGES */}
         <Box mt="-0.3rem">
-          {[
-            ...state.date.errors,
-            ...state.comment.errors,
-            ...state.elapsedSeconds.errors,
-          ].map((error) => {
+          {workoutErrors.map((error) => {
             if (!submitted) {
               return null;
             }
@@ -305,17 +306,19 @@ export default function CreateWorkout() {
                     ease: [0.4, 0, 0.2, 1],
                   }}
                 >
-                  <CreateExercise
-                    key={index}
-                    exercise={exercise}
-                    handleExercise={handleExercise}
-                    deleteExercise={deleteExercise}
-                    exerciseIndex={index}
-                    trackingIndex={state.exercises.length - index - 1}
-                    submitted={submitted}
-                    trackWorkout={showTracking}
-                    showComments={addComments}
-                  />
+                  <Box my="1.25rem">
+                    <CreateExercise
+                      key={index}
+                      exercise={exercise}
+                      handleExercise={handleExercise}
+                      deleteExercise={deleteExercise}
+                      exerciseIndex={index}
+                      trackingIndex={state.exercises.length - index - 1}
+                      submitted={submitted}
+                      trackWorkout={showTracking}
+                      showComments={addComments}
+                    />
+                  </Box>
                 </motion.div>
               );
             })}
