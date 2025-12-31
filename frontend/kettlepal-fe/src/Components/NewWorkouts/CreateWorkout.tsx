@@ -81,6 +81,64 @@ export default function CreateWorkout() {
     ...state.elapsedSeconds.errors,
   ];
 
+  function getCompletedSetsFromMemory(): {
+    trackingIndex: number;
+    completedCount: number;
+    exerciseTitle?: string;
+  }[] {
+    const PREFIX = "completedSets-";
+    const completedSets: {
+      trackingIndex: number;
+      completedCount: number;
+      exerciseTitle?: string;
+    }[] = [];
+
+    Object.keys(sessionStorage).forEach((key) => {
+      if (key.startsWith(PREFIX)) {
+        const trackingIndex = Number(key.slice(PREFIX.length));
+        if (!Number.isNaN(trackingIndex)) {
+          const exerciseTitle =
+            state.exercises[state.exercises.length - 1 - trackingIndex]?.title
+              .value;
+          completedSets.push({
+            trackingIndex,
+            completedCount: Number(sessionStorage.getItem(key) || 0),
+            exerciseTitle,
+          });
+        }
+      }
+    });
+    return completedSets;
+  }
+
+  const completedSets = getCompletedSetsFromMemory();
+  const incompleteExercises: {
+    index: number;
+    title: string;
+    plannedSets: number;
+    completedSets: number;
+  }[] = [];
+  state.exercises.forEach((exercise, currentIndex) => {
+    // Convert CURRENT index to TRACKING index (reverse order)
+    const trackingIndex = state.exercises.length - 1 - currentIndex;
+    const completedData = completedSets.find(
+      (cs) => cs.trackingIndex === trackingIndex
+    );
+    const plannedSets = Number(exercise.sets.value) || 0;
+    const completedCount = completedData?.completedCount || 0;
+
+    if (plannedSets > 0 && completedCount < plannedSets) {
+      incompleteExercises.push({
+        index: currentIndex,
+        title: exercise.title.value,
+        plannedSets,
+        completedSets: completedCount,
+      });
+    }
+  });
+
+  const allSetsCompleted = incompleteExercises.length === 0;
+
   return (
     <Box m={["0.5rem", "1rem"]} w={["100%", "100%", "100%", "900px"]}>
       <Flex direction="column" minH="100%">
@@ -373,25 +431,42 @@ export default function CreateWorkout() {
           ModalBodyText={
             <Box mb="1rem">
               Are you sure your workout is complete, and ready to be saved?
+              {!allSetsCompleted && (
+                <Alert status="warning" mt="1rem" borderRadius="8px" px="12px">
+                  <AlertIcon />
+                  <AlertDescription>
+                    <Text fontSize="15px" fontWeight="600" mb="0.5rem">
+                      Some exercises were not completed.
+                    </Text>
+                    <Text fontSize="12px" lineHeight="1" textAlign="justify">
+                      The values seen below will be saved. Completed sets are
+                      for mid-workout purposes only.
+                    </Text>
+                  </AlertDescription>
+                </Alert>
+              )}
               {state.exercises.length > 0 && (
                 <>
-                  <br />
-                  <br />
                   {state.date && (
                     <>
-                      <Heading fontSize="xl" flex="1">
+                      <Heading fontSize="xl" flex="1" my="1rem">
                         {dayjs(state.date.value).format("dddd, MMMM DD, YYYY")}
                       </Heading>
                     </>
                   )}
 
-                  <HStack w="100%" justifyContent="space-evenly" my="1rem">
+                  <HStack
+                    w="100%"
+                    justifyContent="space-evenly"
+                    mt="1rem"
+                    mb="1.5rem"
+                  >
                     <Detail
                       title={"Time"}
                       value={formatDurationShort(
                         state.elapsedSeconds.value ?? 0
                       )}
-                      variant="sm"
+                      variant="md"
                       color={theme.colors.graphPrimary[500]}
                     />
                     <br />
@@ -406,26 +481,41 @@ export default function CreateWorkout() {
                           multiplier: Number(exercise.multiplier.value),
                         })),
                       })}
-                      variant="sm"
+                      variant="md"
                       color={theme.colors.graphSecondary[500]}
                     />
                   </HStack>
 
                   {state.exercises.map((exercise, index) => {
+                    const incompleteEntry = incompleteExercises.find(
+                      (entry) => entry.index === index
+                    );
+                    const isIncomplete = !!incompleteEntry;
                     return (
                       <React.Fragment key={index}>
-                        <b>
-                          {formatExerciseString({
-                            title: exercise.title.value,
-                            weight: exercise.weight.value,
-                            weightUnit: exercise.weightUnit.value,
-                            sets: exercise.sets.value,
-                            reps: exercise.reps.value,
-                            repsDisplay: exercise.repsDisplay.value,
-                            comment: exercise.comment.value,
-                          })}{" "}
-                          <br />
-                        </b>
+                        <HStack my="0.25rem">
+                          {isIncomplete ? <span>⚠️</span> : <span>✅</span>}
+                          <Text fontSize="16px" fontWeight="600">
+                            {formatExerciseString({
+                              title: exercise.title.value,
+                              weight: exercise.weight.value,
+                              weightUnit: exercise.weightUnit.value,
+                              sets: exercise.sets.value,
+                              reps: exercise.reps.value,
+                              repsDisplay: exercise.repsDisplay.value,
+                              comment: exercise.comment.value,
+                            })}
+                          </Text>
+                          {incompleteEntry && (
+                            <Text
+                              fontSize="14px"
+                              color={theme.colors.gray[700]}
+                            >
+                              Completed {incompleteEntry.completedSets} of{" "}
+                              {incompleteEntry.plannedSets} sets.
+                            </Text>
+                          )}
+                        </HStack>
                       </React.Fragment>
                     );
                   })}
