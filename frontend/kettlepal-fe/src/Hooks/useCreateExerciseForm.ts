@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { CreateWorkoutState } from "./useCreateWorkoutForm";
 import { useDisclosure } from "@chakra-ui/react";
 import getConfigurations, {
   KettlbellWeightsKG,
 } from "../Constants/ExercisesOptions";
 import { UserInContext } from "../Contexts/UserContext";
+import { CreateOrUpdateWorkoutState } from "./HookHelpers/validation";
 
 const useCreateExerciseForm = ({
   user,
@@ -15,7 +15,7 @@ const useCreateExerciseForm = ({
   deleteExercise,
 }: {
   user: UserInContext;
-  exercise: Omit<CreateWorkoutState["exercises"][number], "key">;
+  exercise: Omit<CreateOrUpdateWorkoutState["exercises"][number], "key">;
   handleExercise: (name: string, value: string | number, index: number) => void;
   deleteExercise: ((index: number) => void) | (() => Promise<void>);
   exerciseIndex: number;

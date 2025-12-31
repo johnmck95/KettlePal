@@ -11,24 +11,24 @@ import ExerciseRepsDisplay from "./FormComponents/NewWorkout/Exercise/ExerciseRe
 import ExerciseWeightUnit from "./FormComponents/NewWorkout/Exercise/ExerciseWeightUnit";
 import TrackExercise from "./FormComponents/NewWorkout/MidWorkoutTracking/TrackExercise";
 import { ExerciseContainer } from "./FormComponents/NewWorkout/Exercise/ExerciseContainer";
-import { CreateWorkoutState } from "../../Hooks/useCreateWorkoutForm";
 import useCreateExerciseForm from "../../Hooks/useCreateExerciseForm";
 import "../../Styles/CustomSelect.css";
 import { formatExerciseString } from "../../utils/Exercises/exercises";
 import theme from "../../Constants/theme";
 import { useUser } from "../../Contexts/UserContext";
+import { CreateOrUpdateWorkoutState } from "../../Hooks/HookHelpers/validation";
 
 interface CreateExerciseProps {
-  exercise: Omit<CreateWorkoutState["exercises"][number], "key">;
+  exercise: Omit<CreateOrUpdateWorkoutState["exercises"][number], "key">;
   handleExercise: (name: string, value: string | number, index: number) => void;
   deleteExercise: ((index: number) => void) | (() => Promise<void>);
   exerciseIndex: number;
   trackingIndex: number;
   submitted: boolean;
   trackWorkout: boolean;
-  mutatingWorkout?: boolean;
   showComments: boolean;
-  renderMobileView?: boolean;
+  forceMobileStyle?: boolean;
+  forceCloseButton?: boolean;
 }
 
 export default function CreateExercise({
@@ -40,7 +40,8 @@ export default function CreateExercise({
   submitted,
   trackWorkout,
   showComments,
-  renderMobileView,
+  forceMobileStyle = false,
+  forceCloseButton = false,
 }: CreateExerciseProps) {
   const user = useUser().user;
   const {
@@ -95,6 +96,8 @@ export default function CreateExercise({
       onTouchEnd={onTouchEnd}
       swipeDistance={swipeDistance}
       onOpenDeleteExercise={onOpenDeleteExercise}
+      forceMobileStyle={forceMobileStyle}
+      forceCloseButton={forceCloseButton}
     >
       {trackWorkout ? (
         <Text w="100%" color={theme.colors.grey[600]}>
@@ -115,8 +118,8 @@ export default function CreateExercise({
           <SimpleGrid
             gap={1}
             templateColumns={{
-              base: renderMobileView ? "41% 32% 24%" : "47% 27% 21%",
-              lg: renderMobileView ? "" : "34% 8% 8% 20% 15% 12%",
+              base: forceMobileStyle ? "41% 32% 24%" : "47% 27% 21%",
+              lg: forceMobileStyle ? "" : "34% 8% 8% 20% 15% 12%",
             }}
             w="100%"
           >

@@ -86,7 +86,7 @@ export default function EditWorkout({
         elapsedSeconds: state.elapsedSeconds.value,
         exercises: state.exercises.map((e) => {
           return {
-            uid: e.uid,
+            uid: e.uid ?? "",
             title: e.title.value,
             weight: e.weight.value,
             weightUnit: e.weightUnit.value,
@@ -96,7 +96,7 @@ export default function EditWorkout({
             comment: e.comment.value,
             elapsedSeconds: e.elapsedSeconds.value,
             multiplier: e.multiplier.value,
-            key: e.key,
+            key: e.key ?? "",
           };
         }),
       };
@@ -172,7 +172,12 @@ export default function EditWorkout({
               showLabel={true}
               setComment={setComment}
             />
-            <VStack w="100%" spacing={0} alignItems="flex-start">
+            <VStack
+              w="100%"
+              spacing={0}
+              alignItems="flex-start"
+              mb={errors.length > 0 ? "1rem" : "0rem"}
+            >
               {errors.map((error) => {
                 if (!submitted) {
                   return null;
@@ -197,9 +202,9 @@ export default function EditWorkout({
                   trackingIndex={state.exercises.length - index - 1}
                   submitted={submitted}
                   trackWorkout={false}
-                  mutatingWorkout={true}
                   showComments={true}
-                  renderMobileView={true}
+                  forceMobileStyle={true}
+                  forceCloseButton={true}
                 />
               );
             })}

@@ -1,10 +1,10 @@
 import { FormControl, FormLabel, Input } from "@chakra-ui/react";
 import theme from "../../../../../Constants/theme";
-import { CreateWorkoutState } from "../../../../../Hooks/useCreateWorkoutForm";
+import { CreateOrUpdateWorkoutState } from "../../../../../Hooks/HookHelpers/validation";
 
 interface ExerciseSetsProps {
   setsIsInvalid: boolean;
-  exercise: Omit<CreateWorkoutState["exercises"][number], "key">;
+  exercise: Omit<CreateOrUpdateWorkoutState["exercises"][number], "key">;
   exerciseIndex: number;
   handleExercise: (name: string, value: string | number, index: number) => void;
 }
@@ -33,7 +33,9 @@ export default function ExerciseSets({
           handleExercise("sets", event.target.value, exerciseIndex)
         }
         focusBorderColor={theme.colors.green[300]}
-        color={!!exercise.sets ? theme.colors.black : theme.colors.grey[500]}
+        color={
+          !!exercise.sets.value ? theme.colors.black : theme.colors.grey[500]
+        }
       />
     </FormControl>
   );

@@ -1,12 +1,12 @@
 import { FormControl, FormLabel, HStack, Select } from "@chakra-ui/react";
 import { RepsDisplayOptions } from "../../../../../Constants/ExercisesOptions";
 import theme from "../../../../../Constants/theme";
-import { CreateWorkoutState } from "../../../../../Hooks/useCreateWorkoutForm";
 import ToolTip from "../../../../UI/ToolTip";
+import { CreateOrUpdateWorkoutState } from "../../../../../Hooks/HookHelpers/validation";
 
 interface ExerciseRepsDisplayProps {
   repsDisplayIsInvalid: boolean;
-  exercise: Omit<CreateWorkoutState["exercises"][number], "key">;
+  exercise: Omit<CreateOrUpdateWorkoutState["exercises"][number], "key">;
   exerciseIndex: number;
   handleExercise: (name: string, value: string | number, index: number) => void;
 }
@@ -38,7 +38,9 @@ export default function ExerciseRepsDisplay({
         }
         focusBorderColor={theme.colors.green[300]}
         color={
-          !!exercise.repsDisplay ? theme.colors.black : theme.colors.grey[500]
+          !!exercise.repsDisplay.value
+            ? theme.colors.black
+            : theme.colors.grey[500]
         }
       >
         {RepsDisplayOptions.map((option) => {

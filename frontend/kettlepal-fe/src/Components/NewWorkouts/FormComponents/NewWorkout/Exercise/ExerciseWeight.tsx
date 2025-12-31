@@ -1,13 +1,13 @@
 import { FormControl, Text, FormLabel, Input, Select } from "@chakra-ui/react";
 import theme from "../../../../../Constants/theme";
 import { KettlbellWeightsKG } from "../../../../../Constants/ExercisesOptions";
-import { CreateWorkoutState } from "../../../../../Hooks/useCreateWorkoutForm";
 import { useUser } from "../../../../../Contexts/UserContext";
+import { CreateOrUpdateWorkoutState } from "../../../../../Hooks/HookHelpers/validation";
 
 interface ExerciseWeightProps {
   weightIsInvalid: boolean;
   customWeight: boolean;
-  exercise: Omit<CreateWorkoutState["exercises"][number], "key">;
+  exercise: Omit<CreateOrUpdateWorkoutState["exercises"][number], "key">;
   exerciseIndex: number;
   setCustomWeight: (value: boolean) => void;
   handleExercise: (name: string, value: string | number, index: number) => void;
@@ -49,7 +49,9 @@ export default function ExerciseWeight({
           }
           focusBorderColor={theme.colors.green[300]}
           color={
-            !!exercise.weight ? theme.colors.black : theme.colors.grey[500]
+            !!exercise.weight.value
+              ? theme.colors.black
+              : theme.colors.grey[500]
           }
           disabled={usingBodyWeight}
         />
@@ -65,7 +67,9 @@ export default function ExerciseWeight({
           }
           focusBorderColor={theme.colors.green[300]}
           color={
-            !!exercise.weight ? theme.colors.black : theme.colors.grey[500]
+            !!exercise.weight.value
+              ? theme.colors.black
+              : theme.colors.grey[500]
           }
         />
       ) : (
@@ -86,7 +90,9 @@ export default function ExerciseWeight({
           }
           focusBorderColor={theme.colors.green[300]}
           color={
-            !!exercise.weight ? theme.colors.black : theme.colors.grey[500]
+            !!exercise.weight.value
+              ? theme.colors.black
+              : theme.colors.grey[500]
           }
         >
           {KettlbellWeightsKG.map((weight) => {

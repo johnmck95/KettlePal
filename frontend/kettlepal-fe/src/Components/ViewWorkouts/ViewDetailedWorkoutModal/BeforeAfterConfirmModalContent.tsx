@@ -3,13 +3,13 @@ import theme from "../../../Constants/theme";
 import { formatExerciseString } from "../../../utils/Exercises/exercises";
 import { FuzzySearchQuery } from "../../../generated/frontend-types";
 import dayjs from "dayjs";
-import { CreateWorkoutState } from "../../../Hooks/useCreateWorkoutForm";
+import { CreateOrUpdateWorkoutState } from "../../../Hooks/HookHelpers/validation";
 
 interface BeforeAfterConfirmModalConentProps {
   before: NonNullable<
     NonNullable<FuzzySearchQuery["pastWorkouts"]>["workoutWithExercises"]
   >[0];
-  after: CreateWorkoutState;
+  after: CreateOrUpdateWorkoutState;
 }
 
 export default function BeforeAfterConfirmModalConent({

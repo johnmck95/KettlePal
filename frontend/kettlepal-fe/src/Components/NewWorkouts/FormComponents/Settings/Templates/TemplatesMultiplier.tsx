@@ -46,7 +46,9 @@ export default function TemplatesMultiplier({
         }
         focusBorderColor={theme.colors.green[300]}
         color={
-          !!template.multiplier ? theme.colors.black : theme.colors.grey[500]
+          !!template.multiplier.value
+            ? theme.colors.black
+            : theme.colors.grey[500]
         }
       />
     </FormControl>

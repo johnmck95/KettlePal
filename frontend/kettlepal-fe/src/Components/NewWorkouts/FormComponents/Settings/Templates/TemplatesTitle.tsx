@@ -43,7 +43,9 @@ export default function TemplatesTitle({
           const capitalizedValue = capitalizeWords(event.target.value);
           handleTemplate("title", capitalizedValue, templateIndex);
         }}
-        color={!!template.title ? theme.colors.black : theme.colors.grey[500]}
+        color={
+          !!template.title.value ? theme.colors.black : theme.colors.grey[500]
+        }
         focusBorderColor={theme.colors.green[300]}
       />
     </FormControl>

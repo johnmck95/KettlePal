@@ -46,7 +46,9 @@ export default function TemplatesRepsDisplay({
         }
         focusBorderColor={theme.colors.green[300]}
         color={
-          !!template.repsDisplay ? theme.colors.black : theme.colors.grey[500]
+          !!template.repsDisplay.value
+            ? theme.colors.black
+            : theme.colors.grey[500]
         }
       >
         {RepsDisplayOptions.map((option) => {

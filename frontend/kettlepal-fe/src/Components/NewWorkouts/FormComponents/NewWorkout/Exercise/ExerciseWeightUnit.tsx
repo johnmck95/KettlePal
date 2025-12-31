@@ -1,12 +1,12 @@
 import { FormControl, FormLabel, Select } from "@chakra-ui/react";
 import theme from "../../../../../Constants/theme";
 import { WeightOptions } from "../../../../../Constants/ExercisesOptions";
-import { CreateWorkoutState } from "../../../../../Hooks/useCreateWorkoutForm";
 import { useUser } from "../../../../../Contexts/UserContext";
+import { CreateOrUpdateWorkoutState } from "../../../../../Hooks/HookHelpers/validation";
 
 interface ExerciseWeightUnitProps {
   weightUnitIsInvalid: boolean;
-  exercise: Omit<CreateWorkoutState["exercises"][number], "key">;
+  exercise: Omit<CreateOrUpdateWorkoutState["exercises"][number], "key">;
   exerciseIndex: number;
   handleExercise: (name: string, value: string | number, index: number) => void;
 }
@@ -39,7 +39,9 @@ export default function ExerciseWeightUnit({
         }
         focusBorderColor={theme.colors.green[300]}
         color={
-          !!exercise.weightUnit ? theme.colors.black : theme.colors.grey[500]
+          !!exercise.weightUnit.value
+            ? theme.colors.black
+            : theme.colors.grey[500]
         }
         disabled={usingBodyWeight}
       >
