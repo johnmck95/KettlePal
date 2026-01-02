@@ -30,6 +30,7 @@ export default function BeforeAfterConfirmModalConent({
           textAlign={"center"}
           w="100%"
           mb="0.5rem"
+          borderBottom={`2px solid ${theme.colors.green[600]}`}
         >
           <b>New Workout</b>
         </Text>
@@ -75,6 +76,7 @@ export default function BeforeAfterConfirmModalConent({
           textAlign={"center"}
           w="100%"
           mb="0.5rem"
+          borderBottom={`2px solid ${theme.colors.grey[700]}`}
         >
           <b>Old Workout</b>
         </Text>

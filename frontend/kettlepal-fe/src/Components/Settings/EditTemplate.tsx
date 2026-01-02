@@ -135,7 +135,7 @@ export default function EditTemplate({
         isOpen={isOpenDeleteTemplate}
         onClose={customOnCloseDeleteTemplate}
         onConfirmation={onDeleteTemplate}
-        ModalTitle="Delete Template"
+        ModalTitle="Delete Template?"
         ModalBodyText="Are you sure you would like to delete this Exercise Template?"
         CloseText="Cancel"
         ProceedText="Delete"

@@ -81,8 +81,8 @@ export default function ViewSettings({
           <>
             <Text
               my="4rem"
-              color="gray.600"
-              fontSize={["xs", "sm", "md"]}
+              color={theme.colors.grey[600]}
+              fontSize={["md", "lg", "xl"]}
               textAlign={"center"}
               fontWeight={"semibold"}
             >
@@ -93,9 +93,9 @@ export default function ViewSettings({
               m="2rem 0.5rem 1rem 0.5rem"
               mb="1.5rem"
               mt="3rem"
-              color="gray.600"
+              color={theme.colors.gray[600]}
               fontSize={["sm", "md", "lg"]}
-              fontWeight="bold"
+              fontWeight={600}
             >
               <u>Custom Exercise Templates let you control:</u>
             </Text>

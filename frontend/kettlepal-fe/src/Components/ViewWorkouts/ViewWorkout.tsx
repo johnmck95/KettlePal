@@ -122,7 +122,7 @@ export default function ViewWorkout({
               isOpen={isOpen}
               onClose={onClose}
               onConfirmation={onDeleteWorkout}
-              ModalTitle="Delete Workout"
+              ModalTitle="Delete Workout?"
               ModalBodyText={`Are you sure you want to delete this workout, and the ${
                 workoutWithExercises?.exercises?.length
               } corresponding exercise${

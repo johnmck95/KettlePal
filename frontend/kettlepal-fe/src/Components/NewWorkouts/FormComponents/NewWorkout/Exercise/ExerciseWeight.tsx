@@ -1,6 +1,8 @@
 import { FormControl, Text, FormLabel, Input, Select } from "@chakra-ui/react";
 import theme from "../../../../../Constants/theme";
-import { KettlbellWeightsKG } from "../../../../../Constants/ExercisesOptions";
+import getConfigurations, {
+  KettlbellWeightsKG,
+} from "../../../../../Constants/ExercisesOptions";
 import { useUser } from "../../../../../Contexts/UserContext";
 import { CreateOrUpdateWorkoutState } from "../../../../../Hooks/HookHelpers/validation";
 
@@ -20,10 +22,20 @@ export default function ExerciseWeight({
   setCustomWeight,
   handleExercise,
 }: ExerciseWeightProps) {
-  const usingBodyWeight = useUser().user?.templates?.some(
-    (template) =>
-      template.isBodyWeight && template.title === exercise.title.value
-  );
+  const user = useUser().user;
+  const templates = user?.templates ?? [];
+  const Preconfigurations = getConfigurations(templates, {
+    bodyWeight: user?.bodyWeight ?? 0,
+    bodyWeightUnit: user?.bodyWeightUnit ?? "kg",
+  });
+  // Not all Preconfigurations have a bodyweight. If they do, use it. Otherwise, check user context.
+  const usingBodyWeight =
+    Preconfigurations[exercise.title.value]?.isBodyWeight?.value !== undefined
+      ? Preconfigurations[exercise.title.value]?.isBodyWeight?.value
+      : user?.templates?.some(
+          (template) =>
+            template.isBodyWeight && template.title === exercise.title.value
+        );
 
   return (
     <FormControl isInvalid={weightIsInvalid}>

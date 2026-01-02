@@ -69,7 +69,11 @@ export default function ExerciseTitle({
 
   // If the user entered a Custom exercise title, it needs to be included in the Select options.
   const uniqueTitles = Array.from(
-    new Set([...ExerciseTitles, exercise.title.value])
+    new Set(
+      [...ExerciseTitles, exercise.title.value].filter(
+        (title) => title.trim() !== ""
+      )
+    )
   );
 
   return (

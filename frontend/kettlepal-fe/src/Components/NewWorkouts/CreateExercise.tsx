@@ -220,8 +220,8 @@ export default function CreateExercise({
         isOpen={isOpenDeleteExercise}
         onClose={customOnCloseDeleteExercise}
         onConfirmation={onDeleteExercise}
-        ModalTitle="Delete Exercise"
-        ModalBodyText="Are you sure you would like to delete this Exercise? This cannot be undone."
+        ModalTitle="Delete Exercise?"
+        ModalBodyText="Are you sure you would like to delete this Exercise?"
         CloseText="Cancel"
         ProceedText="Delete"
         variant="warn"

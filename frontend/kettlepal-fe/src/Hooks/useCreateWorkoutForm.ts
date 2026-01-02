@@ -380,6 +380,7 @@ const useCreateWorkoutForm = () => {
     onClose: onCloseSaveWorkout,
   } = useDisclosure();
 
+  console.log(state);
   return {
     state,
     loading,

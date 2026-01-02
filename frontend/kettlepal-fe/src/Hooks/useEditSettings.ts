@@ -3,6 +3,7 @@ import { useUser } from "../Contexts/UserContext";
 import { useDisclosure } from "@chakra-ui/react";
 import { useAddOrUpdateSettingsMutation } from "../generated/frontend-types";
 import {
+  GenericPreconfigurations,
   RepsDisplayOptions,
   WeightOptions,
 } from "../Constants/ExercisesOptions";
@@ -79,36 +80,34 @@ const useEditSettings = ({
   toggleEditMode,
 }: UseEditSettingsProps) => {
   const { user, refetch: refetchUser } = useUser();
+  // The default state, from user context
+  const INITIAL_STATE: EditSettingsState = {
+    bodyWeight: {
+      value: user?.bodyWeight ? user.bodyWeight.toString() : "",
+      errors: [],
+    },
+    bodyWeightUnit: { value: user?.bodyWeightUnit ?? "kg", errors: [] },
+    templates:
+      user?.templates?.map((template, i) => ({
+        title: { value: template.title ?? "", errors: [] },
+        repsDisplay: { value: template.repsDisplay ?? "", errors: [] },
+        weightUnit: {
+          value: template.weightUnit ?? user?.bodyWeightUnit ?? "kg",
+          errors: [],
+        },
+        multiplier: {
+          value: template.multiplier.toString() ?? "1.0",
+          errors: [],
+        },
+        isBodyWeight: { value: !!template.isBodyWeight, errors: [] },
+        index: { value: i, errors: [] },
+        key: `key-${Date.now()}-${Math.random().toString(36)}`,
+      })) ?? [],
+  };
   // Initlialize state from session storage (if exists) or user context
   const [state, setState] = useState<EditSettingsState>(() => {
     const fromStorage = sessionStorage.getItem(EDIT_SETTINGS_STATE_KEY);
-    return fromStorage
-      ? JSON.parse(fromStorage)
-      : {
-          bodyWeight: {
-            value: user?.bodyWeight ? user.bodyWeight.toString() : "",
-            errors: [],
-          },
-          bodyWeightUnit: { value: user?.bodyWeightUnit ?? "kg", errors: [] },
-          templates:
-            user?.templates.map((template) => {
-              return {
-                title: { value: template.title, errors: [] },
-                repsDisplay: {
-                  value: template.repsDisplay ?? "",
-                  errors: [],
-                },
-                weightUnit: {
-                  value: template.weightUnit ?? user.bodyWeightUnit,
-                  errors: [],
-                },
-                multiplier: { value: template.multiplier, errors: [] },
-                isBodyWeight: { value: template.isBodyWeight, errors: [] },
-                index: { value: template.index, errors: [] },
-                key: `key-${Date.now()}-${Math.random().toString(36)}`,
-              };
-            }) ?? [],
-        };
+    return fromStorage ? JSON.parse(fromStorage) : INITIAL_STATE;
   });
   const [submitted, setSubmitted] = useState(false);
   const [showServerError, setShowServerError] = useState(true);
@@ -425,6 +424,48 @@ const useEditSettings = ({
     });
   }
 
+  function importDefaultTemplates() {
+    updateState((prev) => {
+      const currentLength = prev.templates.length;
+      const fallbackWeightUnit = prev.bodyWeightUnit.value;
+
+      const newTemplates = Object.entries(GenericPreconfigurations).map(
+        ([title, config], i) => ({
+          title: { value: title, errors: [] },
+          repsDisplay: { value: config.repsDisplay.value, errors: [] },
+          weightUnit: {
+            value:
+              (config.weightUnit?.value ?? "") !== ""
+                ? config.weightUnit?.value
+                : fallbackWeightUnit,
+            errors: [],
+          },
+          multiplier: {
+            value: String(config.multiplier?.value ?? 1.0),
+            errors: [],
+          },
+          isBodyWeight: {
+            value: Boolean(config.isBodyWeight?.value ?? false),
+            errors: [],
+          },
+          index: { value: currentLength + i, errors: [] },
+          key: `key-${Date.now()}-${Math.random().toString(36)}`,
+        })
+      );
+      onCloseImportDefault();
+      return {
+        ...prev,
+        templates: [...prev.templates, ...newTemplates],
+      };
+    });
+  }
+
+  function discardChanges() {
+    sessionStorage.removeItem(EDIT_SETTINGS_STATE_KEY);
+    setState(INITIAL_STATE);
+    onCloseDiscard();
+  }
+
   // Sync edited state back to sessionStorage
   React.useEffect(() => {
     sessionStorage.setItem(EDIT_SETTINGS_STATE_KEY, JSON.stringify(state));
@@ -444,6 +485,20 @@ const useEditSettings = ({
     onClose: onCloseLeaveSettings,
   } = useDisclosure();
 
+  // Import Default Templates Modal Controls
+  const {
+    isOpen: isOpenImportDefault,
+    onOpen: onOpenImportDefault,
+    onClose: onCloseImportDefault,
+  } = useDisclosure();
+
+  // Discard Changes Modal Controls
+  const {
+    isOpen: isOpenDiscard,
+    onOpen: onOpenDiscard,
+    onClose: onCloseDiscard,
+  } = useDisclosure();
+
   return {
     state,
     user,
@@ -451,8 +506,16 @@ const useEditSettings = ({
     isOpenSaveSettings,
     serverError,
     showServerError,
+    isOpenImportDefault,
     submitted,
     isOpenLeaveSettings,
+    isOpenDiscard,
+    onOpenDiscard,
+    onCloseDiscard,
+    importDefaultTemplates,
+    onOpenImportDefault,
+    onCloseImportDefault,
+    discardChanges,
     onOpenLeaveSettings,
     onCloseLeaveSettings,
     formHasErrors,
