@@ -5,7 +5,7 @@
 # In future, you can run this script periodically in a cron job by:
 #   1. crontab -e  (this will open an editor to define the cron job)
 #   2. Pasting the following command to run it daily at 2am:
-#     0 2 * * * cd /Users/johnmckinnon/DATA_STORAGE/repos/kettlepal/backend/graphql-server && npx dotenv -e .env.local -- bash bin/replicate-prod-db-to-dev.sh >> /Users/johnmckinnon/DATA_STORAGE/repos/kettlepal/backend/cronLogs/db_replicate_$(date +\%Y-\%m-\%d).log 2>&1
+#     0 2 * * * cd [PATH]/kettlepal/backend/graphql-server && npx dotenv -e .env.local -- bash bin/replicate-prod-db-to-dev.sh >> [PATH]/kettlepal/backend/cronLogs/db_replicate_$(date +\%Y-\%m-\%d).log 2>&1
 
 #!/usr/bin/env bash
 set -e
