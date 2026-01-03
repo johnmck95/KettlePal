@@ -44,6 +44,12 @@ import {
 import Detail from "../Components/ViewWorkouts/ViewDetailedWorkoutModal/Detail";
 import LoadingSpinner from "../Components/LoadingSpinner";
 import Graph from "../Components/Visualizations/Graph";
+import dayjs from "dayjs";
+import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
+import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
+
+dayjs.extend(isSameOrAfter);
+dayjs.extend(isSameOrBefore);
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -94,25 +100,22 @@ export default function Profile() {
     }
   }, [error]);
 
-  // Whenever a refetch occurs, display the bucket containing todays date.
   useEffect(() => {
-    const now = new Date();
-    const todayUTC = Date.UTC(
-      now.getUTCFullYear(),
-      now.getUTCMonth(),
-      now.getUTCDate()
-    );
+    if (!data?.user?.workoutTrends?.buckets) {
+      return;
+    }
 
-    const todayBucket = data?.user?.workoutTrends?.buckets?.find((bucket) => {
-      const bucketStart = new Date(bucket.periodStart + "T00:00:00Z").getTime();
-      const bucketEnd = new Date(bucket.periodEnd + "T00:00:00Z").getTime();
-      return todayUTC >= bucketStart && todayUTC <= bucketEnd;
+    const today = dayjs();
+
+    const todayBucket = data.user.workoutTrends.buckets.find((bucket) => {
+      return (
+        today.isSameOrAfter(dayjs(bucket.periodStart), "day") &&
+        today.isSameOrBefore(dayjs(bucket.periodEnd), "day")
+      );
     });
 
     if (todayBucket) {
       setBucket(todayBucket);
-    } else {
-      console.log("Could not find a bucket for today's date.");
     }
   }, [data?.user?.workoutTrends?.buckets]);
 

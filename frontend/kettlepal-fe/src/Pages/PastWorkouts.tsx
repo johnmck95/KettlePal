@@ -144,6 +144,7 @@ export default function PastWorkouts() {
                 {data?.pastWorkouts?.workoutWithExercises?.map(
                   (workoutWithExercises) =>
                     workoutWithExercises ? (
+                      // TODO: Wrap in a motion box for animation
                       <ViewWorkout
                         searchQuery={searchQuery}
                         key={workoutWithExercises.uid}

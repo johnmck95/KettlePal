@@ -447,12 +447,8 @@ export default function CreateWorkout() {
                 <Alert status="warning" mt="1rem" borderRadius="8px" px="12px">
                   <AlertIcon />
                   <AlertDescription>
-                    <Text fontSize="15px" fontWeight="600" mb="0.5rem">
+                    <Text fontSize={["12px", "14px", "16px"]} fontWeight={500}>
                       Some exercises were not completed.
-                    </Text>
-                    <Text fontSize="12px" lineHeight="1" textAlign="justify">
-                      The values seen below will be saved. Completed sets are
-                      used to help track progress during the workout.
                     </Text>
                   </AlertDescription>
                 </Alert>
@@ -533,8 +529,8 @@ export default function CreateWorkout() {
                               fontSize="14px"
                               color={theme.colors.gray[700]}
                             >
-                              Completed {incompleteEntry.completedSets} of{" "}
-                              {incompleteEntry.plannedSets} sets.
+                              ({incompleteEntry.completedSets} of{" "}
+                              {incompleteEntry.plannedSets})
                             </Text>
                           )}
                         </HStack>
