@@ -12,10 +12,10 @@
     "build": "npm run clean && tsc",
     "parseWorkouts": "node dist/bin/parseWorkouts.js",
     "parseAndUploadWorkouts": "node dist/bin/parseWorkouts.js && node dist/bin/writeParsedWorkoutsToDB.js",
-    "restore_kettlepal-dev": "./bin/prod_to_dev_migration.sh",
     "generate-types": "graphql-codegen --config ./src/codegen.yml",
     "knex": "node --import ./register-ts-node.js ./node_modules/knex/bin/cli.js",
-    "test": "jest"
+    "test": "jest",
+    "db:replicate-prod-db-to-local": "dotenv -e .env.local -- bash bin/replicate-prod-db-to-dev.sh"
   },
   "keywords": [],
   "author": "",
@@ -47,6 +47,7 @@
     "@graphql-codegen/typescript-react-apollo": "^4.3.2",
     "@graphql-codegen/typescript-resolvers": "^4.2.1",
     "@types/jest": "^30.0.0",
+    "dotenv-cli": "^11.0.0",
     "jest": "^30.2.0",
     "ts-jest": "^29.4.5"
   },
