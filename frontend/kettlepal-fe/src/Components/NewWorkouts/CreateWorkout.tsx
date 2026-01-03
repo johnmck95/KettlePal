@@ -447,7 +447,7 @@ export default function CreateWorkout() {
                 <Alert status="warning" mt="1rem" borderRadius="8px" px="12px">
                   <AlertIcon />
                   <AlertDescription>
-                    <Text fontSize="12px" fontWeight="500">
+                    <Text fontSize={["12px", "14px", "16px"]} fontWeight={500}>
                       Some exercises were not completed.
                     </Text>
                   </AlertDescription>
