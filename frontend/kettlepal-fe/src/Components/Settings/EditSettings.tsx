@@ -12,10 +12,22 @@ import {
   AlertDescription,
   CloseButton,
   Center,
+  List,
+  ListIcon,
+  ListItem,
+  Stack,
+  useMediaQuery,
 } from "@chakra-ui/react";
 import React from "react";
 import theme from "../../Constants/theme";
-import { FaPlusCircle, FaSave, FaTimes } from "react-icons/fa";
+import {
+  FaCheckCircle,
+  FaFileImport,
+  FaPlusCircle,
+  FaSave,
+  FaTimes,
+  FaTrash,
+} from "react-icons/fa";
 import BodyWeightSettings from "../NewWorkouts/FormComponents/Settings/User/BodyWeightSettings";
 import BodyWeightUnitSettings from "../NewWorkouts/FormComponents/Settings/User/BodyWeightUnitSettings";
 import { AnimatePresence, motion } from "framer-motion";
@@ -42,6 +54,12 @@ export default function EditSettings({
     showServerError,
     submitted,
     isOpenLeaveSettings,
+    isOpenImportDefault,
+    isOpenDiscard,
+    onOpenDiscard,
+    onCloseDiscard,
+    onOpenImportDefault,
+    onCloseImportDefault,
     onOpenLeaveSettings,
     onCloseLeaveSettings,
     setShowServerError,
@@ -54,8 +72,10 @@ export default function EditSettings({
     moveTemplateIndex,
     handleAddTemplate,
     formHasErrors,
+    importDefaultTemplates,
+    discardChanges,
   } = useEditSettings({ setShowUploadSuccess, toggleEditMode });
-
+  const [isMobile] = useMediaQuery("(max-width: 615px)");
   const bodyWeightExercisesWithoutUserWeight = state.templates.reduce(
     (acc, template) => {
       if (
@@ -143,41 +163,107 @@ export default function EditSettings({
       </Box>
 
       <Box w={["96%", "90%"]} m={2} color="gray.700">
-        <Box
+        <HStack
           borderBottom={`2px solid ${theme.colors.green[100]}`}
           fontWeight="bold"
           mb="1rem"
+          justifyContent={"space-between"}
+          alignItems={"flex-end"}
         >
           <Text fontSize={["md", "lg", "xl"]}>EXERCISE TEMPLATES</Text>
-        </Box>
+          <Stack direction={isMobile ? "column" : "row"} spacing={1}>
+            <Button
+              size={["sm", "md"]}
+              variant="link"
+              leftIcon={<FaFileImport />}
+              onClick={onOpenImportDefault}
+              color={theme.colors.olive[200]}
+              maxWidth="160px"
+              sx={{
+                justifyContent: "flex-start",
+                "> span": {
+                  justifyContent: "flex-start !important",
+                },
+                _focus: {
+                  color: theme.colors.olive[600],
+                },
+              }}
+            >
+              Import Default
+            </Button>
+            <Button
+              size={["sm", "md"]}
+              variant="link"
+              leftIcon={<FaTrash />}
+              onClick={onOpenDiscard}
+              w="160px"
+              color={theme.colors.olive[200]}
+              sx={{
+                justifyContent: "flex-start",
+                "> span": {
+                  justifyContent: "flex-start !important",
+                },
+                _focus: {
+                  color: theme.colors.olive[600],
+                },
+              }}
+            >
+              Discard Changes
+            </Button>
+          </Stack>
+        </HStack>
+        {state.templates.length <= 0 && (
+          <Text
+            my="2rem"
+            mx="1rem"
+            color={theme.colors.grey[600]}
+            fontSize={["sm", "md"]}
+            textAlign={"center"}
+          >
+            Click <b>Import Default</b> to help get started.
+            <br />
+            Click <b>Add Template</b> to define your own exercises.
+            <br />
+            <br />
+            You can then adjust each exercise template to customize the
+            KettlePal experience.
+            <br />
+            <br />
+            Remember, once you save atleast one template, KettlePal will stop
+            showing the default exercises and start showing your templates on
+            the New Workout page.
+          </Text>
+        )}
 
-        {/* TEMPLATES */}
-        <AnimatePresence>
-          {state.templates.map((template, index) => {
-            return (
-              <motion.div
-                key={`${template.key}`}
-                initial={{ opacity: 0, x: 200 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -200 }}
-                transition={{
-                  duration: 0.5,
-                  ease: [0.4, 0, 0.2, 1],
-                }}
-              >
-                <EditTemplate
-                  template={template}
-                  bodyWeightUnit={state.bodyWeightUnit.value as "kg" | "lb"}
-                  submitted={submitted}
-                  templateIndex={index}
-                  numTemplates={state.templates.length}
-                  deleteTemplate={deleteTemplate}
-                  moveTemplateIndex={moveTemplateIndex}
-                  handleTemplate={handleTemplate}
-                />
-              </motion.div>
-            );
-          })}
+        <AnimatePresence mode="popLayout">
+          {state.templates.map((template, index) => (
+            <motion.div
+              key={template.key}
+              layout
+              layoutId={template.key}
+              initial={{ opacity: 0, x: 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -40 }}
+              transition={{
+                layout: {
+                  duration: 0.3,
+                  ease: "easeInOut",
+                },
+                opacity: { duration: 0.2 },
+              }}
+            >
+              <EditTemplate
+                template={template}
+                bodyWeightUnit={state.bodyWeightUnit.value as "kg" | "lb"}
+                submitted={submitted}
+                templateIndex={index}
+                numTemplates={state.templates.length}
+                deleteTemplate={deleteTemplate}
+                moveTemplateIndex={moveTemplateIndex}
+                handleTemplate={handleTemplate}
+              />
+            </motion.div>
+          ))}
         </AnimatePresence>
 
         {serverError && showServerError && (
@@ -235,10 +321,51 @@ export default function EditSettings({
         </HStack>
         {submitted && formHasErrors() && (
           <Text my="1rem" color={theme.colors.error} fontSize="xs">
-            Please fix the form errors before updating your settings.
+            • Please fix the form errors before updating your settings.
           </Text>
         )}
       </Box>
+
+      {/* IMPORT DEFAULT TEMPLATES */}
+      <ConfirmModal
+        isOpen={isOpenImportDefault}
+        onClose={onCloseImportDefault}
+        onConfirmation={importDefaultTemplates}
+        ModalTitle="Import Default Templates"
+        ModalBodyText={
+          <Text mb="1rem">
+            Click <b>Continue</b> to append the 13 standard KettlePal exercise
+            templates.
+            <br />
+            <br />
+            Once imported, you may modify or delete all templates as desired.
+          </Text>
+        }
+        CloseText="Cancel"
+        ProceedText="Continue"
+        variant="confirm"
+      />
+
+      {/* DISCARD SETTING CHANGES */}
+      <ConfirmModal
+        isOpen={isOpenDiscard}
+        onClose={onCloseDiscard}
+        onConfirmation={discardChanges}
+        ModalTitle="Discard Settings Changes?"
+        ModalBodyText={
+          <Text mb="1rem">
+            Click <b>Continue</b> to discard all unsaved changes on the Settings
+            page.
+            <br />
+            <br />
+            Your current settings will stay exactly as they are. You can always
+            edit them later.
+          </Text>
+        }
+        CloseText="Cancel"
+        ProceedText="Continue"
+        variant="warn"
+      />
 
       {/* EXIT TEMPLATE EDIT */}
       <ConfirmModal
@@ -266,16 +393,35 @@ export default function EditSettings({
         ModalTitle="Update Settings"
         ModalBodyText={
           <>
-            <Text mb="1rem">
+            <Text mb="1rem" fontWeight="600">
               Are you sure your settings are finalized, and ready to be saved?
-              This will overwrite your existing settings.
+              This will:
             </Text>
-            <Text fontWeight="semibold">
-              <i>
-                Existing workouts will remain unchanged. Your updated settings
-                will only impact future workouts.
-              </i>
-            </Text>
+            <List mx={1} spacing={2} fontSize={"sm"}>
+              <ListItem>
+                <HStack>
+                  <ListIcon as={FaCheckCircle} color="green.500" />
+                  <Text>Override your existing settings.</Text>
+                </HStack>
+              </ListItem>
+              <ListItem>
+                <HStack>
+                  <ListIcon as={FaCheckCircle} color="green.500" />
+                  <Text>
+                    Replace exercise options in the <b>New</b> page.
+                  </Text>
+                </HStack>
+              </ListItem>
+              <ListItem>
+                <HStack>
+                  <ListIcon as={FaCheckCircle} color="green.500" />
+                  <Text>
+                    Affect future workouts. Past workouts remain unchanged.
+                  </Text>
+                </HStack>
+              </ListItem>
+            </List>
+
             {bodyWeightExercisesWithoutUserWeight && (
               <Alert status="warning" mt="1rem" borderRadius={"8px"}>
                 <AlertIcon />

@@ -1,9 +1,13 @@
-import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { ChangeEvent, useCallback, useEffect, useRef, useState } from "react";
 import { calculateElapsedTime, getCurrentDate } from "../utils/Time/time";
 import { useAddWorkoutWithExercisesMutation } from "../generated/frontend-types";
 import { useUser } from "../Contexts/UserContext";
 import { useDisclosure } from "@chakra-ui/react";
 import { StopwatchRef } from "../Components/NewWorkouts/FormComponents/NewWorkout/Generic/Stopwatch";
+import {
+  CreateOrUpdateWorkoutState,
+  validateState,
+} from "./HookHelpers/validation";
 
 export const SESSION_STATE_KEY = "createWorkoutState";
 export const STOPWATCH_IS_ACTIVE_KEY = "stopwatchIsActive";
@@ -11,33 +15,15 @@ export const SHOW_TRACKING_KEY = "showTracking";
 export const WORKOUT_STATE_KEY = "workoutState";
 export const STOPWATCH_TIMESTAMP_KEY = "stopwatchStartTimeStamp";
 
-export type CreateWorkoutState = {
-  date: string;
-  comment: string;
-  elapsedSeconds: number;
-  exercises: Array<{
-    title: string;
-    weight: string;
-    weightUnit: string;
-    sets: string;
-    reps: string;
-    repsDisplay: string;
-    comment: string;
-    elapsedSeconds: number;
-    multiplier: number;
-    key: string;
-  }>;
-};
-
 const useCreateWorkoutForm = () => {
-  const [state, setState] = useState<CreateWorkoutState>(() => {
+  const [state, setState] = useState<CreateOrUpdateWorkoutState>(() => {
     const fromStorage = sessionStorage.getItem(SESSION_STATE_KEY);
     return fromStorage
       ? JSON.parse(fromStorage)
       : {
-          date: getCurrentDate(),
-          comment: "",
-          elapsedSeconds: 0,
+          date: { value: getCurrentDate(), errors: [] },
+          comment: { value: "", errors: [] },
+          elapsedSeconds: { value: 0, errors: [] },
           exercises: [],
         };
   });
@@ -47,15 +33,102 @@ const useCreateWorkoutForm = () => {
   });
   const [addComments, setAddComments] = useState<boolean>(false);
   const [showUploadSuccess, setShowUploadSuccess] = useState<boolean>(false);
-  const [submitted, setSubmitted] = useState(false);
-  const [formHasErrors, setFormHasErrors] = useState(false);
-  const [showServerError, setShowServerError] = useState<boolean>(true);
   const userUid = useUser().user?.uid ?? null;
-
   const [timerIsActive, setTimerIsActive] = useState(() => {
     const fromStorage = sessionStorage.getItem(STOPWATCH_IS_ACTIVE_KEY);
     return fromStorage ? true : false;
   });
+  const [submitted, setSubmitted] = useState(false);
+  const [showServerError, setShowServerError] = useState<boolean>(true);
+  const formHasErrors = () =>
+    state.date.errors.length > 0 ||
+    state.comment.errors.length > 0 ||
+    state.elapsedSeconds.errors.length > 0 ||
+    state.exercises.some((t) =>
+      [
+        t.title,
+        t.weight,
+        t.weightUnit,
+        t.sets,
+        t.reps,
+        t.repsDisplay,
+        t.comment,
+        t.elapsedSeconds,
+        t.multiplier,
+      ].some((f) => f.errors.length > 0)
+    );
+
+  const timerIsActiveRef = useRef<boolean>(false);
+  useEffect(() => {
+    timerIsActiveRef.current = timerIsActive;
+  }, [timerIsActive]);
+
+  const updateState = useCallback(
+    (
+      producer: (prev: CreateOrUpdateWorkoutState) => CreateOrUpdateWorkoutState
+    ) => {
+      setState((prev) => {
+        const next = producer(prev);
+        const validation = validateState(next, timerIsActiveRef.current);
+
+        return {
+          ...next,
+          date: {
+            ...next.date,
+            errors: validation.root.date,
+          },
+          comment: {
+            ...next.comment,
+            errors: validation.root.comment,
+          },
+          elapsedSeconds: {
+            ...next.elapsedSeconds,
+            errors: validation.root.elapsedSeconds,
+          },
+          exercises: next.exercises.map((e, i) => ({
+            ...e,
+            title: {
+              ...e.title,
+              errors: validation.exercises[i].title,
+            },
+            weight: {
+              ...e.weight,
+              errors: validation.exercises[i].weight,
+            },
+            weightUnit: {
+              ...e.weightUnit,
+              errors: validation.exercises[i].weightUnit,
+            },
+            sets: {
+              ...e.sets,
+              errors: validation.exercises[i].sets,
+            },
+            reps: {
+              ...e.reps,
+              errors: validation.exercises[i].reps,
+            },
+            repsDisplay: {
+              ...e.repsDisplay,
+              errors: validation.exercises[i].repsDisplay,
+            },
+            comment: {
+              ...e.comment,
+              errors: validation.exercises[i].comment,
+            },
+            elapsedSeconds: {
+              ...e.elapsedSeconds,
+              errors: validation.exercises[i].elapsedSeconds,
+            },
+            multiplier: {
+              ...e.multiplier,
+              errors: validation.exercises[i].multiplier,
+            },
+          })),
+        };
+      });
+    },
+    []
+  );
 
   // The StopWatch ref to control start/pause from CreateWorkout.tsx
   const ref = useRef<StopwatchRef>(null);
@@ -99,6 +172,7 @@ const useCreateWorkoutForm = () => {
     } else {
       sessionStorage.removeItem(STOPWATCH_IS_ACTIVE_KEY);
     }
+    timerIsActiveRef.current = newState;
   };
 
   // Mutation to submit workoutWithExercises to DB
@@ -106,9 +180,9 @@ const useCreateWorkoutForm = () => {
     useAddWorkoutWithExercisesMutation({
       onCompleted() {
         setState({
-          date: getCurrentDate(),
-          comment: "",
-          elapsedSeconds: 0,
+          date: { value: getCurrentDate(), errors: [] },
+          comment: { value: "", errors: [] },
+          elapsedSeconds: { value: 0, errors: [] },
           exercises: [],
         });
         handleWorkoutState("initial");
@@ -128,6 +202,19 @@ const useCreateWorkoutForm = () => {
     sessionStorage.setItem(SESSION_STATE_KEY, JSON.stringify(state));
   }, [state]);
 
+  const setTime = useCallback(
+    (elapsedSeconds: number) => {
+      updateState((prevState: CreateOrUpdateWorkoutState) => ({
+        ...prevState,
+        elapsedSeconds: {
+          value: elapsedSeconds,
+          errors: prevState.elapsedSeconds.errors,
+        },
+      }));
+    },
+    [updateState]
+  );
+
   // Update workout timer every 1s
   useEffect(() => {
     let interval: NodeJS.Timeout | undefined = undefined;
@@ -139,34 +226,26 @@ const useCreateWorkoutForm = () => {
         );
         setTime(calculateElapsedTime(storedTimestamp));
       }, 1000);
-    } else if (!timerIsActive && state.elapsedSeconds !== 0) {
+    } else if (!timerIsActive && state.elapsedSeconds.value !== 0) {
       clearInterval(interval);
     }
     return () => clearInterval(interval);
-  }, [timerIsActive, state.elapsedSeconds]);
-
-  // Updates workout timer. HTML lacks name property.
-  const setTime = (elapsedSeconds: number) => {
-    setState((prevState: CreateWorkoutState) => ({
-      ...prevState,
-      elapsedSeconds,
-    }));
-  };
+  }, [timerIsActive, state.elapsedSeconds.value, setTime]);
 
   // Updates workout comment. HTML lacks name property.
   const setComment = (newComment: string) => {
-    setState((prevState: CreateWorkoutState) => ({
+    updateState((prevState: CreateOrUpdateWorkoutState) => ({
       ...prevState,
-      comment: newComment,
+      comment: { value: newComment, errors: prevState.comment.errors },
     }));
   };
 
   // Updates remaining workout state properties
   function handleStateChange(event: ChangeEvent<HTMLInputElement>): void {
     const { name, value } = event.target;
-    setState((prevState) => ({
+    updateState((prevState) => ({
       ...prevState,
-      [name]: value,
+      [name]: { value: value, errors: [] },
     }));
 
     // If you change the date with no exercises, reset workout tracking (stale browser tab).
@@ -177,19 +256,19 @@ const useCreateWorkoutForm = () => {
 
   // Initialize a new exercise object
   function handleAddExercise(): void {
-    setState((prevState) => ({
+    updateState((prevState) => ({
       ...prevState,
       exercises: [
         {
-          title: "",
-          weight: "",
-          weightUnit: "",
-          sets: "",
-          reps: "",
-          repsDisplay: "",
-          comment: "",
-          elapsedSeconds: 0,
-          multiplier: 1.0,
+          title: { value: "", errors: [] },
+          weight: { value: "", errors: [] },
+          weightUnit: { value: "", errors: [] },
+          sets: { value: "", errors: [] },
+          reps: { value: "", errors: [] },
+          repsDisplay: { value: "", errors: [] },
+          comment: { value: "", errors: [] },
+          elapsedSeconds: { value: 0, errors: [] },
+          multiplier: { value: 1.0, errors: [] },
           key: `key-${Date.now()}-${Math.random().toString(36)}`,
         },
         ...prevState.exercises,
@@ -199,52 +278,41 @@ const useCreateWorkoutForm = () => {
 
   // Deletes an exercise object from state
   function deleteExercise(index: number): void {
-    setState((prevState) => ({
+    updateState((prevState) => ({
       ...prevState,
       exercises: prevState?.exercises?.filter((_, i) => i !== index),
     }));
   }
 
+  type ExerciseField =
+    | "title"
+    | "weight"
+    | "weightUnit"
+    | "sets"
+    | "reps"
+    | "repsDisplay"
+    | "comment"
+    | "elapsedSeconds"
+    | "multiplier";
   // Updates all per-exercise state properties based on the index.
   function handleExercise(
     name: string,
     value: string | number,
     index: number
   ): void {
-    setState((prevState) => ({
+    updateState((prevState) => ({
       ...prevState,
       exercises: prevState.exercises.map((exercise, i) => {
         if (i === index) {
           return {
             ...exercise,
-            [name]: value,
+            [name]: { ...exercise[name as ExerciseField], value: value },
           };
         }
         return exercise;
       }),
     }));
   }
-
-  // Workout Validation (Exercise Validation is handled in child component)
-  enum WorkoutErrors {
-    date = "Please enter a workout date.",
-    timer = "Please stop the workout timer before saving.",
-  }
-  const dateIsInvalid = !state.date;
-  const timerIsInvalid = timerIsActive;
-  const [numErrors, setNumErrors] = useState(0);
-  const errors: string[] = [];
-  if (dateIsInvalid) errors.push(WorkoutErrors.date);
-  if (timerIsInvalid) errors.push(WorkoutErrors.timer);
-  if (numErrors !== errors.length) {
-    setNumErrors(errors.length);
-  }
-
-  // Client-side error handling
-  useEffect(
-    () => setFormHasErrors(numErrors > 0),
-    [numErrors, setFormHasErrors]
-  );
 
   /**
    * Deletes all 'completedSets-#' key-val pairs from sessionStorage, used for traacking a workout.
@@ -265,18 +333,31 @@ const useCreateWorkoutForm = () => {
   async function onSaveWorkout(): Promise<void> {
     setSubmitted(true);
     onCloseSaveWorkout();
-    if (dateIsInvalid || timerIsInvalid) {
-      setFormHasErrors(true);
-      return;
-    }
-    if (formHasErrors) {
+    if (formHasErrors()) {
       return;
     }
     try {
       await addWorkoutWithExercises({
         variables: {
           userUid: userUid ?? "",
-          workoutWithExercises: state,
+          workoutWithExercises: {
+            ...state,
+            date: state.date.value,
+            comment: state.comment.value,
+            elapsedSeconds: state.elapsedSeconds.value,
+            exercises: state.exercises.map((e) => ({
+              title: e.title.value,
+              weight: e.weight.value,
+              weightUnit: e.weightUnit.value,
+              sets: e.sets.value,
+              reps: e.reps.value,
+              repsDisplay: e.repsDisplay.value,
+              comment: e.comment.value,
+              elapsedSeconds: e.elapsedSeconds.value,
+              multiplier: e.multiplier.value,
+              key: e.key,
+            })),
+          },
         },
       });
       deleteExerciseTrackingFromSessionStorage();
@@ -307,7 +388,6 @@ const useCreateWorkoutForm = () => {
     addComments,
     showUploadSuccess,
     submitted,
-    errors,
     showServerError,
     timerIsActive,
     isOpenSaveWorkout,
@@ -315,7 +395,6 @@ const useCreateWorkoutForm = () => {
     ref,
     setTime,
     setComment,
-    setFormHasErrors,
     setShowServerError,
     setAddComments,
     handleTimerIsActive,
@@ -327,6 +406,7 @@ const useCreateWorkoutForm = () => {
     onCloseSaveWorkout,
     onSaveWorkout,
     startOrPause,
+    formHasErrors,
   };
 };
 

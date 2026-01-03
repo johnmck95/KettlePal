@@ -1,25 +1,23 @@
 import { FormControl, FormLabel, HStack, Input, Text } from "@chakra-ui/react";
 import theme from "../../../../../Constants/theme";
-import { CreateWorkoutState } from "../../../../../Hooks/useCreateWorkoutForm";
 import ToolTip from "../../../../UI/ToolTip";
+import { CreateOrUpdateWorkoutState } from "../../../../../Hooks/HookHelpers/validation";
 
 interface ExerciseRepsProps {
-  submitted: boolean;
   repsIsInvalid: boolean;
-  exercise: Omit<CreateWorkoutState["exercises"][number], "key">;
+  exercise: Omit<CreateOrUpdateWorkoutState["exercises"][number], "key">;
   exerciseIndex: number;
   handleExercise: (name: string, value: string | number, index: number) => void;
 }
 
 export default function ExerciseReps({
-  submitted,
   repsIsInvalid,
   exercise,
   exerciseIndex,
   handleExercise,
 }: ExerciseRepsProps) {
   return (
-    <FormControl isInvalid={submitted && repsIsInvalid}>
+    <FormControl isInvalid={repsIsInvalid}>
       <HStack>
         <FormLabel fontSize={["14px", "16px"]} m="0">
           <Text>Reps</Text>
@@ -36,12 +34,14 @@ export default function ExerciseReps({
         name="reps"
         placeholder="0"
         padding="0.5rem"
-        value={exercise.reps}
+        value={exercise.reps.value}
         onChange={(event) =>
           handleExercise("reps", event.target.value, exerciseIndex)
         }
         focusBorderColor={theme.colors.green[300]}
-        color={!!exercise.reps ? theme.colors.black : theme.colors.grey[500]}
+        color={
+          !!exercise.reps.value ? theme.colors.black : theme.colors.grey[500]
+        }
       />
     </FormControl>
   );

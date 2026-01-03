@@ -4,22 +4,20 @@ import {
   createExerciseTitles,
   getConfigurations,
 } from "../../../../../Constants/ExercisesOptions";
-import { CreateWorkoutState } from "../../../../../Hooks/useCreateWorkoutForm";
 import { useUser } from "../../../../../Contexts/UserContext";
 import { capitalizeWords } from "../../../../../utils/textFormatters";
+import { CreateOrUpdateWorkoutState } from "../../../../../Hooks/HookHelpers/validation";
 
 interface ExerciseTitleProps {
-  submitted: boolean;
   titleIsInvalid: boolean;
   customTitle: boolean;
-  exercise: Omit<CreateWorkoutState["exercises"][number], "key">;
+  exercise: Omit<CreateOrUpdateWorkoutState["exercises"][number], "key">;
   exerciseIndex: number;
   setCustomTitle: (value: boolean) => void;
   handleExercise: (name: string, value: string | number, index: number) => void;
 }
 
 export default function ExerciseTitle({
-  submitted,
   titleIsInvalid,
   customTitle,
   exercise,
@@ -69,8 +67,17 @@ export default function ExerciseTitle({
     );
   };
 
+  // If the user entered a Custom exercise title, it needs to be included in the Select options.
+  const uniqueTitles = Array.from(
+    new Set(
+      [...ExerciseTitles, exercise.title.value].filter(
+        (title) => title.trim() !== ""
+      )
+    )
+  );
+
   return (
-    <FormControl isRequired isInvalid={submitted && titleIsInvalid}>
+    <FormControl isRequired isInvalid={titleIsInvalid}>
       <FormLabel fontSize={["14px", "16px"]} m="0">
         Exercise
       </FormLabel>
@@ -80,30 +87,34 @@ export default function ExerciseTitle({
           fontSize={["16px"]}
           placeholder="Enter Exercise"
           name="title"
-          value={exercise.title}
+          value={exercise.title.value}
           onChange={(event) => {
             const capitalizedValue = capitalizeWords(event.target.value);
             handleExercise(event.target.name, capitalizedValue, exerciseIndex);
           }}
-          color={!!exercise.title ? theme.colors.black : theme.colors.grey[500]}
+          color={
+            !!exercise.title.value ? theme.colors.black : theme.colors.grey[500]
+          }
           focusBorderColor={theme.colors.green[300]}
         />
       ) : (
         <Select
           size={["sm", "sm", "md"]}
           fontSize={["16px"]}
-          placeholder="Select"
+          placeholder={"Select"}
           name="title"
-          value={exercise.title}
+          value={exercise.title.value}
           onChange={(event) =>
             event.target.value === "Custom"
               ? setCustomTitle(true)
               : setTitleAndPreconfigurations(event)
           }
           focusBorderColor={theme.colors.green[300]}
-          color={!!exercise.title ? theme.colors.black : theme.colors.grey[500]}
+          color={
+            !!exercise.title.value ? theme.colors.black : theme.colors.grey[500]
+          }
         >
-          {ExerciseTitles.map((title) => {
+          {uniqueTitles.map((title) => {
             return (
               <option key={title} value={title}>
                 {title}

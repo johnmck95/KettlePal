@@ -1,24 +1,22 @@
 import { FormControl, FormLabel, Input } from "@chakra-ui/react";
 import theme from "../../../../../Constants/theme";
-import { CreateWorkoutState } from "../../../../../Hooks/useCreateWorkoutForm";
+import { CreateOrUpdateWorkoutState } from "../../../../../Hooks/HookHelpers/validation";
 
 interface ExerciseSetsProps {
-  submitted: boolean;
   setsIsInvalid: boolean;
-  exercise: Omit<CreateWorkoutState["exercises"][number], "key">;
+  exercise: Omit<CreateOrUpdateWorkoutState["exercises"][number], "key">;
   exerciseIndex: number;
   handleExercise: (name: string, value: string | number, index: number) => void;
 }
 
 export default function ExerciseSets({
-  submitted,
   setsIsInvalid,
   exercise,
   exerciseIndex,
   handleExercise,
 }: ExerciseSetsProps) {
   return (
-    <FormControl isInvalid={submitted && setsIsInvalid}>
+    <FormControl isInvalid={setsIsInvalid}>
       <FormLabel fontSize={["14px", "16px"]} m="0">
         Sets
       </FormLabel>
@@ -30,12 +28,14 @@ export default function ExerciseSets({
         autoComplete="off"
         type="number"
         name="sets"
-        value={exercise.sets}
+        value={exercise.sets.value}
         onChange={(event) =>
           handleExercise("sets", event.target.value, exerciseIndex)
         }
         focusBorderColor={theme.colors.green[300]}
-        color={!!exercise.sets ? theme.colors.black : theme.colors.grey[500]}
+        color={
+          !!exercise.sets.value ? theme.colors.black : theme.colors.grey[500]
+        }
       />
     </FormControl>
   );

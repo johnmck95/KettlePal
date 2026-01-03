@@ -1,11 +1,12 @@
 import { FormLabel, HStack, IconButton } from "@chakra-ui/react";
 import { FaMinus, FaPlus } from "react-icons/fa";
 import theme from "../../../../../Constants/theme";
+import { CreateOrUpdateWorkoutState } from "../../../../../Hooks/HookHelpers/validation";
 
 interface TrackExerciseProps {
   trackWorkout: boolean;
   completedSets: number;
-  exercise: any;
+  exercise: CreateOrUpdateWorkoutState["exercises"][number];
   removedASet: () => void;
   completedASet: () => void;
 }
@@ -23,7 +24,7 @@ export default function TrackExercise({
         <HStack justifyContent={"space-between"} w="100%">
           <FormLabel size={["sm", "md", "lg"]} my="auto">
             <b>{`Completed ${completedSets} / ${
-              exercise.sets === "" ? "0" : exercise.sets
+              exercise.sets.value === "" ? "0" : exercise.sets.value
             } Sets`}</b>
           </FormLabel>
           <HStack>

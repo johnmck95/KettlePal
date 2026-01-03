@@ -1,30 +1,41 @@
 import { FormControl, FormLabel, Select } from "@chakra-ui/react";
 import theme from "../../../../../Constants/theme";
-import { WeightOptions } from "../../../../../Constants/ExercisesOptions";
-import { CreateWorkoutState } from "../../../../../Hooks/useCreateWorkoutForm";
+import getConfigurations, {
+  WeightOptions,
+} from "../../../../../Constants/ExercisesOptions";
 import { useUser } from "../../../../../Contexts/UserContext";
+import { CreateOrUpdateWorkoutState } from "../../../../../Hooks/HookHelpers/validation";
 
 interface ExerciseWeightUnitProps {
-  submitted: boolean;
   weightUnitIsInvalid: boolean;
-  exercise: Omit<CreateWorkoutState["exercises"][number], "key">;
+  exercise: Omit<CreateOrUpdateWorkoutState["exercises"][number], "key">;
   exerciseIndex: number;
   handleExercise: (name: string, value: string | number, index: number) => void;
 }
 
 export default function ExerciseWeightUnit({
-  submitted,
   weightUnitIsInvalid,
   exercise,
   exerciseIndex,
   handleExercise,
 }: ExerciseWeightUnitProps) {
-  const usingBodyWeight = useUser().user?.templates?.some(
-    (template) => template.isBodyWeight && template.title === exercise.title
-  );
+  const user = useUser().user;
+  const templates = user?.templates ?? [];
+  const Preconfigurations = getConfigurations(templates, {
+    bodyWeight: user?.bodyWeight ?? 0,
+    bodyWeightUnit: user?.bodyWeightUnit ?? "kg",
+  });
+  // Not all Preconfigurations have a bodyweight. If they do, use it. Otherwise, check user context.
+  const usingBodyWeight =
+    Preconfigurations[exercise.title.value]?.isBodyWeight?.value !== undefined
+      ? Preconfigurations[exercise.title.value]?.isBodyWeight?.value
+      : user?.templates?.some(
+          (template) =>
+            template.isBodyWeight && template.title === exercise.title.value
+        );
 
   return (
-    <FormControl isInvalid={submitted && weightUnitIsInvalid}>
+    <FormControl isInvalid={weightUnitIsInvalid}>
       <FormLabel fontSize={["14px", "16px"]} m="0">
         Unit
       </FormLabel>
@@ -34,13 +45,15 @@ export default function ExerciseWeightUnit({
         size={["sm", "sm", "md"]}
         placeholder="Select"
         name="weightUnit"
-        value={exercise.weightUnit}
+        value={exercise.weightUnit.value}
         onChange={(event) =>
           handleExercise(event.target.name, event.target.value, exerciseIndex)
         }
         focusBorderColor={theme.colors.green[300]}
         color={
-          !!exercise.weightUnit ? theme.colors.black : theme.colors.grey[500]
+          !!exercise.weightUnit.value
+            ? theme.colors.black
+            : theme.colors.grey[500]
         }
         disabled={usingBodyWeight}
       >

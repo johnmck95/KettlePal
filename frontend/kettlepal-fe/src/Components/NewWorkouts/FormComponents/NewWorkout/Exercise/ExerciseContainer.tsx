@@ -11,6 +11,8 @@ interface ExerciseContainerProps {
   onTouchStart: any;
   onTouchMove: any;
   onTouchEnd: any;
+  forceMobileStyle: boolean;
+  forceCloseButton: boolean;
   setOffset: (offset: number) => void;
   onOpenDeleteExercise: () => void;
   swipeDistance: () => number;
@@ -25,32 +27,39 @@ export function ExerciseContainer({
   onTouchStart,
   onTouchEnd,
   onTouchMove,
+  forceMobileStyle,
+  forceCloseButton,
   swipeDistance,
   onOpenDeleteExercise,
 }: ExerciseContainerProps) {
-  const [isMobile] = useMediaQuery("(max-width: 420px)");
+  const [isMobile] = useMediaQuery("(max-width: 430px)");
+  const renderAsMobile = forceMobileStyle === true || isMobile === true;
 
   return (
-    <Box my="1.25rem" mx="0.15rem">
+    <Box mx="0.15rem" mb={errors.length > 0 ? "1rem" : "0rem"}>
       <VStack
         w={`calc(100%-0.5rem + ${swipeDistance()})`}
         borderRadius={"5px"}
-        p={["0.35rem", "1rem", "1.5rem"]}
+        p="0.75rem"
         mb="0.5rem"
         boxShadow={`0px 1px 4px ${theme.colors.grey[400]}`}
         bg="white"
         position="relative"
         transition="right 0.4s ease-in-out"
-        right={`${
-          !!swipeDistance() && swipeDistance() > minSwipeDistance
-            ? swipeDistance()
-            : offset
-        }px`}
-        onTouchStart={onTouchStart}
-        onTouchMove={onTouchMove}
-        onTouchEnd={onTouchEnd}
+        right={
+          forceCloseButton
+            ? "none"
+            : `${
+                !!swipeDistance() && swipeDistance() > minSwipeDistance
+                  ? swipeDistance()
+                  : offset
+              }px`
+        }
+        onTouchStart={forceCloseButton ? null : onTouchStart}
+        onTouchMove={forceCloseButton ? null : onTouchMove}
+        onTouchEnd={forceCloseButton ? null : onTouchEnd}
       >
-        {!isMobile && (
+        {(!renderAsMobile || forceCloseButton) && (
           <IconButton
             variant="closeX"
             aria-label="Delete Exercise"
@@ -72,8 +81,12 @@ export function ExerciseContainer({
           return null;
         }
         return (
-          <Text key={error} color={theme.colors.error} fontSize="xs">
-            {error}
+          <Text
+            key={error}
+            color={theme.colors.error}
+            fontSize={renderAsMobile ? "xs" : "sm"}
+          >
+            • {error}
           </Text>
         );
       })}

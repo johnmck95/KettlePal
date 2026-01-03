@@ -3,13 +3,13 @@ import theme from "../../../Constants/theme";
 import { formatExerciseString } from "../../../utils/Exercises/exercises";
 import { FuzzySearchQuery } from "../../../generated/frontend-types";
 import dayjs from "dayjs";
-import { CreateWorkoutState } from "../../../Hooks/useCreateWorkoutForm";
+import { CreateOrUpdateWorkoutState } from "../../../Hooks/HookHelpers/validation";
 
 interface BeforeAfterConfirmModalConentProps {
   before: NonNullable<
     NonNullable<FuzzySearchQuery["pastWorkouts"]>["workoutWithExercises"]
   >[0];
-  after: CreateWorkoutState;
+  after: CreateOrUpdateWorkoutState;
 }
 
 export default function BeforeAfterConfirmModalConent({
@@ -30,6 +30,7 @@ export default function BeforeAfterConfirmModalConent({
           textAlign={"center"}
           w="100%"
           mb="0.5rem"
+          borderBottom={`2px solid ${theme.colors.green[600]}`}
         >
           <b>New Workout</b>
         </Text>
@@ -38,19 +39,28 @@ export default function BeforeAfterConfirmModalConent({
             {after.date && (
               <>
                 <Text fontSize="18" m="0" color={theme.colors.grey[700]}>
-                  <b>{dayjs(after.date).format("dddd, MMMM DD, YYYY")}</b>
+                  <b>{dayjs(after.date.value).format("dddd, MMMM DD, YYYY")}</b>
                 </Text>
               </>
             )}
             {after.comment && (
               <Text fontSize="14px" color={theme.colors.grey[700]}>
-                <i>{after.comment}</i>
+                <i>{after.comment.value}</i>
               </Text>
             )}
             {after?.exercises?.map((exercise, index) => {
               return (
                 <Text ml="1rem" key={index}>
-                  {formatExerciseString(exercise)} <br />
+                  {formatExerciseString({
+                    title: exercise.title.value,
+                    weight: exercise.weight.value,
+                    weightUnit: exercise.weightUnit.value,
+                    sets: exercise.sets.value,
+                    reps: exercise.reps.value,
+                    repsDisplay: exercise.repsDisplay.value,
+                    comment: exercise.comment.value,
+                  })}{" "}
+                  <br />
                 </Text>
               );
             })}
@@ -66,6 +76,7 @@ export default function BeforeAfterConfirmModalConent({
           textAlign={"center"}
           w="100%"
           mb="0.5rem"
+          borderBottom={`2px solid ${theme.colors.grey[700]}`}
         >
           <b>Old Workout</b>
         </Text>
@@ -86,7 +97,16 @@ export default function BeforeAfterConfirmModalConent({
             {before?.exercises?.map((exercise, index) => {
               return (
                 <Text ml="1rem" key={index}>
-                  {formatExerciseString(exercise)} <br />
+                  {formatExerciseString({
+                    title: exercise.title,
+                    weight: exercise.weight,
+                    weightUnit: exercise.weightUnit,
+                    sets: exercise.sets,
+                    reps: exercise.reps,
+                    repsDisplay: exercise.repsDisplay,
+                    comment: exercise.comment,
+                  })}{" "}
+                  <br />
                 </Text>
               );
             })}

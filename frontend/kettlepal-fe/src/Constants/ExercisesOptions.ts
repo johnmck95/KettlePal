@@ -59,115 +59,91 @@ export const RepsDisplayOptions = [
   },
 ];
 
-export const GenericPreconfigurations: any = {
-  Swing: {
-    weightUnit: {
-      value: "kg",
-    },
-    repsDisplay: {
-      value: "std",
-    },
-    multiplier: {
-      value: 1.0,
-    },
-  },
-  "Single Arm Swing": {
-    weightUnit: {
-      value: "kg",
-    },
-    repsDisplay: {
-      value: "l/r",
-    },
-    multiplier: {
-      value: 1.0,
-    },
-  },
-  Press: {
-    weightUnit: {
-      value: "kg",
-    },
-    repsDisplay: {
-      value: "l/r",
-    },
-    multiplier: {
-      value: 1.0,
-    },
-  },
-  "Goblet Squat": {
-    weightUnit: {
-      value: "kg",
-    },
-    repsDisplay: {
-      value: "std",
-    },
-    multiplier: {
-      value: 1.0,
-    },
-  },
-  "Racked Squat": {
-    weightUnit: {
-      value: "kg",
-    },
-    repsDisplay: {
-      value: "l/r",
-    },
-    multiplier: {
-      value: 1.0,
-    },
-  },
-  Clean: {
-    weightUnit: {
-      value: "kg",
-    },
-    repsDisplay: {
-      value: "l/r",
-    },
-    multiplier: {
-      value: 1.0,
-    },
-  },
-  "Clean & Press": {
-    weightUnit: {
-      value: "kg",
-    },
-    repsDisplay: {
-      value: "l/r",
-    },
-    multiplier: {
-      value: 1.0,
-    },
-  },
-  "Turkish Get Up": {
-    weightUnit: {
-      value: "kg",
-    },
-    repsDisplay: {
-      value: "std",
-    },
-    multiplier: {
-      value: 1.0,
-    },
-  },
-  Snatch: {
-    weightUnit: {
-      value: "kg",
-    },
-    repsDisplay: {
-      value: "l/r",
-    },
-    multiplier: {
-      value: 1.0,
-    },
-  },
+type FieldValue<T = string | number> = {
+  value: T;
+};
+type ConfigurationFields = {
+  weightUnit: FieldValue<string>;
+  repsDisplay: FieldValue<string>;
+  multiplier: FieldValue<number>;
+  weight?: FieldValue<string>;
+  isBodyWeight?: FieldValue<boolean>;
 };
 
-type Preconfigurations = {
-  [title: string]: {
-    weightUnit: { value: string };
-    repsDisplay: { value: string };
-    multiplier: { value: number };
-    weight: { value: string };
-  };
+type PreconfigurationsType = Record<string, ConfigurationFields>;
+
+export const GenericPreconfigurations: PreconfigurationsType = {
+  Clean: {
+    weightUnit: { value: "kg" },
+    repsDisplay: { value: "l/r" },
+    multiplier: { value: 1.25 },
+  },
+  "Clean & Press": {
+    weightUnit: { value: "kg" },
+    repsDisplay: { value: "l/r" },
+    multiplier: { value: 1.75 },
+  },
+  Deadlift: {
+    weightUnit: { value: "kg" },
+    repsDisplay: { value: "std" },
+    multiplier: { value: 1 },
+  },
+  "Goblet Squat": {
+    weightUnit: { value: "kg" },
+    repsDisplay: { value: "std" },
+    multiplier: { value: 1.0 },
+  },
+  "Pull Up": {
+    weightUnit: { value: "" },
+    repsDisplay: { value: "std" },
+    multiplier: { value: 0.95 },
+    weight: { value: "" },
+    isBodyWeight: { value: true },
+  },
+  "Push Up": {
+    weightUnit: { value: "" },
+    repsDisplay: { value: "std" },
+    multiplier: { value: 0.3 },
+    weight: { value: "" },
+    isBodyWeight: { value: true },
+  },
+  "Pistol Squat": {
+    weightUnit: { value: "" },
+    repsDisplay: { value: "std" },
+    multiplier: { value: 0.9 },
+    weight: { value: "" },
+    isBodyWeight: { value: true },
+  },
+  Press: {
+    weightUnit: { value: "kg" },
+    repsDisplay: { value: "l/r" },
+    multiplier: { value: 1.0 },
+  },
+  "Racked Squat": {
+    weightUnit: { value: "kg" },
+    repsDisplay: { value: "l/r" },
+    multiplier: { value: 1.0 },
+  },
+  "Single Arm Swing": {
+    weightUnit: { value: "kg" },
+    repsDisplay: { value: "l/r" },
+    multiplier: { value: 1.0 },
+  },
+  Snatch: {
+    weightUnit: { value: "kg" },
+    repsDisplay: { value: "l/r" },
+    multiplier: { value: 1.5 },
+  },
+  Swing: {
+    weightUnit: { value: "kg" },
+    repsDisplay: { value: "std" },
+    multiplier: { value: 1.0 },
+  },
+  "Turkish Get Up": {
+    weightUnit: { value: "kg" },
+    repsDisplay: { value: "std" },
+    multiplier: { value: 4.0 },
+  },
 };
 
 // Creates an array of exercise titles from templates or by default, sorted by index.
@@ -195,7 +171,7 @@ function createPreconfigurationsFromTemplates(
 ) {
   const sortedTemplates = [...templates].sort((a, b) => a.index - b.index);
 
-  const preconfigs: Preconfigurations = {};
+  const preconfigs: PreconfigurationsType = {};
   sortedTemplates.forEach((template) => {
     preconfigs[template.title] = {
       weightUnit: { value: template.weightUnit ?? "" },
@@ -220,7 +196,7 @@ export function getConfigurations(
   templates: Omit<Template, "createdAt" | "uid" | "userUid">[],
   user: { bodyWeight: number; bodyWeightUnit: string },
   withCustom = true
-): Preconfigurations {
+): PreconfigurationsType {
   const preconfigsFromTemplates = createPreconfigurationsFromTemplates(
     templates,
     {
@@ -229,10 +205,24 @@ export function getConfigurations(
     }
   );
 
-  const preconfigs =
-    Object.keys(preconfigsFromTemplates).length > 0
-      ? preconfigsFromTemplates
-      : GenericPreconfigurations;
+  const usingDefaultPreconfigs =
+    Object.keys(preconfigsFromTemplates).length === 0;
+
+  const preconfigs = usingDefaultPreconfigs
+    ? GenericPreconfigurations
+    : preconfigsFromTemplates;
+
+  // If using default preconfigs, set weightUnit and weight for bodyWeightExercises
+  if (usingDefaultPreconfigs) {
+    Object.entries(preconfigs).forEach(
+      ([_, config]: [string, ConfigurationFields]) => {
+        if (config.weightUnit.value === "" && config.weight) {
+          config.weight.value = user.bodyWeight.toString() ?? "0";
+          config.weightUnit.value = user.bodyWeightUnit ?? "kg";
+        }
+      }
+    );
+  }
 
   return {
     ...preconfigs,

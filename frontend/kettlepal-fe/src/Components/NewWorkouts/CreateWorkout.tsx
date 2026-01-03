@@ -14,11 +14,14 @@ import {
   GridItem,
   HStack,
   Heading,
+  Icon,
   Link,
   Text,
 } from "@chakra-ui/react";
 import {
+  FaCheckCircle,
   FaComment,
+  FaMinusCircle,
   FaPause,
   FaPlay,
   FaPlusCircle,
@@ -47,17 +50,16 @@ export default function CreateWorkout() {
     addComments,
     showUploadSuccess,
     submitted,
-    errors,
     showServerError,
     timerIsActive,
     isOpenSaveWorkout,
     workoutState,
     ref,
+    formHasErrors,
     setTime,
     setComment,
     setShowServerError,
     setAddComments,
-    setFormHasErrors,
     handleTimerIsActive,
     handleStateChange,
     handleAddExercise,
@@ -77,6 +79,69 @@ export default function CreateWorkout() {
       </Center>
     );
   }
+  const workoutErrors = [
+    ...state.date.errors,
+    ...state.comment.errors,
+    ...state.elapsedSeconds.errors,
+  ];
+
+  function getCompletedSetsFromMemory(): {
+    trackingIndex: number;
+    completedCount: number;
+    exerciseTitle?: string;
+  }[] {
+    const PREFIX = "completedSets-";
+    const completedSets: {
+      trackingIndex: number;
+      completedCount: number;
+      exerciseTitle?: string;
+    }[] = [];
+
+    Object.keys(sessionStorage).forEach((key) => {
+      if (key.startsWith(PREFIX)) {
+        const trackingIndex = Number(key.slice(PREFIX.length));
+        if (!Number.isNaN(trackingIndex)) {
+          const exerciseTitle =
+            state.exercises[state.exercises.length - 1 - trackingIndex]?.title
+              .value;
+          completedSets.push({
+            trackingIndex,
+            completedCount: Number(sessionStorage.getItem(key) || 0),
+            exerciseTitle,
+          });
+        }
+      }
+    });
+    return completedSets;
+  }
+
+  const completedSets = getCompletedSetsFromMemory();
+  const incompleteExercises: {
+    index: number;
+    title: string;
+    plannedSets: number;
+    completedSets: number;
+  }[] = [];
+  state.exercises.forEach((exercise, currentIndex) => {
+    // Convert CURRENT index to TRACKING index (reverse order)
+    const trackingIndex = state.exercises.length - 1 - currentIndex;
+    const completedData = completedSets.find(
+      (cs) => cs.trackingIndex === trackingIndex
+    );
+    const plannedSets = Number(exercise.sets.value) || 0;
+    const completedCount = completedData?.completedCount || 0;
+
+    if (plannedSets > 0 && completedCount < plannedSets) {
+      incompleteExercises.push({
+        index: currentIndex,
+        title: exercise.title.value,
+        plannedSets,
+        completedSets: completedCount,
+      });
+    }
+  });
+
+  const allSetsCompleted = incompleteExercises.length === 0;
 
   return (
     <Box m={["0.5rem", "1rem"]} w={["100%", "100%", "100%", "900px"]}>
@@ -99,7 +164,7 @@ export default function CreateWorkout() {
           <GridItem rowStart={1} rowEnd={2} colStart={1} colEnd={1}>
             <WorkoutDate
               submitted={submitted}
-              date={state.date}
+              date={state.date.value}
               handleStateChange={handleStateChange}
             />
           </GridItem>
@@ -114,7 +179,7 @@ export default function CreateWorkout() {
           >
             <WorkoutStopwatch
               ref={ref}
-              seconds={state.elapsedSeconds}
+              seconds={state.elapsedSeconds.value}
               omitControls={true}
               isActive={timerIsActive}
               setTime={setTime}
@@ -235,15 +300,21 @@ export default function CreateWorkout() {
           )}
         </Grid>
 
+        {submitted && formHasErrors() && (
+          <Text my="0.25rem" color={theme.colors.error} fontSize="xs">
+            • Please fix the form errors before saving your workout.
+          </Text>
+        )}
+
         {/* ERROR MESSAGES */}
         <Box mt="-0.3rem">
-          {errors.map((error) => {
+          {workoutErrors.map((error) => {
             if (!submitted) {
               return null;
             }
             return (
               <Text key={error} color={theme.colors.error} fontSize="xs">
-                {error}
+                • {error}
               </Text>
             );
           })}
@@ -251,8 +322,9 @@ export default function CreateWorkout() {
 
         {/* WORKOUT COMMENT */}
         <WorkoutComment
+          commentIsInvalid={submitted && state.comment.errors.length > 0}
           addComments={addComments}
-          comment={state.comment}
+          comment={state.comment.value}
           setComment={setComment}
         />
 
@@ -288,37 +360,40 @@ export default function CreateWorkout() {
         )}
 
         {/* EXERCISES */}
-        <Box>
-          <AnimatePresence>
+        <motion.div layoutRoot>
+          <AnimatePresence mode="popLayout">
             {state.exercises.map((exercise, index) => {
               return (
                 <motion.div
-                  key={`${exercise.key}`}
-                  initial={{ opacity: 0, x: 200 }}
+                  key={exercise.key}
+                  layout="position"
+                  layoutId={exercise.key}
+                  initial={{ opacity: 0, x: 40 }}
                   animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -200 }}
+                  exit={{ opacity: 0, x: -40 }}
                   transition={{
-                    duration: 0.5,
-                    ease: [0.4, 0, 0.2, 1],
+                    layout: { duration: 0.3, ease: "easeInOut" },
+                    opacity: { duration: 0.2 },
                   }}
                 >
-                  <CreateExercise
-                    key={index}
-                    exercise={exercise}
-                    handleExercise={handleExercise}
-                    deleteExercise={deleteExercise}
-                    exerciseIndex={index}
-                    trackingIndex={state.exercises.length - index - 1}
-                    submitted={submitted}
-                    setFormHasErrors={setFormHasErrors}
-                    trackWorkout={showTracking}
-                    showComments={addComments}
-                  />
+                  <Box my="1.25rem">
+                    <CreateExercise
+                      key={index}
+                      exercise={exercise}
+                      handleExercise={handleExercise}
+                      deleteExercise={deleteExercise}
+                      exerciseIndex={index}
+                      trackingIndex={state.exercises.length - index - 1}
+                      submitted={submitted}
+                      trackWorkout={showTracking}
+                      showComments={addComments}
+                    />
+                  </Box>
                 </motion.div>
               );
             })}
           </AnimatePresence>
-        </Box>
+        </motion.div>
 
         {!showTracking && (
           <Center mt="auto">
@@ -368,23 +443,42 @@ export default function CreateWorkout() {
           ModalBodyText={
             <Box mb="1rem">
               Are you sure your workout is complete, and ready to be saved?
+              {!allSetsCompleted && (
+                <Alert status="warning" mt="1rem" borderRadius="8px" px="12px">
+                  <AlertIcon />
+                  <AlertDescription>
+                    <Text fontSize="15px" fontWeight="600" mb="0.5rem">
+                      Some exercises were not completed.
+                    </Text>
+                    <Text fontSize="12px" lineHeight="1" textAlign="justify">
+                      The values seen below will be saved. Completed sets are
+                      used to help track progress during the workout.
+                    </Text>
+                  </AlertDescription>
+                </Alert>
+              )}
               {state.exercises.length > 0 && (
                 <>
-                  <br />
-                  <br />
                   {state.date && (
                     <>
-                      <Heading fontSize="xl" flex="1">
-                        {dayjs(state.date).format("dddd, MMMM DD, YYYY")}
+                      <Heading fontSize="xl" flex="1" my="1rem">
+                        {dayjs(state.date.value).format("dddd, MMMM DD, YYYY")}
                       </Heading>
                     </>
                   )}
 
-                  <HStack w="100%" justifyContent="space-evenly" my="1rem">
+                  <HStack
+                    w="100%"
+                    justifyContent="space-evenly"
+                    mt="1rem"
+                    mb="1.5rem"
+                  >
                     <Detail
                       title={"Time"}
-                      value={formatDurationShort(state.elapsedSeconds ?? 0)}
-                      variant="sm"
+                      value={formatDurationShort(
+                        state.elapsedSeconds.value ?? 0
+                      )}
+                      variant="md"
                       color={theme.colors.graphPrimary[500]}
                     />
                     <br />
@@ -392,24 +486,58 @@ export default function CreateWorkout() {
                       title={"Work Capacity"}
                       value={totalWorkoutWorkCapacity({
                         exercises: state.exercises.map((exercise) => ({
-                          weight: Number(exercise.weight),
-                          weightUnit: exercise.weightUnit,
-                          sets: Number(exercise.sets),
-                          reps: Number(exercise.reps),
-                          multiplier: Number(exercise.multiplier),
+                          weight: Number(exercise.weight.value),
+                          weightUnit: exercise.weightUnit.value,
+                          sets: Number(exercise.sets.value),
+                          reps: Number(exercise.reps.value),
+                          multiplier: Number(exercise.multiplier.value),
                         })),
                       })}
-                      variant="sm"
+                      variant="md"
                       color={theme.colors.graphSecondary[500]}
                     />
                   </HStack>
 
                   {state.exercises.map((exercise, index) => {
+                    const incompleteEntry = incompleteExercises.find(
+                      (entry) => entry.index === index
+                    );
+                    const isIncomplete = !!incompleteEntry;
                     return (
                       <React.Fragment key={index}>
-                        <b>
-                          {formatExerciseString(exercise)} <br />
-                        </b>
+                        <HStack my="0.25rem">
+                          {isIncomplete ? (
+                            <Icon
+                              as={FaMinusCircle}
+                              color={theme.colors.lion[700]}
+                            />
+                          ) : (
+                            <Icon
+                              as={FaCheckCircle}
+                              color={theme.colors.green[300]}
+                            />
+                          )}
+                          <Text fontSize="16px" fontWeight="600">
+                            {formatExerciseString({
+                              title: exercise.title.value,
+                              weight: exercise.weight.value,
+                              weightUnit: exercise.weightUnit.value,
+                              sets: exercise.sets.value,
+                              reps: exercise.reps.value,
+                              repsDisplay: exercise.repsDisplay.value,
+                              comment: exercise.comment.value,
+                            })}
+                          </Text>
+                          {incompleteEntry && (
+                            <Text
+                              fontSize="14px"
+                              color={theme.colors.gray[700]}
+                            >
+                              Completed {incompleteEntry.completedSets} of{" "}
+                              {incompleteEntry.plannedSets} sets.
+                            </Text>
+                          )}
+                        </HStack>
                       </React.Fragment>
                     );
                   })}

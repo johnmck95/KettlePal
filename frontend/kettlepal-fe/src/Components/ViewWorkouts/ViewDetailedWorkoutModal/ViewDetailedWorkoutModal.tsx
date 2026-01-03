@@ -53,6 +53,7 @@ export default function ViewDetailedWorkoutModal({
         motionPreset="slideInBottom"
         isCentered
         scrollBehavior="inside"
+        size="xl"
       >
         <ModalOverlay />
         <ModalContent
@@ -75,12 +76,12 @@ export default function ViewDetailedWorkoutModal({
                 Save
               </Button>
             )}
-
             {/* SUCCESSFULLY UPDATED EXERCISE */}
             {showUploadSuccess && (
               <Alert
                 status="success"
-                my="2rem"
+                mt="2rem"
+                mb="1rem"
                 w="100%%"
                 borderRadius={"8px"}
                 bg="green.50"
@@ -89,7 +90,6 @@ export default function ViewDetailedWorkoutModal({
                 Workout Updated Successfully!
               </Alert>
             )}
-
             <HStack
               justifyContent={"flex-end"}
               gap={2}
@@ -132,6 +132,7 @@ export default function ViewDetailedWorkoutModal({
                 zIndex={3}
               />
             </HStack>
+
             <VStack alignItems="flex-start" gap={0}>
               {editing ? (
                 <EditWorkout

@@ -11,25 +11,24 @@ import ExerciseRepsDisplay from "./FormComponents/NewWorkout/Exercise/ExerciseRe
 import ExerciseWeightUnit from "./FormComponents/NewWorkout/Exercise/ExerciseWeightUnit";
 import TrackExercise from "./FormComponents/NewWorkout/MidWorkoutTracking/TrackExercise";
 import { ExerciseContainer } from "./FormComponents/NewWorkout/Exercise/ExerciseContainer";
-import { CreateWorkoutState } from "../../Hooks/useCreateWorkoutForm";
 import useCreateExerciseForm from "../../Hooks/useCreateExerciseForm";
 import "../../Styles/CustomSelect.css";
 import { formatExerciseString } from "../../utils/Exercises/exercises";
 import theme from "../../Constants/theme";
 import { useUser } from "../../Contexts/UserContext";
+import { CreateOrUpdateWorkoutState } from "../../Hooks/HookHelpers/validation";
 
 interface CreateExerciseProps {
-  exercise: Omit<CreateWorkoutState["exercises"][number], "key">;
+  exercise: Omit<CreateOrUpdateWorkoutState["exercises"][number], "key">;
   handleExercise: (name: string, value: string | number, index: number) => void;
   deleteExercise: ((index: number) => void) | (() => Promise<void>);
   exerciseIndex: number;
   trackingIndex: number;
   submitted: boolean;
-  setFormHasErrors: (value: boolean) => void;
   trackWorkout: boolean;
-  mutatingWorkout?: boolean;
   showComments: boolean;
-  renderMobileView?: boolean;
+  forceMobileStyle?: boolean;
+  forceCloseButton?: boolean;
 }
 
 export default function CreateExercise({
@@ -39,26 +38,19 @@ export default function CreateExercise({
   exerciseIndex,
   trackingIndex,
   submitted,
-  setFormHasErrors,
   trackWorkout,
   showComments,
-  renderMobileView,
+  forceMobileStyle = false,
+  forceCloseButton = false,
 }: CreateExerciseProps) {
   const user = useUser().user;
   const {
     completedSets,
     customTitle,
     customWeight,
-    errors,
     isOpenDeleteExercise,
     minSwipeDistance,
     offset,
-    repsDisplayIsInvalid,
-    repsIsInvalid,
-    setsIsInvalid,
-    titleIsInvalid,
-    weightIsInvalid,
-    weightUnitIsInvalid,
     completedASet,
     customOnCloseDeleteExercise,
     onDeleteExercise,
@@ -79,8 +71,18 @@ export default function CreateExercise({
     trackingIndex,
     handleExercise,
     deleteExercise,
-    setFormHasErrors,
   });
+  const errors = [
+    ...exercise.title.errors,
+    ...exercise.weight.errors,
+    ...exercise.weightUnit.errors,
+    ...exercise.sets.errors,
+    ...exercise.reps.errors,
+    ...exercise.repsDisplay.errors,
+    ...exercise.comment.errors,
+    ...exercise.elapsedSeconds.errors,
+    ...exercise.multiplier.errors,
+  ];
 
   return (
     <ExerciseContainer
@@ -94,26 +96,37 @@ export default function CreateExercise({
       onTouchEnd={onTouchEnd}
       swipeDistance={swipeDistance}
       onOpenDeleteExercise={onOpenDeleteExercise}
+      forceMobileStyle={forceMobileStyle}
+      forceCloseButton={forceCloseButton}
     >
       {trackWorkout ? (
         <Text w="100%" color={theme.colors.grey[600]}>
-          <i>{formatExerciseString(exercise)}</i>
+          <i>
+            {formatExerciseString({
+              title: exercise.title.value,
+              weight: exercise.weight.value,
+              weightUnit: exercise.weightUnit.value,
+              sets: exercise.sets.value,
+              reps: exercise.reps.value,
+              repsDisplay: exercise.repsDisplay.value,
+              comment: exercise.comment.value,
+            })}
+          </i>
         </Text>
       ) : (
         <>
           <SimpleGrid
             gap={1}
             templateColumns={{
-              base: renderMobileView ? "41% 32% 24%" : "47% 27% 21%",
-              lg: renderMobileView ? "" : "34% 8% 8% 20% 15% 12%",
+              base: forceMobileStyle ? "41% 32% 24%" : "47% 27% 21%",
+              lg: forceMobileStyle ? "" : "34% 8% 8% 20% 15% 12%",
             }}
             w="100%"
           >
             {/* TITLE */}
             <GridItem colSpan={1}>
               <ExerciseTitle
-                submitted={submitted}
-                titleIsInvalid={titleIsInvalid}
+                titleIsInvalid={submitted && exercise.title.errors.length > 0}
                 customTitle={customTitle}
                 exercise={exercise}
                 exerciseIndex={exerciseIndex}
@@ -125,8 +138,7 @@ export default function CreateExercise({
             {/* SETS */}
             <GridItem colSpan={1}>
               <ExerciseSets
-                submitted={submitted}
-                setsIsInvalid={setsIsInvalid}
+                setsIsInvalid={submitted && exercise.sets.errors.length > 0}
                 exercise={exercise}
                 exerciseIndex={exerciseIndex}
                 handleExercise={handleExercise}
@@ -136,8 +148,7 @@ export default function CreateExercise({
             {/* REPS */}
             <GridItem colSpan={1}>
               <ExerciseReps
-                submitted={submitted}
-                repsIsInvalid={repsIsInvalid}
+                repsIsInvalid={submitted && exercise.reps.errors.length > 0}
                 exercise={exercise}
                 exerciseIndex={exerciseIndex}
                 handleExercise={handleExercise}
@@ -147,8 +158,9 @@ export default function CreateExercise({
             {/* REPS DISPLAY */}
             <GridItem colSpan={1}>
               <ExerciseRepsDisplay
-                submitted={submitted}
-                repsDisplayIsInvalid={repsDisplayIsInvalid}
+                repsDisplayIsInvalid={
+                  submitted && exercise.repsDisplay.errors.length > 0
+                }
                 exercise={exercise}
                 exerciseIndex={exerciseIndex}
                 handleExercise={handleExercise}
@@ -158,8 +170,7 @@ export default function CreateExercise({
             {/* WEIGHT */}
             <GridItem colSpan={1}>
               <ExerciseWeight
-                submitted={submitted}
-                weightIsInvalid={weightIsInvalid}
+                weightIsInvalid={submitted && exercise.weight.errors.length > 0}
                 customWeight={customWeight}
                 exercise={exercise}
                 exerciseIndex={exerciseIndex}
@@ -171,8 +182,9 @@ export default function CreateExercise({
             {/* WEIGHT UNIT */}
             <GridItem colSpan={1}>
               <ExerciseWeightUnit
-                submitted={submitted}
-                weightUnitIsInvalid={weightUnitIsInvalid}
+                weightUnitIsInvalid={
+                  submitted && exercise.weightUnit.errors.length > 0
+                }
                 exercise={exercise}
                 exerciseIndex={exerciseIndex}
                 handleExercise={handleExercise}
@@ -184,8 +196,9 @@ export default function CreateExercise({
           {/* EXERCISE COMMENT */}
           {showComments && (
             <AddComment
+              isInvalid={submitted && exercise.comment.errors.length > 0}
               placeholderText="Add an Exercise Comment"
-              comment={exercise.comment}
+              comment={exercise.comment.value}
               setComment={setExerciseComment}
               maxWidth="100%"
             />
@@ -207,8 +220,8 @@ export default function CreateExercise({
         isOpen={isOpenDeleteExercise}
         onClose={customOnCloseDeleteExercise}
         onConfirmation={onDeleteExercise}
-        ModalTitle="Delete Exercise"
-        ModalBodyText="Are you sure you would like to delete this Exercise? This cannot be undone."
+        ModalTitle="Delete Exercise?"
+        ModalBodyText="Are you sure you would like to delete this Exercise?"
         CloseText="Cancel"
         ProceedText="Delete"
         variant="warn"
