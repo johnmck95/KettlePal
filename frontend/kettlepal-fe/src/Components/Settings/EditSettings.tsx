@@ -338,7 +338,7 @@ export default function EditSettings({
             templates.
             <br />
             <br />
-            Once imported, you may modify or delete all templates as needed.
+            Once imported, you may modify or delete all templates as desired.
           </Text>
         }
         CloseText="Cancel"

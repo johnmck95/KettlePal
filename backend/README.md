@@ -26,15 +26,15 @@ You can now open `http://localhost:4000/graphql` in the browser to use Apollo Se
 
 `knexfile.ts` in _/backend/graphql-server/src_ contains the `knexConfig` required for defining the DB connection. It uses env variables to choose to corresponding DB. Update these env variables to change the DB you are pointing to.
 
-## Cloning kettlepal-prod to kettlepal-dev
+## Replicating kettlepal-prod database to kettlepal-dev
 
-To make `kettlebell-dev` have an identical schema & data as `kettlepal-prod`, run `npm run restore_kettlepal-dev`. This will drop the `kettlepal-dev` database, pg_dump the contents of `kettlepal-prod`, then create a new `kettlepal-dev` DB with the dumped data. Finally, it removes the data dump file.
+Run `npm run db:replicate-prod-db-to-local` to replicate the production database locally. This will `pg_dump` the `kettlepal-prod` database, then rebuild `kettlebell-dev` with the production database dump.
 
 # Tables
 
-There are 3 important KettlePal postgresql tables.
+There are 4 important KettlePal tables, `users`, `workouts`, `exercises` & `templates`.
 
-There is a `1 - M` relationship between the `users & workouts` tables, and another `1 - M` relationship between the `workouts & exercises` tables.
+There are `1 - M` relationships between the `users & workouts`, `workouts & exercises`, and `users & templates` tables.
 
 ## users
 
