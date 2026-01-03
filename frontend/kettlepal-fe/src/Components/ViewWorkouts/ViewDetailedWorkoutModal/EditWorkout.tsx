@@ -148,13 +148,17 @@ export default function EditWorkout({
           </Box>
         ) : (
           <>
-            <HStack mt="2.5rem" w="100%">
+            <HStack
+              mt={["3rem", "2rem"]}
+              w="100%"
+              justifyContent={"space-between"}
+            >
               <WorkoutDate
                 submitted={submitted}
                 date={state.date.value}
                 handleStateChange={handleStateChange}
               />
-              <Box w="175px">
+              <Box>
                 <WorkoutStopwatch
                   seconds={state.elapsedSeconds.value}
                   isActive={false}
@@ -184,7 +188,7 @@ export default function EditWorkout({
                 }
                 return (
                   <Text key={error} color={theme.colors.error} fontSize="xs">
-                    {error}
+                    • {error}
                   </Text>
                 );
               })}

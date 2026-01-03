@@ -235,33 +235,35 @@ export default function EditSettings({
           </Text>
         )}
 
-        {/* TEMPLATES */}
-        <AnimatePresence>
-          {state.templates.map((template, index) => {
-            return (
-              <motion.div
-                key={`${template.key}`}
-                initial={{ opacity: 0, x: 200 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -200 }}
-                transition={{
-                  duration: 0.5,
-                  ease: [0.4, 0, 0.2, 1],
-                }}
-              >
-                <EditTemplate
-                  template={template}
-                  bodyWeightUnit={state.bodyWeightUnit.value as "kg" | "lb"}
-                  submitted={submitted}
-                  templateIndex={index}
-                  numTemplates={state.templates.length}
-                  deleteTemplate={deleteTemplate}
-                  moveTemplateIndex={moveTemplateIndex}
-                  handleTemplate={handleTemplate}
-                />
-              </motion.div>
-            );
-          })}
+        <AnimatePresence mode="popLayout">
+          {state.templates.map((template, index) => (
+            <motion.div
+              key={template.key}
+              layout
+              layoutId={template.key}
+              initial={{ opacity: 0, x: 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -40 }}
+              transition={{
+                layout: {
+                  duration: 0.3,
+                  ease: "easeInOut",
+                },
+                opacity: { duration: 0.2 },
+              }}
+            >
+              <EditTemplate
+                template={template}
+                bodyWeightUnit={state.bodyWeightUnit.value as "kg" | "lb"}
+                submitted={submitted}
+                templateIndex={index}
+                numTemplates={state.templates.length}
+                deleteTemplate={deleteTemplate}
+                moveTemplateIndex={moveTemplateIndex}
+                handleTemplate={handleTemplate}
+              />
+            </motion.div>
+          ))}
         </AnimatePresence>
 
         {serverError && showServerError && (
@@ -319,7 +321,7 @@ export default function EditSettings({
         </HStack>
         {submitted && formHasErrors() && (
           <Text my="1rem" color={theme.colors.error} fontSize="xs">
-            Please fix the form errors before updating your settings.
+            • Please fix the form errors before updating your settings.
           </Text>
         )}
       </Box>

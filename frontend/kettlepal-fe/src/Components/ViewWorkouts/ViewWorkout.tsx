@@ -7,7 +7,6 @@ import {
   IconButton,
   VStack,
   useDisclosure,
-  useMediaQuery,
 } from "@chakra-ui/react";
 import ViewExercise from "./ViewExercise";
 import theme from "../../Constants/theme";
@@ -32,7 +31,6 @@ export default function ViewWorkout({
   refetchPastWorkouts: () => void;
   searchQuery: string;
 }) {
-  const [isMobile] = useMediaQuery("(max-width: 420px)");
   const [deleteWorkoutWithExercises, { loading, error }] =
     useDeleteWorkoutWithExercisesMutation({
       onCompleted() {
@@ -87,14 +85,6 @@ export default function ViewWorkout({
             <IconButton
               variant="closeX"
               aria-label="Delete Workout"
-              sx={{
-                _focus: {
-                  borderColor: theme.colors.green[300],
-                  boxShadow: isMobile
-                    ? `0 0 0 0`
-                    : `0 0 0 1px ${theme.colors.green[300]}`,
-                },
-              }}
               icon={<FaTimes />}
               size="sm"
               position="absolute"

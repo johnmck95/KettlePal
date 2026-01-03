@@ -406,6 +406,7 @@ const useCreateWorkoutForm = () => {
     onCloseSaveWorkout,
     onSaveWorkout,
     startOrPause,
+    formHasErrors,
   };
 };
 

@@ -463,6 +463,7 @@ const useEditSettings = ({
   function discardChanges() {
     sessionStorage.removeItem(EDIT_SETTINGS_STATE_KEY);
     setState(INITIAL_STATE);
+    setSubmitted(false);
     onCloseDiscard();
   }
 

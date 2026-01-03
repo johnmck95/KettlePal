@@ -5,12 +5,12 @@ export enum WorkoutErrorsMessages {
 }
 export enum ExerciseErrorsMessages {
   title = "Title is required.",
-  weight = "Weight is required when Weight Unit is provided.",
-  weightUnit = "Weight Unit is required when Weight is proivided.",
-  sets = "Sets are required when Reps or Rep Type are provided.",
-  reps = "Reps are required when Sets or Rep Type are provided.",
+  weight = "Weight is required when Unit is provided.",
+  weightUnit = "Unit is required when Weight is proivided.",
+  sets = "Sets are required when Reps, Type, Weight and/or Unit are provided.",
+  reps = "Reps are required when Sets, Type, Weight and/or Unit are provided.",
   repsLrEven = "Reps must be an even number when Type is 'Left / Right'.",
-  repsDisplay = "Rep Type is required when Sets or Reps are provided.",
+  repsDisplay = "Type is required when Sets, Reps, Weight and/or Unit are provided.",
   multiplier = "Multiplier must be a realistic, positive number.",
   oneTwoLadder = "Reps must be 6 when Type is '(1,2)'.",
   oneThreeLadder = "Reps must be 12 when Type is '(1,2,3)'.",
@@ -105,13 +105,19 @@ export function validateState(
       result.exercises[i].weightUnit.push(ExerciseErrorsMessages.weightUnit);
     }
     if (
-      (!!e.reps.value === true || !!e.repsDisplay.value === true) &&
+      (!!e.reps.value === true ||
+        !!e.repsDisplay.value === true ||
+        !!e.weight.value === true ||
+        !!e.weightUnit.value === true) &&
       !!e.sets.value === false
     ) {
       result.exercises[i].sets.push(ExerciseErrorsMessages.sets);
     }
     if (
-      (!!e.sets.value === true || !!e.repsDisplay.value === true) &&
+      (!!e.sets.value === true ||
+        !!e.repsDisplay.value === true ||
+        !!e.weight.value === true ||
+        !!e.weightUnit.value === true) &&
       !!e.reps.value === false
     ) {
       result.exercises[i].reps.push(ExerciseErrorsMessages.reps);
@@ -124,7 +130,10 @@ export function validateState(
       result.exercises[i].reps.push(ExerciseErrorsMessages.repsLrEven);
     }
     if (
-      (!!e.reps.value === true || !!e.sets.value === true) &&
+      (!!e.reps.value === true ||
+        !!e.sets.value === true ||
+        !!e.weight.value === true ||
+        !!e.weightUnit.value === true) &&
       !!e.repsDisplay.value === false
     ) {
       result.exercises[i].repsDisplay.push(ExerciseErrorsMessages.repsDisplay);

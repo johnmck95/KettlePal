@@ -1,4 +1,4 @@
-import { Box, Button, HStack, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, HStack, Text } from "@chakra-ui/react";
 import { formatDurationShort } from "../../../utils/Time/time";
 import Detail from "./Detail";
 import { FuzzySearchQuery } from "../../../generated/frontend-types";
@@ -24,9 +24,11 @@ export default function ShowWorkout({
   return (
     <>
       {/* DATE */}
-      <Text fontSize={["lg", "2xl"]} maxW="calc(100% - 75px)">
-        <b>{dayjs(date).format("ddd, MMM DD, YYYY")}</b>
-      </Text>
+      <Flex w="100%" h="36px" alignItems="flex-end">
+        <Text fontSize={["lg", "xl", "2xl"]} maxW="calc(100% - 75px)">
+          <b>{dayjs(date).format("ddd, MMM DD, YYYY")}</b>
+        </Text>
+      </Flex>
 
       {/* WORKOUT COMMENT */}
       <Text fontSize={["sm", "md"]} color={theme.colors.grey[700]}>

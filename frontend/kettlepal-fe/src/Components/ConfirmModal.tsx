@@ -49,9 +49,15 @@ export default function ConfirmModal({
           </ModalHeader>
           <ModalCloseButton
             sx={{
-              _focus: {
-                borderColor: theme.colors.green[300],
-                boxShadow: `0 0 0 1px ${theme.colors.green[300]}`,
+              color: "black",
+              border: "none",
+              _hover: {
+                bg: "grey.50",
+                boxShadow: `0px 1px 2px #E2E8F0 !important`,
+              },
+              _active: {
+                bg: "grey.100",
+                boxShadow: `0px 2px 4px #CBD5E0 !important`,
               },
             }}
           />
@@ -68,12 +74,7 @@ export default function ConfirmModal({
               >
                 {ProceedText}
               </Button>
-              <Button
-                onClick={onClose}
-                width="100px"
-                variant="outline"
-                colorScheme="grey"
-              >
+              <Button onClick={onClose} width="100px" variant="secondary">
                 {CloseText}
               </Button>
             </Flex>

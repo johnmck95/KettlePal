@@ -94,10 +94,27 @@ export default function Profile() {
     }
   }, [error]);
 
+  // Whenever a refetch occurs, display the bucket containing todays date.
   useEffect(() => {
-    const firstBucket = data?.user?.workoutTrends?.buckets?.[0];
-    if (firstBucket && !bucket) setBucket(firstBucket);
-  }, [data, bucket]);
+    const now = new Date();
+    const todayUTC = Date.UTC(
+      now.getUTCFullYear(),
+      now.getUTCMonth(),
+      now.getUTCDate()
+    );
+
+    const todayBucket = data?.user?.workoutTrends?.buckets?.find((bucket) => {
+      const bucketStart = new Date(bucket.periodStart + "T00:00:00Z").getTime();
+      const bucketEnd = new Date(bucket.periodEnd + "T00:00:00Z").getTime();
+      return todayUTC >= bucketStart && todayUTC <= bucketEnd;
+    });
+
+    if (todayBucket) {
+      setBucket(todayBucket);
+    } else {
+      console.log("Could not find a bucket for today's date.");
+    }
+  }, [data?.user?.workoutTrends?.buckets]);
 
   const dataRangeShown = formatSelectedDateRange(
     bucket?.periodStart,

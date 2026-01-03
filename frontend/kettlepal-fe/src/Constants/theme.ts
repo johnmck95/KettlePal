@@ -155,11 +155,14 @@ const theme = extendTheme({
         },
         closeX: {
           color: "black",
+          border: "none",
           _hover: {
-            bg: "rgba(250,249,246,1)",
+            bg: "grey.50",
+            boxShadow: `0px 1px 2px #E2E8F0 !important`,
           },
           _active: {
-            filter: "brightness(0.98)",
+            bg: "grey.100",
+            boxShadow: `0px 2px 4px #CBD5E0 !important`,
           },
         },
       },

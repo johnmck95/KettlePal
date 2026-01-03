@@ -110,15 +110,16 @@ export default function TemplateContainer({
           {children}
         </VStack>
       </HStack>
+
       {/* ERROR MESSAGES */}
-      <Box w={"calc(100% - 3.5rem)"} mt={1} ml="3.5rem">
+      <Box w={["100%", "calc(100% - 3.5rem)"]} mt={1} ml={["0", "3.5rem"]}>
         {errors.map((error) => {
           if (!submitted) {
             return null;
           }
           return (
             <Text key={error} color={theme.colors.error} fontSize="xs">
-              {error}
+              • {error}
             </Text>
           );
         })}

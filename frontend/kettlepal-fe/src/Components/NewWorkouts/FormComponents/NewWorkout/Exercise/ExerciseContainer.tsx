@@ -40,7 +40,7 @@ export function ExerciseContainer({
       <VStack
         w={`calc(100%-0.5rem + ${swipeDistance()})`}
         borderRadius={"5px"}
-        p={["0.6rem", "1rem", "1.5rem"]}
+        p="0.75rem"
         mb="0.5rem"
         boxShadow={`0px 1px 4px ${theme.colors.grey[400]}`}
         bg="white"
@@ -81,8 +81,12 @@ export function ExerciseContainer({
           return null;
         }
         return (
-          <Text key={error} color={theme.colors.error} fontSize="xs">
-            {error}
+          <Text
+            key={error}
+            color={theme.colors.error}
+            fontSize={renderAsMobile ? "xs" : "sm"}
+          >
+            • {error}
           </Text>
         );
       })}

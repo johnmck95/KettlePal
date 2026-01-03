@@ -14,11 +14,14 @@ import {
   GridItem,
   HStack,
   Heading,
+  Icon,
   Link,
   Text,
 } from "@chakra-ui/react";
 import {
+  FaCheckCircle,
   FaComment,
+  FaMinusCircle,
   FaPause,
   FaPlay,
   FaPlusCircle,
@@ -52,6 +55,7 @@ export default function CreateWorkout() {
     isOpenSaveWorkout,
     workoutState,
     ref,
+    formHasErrors,
     setTime,
     setComment,
     setShowServerError,
@@ -296,6 +300,12 @@ export default function CreateWorkout() {
           )}
         </Grid>
 
+        {submitted && formHasErrors() && (
+          <Text my="0.25rem" color={theme.colors.error} fontSize="xs">
+            • Please fix the form errors before saving your workout.
+          </Text>
+        )}
+
         {/* ERROR MESSAGES */}
         <Box mt="-0.3rem">
           {workoutErrors.map((error) => {
@@ -304,7 +314,7 @@ export default function CreateWorkout() {
             }
             return (
               <Text key={error} color={theme.colors.error} fontSize="xs">
-                {error}
+                • {error}
               </Text>
             );
           })}
@@ -350,18 +360,20 @@ export default function CreateWorkout() {
         )}
 
         {/* EXERCISES */}
-        <Box>
-          <AnimatePresence>
+        <motion.div layoutRoot>
+          <AnimatePresence mode="popLayout">
             {state.exercises.map((exercise, index) => {
               return (
                 <motion.div
-                  key={`${exercise.key}`}
-                  initial={{ opacity: 0, x: 200 }}
+                  key={exercise.key}
+                  layout="position"
+                  layoutId={exercise.key}
+                  initial={{ opacity: 0, x: 40 }}
                   animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -200 }}
+                  exit={{ opacity: 0, x: -40 }}
                   transition={{
-                    duration: 0.5,
-                    ease: [0.4, 0, 0.2, 1],
+                    layout: { duration: 0.3, ease: "easeInOut" },
+                    opacity: { duration: 0.2 },
                   }}
                 >
                   <Box my="1.25rem">
@@ -381,7 +393,7 @@ export default function CreateWorkout() {
               );
             })}
           </AnimatePresence>
-        </Box>
+        </motion.div>
 
         {!showTracking && (
           <Center mt="auto">
@@ -440,7 +452,7 @@ export default function CreateWorkout() {
                     </Text>
                     <Text fontSize="12px" lineHeight="1" textAlign="justify">
                       The values seen below will be saved. Completed sets are
-                      for mid-workout purposes only.
+                      used to help track progress during the workout.
                     </Text>
                   </AlertDescription>
                 </Alert>
@@ -494,7 +506,17 @@ export default function CreateWorkout() {
                     return (
                       <React.Fragment key={index}>
                         <HStack my="0.25rem">
-                          {isIncomplete ? <span>⚠️</span> : <span>✅</span>}
+                          {isIncomplete ? (
+                            <Icon
+                              as={FaMinusCircle}
+                              color={theme.colors.lion[700]}
+                            />
+                          ) : (
+                            <Icon
+                              as={FaCheckCircle}
+                              color={theme.colors.green[300]}
+                            />
+                          )}
                           <Text fontSize="16px" fontWeight="600">
                             {formatExerciseString({
                               title: exercise.title.value,
