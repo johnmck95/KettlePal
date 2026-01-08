@@ -1,6 +1,5 @@
 export enum WorkoutErrorsMessages {
   date = "Please enter a workout date.",
-  timer = "Please stop the workout timer before saving.",
   comment = "Comment cannot exceed 512 characters.",
 }
 export enum ExerciseErrorsMessages {
@@ -85,9 +84,6 @@ export function validateState(
   // Workout-level validations
   if (!state.date.value) {
     result.root.date.push(WorkoutErrorsMessages.date);
-  }
-  if (timerIsActive) {
-    result.root.elapsedSeconds.push(WorkoutErrorsMessages.timer);
   }
   if (state.comment.value.length > 512) {
     result.root.comment.push(WorkoutErrorsMessages.comment);
