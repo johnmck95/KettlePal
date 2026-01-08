@@ -1,6 +1,6 @@
 import React from "react";
 
-import { GridItem, SimpleGrid, Text } from "@chakra-ui/react";
+import { GridItem, SimpleGrid, Text, useMediaQuery } from "@chakra-ui/react";
 import AddComment from "./FormComponents/NewWorkout/Generic/AddComment";
 import ConfirmModal from "../ConfirmModal";
 import ExerciseTitle from "./FormComponents/NewWorkout/Exercise/ExerciseTitle";
@@ -72,6 +72,7 @@ export default function CreateExercise({
     handleExercise,
     deleteExercise,
   });
+
   const errors = [
     ...exercise.title.errors,
     ...exercise.weight.errors,
@@ -83,6 +84,7 @@ export default function CreateExercise({
     ...exercise.elapsedSeconds.errors,
     ...exercise.multiplier.errors,
   ];
+  const [isMobile] = useMediaQuery("(max-width: 430px)");
 
   return (
     <ExerciseContainer
@@ -100,7 +102,11 @@ export default function CreateExercise({
       forceCloseButton={forceCloseButton}
     >
       {trackWorkout ? (
-        <Text w="100%" color={theme.colors.grey[600]}>
+        <Text
+          w="100%"
+          color={theme.colors.grey[600]}
+          minH={isMobile ? "0" : "1.25rem"}
+        >
           <i>
             {formatExerciseString({
               title: exercise.title.value,
@@ -110,7 +116,7 @@ export default function CreateExercise({
               reps: exercise.reps.value,
               repsDisplay: exercise.repsDisplay.value,
               comment: exercise.comment.value,
-            })}
+            }) || "----"}
           </i>
         </Text>
       ) : (
