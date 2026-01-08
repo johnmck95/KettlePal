@@ -59,6 +59,7 @@ Make sure you **"_Add To Homescreen_"** on mobile devices for the best experienc
 - Update past workouts at any time.
 - Visualize workout trends over time.
 - See all of your personal records in one spot.
+- "Cook Mode" - keep device awake while tracking a workout.
 
 ## Road Map
 
