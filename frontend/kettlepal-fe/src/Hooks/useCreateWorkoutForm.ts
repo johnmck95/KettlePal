@@ -8,6 +8,7 @@ import {
   CreateOrUpdateWorkoutState,
   validateState,
 } from "./HookHelpers/validation";
+import { useWakeLock } from "./useWakeLock";
 
 export const SESSION_STATE_KEY = "createWorkoutState";
 export const STOPWATCH_IS_ACTIVE_KEY = "stopwatchIsActive";
@@ -62,6 +63,9 @@ const useCreateWorkoutForm = () => {
   useEffect(() => {
     timerIsActiveRef.current = timerIsActive;
   }, [timerIsActive]);
+
+  // "Cook Mode" - keep screen awake during workout tracking
+  useWakeLock(showTracking);
 
   const updateState = useCallback(
     (

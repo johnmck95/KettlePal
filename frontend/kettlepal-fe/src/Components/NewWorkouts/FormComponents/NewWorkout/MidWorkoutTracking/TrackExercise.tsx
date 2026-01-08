@@ -27,7 +27,7 @@ export default function TrackExercise({
               exercise.sets.value === "" ? "0" : exercise.sets.value
             } Sets`}</b>
           </FormLabel>
-          <HStack>
+          <HStack spacing={3}>
             <IconButton
               aria-label="Subtract Set"
               icon={<FaMinus />}
