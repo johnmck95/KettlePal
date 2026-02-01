@@ -26,6 +26,7 @@ import {
   FaPlay,
   FaPlusCircle,
   FaSave,
+  FaStopwatch,
 } from "react-icons/fa";
 import ConfirmModal from "../ConfirmModal";
 import LoadingSpinner from "../LoadingSpinner";
@@ -40,6 +41,8 @@ import { useNavigate } from "react-router-dom";
 import Detail from "../ViewWorkouts/ViewDetailedWorkoutModal/Detail";
 import { formatDurationShort } from "../../utils/Time/time";
 import { totalWorkoutWorkCapacity } from "../../utils/Workouts/workouts";
+import useEmomTimer from "../../Hooks/useEmomTimer";
+import EmomTimerModal from "../EmomTimerModal";
 
 export default function CreateWorkout() {
   const {
@@ -71,6 +74,17 @@ export default function CreateWorkout() {
     startOrPause,
   } = useCreateWorkoutForm();
   const navigate = useNavigate();
+  const {
+    modalView,
+    isOpen,
+    emomConfig,
+    onOpen,
+    onClose,
+    onProceed,
+    setModalView,
+  } = useEmomTimer({
+    exercises: state.exercises,
+  });
 
   if (loading) {
     return (
@@ -168,6 +182,26 @@ export default function CreateWorkout() {
               handleStateChange={handleStateChange}
             />
           </GridItem>
+          {showTracking && (
+            <GridItem rowStart={2} rowEnd={2} colStart={1} colEnd={1}>
+              <Button
+                size={["sm", "md"]}
+                variant="secondary"
+                leftIcon={<FaStopwatch />}
+                onClick={onOpen}
+                w="100%"
+                maxW={"200px"}
+                sx={{
+                  _focus: {
+                    borderColor: theme.colors.green[300],
+                    boxShadow: `0 0 0 1px ${theme.colors.green[300]}`,
+                  },
+                }}
+              >
+                EMOM Timer
+              </Button>
+            </GridItem>
+          )}
 
           {/* STOPWATCH */}
           <GridItem
@@ -434,6 +468,16 @@ export default function CreateWorkout() {
             />
           </Alert>
         )}
+
+        <EmomTimerModal
+          modalView={modalView}
+          isOpen={isOpen}
+          onClose={onClose}
+          onProceed={onProceed}
+          setModalView={setModalView}
+          exercises={state.exercises}
+          emomConfig={emomConfig}
+        />
 
         <ConfirmModal
           isOpen={isOpenSaveWorkout}

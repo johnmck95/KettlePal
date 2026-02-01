@@ -1,0 +1,143 @@
+import { useEffect, useMemo, useState } from "react";
+import { EmomConfig } from "../Hooks/useEmomTimer";
+import { CreateOrUpdateWorkoutState } from "../Hooks/HookHelpers/validation";
+import {
+  Button,
+  Flex,
+  Text,
+  Heading,
+  ModalBody,
+  ModalFooter,
+  VStack,
+} from "@chakra-ui/react";
+import beep from "../utils/audio";
+import theme from "../Constants/theme";
+
+export default function EmomTimerClock({
+  exercises: exercisesFromState,
+  emomConfig: config,
+  setModalView,
+}: {
+  exercises: CreateOrUpdateWorkoutState["exercises"];
+  emomConfig: EmomConfig;
+  setModalView: React.Dispatch<React.SetStateAction<"inputs" | "clock">>;
+}) {
+  const linkedExercises = useMemo(() => {
+    if (config.mode === "manual") {
+      return [];
+    }
+    return exercisesFromState.filter((e) =>
+      config.exerciseKeys?.includes(e.key ?? "")
+    );
+  }, [config, exercisesFromState]);
+
+  const [elapsed, setElapsed] = useState(0);
+  const [isRunning, setIsRunning] = useState(true);
+  const totalSeconds = config.rounds * 60;
+
+  const currentRound = Math.min(Math.floor(elapsed / 60) + 1, config.rounds);
+
+  const secondsLeftInRound = 59 - (elapsed % 60);
+
+  useEffect(() => {
+    if (!isRunning) return;
+
+    const interval = setInterval(() => {
+      setElapsed((prev) => {
+        const next = prev + 1;
+        const secondsLeft = 59 - (next % 60);
+
+        const totalRounds = Math.ceil(totalSeconds / 60);
+        const currentRound = Math.floor(next / 60) + 1; // 1-indexed
+        const roundsRemaining = totalRounds - currentRound;
+
+        // Play a countdown of 'beeps' leading into each new round
+        if (roundsRemaining > 0) {
+          if (secondsLeft === 10)
+            beep({ frequency: 900, duration: 60, volume: 0.2 });
+          if (secondsLeft === 5)
+            beep({ frequency: 900, duration: 60, volume: 0.2 });
+          if (secondsLeft <= 3 && secondsLeft > 0)
+            beep({ frequency: 700, duration: 60, volume: 0.4 });
+          if (secondsLeft === 0)
+            beep({ frequency: 700, duration: 450, volume: 0.6 }); // round change
+        }
+
+        // End of EMOM, single final beep.
+        if (next >= totalSeconds) {
+          clearInterval(interval);
+          beep({ frequency: 440, duration: 500, volume: 0.6 });
+          return prev;
+        }
+
+        return next;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [isRunning, totalSeconds]);
+
+  return (
+    <>
+      <ModalBody>
+        <Flex
+          direction="column"
+          align="center"
+          justify="center"
+          minH="360px"
+          gap={6}
+        >
+          {/* Round info */}
+          <VStack spacing={1}>
+            <Text
+              fontSize="sm"
+              letterSpacing="0.15em"
+              fontWeight="bold"
+              color={theme.colors.grey[500]}
+            >
+              ROUND
+            </Text>
+
+            <Text fontSize="lg" fontWeight="semibold">
+              {currentRound}/{config.rounds}
+            </Text>
+          </VStack>
+
+          {/* Main timer */}
+          <Heading fontSize="7xl" fontWeight="bold" lineHeight="1">
+            {secondsLeftInRound}
+          </Heading>
+
+          {/* Next up */}
+          {linkedExercises?.length > 0 && (
+            <Text color={theme.colors.grey[500]} fontSize="sm">
+              Next:{" "}
+              {
+                linkedExercises[currentRound % linkedExercises.length]?.title
+                  .value
+              }
+            </Text>
+          )}
+        </Flex>
+      </ModalBody>
+      <ModalFooter>
+        <Flex w="100%" justify="space-between">
+          <Button
+            variant="link"
+            onClick={() => {
+              setElapsed(0);
+              setIsRunning(false);
+              setModalView("inputs");
+            }}
+          >
+            Reset
+          </Button>
+
+          <Button variant="secondary" onClick={() => setIsRunning((p) => !p)}>
+            {isRunning ? "Pause" : "Resume"}
+          </Button>
+        </Flex>
+      </ModalFooter>
+    </>
+  );
+}
