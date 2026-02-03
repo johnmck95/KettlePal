@@ -29,8 +29,11 @@ export default function EmomTimerModal({
   onProceed: (config: EmomConfig) => void;
   setModalView: React.Dispatch<React.SetStateAction<"inputs" | "clock">>;
 }) {
-  const safeExercises = Array.isArray(exercises) ? exercises : [];
   const [phase, setPhase] = useState<"delay" | "running">("delay");
+  const safeExercises = useMemo(
+    () => (Array.isArray(exercises) ? exercises : []),
+    [exercises]
+  );
 
   useEffect(() => {
     if (modalView === "clock") {
