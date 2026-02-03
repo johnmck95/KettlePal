@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { EmomConfig } from "../Hooks/useEmomTimer";
 import { CreateOrUpdateWorkoutState } from "../Hooks/HookHelpers/validation";
 import {
@@ -14,29 +14,18 @@ import theme from "../Constants/theme";
 import { beep } from "../utils/audio";
 
 export default function EmomTimerClock({
-  exercises: exercisesFromState,
+  linkedExercises,
   emomConfig: config,
   setModalView,
 }: {
-  exercises: CreateOrUpdateWorkoutState["exercises"];
+  linkedExercises: CreateOrUpdateWorkoutState["exercises"];
   emomConfig: EmomConfig;
   setModalView: React.Dispatch<React.SetStateAction<"inputs" | "clock">>;
 }) {
-  const linkedExercises = useMemo(() => {
-    if (config.mode === "manual") {
-      return [];
-    }
-    return exercisesFromState.filter((e) =>
-      config.exerciseKeys?.includes(e.key ?? "")
-    );
-  }, [config, exercisesFromState]);
-
   const [elapsed, setElapsed] = useState(0);
   const [isRunning, setIsRunning] = useState(true);
   const totalSeconds = config.rounds * 60;
-
   const currentRound = Math.min(Math.floor(elapsed / 60) + 1, config.rounds);
-
   const secondsLeftInRound = 59 - (elapsed % 60);
 
   useEffect(() => {
@@ -66,14 +55,11 @@ export default function EmomTimerClock({
           if (secondsLeft === 10)
             beep({ frequency: 900, duration: 60, volume: 0.2 });
 
-          if (secondsLeft === 5)
-            beep({ frequency: 900, duration: 60, volume: 0.2 });
-
-          if (secondsLeft <= 3 && secondsLeft > 0)
+          if (secondsLeft <= 5 && secondsLeft > 0)
             beep({ frequency: 700, duration: 60, volume: 0.4 });
 
           if (secondsLeft === 0)
-            beep({ frequency: 700, duration: 450, volume: 0.6 });
+            beep({ frequency: 700, duration: 450, volume: 0.4 });
         }
 
         return next;
@@ -117,7 +103,7 @@ export default function EmomTimerClock({
           {/* Next up */}
           {linkedExercises?.length > 0 && (
             <Text color={theme.colors.grey[500]} fontSize="sm">
-              Next:{" "}
+              <b>NEXT:</b>{" "}
               {
                 linkedExercises[currentRound % linkedExercises.length]?.title
                   .value
