@@ -10,8 +10,8 @@ import {
   ModalFooter,
   VStack,
 } from "@chakra-ui/react";
-import beep from "../utils/audio";
 import theme from "../Constants/theme";
+import { beep } from "../utils/audio";
 
 export default function EmomTimerClock({
   exercises: exercisesFromState,
@@ -42,32 +42,38 @@ export default function EmomTimerClock({
   useEffect(() => {
     if (!isRunning) return;
 
+    // slight audible timing issues are caused by lag in the audio beep, this is mostly just Safarii.
+    // Logic is sound. If issues persist, update calibrateLatency() in audio.ts
     const interval = setInterval(() => {
       setElapsed((prev) => {
         const next = prev + 1;
         const secondsLeft = 59 - (next % 60);
-
         const totalRounds = Math.ceil(totalSeconds / 60);
-        const currentRound = Math.floor(next / 60) + 1; // 1-indexed
+        const currentRound = Math.floor(next / 60) + 1;
         const roundsRemaining = totalRounds - currentRound;
 
-        // Play a countdown of 'beeps' leading into each new round
+        const isFinalSecond = next === totalSeconds - 1;
+
+        // Final beep - end of EMOM.
+        if (isFinalSecond) {
+          clearInterval(interval);
+          beep({ frequency: 440, duration: 750, volume: 0.6 });
+          return next;
+        }
+
+        // Countdown beeps (skip entirely on last round)
         if (roundsRemaining > 0) {
           if (secondsLeft === 10)
             beep({ frequency: 900, duration: 60, volume: 0.2 });
+
           if (secondsLeft === 5)
             beep({ frequency: 900, duration: 60, volume: 0.2 });
+
           if (secondsLeft <= 3 && secondsLeft > 0)
             beep({ frequency: 700, duration: 60, volume: 0.4 });
-          if (secondsLeft === 0)
-            beep({ frequency: 700, duration: 450, volume: 0.6 }); // round change
-        }
 
-        // End of EMOM, single final beep.
-        if (next >= totalSeconds) {
-          clearInterval(interval);
-          beep({ frequency: 440, duration: 500, volume: 0.6 });
-          return prev;
+          if (secondsLeft === 0)
+            beep({ frequency: 700, duration: 450, volume: 0.6 });
         }
 
         return next;

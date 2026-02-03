@@ -43,6 +43,7 @@ import { formatDurationShort } from "../../utils/Time/time";
 import { totalWorkoutWorkCapacity } from "../../utils/Workouts/workouts";
 import useEmomTimer from "../../Hooks/useEmomTimer";
 import EmomTimerModal from "../EmomTimerModal";
+import { initAudio } from "../../utils/audio";
 
 export default function CreateWorkout() {
   const {
@@ -188,7 +189,10 @@ export default function CreateWorkout() {
                 size={["sm", "md"]}
                 variant="secondary"
                 leftIcon={<FaStopwatch />}
-                onClick={onOpen}
+                onClick={() => {
+                  initAudio();
+                  onOpen();
+                }}
                 w="100%"
                 maxW={"200px"}
                 sx={{
