@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { EmomConfig } from "../Hooks/useEmomTimer";
-import { CreateOrUpdateWorkoutState } from "../Hooks/HookHelpers/validation";
+import { EmomConfig } from "../../Hooks/useEmomTimer";
+import { CreateOrUpdateWorkoutState } from "../../Hooks/HookHelpers/validation";
 import {
   Button,
   Flex,
@@ -10,15 +10,16 @@ import {
   ModalFooter,
   VStack,
 } from "@chakra-ui/react";
-import theme from "../Constants/theme";
-import { beep } from "../utils/audio";
+import theme from "../../Constants/theme";
+import { beep } from "../../utils/audio";
+import { formatExerciseString } from "../../utils/Exercises/exercises";
 
 export default function EmomTimerClock({
-  linkedExercises,
+  schedule,
   emomConfig: config,
   setModalView,
 }: {
-  linkedExercises: CreateOrUpdateWorkoutState["exercises"];
+  schedule: CreateOrUpdateWorkoutState["exercises"];
   emomConfig: EmomConfig;
   setModalView: React.Dispatch<React.SetStateAction<"inputs" | "clock">>;
 }) {
@@ -27,6 +28,8 @@ export default function EmomTimerClock({
   const totalSeconds = config.rounds * 60;
   const currentRound = Math.min(Math.floor(elapsed / 60) + 1, config.rounds);
   const secondsLeftInRound = 59 - (elapsed % 60);
+  const currentExercise = schedule[currentRound - 1];
+  const nextExercise = schedule[currentRound];
 
   useEffect(() => {
     if (!isRunning) return;
@@ -79,7 +82,7 @@ export default function EmomTimerClock({
           minH="360px"
           gap={6}
         >
-          {/* Round info */}
+          {/* ROUND */}
           <VStack spacing={1}>
             <Text
               fontSize="sm"
@@ -94,20 +97,40 @@ export default function EmomTimerClock({
               {currentRound}/{config.rounds}
             </Text>
           </VStack>
+          {/* CURRENT EXERCISE */}
+          {currentExercise && (
+            <Text color={theme.colors.grey[500]} fontSize="sm">
+              <b>CURRENT EXERCISE: </b>{" "}
+              {formatExerciseString({
+                title: currentExercise.title.value,
+                weight: currentExercise.weight.value,
+                weightUnit: currentExercise.weightUnit.value,
+                sets: currentExercise.sets.value,
+                reps: currentExercise.reps.value,
+                repsDisplay: currentExercise.repsDisplay.value,
+                comment: currentExercise.comment.value,
+              }) || "----"}
+            </Text>
+          )}
 
-          {/* Main timer */}
+          {/* TIMER */}
           <Heading fontSize="7xl" fontWeight="bold" lineHeight="1">
             {secondsLeftInRound}
           </Heading>
 
-          {/* Next up */}
-          {linkedExercises?.length > 0 && (
+          {/* NEXT EXERCISE*/}
+          {nextExercise && (
             <Text color={theme.colors.grey[500]} fontSize="sm">
               <b>NEXT:</b>{" "}
-              {
-                linkedExercises[currentRound % linkedExercises.length]?.title
-                  .value
-              }
+              {formatExerciseString({
+                title: nextExercise.title.value,
+                weight: nextExercise.weight.value,
+                weightUnit: nextExercise.weightUnit.value,
+                sets: nextExercise.sets.value,
+                reps: nextExercise.reps.value,
+                repsDisplay: nextExercise.repsDisplay.value,
+                comment: nextExercise.comment.value,
+              }) || "----"}
             </Text>
           )}
         </Flex>

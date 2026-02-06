@@ -5,12 +5,13 @@ import {
   ModalHeader,
   ModalOverlay,
 } from "@chakra-ui/react";
-import theme from "../Constants/theme";
-import { CreateOrUpdateWorkoutState } from "../Hooks/HookHelpers/validation";
+import theme from "../../Constants/theme";
+import { CreateOrUpdateWorkoutState } from "../../Hooks/HookHelpers/validation";
 import EmomTimerInputs from "./EmomTimerInputs";
 import EmomTimerClock from "./EmomTimerClock";
 import EmomStartDelay from "./EmomStartDelay";
-import { EmomConfig } from "../Hooks/useEmomTimer";
+import { EmomConfig } from "../../Hooks/useEmomTimer";
+import { buildEmomSchedule } from "../../utils/Emom/emom";
 
 export default function EmomTimerModal({
   modalView,
@@ -50,6 +51,11 @@ export default function EmomTimerModal({
     );
   }, [emomConfig, safeExercises]);
 
+  const emomSchedule = useMemo(() => {
+    if (emomConfig.mode === "manual") return [];
+    return buildEmomSchedule(linkedExercises);
+  }, [linkedExercises, emomConfig.mode]);
+
   return (
     <Modal
       isOpen={isOpen}
@@ -73,13 +79,13 @@ export default function EmomTimerModal({
           <EmomStartDelay
             seconds={emomConfig.startDelaySeconds}
             onComplete={() => setPhase("running")}
-            firstExercise={linkedExercises[0]}
+            firstExercise={emomSchedule[0]}
             onReset={() => setModalView("inputs")}
           />
         ) : (
           <EmomTimerClock
             emomConfig={emomConfig}
-            linkedExercises={linkedExercises}
+            schedule={emomSchedule}
             setModalView={setModalView}
           />
         )}

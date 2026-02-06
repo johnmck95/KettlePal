@@ -6,9 +6,9 @@ import {
   Box,
   FormControl,
 } from "@chakra-ui/react";
-import { CreateOrUpdateWorkoutState } from "../Hooks/HookHelpers/validation";
-import { formatExerciseString } from "../utils/Exercises/exercises";
-import theme from "../Constants/theme";
+import { CreateOrUpdateWorkoutState } from "../../Hooks/HookHelpers/validation";
+import { formatExerciseString } from "../../utils/Exercises/exercises";
+import theme from "../../Constants/theme";
 
 export function LinkedEmomTab({
   exercises,

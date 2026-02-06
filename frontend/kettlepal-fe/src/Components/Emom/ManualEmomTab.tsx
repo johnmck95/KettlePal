@@ -9,7 +9,7 @@ import {
   FormHelperText,
   VStack,
 } from "@chakra-ui/react";
-import theme from "../Constants/theme";
+import theme from "../../Constants/theme";
 
 export function ManualEmomTab({
   rounds,

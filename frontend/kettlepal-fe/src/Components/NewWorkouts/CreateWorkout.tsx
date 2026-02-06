@@ -42,7 +42,7 @@ import Detail from "../ViewWorkouts/ViewDetailedWorkoutModal/Detail";
 import { formatDurationShort } from "../../utils/Time/time";
 import { totalWorkoutWorkCapacity } from "../../utils/Workouts/workouts";
 import useEmomTimer from "../../Hooks/useEmomTimer";
-import EmomTimerModal from "../EmomTimerModal";
+import EmomTimerModal from "../Emom/EmomTimerModal";
 import { initAudio } from "../../utils/audio";
 
 export default function CreateWorkout() {

@@ -8,10 +8,10 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import theme from "../Constants/theme";
-import { beep } from "../utils/audio";
-import { CreateOrUpdateWorkoutState } from "../Hooks/HookHelpers/validation";
-import { formatExerciseString } from "../utils/Exercises/exercises";
+import theme from "../../Constants/theme";
+import { beep } from "../../utils/audio";
+import { CreateOrUpdateWorkoutState } from "../../Hooks/HookHelpers/validation";
+import { formatExerciseString } from "../../utils/Exercises/exercises";
 
 export default function EmomStartDelay({
   seconds,

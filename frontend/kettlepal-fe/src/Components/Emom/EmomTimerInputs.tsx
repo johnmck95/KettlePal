@@ -21,10 +21,10 @@ import {
   TabPanels,
   Tabs,
 } from "@chakra-ui/react";
-import theme from "../Constants/theme";
+import theme from "../../Constants/theme";
 import { useMemo, useState } from "react";
 
-import { CreateOrUpdateWorkoutState } from "../Hooks/HookHelpers/validation";
+import { CreateOrUpdateWorkoutState } from "../../Hooks/HookHelpers/validation";
 import { LinkedEmomTab } from "./LinkedEmomTab";
 import { ManualEmomTab } from "./ManualEmomTab";
 import { FaLink, FaKeyboard } from "react-icons/fa";
