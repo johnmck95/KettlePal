@@ -41,7 +41,6 @@ export default function EmomStartDelay({
         if (next === 0) {
           beep({ frequency: 700, duration: 450, volume: 0.4 });
           clearInterval(interval);
-          onComplete();
         }
 
         return next;
@@ -50,6 +49,16 @@ export default function EmomStartDelay({
 
     return () => clearInterval(interval);
   }, [isRunning, onComplete]);
+
+  useEffect(() => {
+    setRemaining(seconds);
+  }, [seconds]);
+
+  useEffect(() => {
+    if (remaining === 0) {
+      onComplete();
+    }
+  }, [remaining, onComplete]);
 
   return (
     <>

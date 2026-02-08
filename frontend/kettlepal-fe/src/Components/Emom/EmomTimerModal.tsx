@@ -67,8 +67,6 @@ export default function EmomTimerModal({
     >
       <ModalOverlay />
       <ModalContent m="1rem">
-        <ModalHeader color={theme.colors.olive[500]}>EMOM Timer</ModalHeader>
-
         {modalView === "inputs" ? (
           <EmomTimerInputs
             exercises={safeExercises}
