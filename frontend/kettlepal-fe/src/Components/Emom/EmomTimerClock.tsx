@@ -5,7 +5,6 @@ import {
   Button,
   Flex,
   Text,
-  Heading,
   ModalBody,
   ModalFooter,
   VStack,

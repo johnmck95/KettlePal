@@ -1,13 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  Button,
-  Flex,
-  Heading,
-  ModalBody,
-  ModalFooter,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
+import { Button, Flex, ModalBody, ModalFooter, Text } from "@chakra-ui/react";
 import theme from "../../Constants/theme";
 import { beep } from "../../utils/audio";
 import { CreateOrUpdateWorkoutState } from "../../Hooks/HookHelpers/validation";

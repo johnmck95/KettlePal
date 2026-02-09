@@ -1,11 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
-} from "@chakra-ui/react";
-import theme from "../../Constants/theme";
+import { Modal, ModalContent, ModalOverlay } from "@chakra-ui/react";
 import { CreateOrUpdateWorkoutState } from "../../Hooks/HookHelpers/validation";
 import EmomTimerInputs from "./EmomTimerInputs";
 import EmomTimerClock from "./EmomTimerClock";
