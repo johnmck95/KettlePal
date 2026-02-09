@@ -12,6 +12,7 @@ import theme from "../../Constants/theme";
 import { beep } from "../../utils/audio";
 import { CreateOrUpdateWorkoutState } from "../../Hooks/HookHelpers/validation";
 import { formatExerciseString } from "../../utils/Exercises/exercises";
+import Countdown from "./Countdown";
 
 export default function EmomStartDelay({
   seconds,
@@ -68,41 +69,37 @@ export default function EmomStartDelay({
           align="center"
           justify="center"
           minH="360px"
-          gap={6}
+          gap={10}
         >
-          <VStack spacing={2}>
+          <Text
+            fontSize="sm"
+            letterSpacing="0.15em"
+            fontWeight="bold"
+            color={theme.colors.grey[500]}
+          >
+            WORKOUT STARTS IN
+          </Text>
+
+          <Countdown remaining={remaining} />
+
+          {firstExercise && (
             <Text
-              fontSize="sm"
-              letterSpacing="0.15em"
-              fontWeight="bold"
               color={theme.colors.grey[500]}
+              fontSize="sm"
+              textAlign="center"
             >
-              WORKOUT STARTS IN
+              <b>FIRST EXERCISE:</b>{" "}
+              {formatExerciseString({
+                title: firstExercise.title.value,
+                weight: firstExercise.weight.value,
+                weightUnit: firstExercise.weightUnit.value,
+                sets: firstExercise.sets.value,
+                reps: firstExercise.reps.value,
+                repsDisplay: firstExercise.repsDisplay.value,
+                comment: firstExercise.comment.value,
+              }) || "----"}
             </Text>
-
-            <Heading fontSize="7xl" fontWeight="bold">
-              {remaining}
-            </Heading>
-
-            {firstExercise && (
-              <Text
-                color={theme.colors.grey[500]}
-                fontSize="sm"
-                textAlign="center"
-              >
-                <b>FIRST EXERCISE:</b>{" "}
-                {formatExerciseString({
-                  title: firstExercise.title.value,
-                  weight: firstExercise.weight.value,
-                  weightUnit: firstExercise.weightUnit.value,
-                  sets: firstExercise.sets.value,
-                  reps: firstExercise.reps.value,
-                  repsDisplay: firstExercise.repsDisplay.value,
-                  comment: firstExercise.comment.value,
-                }) || "----"}
-              </Text>
-            )}
-          </VStack>
+          )}
         </Flex>
       </ModalBody>
 

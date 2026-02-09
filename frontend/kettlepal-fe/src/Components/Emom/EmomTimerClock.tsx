@@ -13,6 +13,7 @@ import {
 import theme from "../../Constants/theme";
 import { beep } from "../../utils/audio";
 import { formatExerciseString } from "../../utils/Exercises/exercises";
+import Countdown from "./Countdown";
 
 export default function EmomTimerClock({
   schedule,
@@ -114,9 +115,7 @@ export default function EmomTimerClock({
           )}
 
           {/* TIMER */}
-          <Heading fontSize="7xl" fontWeight="bold" lineHeight="1">
-            {secondsLeftInRound}
-          </Heading>
+          <Countdown remaining={secondsLeftInRound} />
 
           {/* NEXT EXERCISE*/}
           {nextExercise && (
