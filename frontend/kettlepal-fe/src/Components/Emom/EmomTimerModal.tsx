@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { Modal, ModalContent, ModalOverlay } from "@chakra-ui/react";
+import { Box, Modal, ModalContent, ModalOverlay } from "@chakra-ui/react";
 import { CreateOrUpdateWorkoutState } from "../../Hooks/HookHelpers/validation";
 import EmomTimerInputs from "./EmomTimerInputs";
 import EmomTimerClock from "./EmomTimerClock";
@@ -51,36 +51,40 @@ export default function EmomTimerModal({
   }, [linkedExercises, emomConfig.mode]);
 
   return (
-    <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      motionPreset="slideInBottom"
-      isCentered
-      scrollBehavior="inside"
-      size="xl"
-    >
+    <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside" isCentered>
       <ModalOverlay />
-      <ModalContent m="1rem">
-        {modalView === "inputs" ? (
-          <EmomTimerInputs
-            exercises={safeExercises}
-            onProceed={onProceed}
-            onClose={onClose}
-          />
-        ) : phase === "delay" ? (
-          <EmomStartDelay
-            seconds={emomConfig.startDelaySeconds}
-            onComplete={() => setPhase("running")}
-            firstExercise={emomSchedule[0]}
-            onReset={() => setModalView("inputs")}
-          />
-        ) : (
-          <EmomTimerClock
-            emomConfig={emomConfig}
-            schedule={emomSchedule}
-            setModalView={setModalView}
-          />
-        )}
+      <ModalContent
+        maxW="min(1080px, calc(100vw - 2rem))"
+        maxH="min(900px, calc(100vh - 2rem))"
+        h="100%"
+        borderRadius="xl"
+        overflow="hidden"
+        justifyContent={"center"}
+        alignItems={"center"}
+        px={["0rem 0rem 2rem"]}
+      >
+        <Box maxW="720px" w="100%" h="100%">
+          {modalView === "inputs" ? (
+            <EmomTimerInputs
+              exercises={safeExercises}
+              onProceed={onProceed}
+              onClose={onClose}
+            />
+          ) : phase === "delay" ? (
+            <EmomStartDelay
+              seconds={emomConfig.startDelaySeconds}
+              onComplete={() => setPhase("running")}
+              firstExercise={emomSchedule[0]}
+              onReset={() => setModalView("inputs")}
+            />
+          ) : (
+            <EmomTimerClock
+              emomConfig={emomConfig}
+              schedule={emomSchedule}
+              setModalView={setModalView}
+            />
+          )}
+        </Box>
       </ModalContent>
     </Modal>
   );

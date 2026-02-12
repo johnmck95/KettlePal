@@ -1,5 +1,12 @@
 import { useEffect, useState } from "react";
-import { Button, Flex, ModalBody, ModalFooter, Text } from "@chakra-ui/react";
+import {
+  Button,
+  Flex,
+  ModalBody,
+  ModalFooter,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 import theme from "../../Constants/theme";
 import { beep } from "../../utils/audio";
 import { CreateOrUpdateWorkoutState } from "../../Hooks/HookHelpers/validation";
@@ -54,20 +61,22 @@ export default function EmomStartDelay({
   }, [remaining, onComplete]);
 
   return (
-    <>
+    <VStack h="100%" alignItems="space-between" py="1rem">
       <ModalBody>
         <Flex
           direction="column"
           align="center"
-          justify="center"
+          justify="space-evenly"
           minH="360px"
+          h="100%"
           gap={10}
         >
           <Text
-            fontSize="sm"
+            fontSize={["xl", "2xl", "3xl"]}
             letterSpacing="0.15em"
             fontWeight="bold"
             color={theme.colors.grey[500]}
+            textAlign={"center"}
           >
             WORKOUT STARTS IN
           </Text>
@@ -75,22 +84,32 @@ export default function EmomStartDelay({
           <Countdown remaining={remaining} />
 
           {firstExercise && (
-            <Text
-              color={theme.colors.grey[500]}
-              fontSize="sm"
-              textAlign="center"
-            >
-              <b>FIRST EXERCISE:</b>{" "}
-              {formatExerciseString({
-                title: firstExercise.title.value,
-                weight: firstExercise.weight.value,
-                weightUnit: firstExercise.weightUnit.value,
-                sets: firstExercise.sets.value,
-                reps: firstExercise.reps.value,
-                repsDisplay: firstExercise.repsDisplay.value,
-                comment: firstExercise.comment.value,
-              }) || "----"}
-            </Text>
+            <VStack>
+              <Text
+                fontSize={["sm", "md", "lg", "xl"]}
+                letterSpacing="0.15em"
+                fontWeight="bold"
+                color={theme.colors.grey[500]}
+                textAlign={"center"}
+              >
+                FIRST EXERCISE
+              </Text>
+              <Text
+                color={theme.colors.grey[600]}
+                fontSize={["xs", "sm", "md", "lg"]}
+                textAlign="center"
+              >
+                {formatExerciseString({
+                  title: firstExercise.title.value,
+                  weight: firstExercise.weight.value,
+                  weightUnit: firstExercise.weightUnit.value,
+                  sets: firstExercise.sets.value,
+                  reps: firstExercise.reps.value,
+                  repsDisplay: firstExercise.repsDisplay.value,
+                  comment: firstExercise.comment.value,
+                }) || "----"}
+              </Text>
+            </VStack>
           )}
         </Flex>
       </ModalBody>
@@ -113,6 +132,6 @@ export default function EmomStartDelay({
           </Button>
         </Flex>
       </ModalFooter>
-    </>
+    </VStack>
   );
 }

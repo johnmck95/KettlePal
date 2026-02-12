@@ -8,6 +8,7 @@ import {
   ModalBody,
   ModalFooter,
   VStack,
+  HStack,
 } from "@chakra-ui/react";
 import theme from "../../Constants/theme";
 import { beep } from "../../utils/audio";
@@ -73,66 +74,108 @@ export default function EmomTimerClock({
   }, [isRunning, totalSeconds]);
 
   return (
-    <>
+    <VStack h="100%" alignItems="space-between" py="1rem">
       <ModalBody>
         <Flex
           direction="column"
           align="center"
-          justify="center"
+          justify="space-evenly"
           minH="360px"
-          gap={6}
+          h="100%"
         >
-          {/* ROUND */}
-          <VStack spacing={1}>
-            <Text
-              fontSize="sm"
-              letterSpacing="0.15em"
-              fontWeight="bold"
-              color={theme.colors.grey[500]}
-            >
-              ROUND
-            </Text>
+          <HStack
+            justifyContent={currentExercise ? "space-between" : "center"}
+            w="100%"
+          >
+            {/* ROUND */}
+            <VStack alignItems="flex-start">
+              <Text
+                fontSize={["md", "lg", "xl", "2xl"]}
+                letterSpacing="0.15em"
+                fontWeight="bold"
+                color={theme.colors.grey[500]}
+                textAlign="center"
+              >
+                ROUND
+              </Text>
+              <Text
+                fontSize={["sm", "md", "lg", "xl"]}
+                fontWeight="semibold"
+                w="100%"
+                textAlign="center"
+                color={theme.colors.grey[700]}
+              >
+                {currentRound} / {config.rounds}
+              </Text>
+            </VStack>
 
-            <Text fontSize="lg" fontWeight="semibold">
-              {currentRound}/{config.rounds}
-            </Text>
-          </VStack>
-          {/* CURRENT EXERCISE */}
-          {currentExercise && (
-            <Text color={theme.colors.grey[500]} fontSize="sm">
-              <b>CURRENT EXERCISE: </b>{" "}
-              {formatExerciseString({
-                title: currentExercise.title.value,
-                weight: currentExercise.weight.value,
-                weightUnit: currentExercise.weightUnit.value,
-                sets: currentExercise.sets.value,
-                reps: currentExercise.reps.value,
-                repsDisplay: currentExercise.repsDisplay.value,
-                comment: currentExercise.comment.value,
-              }) || "----"}
-            </Text>
-          )}
+            {/* CURRENT EXERCISE */}
+            {currentExercise && (
+              <VStack>
+                <Text
+                  fontSize={["md", "lg", "xl", "2xl"]}
+                  letterSpacing="0.15em"
+                  fontWeight="bold"
+                  color={theme.colors.grey[500]}
+                  textAlign={"center"}
+                >
+                  CURRENT EXERCISE
+                </Text>
+                <Text
+                  color={theme.colors.grey[700]}
+                  fontSize={["sm", "md", "lg", "xl"]}
+                  fontWeight="semibold"
+                  textAlign="center"
+                >
+                  {formatExerciseString({
+                    title: currentExercise.title.value,
+                    weight: currentExercise.weight.value,
+                    weightUnit: currentExercise.weightUnit.value,
+                    sets: currentExercise.sets.value,
+                    reps: currentExercise.reps.value,
+                    repsDisplay: currentExercise.repsDisplay.value,
+                    comment: currentExercise.comment.value,
+                  }) || "----"}
+                </Text>
+              </VStack>
+            )}
+          </HStack>
 
           {/* TIMER */}
           <Countdown remaining={secondsLeftInRound} />
 
           {/* NEXT EXERCISE*/}
           {nextExercise && (
-            <Text color={theme.colors.grey[500]} fontSize="sm">
-              <b>NEXT:</b>{" "}
-              {formatExerciseString({
-                title: nextExercise.title.value,
-                weight: nextExercise.weight.value,
-                weightUnit: nextExercise.weightUnit.value,
-                sets: nextExercise.sets.value,
-                reps: nextExercise.reps.value,
-                repsDisplay: nextExercise.repsDisplay.value,
-                comment: nextExercise.comment.value,
-              }) || "----"}
-            </Text>
+            <VStack>
+              <Text
+                fontSize={["sm", "md", "lg", "xl"]}
+                letterSpacing="0.15em"
+                fontWeight="bold"
+                color={theme.colors.grey[500]}
+                textAlign={"center"}
+              >
+                NEXT EXERCISE
+              </Text>
+              <Text
+                color={theme.colors.grey[600]}
+                fontSize={["xs", "sm", "md", "lg"]}
+                textAlign="center"
+              >
+                {formatExerciseString({
+                  title: nextExercise.title.value,
+                  weight: nextExercise.weight.value,
+                  weightUnit: nextExercise.weightUnit.value,
+                  sets: nextExercise.sets.value,
+                  reps: nextExercise.reps.value,
+                  repsDisplay: nextExercise.repsDisplay.value,
+                  comment: nextExercise.comment.value,
+                }) || "----"}
+              </Text>
+            </VStack>
           )}
         </Flex>
       </ModalBody>
+
       <ModalFooter>
         <Flex w="100%" justify="space-between">
           <Button
@@ -151,6 +194,6 @@ export default function EmomTimerClock({
           </Button>
         </Flex>
       </ModalFooter>
-    </>
+    </VStack>
   );
 }

@@ -20,6 +20,7 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
+  VStack,
 } from "@chakra-ui/react";
 import theme from "../../Constants/theme";
 import { useMemo, useState } from "react";
@@ -74,7 +75,7 @@ export default function EmomTimerInputs({
     );
   };
   return (
-    <>
+    <VStack h="100%" alignItems="space-between" py="1rem">
       <ModalBody>
         <Tabs
           colorScheme="green"
@@ -82,7 +83,7 @@ export default function EmomTimerInputs({
           index={tabIndex}
           onChange={setTabIndex}
         >
-          <TabList>
+          <TabList mb="2rem">
             {/* TABS */}
             <Tab>
               <HStack spacing={2}>
@@ -174,6 +175,6 @@ export default function EmomTimerInputs({
           </Button>
         </Flex>
       </ModalFooter>
-    </>
+    </VStack>
   );
 }
