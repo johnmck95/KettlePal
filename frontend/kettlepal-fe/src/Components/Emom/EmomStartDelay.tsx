@@ -61,16 +61,9 @@ export default function EmomStartDelay({
   }, [remaining, onComplete]);
 
   return (
-    <VStack h="100%" alignItems="space-between" py="1rem">
+    <VStack h="100%" alignItems="space-between" mt="1rem">
       <ModalBody>
-        <Flex
-          direction="column"
-          align="center"
-          justify="space-evenly"
-          minH="360px"
-          h="100%"
-          gap={10}
-        >
+        <Flex direction="column" align="center" minH="360px" h="100%" gap={10}>
           <Text
             fontSize={["xl", "2xl", "3xl"]}
             letterSpacing="0.15em"
@@ -115,7 +108,7 @@ export default function EmomStartDelay({
       </ModalBody>
 
       <ModalFooter>
-        <Flex w="100%" justify="space-between">
+        <Flex w="100%" justify="space-between" mb="2rem">
           <Button
             variant="link"
             onClick={() => {

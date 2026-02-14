@@ -39,7 +39,13 @@ export default function Countdwn({ remaining }: { remaining: number }) {
   }
 
   return (
-    <Box position="relative" width={["95%", "75%"]} aspectRatio={1} mx="auto">
+    <Box
+      position="relative"
+      width={["95%", "75%"]}
+      aspectRatio={1}
+      mx="auto"
+      my="2rem"
+    >
       {/* Background Circle */}
       <Box
         position="absolute"

@@ -82,6 +82,7 @@ export default function EmomTimerModal({
               emomConfig={emomConfig}
               schedule={emomSchedule}
               setModalView={setModalView}
+              onClose={onClose}
             />
           )}
         </Box>
