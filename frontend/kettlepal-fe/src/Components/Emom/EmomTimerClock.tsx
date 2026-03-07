@@ -116,7 +116,7 @@ export default function EmomTimerClock({
                 color={theme.colors.grey[500]}
                 textAlign="center"
               >
-                {schedule.length} rounds completed
+                {config.rounds} round{config.rounds > 1 ? "s" : ""} completed
               </Text>
             </VStack>
 
