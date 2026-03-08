@@ -326,12 +326,14 @@ export default function CreateWorkout() {
         </Box>
 
         {/* WORKOUT COMMENT */}
-        <WorkoutComment
-          commentIsInvalid={submitted && state.comment.errors.length > 0}
-          addComments={addComments}
-          comment={state.comment.value}
-          setComment={setComment}
-        />
+        {workoutState !== "active" && (
+          <WorkoutComment
+            commentIsInvalid={submitted && state.comment.errors.length > 0}
+            addComments={addComments}
+            comment={state.comment.value}
+            setComment={setComment}
+          />
+        )}
 
         {showUploadSuccess ? (
           <Alert status="success" mt="2rem" borderRadius={"8px"} bg="green.50">
