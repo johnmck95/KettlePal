@@ -143,7 +143,11 @@ export default function EmomTimerInputs({
               <NumberInput
                 min={0}
                 value={startDelaySeconds}
-                onChange={(_, prev) => setStartDelaySeconds(prev)}
+                onChange={(_, valueAsNumber) => {
+                  setStartDelaySeconds(
+                    isNaN(valueAsNumber) ? 0 : valueAsNumber
+                  );
+                }}
                 focusBorderColor={theme.colors.green[300]}
               >
                 <NumberInputField />

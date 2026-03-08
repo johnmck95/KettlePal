@@ -100,8 +100,7 @@ export default function EmomTimerClock({
   }
   return (
     <VStack h="100%" alignItems="space-between" py="1rem">
-      {/* {isFinished ? ( */}
-      {true ? (
+      {isFinished ? (
         <ModalBody>
           <Flex
             direction="column"
