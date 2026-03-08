@@ -1,5 +1,4 @@
 import { useDisclosure } from "@chakra-ui/react";
-import { CreateOrUpdateWorkoutState } from "./HookHelpers/validation";
 import { useState } from "react";
 
 export type EmomConfig =
@@ -15,11 +14,7 @@ export type EmomConfig =
       startDelaySeconds: number;
     };
 
-const useEmomTimer = ({
-  exercises,
-}: {
-  exercises: CreateOrUpdateWorkoutState["exercises"];
-}) => {
+const useEmomTimer = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [emomConfig, setEmomConfig] = useState<EmomConfig>({
     mode: "manual",

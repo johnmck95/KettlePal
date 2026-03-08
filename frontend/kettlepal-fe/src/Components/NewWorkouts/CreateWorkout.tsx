@@ -87,9 +87,7 @@ export default function CreateWorkout() {
     onClose,
     onProceed,
     setModalView,
-  } = useEmomTimer({
-    exercises: state.exercises,
-  });
+  } = useEmomTimer();
 
   if (loading) {
     return (
