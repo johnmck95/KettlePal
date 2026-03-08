@@ -146,35 +146,38 @@ export default function EmomTimerClock({
                 );
               })}
             </>
+            {config.mode === "linked" && (
+              <>
+                <Text
+                  fontSize="sm"
+                  color={theme.colors.grey[500]}
+                  textAlign="center"
+                  mt="3rem"
+                  mb="2rem"
+                >
+                  Would you like KettlePal to automatically mark these exercises
+                  as completed?
+                </Text>
 
-            <Text
-              fontSize="sm"
-              color={theme.colors.grey[500]}
-              textAlign="center"
-              mt="3rem"
-              mb="2rem"
-            >
-              Would you like KettlePal to automatically mark these exercises as
-              completed?
-            </Text>
+                {/* ACTIONS */}
+                <VStack spacing={4} w="100%" maxW="320px">
+                  <Button
+                    w="100%"
+                    variant="primary"
+                    onClick={() => {
+                      markSetsCompleted();
+                      setModalView("inputs");
+                    }}
+                  >
+                    Yes — Mark Completed
+                  </Button>
 
-            {/* ACTIONS */}
-            <VStack spacing={4} w="100%" maxW="320px">
-              <Button
-                w="100%"
-                variant="primary"
-                onClick={() => {
-                  markSetsCompleted();
-                  setModalView("inputs");
-                }}
-              >
-                Yes — Mark Completed
-              </Button>
-
-              <Button w="100%" variant="secondary" onClick={onClose}>
-                No — Handle Manually
-              </Button>
-            </VStack>
+                  <Button w="100%" variant="secondary" onClick={onClose}>
+                    No — Handle Manually
+                  </Button>
+                </VStack>
+              </>
+            )}
           </Flex>
         </ModalBody>
       ) : (
