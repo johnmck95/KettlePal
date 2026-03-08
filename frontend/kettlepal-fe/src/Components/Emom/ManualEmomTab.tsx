@@ -26,7 +26,9 @@ export function ManualEmomTab({
         <NumberInput
           min={1}
           value={rounds}
-          onChange={(_, value) => onChange(value)}
+          onChange={(_, valueAsNumber) =>
+            onChange(isNaN(valueAsNumber) ? 0 : valueAsNumber)
+          }
           focusBorderColor={theme.colors.green[300]}
         >
           <NumberInputField />
