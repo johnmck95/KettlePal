@@ -104,55 +104,20 @@ export default function CreateWorkout() {
     ...state.elapsedSeconds.errors,
   ];
 
-  function getCompletedSetsFromMemory(): {
-    trackingIndex: number;
-    completedCount: number;
-    exerciseTitle?: string;
-  }[] {
-    const PREFIX = "completedSets-";
-    const completedSets: {
-      trackingIndex: number;
-      completedCount: number;
-      exerciseTitle?: string;
-    }[] = [];
-
-    Object.keys(sessionStorage).forEach((key) => {
-      if (key.startsWith(PREFIX)) {
-        const trackingIndex = Number(key.slice(PREFIX.length));
-        if (!Number.isNaN(trackingIndex)) {
-          const exerciseTitle =
-            state.exercises[state.exercises.length - 1 - trackingIndex]?.title
-              .value;
-          completedSets.push({
-            trackingIndex,
-            completedCount: Number(sessionStorage.getItem(key) || 0),
-            exerciseTitle,
-          });
-        }
-      }
-    });
-    return completedSets;
-  }
-
-  const completedSets = getCompletedSetsFromMemory();
   const incompleteExercises: {
     index: number;
     title: string;
     plannedSets: number;
     completedSets: number;
   }[] = [];
-  state.exercises.forEach((exercise, currentIndex) => {
-    // Convert CURRENT index to TRACKING index (reverse order)
-    const trackingIndex = state.exercises.length - 1 - currentIndex;
-    const completedData = completedSets.find(
-      (cs) => cs.trackingIndex === trackingIndex
-    );
+
+  state.exercises.forEach((exercise, index) => {
     const plannedSets = Number(exercise.sets.value) || 0;
-    const completedCount = completedData?.completedCount || 0;
+    const completedCount = completedSetsMap[exercise.key] ?? 0;
 
     if (plannedSets > 0 && completedCount < plannedSets) {
       incompleteExercises.push({
-        index: currentIndex,
+        index,
         title: exercise.title.value,
         plannedSets,
         completedSets: completedCount,

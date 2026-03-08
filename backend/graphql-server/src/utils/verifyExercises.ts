@@ -66,7 +66,8 @@ export function verifyExercises({
       };
     }
 
-    if (!weight && weightUnit) {
+    // Allow weight to be 0 (body weight exercises when user doesn't enter their weight)
+    if (weight == null && weightUnit) {
       return {
         result: false,
         reason: `Exercise Weight is required when Weight Unit is provided.`,
