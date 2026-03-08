@@ -23,11 +23,13 @@ export default function EmomTimerClock({
   emomConfig: config,
   setModalView,
   onClose,
+  completedASet,
 }: {
   schedule: CreateOrUpdateWorkoutState["exercises"];
   emomConfig: EmomConfig;
   setModalView: React.Dispatch<React.SetStateAction<"inputs" | "clock">>;
   onClose: () => void;
+  completedASet: (exerciseKey: string) => void;
 }) {
   const [elapsed, setElapsed] = useState(0);
   const [isRunning, setIsRunning] = useState(true);
@@ -86,12 +88,20 @@ export default function EmomTimerClock({
   );
 
   function markSetsCompleted() {
-    // TODO - Update the number of completed sets
+    schedule.forEach((exercise) => {
+      completedASet(exercise.key);
+    });
     onClose();
+    setModalView("inputs");
+  }
+  function exitWithoutMArkingSetsCompleted() {
+    onClose();
+    setModalView("inputs");
   }
   return (
     <VStack h="100%" alignItems="space-between" py="1rem">
-      {isFinished ? (
+      {/* {isFinished ? ( */}
+      {true ? (
         <ModalBody>
           <Flex
             direction="column"
@@ -146,7 +156,7 @@ export default function EmomTimerClock({
                 );
               })}
             </>
-            {config.mode === "linked" && (
+            {config.mode === "linked" ? (
               <>
                 <Text
                   fontSize="sm"
@@ -164,19 +174,28 @@ export default function EmomTimerClock({
                   <Button
                     w="100%"
                     variant="primary"
-                    onClick={() => {
-                      markSetsCompleted();
-                      setModalView("inputs");
-                    }}
+                    onClick={markSetsCompleted}
                   >
                     Yes — Mark Completed
                   </Button>
 
-                  <Button w="100%" variant="secondary" onClick={onClose}>
+                  <Button
+                    w="100%"
+                    variant="secondary"
+                    onClick={exitWithoutMArkingSetsCompleted}
+                  >
                     No — Handle Manually
                   </Button>
                 </VStack>
               </>
+            ) : (
+              <Button
+                w="100%"
+                variant="secondary"
+                onClick={exitWithoutMArkingSetsCompleted}
+              >
+                Exit EMOM Timer
+              </Button>
             )}
           </Flex>
         </ModalBody>

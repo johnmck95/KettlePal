@@ -59,6 +59,7 @@ export default function CreateWorkout() {
     isOpenSaveWorkout,
     workoutState,
     ref,
+    completedSetsMap,
     formHasErrors,
     setTime,
     setComment,
@@ -73,6 +74,9 @@ export default function CreateWorkout() {
     onCloseSaveWorkout,
     onSaveWorkout,
     startOrPause,
+    completedASet,
+    removedASet,
+    resetCompletedExercisesSessionStorage,
   } = useCreateWorkoutForm();
   const navigate = useNavigate();
   const {
@@ -421,10 +425,15 @@ export default function CreateWorkout() {
                       handleExercise={handleExercise}
                       deleteExercise={deleteExercise}
                       exerciseIndex={index}
-                      trackingIndex={state.exercises.length - index - 1}
                       submitted={submitted}
                       trackWorkout={showTracking}
                       showComments={addComments}
+                      completedSets={completedSetsMap[exercise.key] ?? 0}
+                      completedASet={() => completedASet(exercise.key)}
+                      removedASet={() => removedASet(exercise.key)}
+                      resetCompletedExercisesSessionStorage={
+                        resetCompletedExercisesSessionStorage
+                      }
                     />
                   </Box>
                 </motion.div>
@@ -481,6 +490,7 @@ export default function CreateWorkout() {
           setModalView={setModalView}
           exercises={state.exercises}
           emomConfig={emomConfig}
+          completedASet={completedASet}
         />
 
         <ConfirmModal

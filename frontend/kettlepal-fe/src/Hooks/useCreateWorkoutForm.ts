@@ -41,6 +41,81 @@ const useCreateWorkoutForm = () => {
   });
   const [submitted, setSubmitted] = useState(false);
   const [showServerError, setShowServerError] = useState<boolean>(true);
+  const [completedSetsMap, setCompletedSetsMap] = useState<
+    Record<string, number>
+  >(() => {
+    const result: Record<string, number> = {};
+
+    Object.keys(sessionStorage).forEach((key) => {
+      if (key.startsWith("completedSets-")) {
+        const exerciseKey = key.replace("completedSets-", "");
+        result[exerciseKey] = Number(sessionStorage.getItem(key) ?? 0);
+      }
+    });
+
+    return result;
+  });
+
+  function completedASet(exerciseKey: string) {
+    setCompletedSetsMap((prev) => {
+      const currentCompleted = prev[exerciseKey] ?? 0;
+      const nextCompleted = currentCompleted + 1;
+
+      const next = {
+        ...prev,
+        [exerciseKey]: nextCompleted,
+      };
+
+      sessionStorage.setItem(
+        `completedSets-${exerciseKey}`,
+        nextCompleted.toString()
+      );
+
+      // Bump exercise.sets if needed
+      const exerciseIndex = state.exercises.findIndex(
+        (e) => e.key === exerciseKey
+      );
+
+      if (exerciseIndex !== -1) {
+        const exercise = state.exercises[exerciseIndex];
+        const plannedSets = Number(exercise.sets.value || 0);
+
+        if (nextCompleted > plannedSets) {
+          handleExercise("sets", nextCompleted.toString(), exerciseIndex);
+        }
+      }
+
+      return next;
+    });
+  }
+
+  function removedASet(exerciseKey: string) {
+    setCompletedSetsMap((prev) => {
+      const current = prev[exerciseKey] ?? 0;
+
+      if (current <= 0) return prev;
+
+      const nextCount = current - 1;
+
+      const next = {
+        ...prev,
+        [exerciseKey]: nextCount,
+      };
+
+      sessionStorage.setItem(
+        `completedSets-${exerciseKey}`,
+        nextCount.toString()
+      );
+
+      return next;
+    });
+  }
+
+  function resetCompletedExercisesSessionStorage(exerciseKey: string): void {
+    const storageKey = `completedSets-${exerciseKey}`;
+    sessionStorage.removeItem(storageKey);
+  }
+
   const formHasErrors = () =>
     state.date.errors.length > 0 ||
     state.comment.errors.length > 0 ||
@@ -397,6 +472,7 @@ const useCreateWorkoutForm = () => {
     isOpenSaveWorkout,
     workoutState,
     ref,
+    completedSetsMap,
     setTime,
     setComment,
     setShowServerError,
@@ -411,6 +487,9 @@ const useCreateWorkoutForm = () => {
     onSaveWorkout,
     startOrPause,
     formHasErrors,
+    completedASet,
+    removedASet,
+    resetCompletedExercisesSessionStorage,
   };
 };
 

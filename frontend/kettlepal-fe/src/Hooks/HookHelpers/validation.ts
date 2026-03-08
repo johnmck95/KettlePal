@@ -33,7 +33,7 @@ export type CreateOrUpdateWorkoutState = {
     elapsedSeconds: { value: number; errors: string[] };
     multiplier: { value: number; errors: string[] };
     uid?: string;
-    key?: string;
+    key: string;
   }>;
 };
 

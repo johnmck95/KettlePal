@@ -15,6 +15,7 @@ export default function EmomTimerModal({
   onClose,
   onProceed,
   setModalView,
+  completedASet,
 }: {
   modalView: "inputs" | "clock";
   exercises: CreateOrUpdateWorkoutState["exercises"];
@@ -23,6 +24,7 @@ export default function EmomTimerModal({
   onClose: () => void;
   onProceed: (config: EmomConfig) => void;
   setModalView: React.Dispatch<React.SetStateAction<"inputs" | "clock">>;
+  completedASet: (exerciseKey: string) => void;
 }) {
   const [phase, setPhase] = useState<"delay" | "running">("delay");
   const safeExercises = useMemo(
@@ -83,6 +85,7 @@ export default function EmomTimerModal({
               schedule={emomSchedule}
               setModalView={setModalView}
               onClose={onClose}
+              completedASet={completedASet}
             />
           )}
         </Box>
