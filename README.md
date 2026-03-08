@@ -34,6 +34,10 @@ Make sure you **"_Add To Homescreen_"** on mobile devices for the best experienc
 
 <img src="image-1.png" alt="alt text" width="800" >
 
+### EMOM Timer
+
+<img src="image-6.png" alt="alt text" width="800" >
+
 ### Track Progress Over Time
 
 <img src="image-2.png" alt="alt text" width="400" >
@@ -54,10 +58,11 @@ Make sure you **"_Add To Homescreen_"** on mobile devices for the best experienc
 
 - JWT Authentication, Registration/Login/Logout, Hashing.
 - Design a workout, track your sets, then save the activity.
+- Live EMOM timer with workout linking
 - Personalized exercise list and work capacity computations.
 - View past workouts chronologically, or search by relevant details.
-- Update past workouts at any time.
 - Visualize workout trends over time.
+- Update past workouts.
 - See all of your personal records in one spot.
 - "Cook Mode" - keep device awake while tracking a workout.
 
