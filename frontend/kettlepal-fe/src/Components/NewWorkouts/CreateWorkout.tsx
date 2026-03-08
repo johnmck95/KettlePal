@@ -26,6 +26,7 @@ import {
   FaPlay,
   FaPlusCircle,
   FaSave,
+  FaStopwatch,
 } from "react-icons/fa";
 import ConfirmModal from "../ConfirmModal";
 import LoadingSpinner from "../LoadingSpinner";
@@ -40,6 +41,9 @@ import { useNavigate } from "react-router-dom";
 import Detail from "../ViewWorkouts/ViewDetailedWorkoutModal/Detail";
 import { formatDurationShort } from "../../utils/Time/time";
 import { totalWorkoutWorkCapacity } from "../../utils/Workouts/workouts";
+import useEmomTimer from "../../Hooks/useEmomTimer";
+import EmomTimerModal from "../Emom/EmomTimerModal";
+import { initAudio } from "../../utils/audio";
 
 export default function CreateWorkout() {
   const {
@@ -55,6 +59,7 @@ export default function CreateWorkout() {
     isOpenSaveWorkout,
     workoutState,
     ref,
+    completedSetsMap,
     formHasErrors,
     setTime,
     setComment,
@@ -69,8 +74,20 @@ export default function CreateWorkout() {
     onCloseSaveWorkout,
     onSaveWorkout,
     startOrPause,
+    completedASet,
+    removedASet,
+    resetCompletedExercisesSessionStorage,
   } = useCreateWorkoutForm();
   const navigate = useNavigate();
+  const {
+    modalView,
+    isOpen,
+    emomConfig,
+    onOpen,
+    onClose,
+    onProceed,
+    setModalView,
+  } = useEmomTimer();
 
   if (loading) {
     return (
@@ -85,55 +102,20 @@ export default function CreateWorkout() {
     ...state.elapsedSeconds.errors,
   ];
 
-  function getCompletedSetsFromMemory(): {
-    trackingIndex: number;
-    completedCount: number;
-    exerciseTitle?: string;
-  }[] {
-    const PREFIX = "completedSets-";
-    const completedSets: {
-      trackingIndex: number;
-      completedCount: number;
-      exerciseTitle?: string;
-    }[] = [];
-
-    Object.keys(sessionStorage).forEach((key) => {
-      if (key.startsWith(PREFIX)) {
-        const trackingIndex = Number(key.slice(PREFIX.length));
-        if (!Number.isNaN(trackingIndex)) {
-          const exerciseTitle =
-            state.exercises[state.exercises.length - 1 - trackingIndex]?.title
-              .value;
-          completedSets.push({
-            trackingIndex,
-            completedCount: Number(sessionStorage.getItem(key) || 0),
-            exerciseTitle,
-          });
-        }
-      }
-    });
-    return completedSets;
-  }
-
-  const completedSets = getCompletedSetsFromMemory();
   const incompleteExercises: {
     index: number;
     title: string;
     plannedSets: number;
     completedSets: number;
   }[] = [];
-  state.exercises.forEach((exercise, currentIndex) => {
-    // Convert CURRENT index to TRACKING index (reverse order)
-    const trackingIndex = state.exercises.length - 1 - currentIndex;
-    const completedData = completedSets.find(
-      (cs) => cs.trackingIndex === trackingIndex
-    );
+
+  state.exercises.forEach((exercise, index) => {
     const plannedSets = Number(exercise.sets.value) || 0;
-    const completedCount = completedData?.completedCount || 0;
+    const completedCount = completedSetsMap[exercise.key] ?? 0;
 
     if (plannedSets > 0 && completedCount < plannedSets) {
       incompleteExercises.push({
-        index: currentIndex,
+        index,
         title: exercise.title.value,
         plannedSets,
         completedSets: completedCount,
@@ -168,6 +150,29 @@ export default function CreateWorkout() {
               handleStateChange={handleStateChange}
             />
           </GridItem>
+          {showTracking && (
+            <GridItem rowStart={2} rowEnd={2} colStart={1} colEnd={1}>
+              <Button
+                size={["sm", "md"]}
+                variant="secondary"
+                leftIcon={<FaStopwatch />}
+                onClick={() => {
+                  initAudio();
+                  onOpen();
+                }}
+                w="100%"
+                maxW={"200px"}
+                sx={{
+                  _focus: {
+                    borderColor: theme.colors.green[300],
+                    boxShadow: `0 0 0 1px ${theme.colors.green[300]}`,
+                  },
+                }}
+              >
+                EMOM Timer
+              </Button>
+            </GridItem>
+          )}
 
           {/* STOPWATCH */}
           <GridItem
@@ -383,10 +388,15 @@ export default function CreateWorkout() {
                       handleExercise={handleExercise}
                       deleteExercise={deleteExercise}
                       exerciseIndex={index}
-                      trackingIndex={state.exercises.length - index - 1}
                       submitted={submitted}
                       trackWorkout={showTracking}
                       showComments={addComments}
+                      completedSets={completedSetsMap[exercise.key] ?? 0}
+                      completedASet={() => completedASet(exercise.key)}
+                      removedASet={() => removedASet(exercise.key)}
+                      resetCompletedExercisesSessionStorage={
+                        resetCompletedExercisesSessionStorage
+                      }
                     />
                   </Box>
                 </motion.div>
@@ -434,6 +444,17 @@ export default function CreateWorkout() {
             />
           </Alert>
         )}
+
+        <EmomTimerModal
+          modalView={modalView}
+          isOpen={isOpen}
+          onClose={onClose}
+          onProceed={onProceed}
+          setModalView={setModalView}
+          exercises={state.exercises}
+          emomConfig={emomConfig}
+          completedASet={completedASet}
+        />
 
         <ConfirmModal
           isOpen={isOpenSaveWorkout}

@@ -187,6 +187,17 @@ const theme = extendTheme({
         },
       },
     },
+    Checkbox: {
+      baseStyle: {
+        control: {
+          "&[data-focus-visible]": {
+            boxShadow: "none",
+            "--chakra-ring-shadow": "none",
+            "--chakra-ring-color": "transparent",
+          },
+        },
+      },
+    },
   },
 });
 

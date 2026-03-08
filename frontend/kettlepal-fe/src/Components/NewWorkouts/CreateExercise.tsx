@@ -19,16 +19,19 @@ import { useUser } from "../../Contexts/UserContext";
 import { CreateOrUpdateWorkoutState } from "../../Hooks/HookHelpers/validation";
 
 interface CreateExerciseProps {
-  exercise: Omit<CreateOrUpdateWorkoutState["exercises"][number], "key">;
+  exercise: CreateOrUpdateWorkoutState["exercises"][number];
   handleExercise: (name: string, value: string | number, index: number) => void;
   deleteExercise: ((index: number) => void) | (() => Promise<void>);
   exerciseIndex: number;
-  trackingIndex: number;
   submitted: boolean;
   trackWorkout: boolean;
   showComments: boolean;
   forceMobileStyle?: boolean;
   forceCloseButton?: boolean;
+  completedSets?: number;
+  completedASet?: () => void;
+  removedASet?: () => void;
+  resetCompletedExercisesSessionStorage?: (exerciseKey: string) => void;
 }
 
 export default function CreateExercise({
@@ -36,29 +39,29 @@ export default function CreateExercise({
   handleExercise,
   deleteExercise,
   exerciseIndex,
-  trackingIndex,
   submitted,
   trackWorkout,
   showComments,
   forceMobileStyle = false,
   forceCloseButton = false,
+  completedSets,
+  completedASet,
+  removedASet,
+  resetCompletedExercisesSessionStorage,
 }: CreateExerciseProps) {
   const user = useUser().user;
   const {
-    completedSets,
     customTitle,
     customWeight,
     isOpenDeleteExercise,
     minSwipeDistance,
     offset,
-    completedASet,
     customOnCloseDeleteExercise,
     onDeleteExercise,
     onOpenDeleteExercise,
     onTouchEnd,
     onTouchMove,
     onTouchStart,
-    removedASet,
     setCustomTitle,
     setCustomWeight,
     setExerciseComment,
@@ -68,9 +71,10 @@ export default function CreateExercise({
     user,
     exercise,
     exerciseIndex,
-    trackingIndex,
+    exerciseKey: exercise.key,
     handleExercise,
     deleteExercise,
+    resetCompletedExercisesSessionStorage,
   });
 
   const errors = [
@@ -213,13 +217,18 @@ export default function CreateExercise({
       )}
 
       {/* SETS COMPLETED */}
-      <TrackExercise
-        trackWorkout={trackWorkout}
-        completedSets={completedSets}
-        exercise={exercise}
-        removedASet={removedASet}
-        completedASet={completedASet}
-      />
+      {trackWorkout &&
+        completedSets !== undefined &&
+        completedASet !== undefined &&
+        removedASet !== undefined && (
+          <TrackExercise
+            trackWorkout={trackWorkout}
+            exercise={exercise}
+            completedSets={completedSets}
+            removedASet={removedASet}
+            completedASet={completedASet}
+          />
+        )}
 
       {/* DELETE EXERCISE MODAL */}
       <ConfirmModal
