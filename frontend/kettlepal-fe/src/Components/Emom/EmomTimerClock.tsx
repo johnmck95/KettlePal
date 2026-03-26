@@ -209,14 +209,21 @@ export default function EmomTimerClock({
               h="100%"
             >
               <HStack
-                justifyContent={currentExercise ? "space-between" : "center"}
+                justifyContent={
+                  currentExercise ? "space-between" : "flex-start"
+                }
                 w="100%"
                 mt="1rem"
               >
                 {/* ROUND */}
-                <VStack alignItems="flex-start">
+                <VStack
+                  h="100%"
+                  gap={0.5}
+                  alignItems="space-between"
+                  justifyContent="space-between"
+                >
                   <Text
-                    fontSize={["md", "lg", "xl", "2xl"]}
+                    fontSize={["xs", "sm", "md", "lg"]}
                     letterSpacing="0.15em"
                     fontWeight="bold"
                     color={theme.colors.grey[500]}
@@ -225,8 +232,8 @@ export default function EmomTimerClock({
                     ROUND
                   </Text>
                   <Text
-                    fontSize={["sm", "md", "lg", "xl"]}
-                    fontWeight="semibold"
+                    fontSize={["xl", "2xl"]}
+                    fontWeight="bold"
                     w="100%"
                     textAlign="center"
                     color={theme.colors.grey[700]}
@@ -237,13 +244,18 @@ export default function EmomTimerClock({
 
                 {/* CURRENT EXERCISE */}
                 {currentExercise && (
-                  <VStack>
+                  <VStack
+                    h="100%"
+                    gap={0.5}
+                    alignItems="space-between"
+                    justifyContent="space-between"
+                  >
                     <Text
-                      fontSize={["md", "lg", "xl", "2xl"]}
+                      fontSize={["xs", "sm", "md", "lg"]}
                       letterSpacing="0.15em"
                       fontWeight="bold"
                       color={theme.colors.grey[500]}
-                      textAlign={"center"}
+                      textAlign="center"
                     >
                       CURRENT EXERCISE
                     </Text>
@@ -272,20 +284,22 @@ export default function EmomTimerClock({
 
               {/* NEXT EXERCISE*/}
               {nextExercise && (
-                <VStack>
+                <VStack gap={0.5}>
                   <Text
-                    fontSize={["sm", "md", "lg", "xl"]}
+                    fontSize={["xs", "sm", "md", "lg"]}
                     letterSpacing="0.15em"
                     fontWeight="bold"
                     color={theme.colors.grey[500]}
-                    textAlign={"center"}
+                    textAlign="center"
                   >
                     NEXT EXERCISE
                   </Text>
                   <Text
-                    color={theme.colors.grey[600]}
-                    fontSize={["xs", "sm", "md", "lg"]}
+                    fontSize={["xl", "2xl", "3xl"]}
+                    fontWeight="bold"
+                    w="100%"
                     textAlign="center"
+                    color={theme.colors.grey[700]}
                   >
                     {formatExerciseString({
                       title: nextExercise.title.value,

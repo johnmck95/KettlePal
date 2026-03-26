@@ -77,20 +77,22 @@ export default function EmomStartDelay({
           <Countdown remaining={remaining} />
 
           {firstExercise && (
-            <VStack>
+            <VStack gap={0.5}>
               <Text
-                fontSize={["sm", "md", "lg", "xl"]}
+                fontSize={["xs", "sm", "md", "lg"]}
                 letterSpacing="0.15em"
                 fontWeight="bold"
                 color={theme.colors.grey[500]}
-                textAlign={"center"}
+                textAlign="center"
               >
                 FIRST EXERCISE
               </Text>
               <Text
-                color={theme.colors.grey[600]}
-                fontSize={["xs", "sm", "md", "lg"]}
+                fontSize={["xl", "2xl", "3xl"]}
+                fontWeight="bold"
+                w="100%"
                 textAlign="center"
+                color={theme.colors.grey[700]}
               >
                 {formatExerciseString({
                   title: firstExercise.title.value,

@@ -41,7 +41,7 @@ export default function Countdwn({ remaining }: { remaining: number }) {
   return (
     <Box
       position="relative"
-      width={["95%", "75%"]}
+      width={["95%", "60%"]}
       aspectRatio={1}
       mx="auto"
       my="2rem"
