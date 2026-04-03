@@ -4,14 +4,12 @@ import {
   AlertDescription,
   AlertIcon,
   HStack,
-  IconButton,
   VStack,
   useDisclosure,
 } from "@chakra-ui/react";
 import ViewExercise from "./ViewExercise";
 import theme from "../../Constants/theme";
 import CalendarWidget from "../CalendarWidget";
-import { FaTimes } from "react-icons/fa";
 import ConfirmModal from "../ConfirmModal";
 import LoadingSpinner from "../LoadingSpinner";
 import ViewDetailedWorkoutModal from "./ViewDetailedWorkoutModal/ViewDetailedWorkoutModal";
@@ -82,19 +80,6 @@ export default function ViewWorkout({
           <LoadingSpinner size={16} />
         ) : (
           <>
-            <IconButton
-              variant="closeX"
-              aria-label="Delete Workout"
-              icon={<FaTimes />}
-              size="sm"
-              position="absolute"
-              top="5px"
-              right="5px"
-              onClick={(e) => {
-                e.stopPropagation();
-                onOpen();
-              }}
-            />
             <CalendarWidget date={workoutWithExercises?.date ?? ""} w="4rem" />
             <VStack mx="1rem">
               {exercises?.map((exercise) => {
@@ -129,6 +114,7 @@ export default function ViewWorkout({
           workoutWithExercises={workoutWithExercises}
           isOpen={isOpenDetailedWorkout}
           onClose={onCloseDetailedWorkout}
+          onOpen={onOpen}
           refetchPastWorkouts={refetchPastWorkouts}
         />
       </HStack>

@@ -14,7 +14,7 @@ import {
 } from "@chakra-ui/react";
 import React, { useRef, useState } from "react";
 import { FuzzySearchQuery } from "../../../generated/frontend-types";
-import { FaPencilAlt, FaTimes } from "react-icons/fa";
+import { FaPencilAlt, FaTimes, FaTrash } from "react-icons/fa";
 import EditWorkout from "./EditWorkout";
 import ShowWorkout from "./ShowWorkout";
 import theme from "../../../Constants/theme";
@@ -22,6 +22,7 @@ import theme from "../../../Constants/theme";
 export default function ViewDetailedWorkoutModal({
   workoutWithExercises,
   isOpen,
+  onOpen,
   onClose,
   refetchPastWorkouts,
 }: {
@@ -29,6 +30,7 @@ export default function ViewDetailedWorkoutModal({
     NonNullable<FuzzySearchQuery["pastWorkouts"]>["workoutWithExercises"]
   >[0];
   isOpen: boolean;
+  onOpen: () => void;
   onClose: () => void;
   refetchPastWorkouts: () => void;
 }) {
@@ -99,6 +101,25 @@ export default function ViewDetailedWorkoutModal({
               right="16px"
               top="14px"
             >
+              <IconButton
+                variant="secondary"
+                aria-label="Delete Exercise"
+                size="sm"
+                icon={<FaTrash />}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onOpen();
+                }}
+                sx={{
+                  _focus: {
+                    borderColor: theme.colors.green[300],
+                    boxShadow: isMobile
+                      ? `0 0 0 0`
+                      : `0 0 0 1px ${theme.colors.green[300]}`,
+                  },
+                }}
+                zIndex={3}
+              />
               <IconButton
                 variant="secondary"
                 aria-label="Edit Exercise"
