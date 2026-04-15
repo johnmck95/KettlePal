@@ -10,6 +10,7 @@ import {
   VStack,
   HStack,
   Icon,
+  Box,
 } from "@chakra-ui/react";
 import theme from "../../Constants/theme";
 import { beep } from "../../utils/audio";
@@ -17,6 +18,7 @@ import { formatExerciseString } from "../../utils/Exercises/exercises";
 import Countdown from "./Countdown";
 import React from "react";
 import { FaCheckCircle } from "react-icons/fa";
+import { motion } from "framer-motion";
 
 export default function EmomTimerClock({
   schedule,
@@ -283,7 +285,7 @@ export default function EmomTimerClock({
               <Countdown remaining={secondsLeftInRound} />
 
               {/* NEXT EXERCISE*/}
-              {nextExercise && (
+              {nextExercise ? (
                 <VStack gap={0.5}>
                   <Text
                     fontSize={["xs", "sm", "md", "lg"]}
@@ -312,6 +314,56 @@ export default function EmomTimerClock({
                     }) || "----"}
                   </Text>
                 </VStack>
+              ) : (
+                <>
+                  {config.mode === "linked" && (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{
+                        duration: 4,
+                        delay: 0.25,
+                        ease: [0.7, 0, 1, 1],
+                      }}
+                    >
+                      <Text
+                        fontSize="sm"
+                        color={theme.colors.grey[500]}
+                        textAlign="center"
+                        mt="2rem"
+                        mb="2rem"
+                      >
+                        Would you like KettlePal to automatically mark these
+                        exercises as completed?
+                      </Text>
+
+                      {/* ACTIONS */}
+                      <VStack
+                        spacing={4}
+                        w="100%"
+                        maxW="320px"
+                        justifyContent={"center"}
+                        mx="auto"
+                      >
+                        <Button
+                          w="100%"
+                          variant="primary"
+                          onClick={markSetsCompleted}
+                        >
+                          Yes — Mark Completed
+                        </Button>
+
+                        <Button
+                          w="100%"
+                          variant="secondary"
+                          onClick={exitWithoutMArkingSetsCompleted}
+                        >
+                          No — Handle Manually
+                        </Button>
+                      </VStack>
+                    </motion.div>
+                  )}
+                </>
               )}
             </Flex>
           </ModalBody>
