@@ -1195,6 +1195,48 @@ export const resolvers = {
       }
     },
 
+    async resetPassword(
+      _: any,
+      {
+        userToUpdateUid,
+        newPassword,
+      }: { userToUpdateUid: string; newPassword: string },
+      { req }: { req: AuthenticatedRequest }
+    ) {
+      if (!req.userUid) {
+        throw new NotAuthorizedError();
+      }
+
+      // 1. Only administrators are currently allowed to reset a users password
+      const requestingUser = await knexInstance("users")
+        .where({ uid: req.userUid })
+        .first();
+
+      if (requestingUser.isAuthorized !== true) {
+        throw new Error(
+          "The requesting user is not authorized to reset the password. This feature is only available for administrators"
+        );
+      }
+
+      // 2. Check password atleast 8 characters
+      if (newPassword.length < 8) {
+        throw new Error("New password must be at least 8 characters");
+      }
+      // 3. Hash password
+      const hashedPassword = await bcrypt.hash(newPassword, 12);
+
+      // 4. Update users table with new hashed password
+      const rowsUpdated = await knexInstance("users")
+        .where({ uid: userToUpdateUid })
+        .update({ password: hashedPassword });
+
+      if (rowsUpdated === 0) {
+        throw new Error("User not found");
+      }
+
+      return true;
+    },
+
     async login(
       _: any,
       { email, password }: { email: string; password: string },
