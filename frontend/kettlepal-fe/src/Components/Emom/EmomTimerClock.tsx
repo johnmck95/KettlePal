@@ -10,7 +10,6 @@ import {
   VStack,
   HStack,
   Icon,
-  Box,
 } from "@chakra-ui/react";
 import theme from "../../Constants/theme";
 import { beep } from "../../utils/audio";
