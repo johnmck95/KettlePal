@@ -13,6 +13,12 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - db_backup_volume:/backup
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   backend:
     build:
@@ -28,11 +34,16 @@ services:
       ACCESS_TOKEN_SECRET: ${ACCESS_TOKEN_SECRET}
       REFRESH_TOKEN_SECRET: ${REFRESH_TOKEN_SECRET}
       PORT: 4000
+      KNEX_LOCAL_DB_HOST: postgres
+      KNEX_LOCAL_DB_NAME: kettlepal-dev
+      KNEX_LOCAL_DB_USER: postgres
+      KNEX_LOCAL_DB_PASSWORD: postgres
     volumes:
       - ./backend/graphql-server:/graphql-server
       - /graphql-server/node_modules
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     develop:
       watch:
         - path: ./backend/graphql-server/src
@@ -54,6 +65,36 @@ services:
     depends_on:
       - backend
 
+  db-backup:
+    image: postgres:16
+    container_name: db-backup
+    working_dir: /graphql-server
+    environment:
+      KNEX_LOCAL_CONNECTION_STRING: postgresql://postgres:postgres@host.docker.internal:5432/kettlepal-dev
+    volumes:
+      - db_backup_volume:/backup
+    command: sh -c 'pg_dump --no-owner --no-privileges --clean --if-exists "$${KNEX_LOCAL_CONNECTION_STRING}" > /backup/local_dump_$$(date +"%Y-%m-%d_%H-%M-%S").sql'
+    profiles:
+      - init
+
+  db-restore:
+    build:
+      context: ./backend/graphql-server
+    container_name: db-restore
+    working_dir: /graphql-server
+    environment:
+      KNEX_LOCAL_CONNECTION_STRING: postgresql://postgres:postgres@postgres:5432/kettlepal-dev
+    volumes:
+      - ./backend/graphql-server:/graphql-server
+      - db_backup_volume:/backup
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: bash bin/pg-restore-from-docker-volume.sh
+    profiles:
+      - init
+
 volumes:
   postgres_data:
+  db_backup_volume:
   frontend_node_modules:
