@@ -15,7 +15,10 @@
     "generate-types": "graphql-codegen --config ./src/codegen.yml",
     "knex": "node --import ./register-ts-node.js ./node_modules/knex/bin/cli.js",
     "test": "jest",
-    "db:replicate-prod-db-to-local": "dotenv -e .env.local -- bash bin/replicate-prod-db-to-dev.sh"
+    "db:replicate-prod-db-to-local": "dotenv -e .env.local -- bash bin/replicate-prod-db-to-dev.sh",
+    "db:migrate": "npm run build && npm run knex migrate:latest",
+    "db:seed": "npm run knex seed:run",
+    "db:setup": "npm run db:migrate && npm run db:seed"
   },
   "keywords": [],
   "author": "",

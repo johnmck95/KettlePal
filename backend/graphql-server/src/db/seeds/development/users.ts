@@ -1,33 +1,17 @@
 export async function seed(knex: any) {
-  await knex("users").del();
-  await knex("users").insert([
-    {
-      firstName: "John",
-      lastName: "Doe",
-      email: "JoeyDoey@email.com",
-      password: "hashme",
-      isAuthorized: false,
-    },
-    {
-      firstName: "Jane",
-      lastName: "Doe",
-      email: "JaneDoe@email.com",
-      password: "hashme",
-      isAuthorized: false,
-    },
-    {
-      firstName: "Robert",
-      lastName: "Lebowsky",
-      email: "RobLeb@email.com",
-      password: "hashme",
-      isAuthorized: false,
-    },
-    {
-      firstName: "Ada",
-      lastName: "Funk",
-      email: "AdaFunk@email.com",
-      password: "hashme",
-      isAuthorized: false,
-    },
-  ]);
+  const guestExists = await knex("users")
+    .where({ email: "test_account@gmail.com" })
+    .first();
+
+  if (!guestExists) {
+    await knex("users").insert([
+      {
+        firstName: "Guest",
+        lastName: "User",
+        email: "test_account@gmail.com",
+        password: "$2b$12$x0HbL/Rg76egNffD/U4grOiNVvz3nDwYfrxeJhIFeP/VJR7bW650K",
+        isAuthorized: true,
+      },
+    ]);
+  }
 }
