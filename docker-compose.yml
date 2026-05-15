@@ -1,0 +1,98 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: kettlepal-db
+    restart: always
+    environment:
+      POSTGRES_DB: kettlepal-dev
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend/graphql-server
+    container_name: backend
+    working_dir: /graphql-server
+    ports:
+      - "4000:4000"
+    env_file:
+      - ./.env
+      - ./backend/graphql-server/.env
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      ACCESS_TOKEN_SECRET: ${ACCESS_TOKEN_SECRET}
+      REFRESH_TOKEN_SECRET: ${REFRESH_TOKEN_SECRET}
+      PORT: 4000
+      KNEX_LOCAL_DB_HOST: postgres
+      KNEX_LOCAL_DB_NAME: kettlepal-dev
+      KNEX_LOCAL_DB_USER: postgres
+      KNEX_LOCAL_DB_PASSWORD: postgres
+    volumes:
+      - ./backend/graphql-server:/graphql-server
+      - backend_node_modules:/graphql-server/node_modules
+    depends_on:
+      db-migrate:
+        condition: service_completed_successfully
+    develop:
+      watch:
+        - path: ./backend/graphql-server/src
+          action: rebuild
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4000/ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  frontend:
+    build:
+      context: ./frontend/kettlepal-fe
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend/kettlepal-fe:/kettlepal-fe
+      - frontend_node_modules:/kettlepal-fe/node_modules
+    environment:
+      FAST_REFRESH: "true"
+      WDS_SOCKET_HOST: "localhost"
+      WDS_SOCKET_PORT: "3000"
+    depends_on:
+      backend:
+        condition: service_healthy
+
+  db-migrate:
+    build:
+      context: ./backend/graphql-server
+    container_name: db-migrate
+    working_dir: /graphql-server
+    env_file:
+      - ./backend/graphql-server/.env
+    environment:
+      KNEX_LOCAL_DB_HOST: postgres
+      KNEX_LOCAL_DB_NAME: kettlepal-dev
+      KNEX_LOCAL_DB_USER: postgres
+      KNEX_LOCAL_DB_PASSWORD: postgres
+    volumes:
+      - ./backend/graphql-server:/graphql-server
+      - backend_node_modules:/graphql-server/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: sh -c "npm run db:migrate && npm run db:seed"
+
+volumes:
+  postgres_data:
+    name: kettlepal_postgres_data
+  frontend_node_modules:
+    name: kettlepal_frontend_node_modules
+  backend_node_modules:
+    name: kettlepal_backend_node_modules

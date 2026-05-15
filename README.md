@@ -19,6 +19,7 @@ Make sure you **"_Add To Homescreen_"** on mobile devices for the best experienc
 - React
 - GraphQL
 - PostgreSQL
+- Docker
 - Express
 - Apollo
 - ChakraUI
@@ -75,7 +76,7 @@ Make sure you **"_Add To Homescreen_"** on mobile devices for the best experienc
 
 ## Deployment
 
-The production environment is built using free services. This means down time can be expected on occasion, as CPU usage is limited. Services will be scaled as the user-base grows and donations cover the costs.
+The production environment is built using free services (why it is not dockerized). This means down time can be expected on occasion, as CPU usage is limited. Services will be scaled as the user-base grows and donations cover the costs.
 
 - Database
   - Hosted on Neon
@@ -83,3 +84,39 @@ The production environment is built using free services. This means down time ca
   - Hosted on Render
 - Frontend
   - Hosted on Netlify
+
+## Local Development with Docker
+
+**First time only**: Copy the env files, substitute values:
+
+```bash
+cp ./.env.example ./.env
+cp ./backend/graphql-server/.env.example ./backend/graphql-server/.env
+```
+
+Then spin up in one command:
+
+```bash
+docker compose up
+```
+
+This starts:
+
+- **Frontend** (React) at `http://localhost:3000`
+- **Backend** (GraphQL) at `http://localhost:4000/graphql`
+- **Database** (PostgreSQL) with migrations and guest user seeded
+
+### Common Commands
+
+```bash
+# Stop all services
+docker compose down
+
+# View logs
+docker compose logs -f frontend
+docker compose logs -f backend
+
+# Reset database (-v DELETES volumes)
+docker compose down -v
+docker compose up
+```
