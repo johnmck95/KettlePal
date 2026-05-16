@@ -90,6 +90,7 @@ The production environment is built using free services (why it is not dockerize
 **First time only**: Copy the env files, substitute values:
 
 ```bash
+cd Kettlepal/
 cp ./.env.example ./.env
 cp ./backend/graphql-server/.env.example ./backend/graphql-server/.env
 ```
