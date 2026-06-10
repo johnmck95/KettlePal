@@ -37,7 +37,7 @@ import {
   formatSelectedDateRange,
   formatTime,
   getCurrentWeekRange,
-  getCurrentYearRange,
+  getLastTwelveMonthsRange,
   getLastThreeMonthsRange,
   getUserLifetimeRange,
 } from "../utils/Time/time";
@@ -87,7 +87,7 @@ export default function Profile() {
           : grain === "Weekly"
           ? getLastThreeMonthsRange()
           : grain === "Monthly"
-          ? getCurrentYearRange()
+          ? getLastTwelveMonthsRange()
           : getUserLifetimeRange(
               user?.createdAt ?? new Date().getTime().toString()
             ),

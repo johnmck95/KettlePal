@@ -300,6 +300,18 @@ export const getCurrentYearRange = () => {
   };
 };
 
+// Last 12 calendar months ending with the current month
+export const getLastTwelveMonthsRange = () => {
+  const today = dayjs();
+  const start = today.startOf("month").subtract(11, "month");
+  const end = today.endOf("month");
+
+  return {
+    start: start.format("YYYY-MM-DD"),
+    end: end.format("YYYY-MM-DD"),
+  };
+};
+
 // (YEAR) Jan 1st of user created year to Dec 31 of current year
 export const getUserLifetimeRange = (userCreatedAt: string) => {
   const createdDate = dayjs(Number(userCreatedAt)).startOf("year");
