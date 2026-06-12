@@ -113,69 +113,6 @@ export default function Profile() {
     });
   }, [grain, range, refetch, user?.uid]);
 
-  // Shifts per bucket
-  // const shiftRange = (direction: -1 | 1) => {
-  //   const currentStart = dayjs(range.start);
-
-  //   switch (grain) {
-  //     // Data aggregated per day. Mon-Sun bucket at a time.
-  //     case "Daily": {
-  //       const base = currentStart.startOf("isoWeek");
-  //       const next = base.add(direction, "week");
-
-  //       setRange({
-  //         start: next.startOf("isoWeek").format("YYYY-MM-DD"),
-  //         end: next.endOf("isoWeek").format("YYYY-MM-DD"),
-  //       });
-  //       break;
-  //     }
-
-  //     // Data aggregated per week (mon-sun). 13 total weeks shown at once, shifted by 12-week blocks.
-  //     case "Weekly": {
-  //       const baseStart = dayjs(range.start).startOf("isoWeek");
-  //       const baseEnd = dayjs(range.end).endOf("isoWeek");
-
-  //       const nextStart = baseStart.add(direction * 12, "week");
-  //       const nextEnd = baseEnd.add(direction * 12, "week");
-
-  //       setRange({
-  //         start: nextStart.startOf("isoWeek").format("YYYY-MM-DD"),
-  //         end: nextEnd.endOf("isoWeek").format("YYYY-MM-DD"),
-  //       });
-  //       break;
-  //     }
-
-  //     // Data aggregated per month. 12 calendar months backwards from the end of current month.
-  //     case "Monthly": {
-  //       const baseStart = dayjs(range.start).startOf("month");
-  //       const baseEnd = dayjs(range.end).endOf("month");
-
-  //       const nextStart = baseStart.add(direction * 12, "month");
-  //       const nextEnd = baseEnd.add(direction * 12, "month");
-
-  //       setRange({
-  //         start: nextStart.startOf("month").format("YYYY-MM-DD"),
-  //         end: nextEnd.endOf("month").format("YYYY-MM-DD"),
-  //       });
-  //       break;
-  //     }
-
-  //     // Data aggregated per calendar year.
-  //     case "Annually": {
-  //       const baseStart = dayjs(range.start).startOf("year");
-  //       const baseEnd = dayjs(range.end).endOf("year");
-
-  //       const nextStart = baseStart.add(direction, "year");
-  //       const nextEnd = baseEnd.add(direction, "year");
-
-  //       setRange({
-  //         start: nextStart.startOf("year").format("YYYY-MM-DD"),
-  //         end: nextEnd.endOf("year").format("YYYY-MM-DD"),
-  //       });
-  //       break;
-  //     }
-  //   }
-  // };
   const shiftRange = (direction: -1 | 1) => {
     const currentStart = dayjs(range.start);
     const currentEnd = dayjs(range.end);
