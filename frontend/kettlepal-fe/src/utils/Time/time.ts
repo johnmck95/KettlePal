@@ -312,13 +312,52 @@ export const getLastTwelveMonthsRange = () => {
   };
 };
 
-// (YEAR) Jan 1st of user created year to Dec 31 of current year
-export const getUserLifetimeRange = (userCreatedAt: string) => {
+// Jan 1st - Dec 31st date range.
+// Spans 5 years if the users account age <=5 year. Spans user lifetime if account age >5 years.
+export const getUsersAnnualRange = (userCreatedAt: string) => {
   const createdDate = dayjs(Number(userCreatedAt)).startOf("year");
+  const minimumStart = dayjs().startOf("year").subtract(4, "year");
   const endOfYear = dayjs().endOf("year");
 
+  const start = createdDate.isBefore(minimumStart) ? createdDate : minimumStart;
+
   return {
-    start: createdDate.format("YYYY-MM-DD"),
+    start: start.format("YYYY-MM-DD"),
     end: endOfYear.format("YYYY-MM-DD"),
   };
+};
+
+export const isNextRangeInFuture = (
+  grain: "Daily" | "Weekly" | "Monthly" | "Annually",
+  range: {
+    start: string;
+    end: string;
+  }
+) => {
+  const now = dayjs();
+
+  switch (grain) {
+    case "Daily": {
+      const nextStart = dayjs(range.start).startOf("isoWeek").add(1, "week");
+      return nextStart.isAfter(now);
+    }
+
+    case "Weekly": {
+      const nextStart = dayjs(range.start).startOf("isoWeek").add(13, "week");
+      return nextStart.isAfter(now);
+    }
+
+    case "Monthly": {
+      const nextStart = dayjs(range.start).startOf("month").add(12, "month");
+      return nextStart.isAfter(now);
+    }
+
+    case "Annually": {
+      const nextStart = dayjs(range.start).startOf("year").add(5, "year");
+      return nextStart.isAfter(now);
+    }
+
+    default:
+      return false;
+  }
 };

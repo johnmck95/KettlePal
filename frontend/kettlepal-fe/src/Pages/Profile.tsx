@@ -28,7 +28,7 @@ import {
 } from "../generated/frontend-types";
 import { useUser } from "../Contexts/UserContext";
 import theme from "../Constants/theme";
-import { FaCog } from "react-icons/fa";
+import { FaChevronLeft, FaChevronRight, FaCog } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import {
   calculateTotalActiveDaysPercentage,
@@ -39,7 +39,8 @@ import {
   getCurrentWeekRange,
   getLastTwelveMonthsRange,
   getLastThreeMonthsRange,
-  getUserLifetimeRange,
+  getUsersAnnualRange,
+  isNextRangeInFuture,
 } from "../utils/Time/time";
 import Detail from "../Components/ViewWorkouts/ViewDetailedWorkoutModal/Detail";
 import LoadingSpinner from "../Components/LoadingSpinner";
@@ -51,6 +52,28 @@ import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
+function getDefaultRangeForGrain(
+  grain: "Daily" | "Weekly" | "Monthly" | "Annually",
+  userCreatedAt?: string
+) {
+  switch (grain) {
+    case "Daily":
+      return getCurrentWeekRange();
+
+    case "Weekly":
+      return getLastThreeMonthsRange();
+
+    case "Monthly":
+      return getLastTwelveMonthsRange();
+
+    case "Annually":
+      return getUsersAnnualRange(userCreatedAt ?? "");
+
+    default:
+      return getLastThreeMonthsRange();
+  }
+}
+
 export default function Profile() {
   const navigate = useNavigate();
   const user = useUser().user;
@@ -61,6 +84,7 @@ export default function Profile() {
   const [grain, setGrain] = useState<
     "Daily" | "Weekly" | "Monthly" | "Annually"
   >("Weekly");
+  const [range, setRange] = useState(getLastThreeMonthsRange());
 
   const { loading, error, data, refetch } = useProfilePageQuery({
     variables: {
@@ -69,6 +93,10 @@ export default function Profile() {
       range: getLastThreeMonthsRange(),
     },
   });
+
+  useEffect(() => {
+    setRange(getDefaultRangeForGrain(grain, user?.createdAt));
+  }, [grain, user?.createdAt]);
 
   useEffect(() => {
     refetch({
@@ -81,18 +109,133 @@ export default function Profile() {
           : grain === "Monthly"
           ? TimeGrain.Month
           : TimeGrain.Year,
-      range:
-        grain === "Daily"
-          ? getCurrentWeekRange()
-          : grain === "Weekly"
-          ? getLastThreeMonthsRange()
-          : grain === "Monthly"
-          ? getLastTwelveMonthsRange()
-          : getUserLifetimeRange(
-              user?.createdAt ?? new Date().getTime().toString()
-            ),
+      range,
     });
-  }, [grain, refetch, user]);
+  }, [grain, range, refetch, user?.uid]);
+
+  // Shifts per bucket
+  // const shiftRange = (direction: -1 | 1) => {
+  //   const currentStart = dayjs(range.start);
+
+  //   switch (grain) {
+  //     // Data aggregated per day. Mon-Sun bucket at a time.
+  //     case "Daily": {
+  //       const base = currentStart.startOf("isoWeek");
+  //       const next = base.add(direction, "week");
+
+  //       setRange({
+  //         start: next.startOf("isoWeek").format("YYYY-MM-DD"),
+  //         end: next.endOf("isoWeek").format("YYYY-MM-DD"),
+  //       });
+  //       break;
+  //     }
+
+  //     // Data aggregated per week (mon-sun). 13 total weeks shown at once, shifted by 12-week blocks.
+  //     case "Weekly": {
+  //       const baseStart = dayjs(range.start).startOf("isoWeek");
+  //       const baseEnd = dayjs(range.end).endOf("isoWeek");
+
+  //       const nextStart = baseStart.add(direction * 12, "week");
+  //       const nextEnd = baseEnd.add(direction * 12, "week");
+
+  //       setRange({
+  //         start: nextStart.startOf("isoWeek").format("YYYY-MM-DD"),
+  //         end: nextEnd.endOf("isoWeek").format("YYYY-MM-DD"),
+  //       });
+  //       break;
+  //     }
+
+  //     // Data aggregated per month. 12 calendar months backwards from the end of current month.
+  //     case "Monthly": {
+  //       const baseStart = dayjs(range.start).startOf("month");
+  //       const baseEnd = dayjs(range.end).endOf("month");
+
+  //       const nextStart = baseStart.add(direction * 12, "month");
+  //       const nextEnd = baseEnd.add(direction * 12, "month");
+
+  //       setRange({
+  //         start: nextStart.startOf("month").format("YYYY-MM-DD"),
+  //         end: nextEnd.endOf("month").format("YYYY-MM-DD"),
+  //       });
+  //       break;
+  //     }
+
+  //     // Data aggregated per calendar year.
+  //     case "Annually": {
+  //       const baseStart = dayjs(range.start).startOf("year");
+  //       const baseEnd = dayjs(range.end).endOf("year");
+
+  //       const nextStart = baseStart.add(direction, "year");
+  //       const nextEnd = baseEnd.add(direction, "year");
+
+  //       setRange({
+  //         start: nextStart.startOf("year").format("YYYY-MM-DD"),
+  //         end: nextEnd.endOf("year").format("YYYY-MM-DD"),
+  //       });
+  //       break;
+  //     }
+  //   }
+  // };
+  const shiftRange = (direction: -1 | 1) => {
+    const currentStart = dayjs(range.start);
+    const currentEnd = dayjs(range.end);
+
+    switch (grain) {
+      // Data aggregated per day. Shifted 1 day at a time.
+      case "Daily": {
+        setRange({
+          start: currentStart.add(direction, "day").format("YYYY-MM-DD"),
+          end: currentEnd.add(direction, "day").format("YYYY-MM-DD"),
+        });
+        break;
+      }
+
+      // Data aggregated per week (mon-sun). 13 total weeks shown at once, shifted by 1-week blocks.
+      case "Weekly": {
+        const baseStart = dayjs(range.start).startOf("isoWeek");
+        const baseEnd = dayjs(range.end).endOf("isoWeek");
+
+        const nextStart = baseStart.add(direction, "week");
+        const nextEnd = baseEnd.add(direction, "week");
+
+        setRange({
+          start: nextStart.startOf("isoWeek").format("YYYY-MM-DD"),
+          end: nextEnd.endOf("isoWeek").format("YYYY-MM-DD"),
+        });
+        break;
+      }
+
+      // Data aggregated per month. 12 calendar months backwards from the end of current month. Shifted monthly.
+      case "Monthly": {
+        const baseStart = dayjs(range.start).startOf("month");
+        const baseEnd = dayjs(range.end).endOf("month");
+
+        const nextStart = baseStart.add(direction, "month");
+        const nextEnd = baseEnd.add(direction, "month");
+
+        setRange({
+          start: nextStart.startOf("month").format("YYYY-MM-DD"),
+          end: nextEnd.endOf("month").format("YYYY-MM-DD"),
+        });
+        break;
+      }
+
+      // Data aggregated per calendar year.
+      case "Annually": {
+        const baseStart = dayjs(range.start).startOf("year");
+        const baseEnd = dayjs(range.end).endOf("year");
+
+        const nextStart = baseStart.add(direction, "year");
+        const nextEnd = baseEnd.add(direction, "year");
+
+        setRange({
+          start: nextStart.startOf("year").format("YYYY-MM-DD"),
+          end: nextEnd.endOf("year").format("YYYY-MM-DD"),
+        });
+        break;
+      }
+    }
+  };
 
   useEffect(() => {
     if (error) {
@@ -116,6 +259,12 @@ export default function Profile() {
 
     if (todayBucket) {
       setBucket(todayBucket);
+    } else {
+      setBucket(
+        data.user.workoutTrends.buckets[
+          data.user.workoutTrends.buckets.length - 1
+        ]
+      );
     }
   }, [data?.user?.workoutTrends?.buckets]);
 
@@ -159,16 +308,60 @@ export default function Profile() {
         />
       </HStack>
 
-      <Heading
-        size="md"
-        fontWeight={"lighter"}
+      <HStack
         w="90%"
-        mt="0.5rem"
+        mt="0.75rem"
+        pb="0.25rem"
         px="0.25rem"
-        borderBottom={`2px solid ${theme.colors.green[50]}`}
+        justifyContent="space-between"
       >
-        {dataRangeShown}
-      </Heading>
+        <IconButton
+          aria-label="Previous period"
+          icon={<FaChevronLeft />}
+          onClick={() => shiftRange(-1)}
+          variant="ghost"
+          size="md"
+          bg={theme.colors.white}
+          borderRadius="full"
+          border={`1px solid ${theme.colors.grey[300]}`}
+          boxShadow="sm"
+          _hover={{
+            borderColor: theme.colors.grey[400],
+          }}
+          _active={{
+            borderColor: theme.colors.grey[500],
+          }}
+        />
+
+        <Heading
+          size="md"
+          fontWeight={500}
+          color={theme.colors.grey[700]}
+          textAlign="center"
+        >
+          {dataRangeShown}
+        </Heading>
+
+        <IconButton
+          aria-label="Next period"
+          icon={<FaChevronRight />}
+          onClick={() => shiftRange(1)}
+          isDisabled={isNextRangeInFuture(grain, range)}
+          variant="ghost"
+          size="md"
+          bg={theme.colors.white}
+          borderRadius="full"
+          border={`1px solid ${theme.colors.grey[300]}`}
+          boxShadow="sm"
+          mt="0.25rem"
+          _hover={{
+            borderColor: theme.colors.grey[400],
+          }}
+          _active={{
+            borderColor: theme.colors.grey[500],
+          }}
+        />
+      </HStack>
       <HStack
         w="90%"
         justifyContent="space-evenly"
@@ -278,31 +471,37 @@ export default function Profile() {
             </Text>
           </HStack>
         </VStack>
-
-        <Select
-          size={["sm", "sm", "md"]}
-          fontSize={["16px"]}
-          name="grain"
-          w="50%"
-          maxW="250px"
-          borderRadius="5px"
-          value={grain}
-          onChange={(e) =>
-            setGrain(
-              e.target.value as "Daily" | "Weekly" | "Monthly" | "Annually"
-            )
-          }
-          focusBorderColor={theme.colors.green[300]}
-          color={theme.colors.black}
-        >
-          {["Daily", "Weekly", "Monthly", "Annually"].map((title) => {
-            return (
-              <option key={title} value={title}>
-                {title}
-              </option>
-            );
-          })}
-        </Select>
+        <VStack w="50%" maxW="250px" alignItems={"flex-start"}>
+          <Text
+            fontSize={["sm", "md"]}
+            fontWeight="medium"
+            color={theme.colors.grey[700]}
+          >
+            Granularity
+          </Text>
+          <Select
+            size={["sm", "sm", "md"]}
+            fontSize={["16px"]}
+            name="grain"
+            borderRadius="5px"
+            value={grain}
+            onChange={(e) =>
+              setGrain(
+                e.target.value as "Daily" | "Weekly" | "Monthly" | "Annually"
+              )
+            }
+            focusBorderColor={theme.colors.green[300]}
+            color={theme.colors.black}
+          >
+            {["Daily", "Weekly", "Monthly", "Annually"].map((title) => {
+              return (
+                <option key={title} value={title}>
+                  {title}
+                </option>
+              );
+            })}
+          </Select>
+        </VStack>
       </HStack>
 
       <VStack
