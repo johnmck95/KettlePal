@@ -364,7 +364,7 @@ export const resolvers = {
       validateDateFormat(range.end, "Range.end");
       validateRangeEndAfterStart(range);
 
-      // Aggregates ElapsedSeconds and WorkCapacity per day. Range is typically Monday-Friday of the current week
+      // Aggregates ElapsedSeconds and WorkCapacity per day. Range is typically Monday-Sunday of the current week
       switch (grain) {
         case TimeGrain.Day: {
           const { rows } = await knexInstance.raw(
