@@ -48,6 +48,7 @@ import Graph from "../Components/Visualizations/Graph";
 import dayjs from "dayjs";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
+import ExerciseTrends from "../Components/Visualizations/ExerciseTrends";
 
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
@@ -245,6 +246,7 @@ export default function Profile() {
         />
       </HStack>
 
+      {/* WEEKLY PROGRESS GRAPH */}
       <HStack
         w="90%"
         mt="0.75rem"
@@ -441,6 +443,11 @@ export default function Profile() {
         </VStack>
       </HStack>
 
+      {/* EXERCISE GRAPH */}
+
+      <ExerciseTrends />
+
+      {/* LIFETIME TOTALS */}
       <VStack
         w="90%"
         pt="2rem"

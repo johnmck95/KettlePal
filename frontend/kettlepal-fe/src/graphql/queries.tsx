@@ -98,12 +98,7 @@ const CHECK_SESSION_QUERY = gql`
 `;
 
 const PROFILE_PAGE_QUERY = gql`
-  query ProfilePage(
-    $uid: ID!
-    $grain: TimeGrain!
-    $range: DateRangeInput!
-    $exerciseTitle: String!
-  ) {
+  query ProfilePage($uid: ID!, $grain: TimeGrain!, $range: DateRangeInput!) {
     user(uid: $uid) {
       workoutTrends(grain: $grain, range: $range) {
         grain
@@ -126,6 +121,13 @@ const PROFILE_PAGE_QUERY = gql`
         topExercises
         oldestWorkoutDate
       }
+    }
+  }
+`;
+
+const EXERCISE_TRENDS_QUERY = gql`
+  query ExerciseTrends($uid: ID!, $exerciseTitle: String!) {
+    user(uid: $uid) {
       exerciseTrends(exerciseTitle: $exerciseTitle) {
         exerciseTitle
         rangeStart

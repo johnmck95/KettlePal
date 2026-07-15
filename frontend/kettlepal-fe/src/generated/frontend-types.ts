@@ -544,15 +544,22 @@ export type CheckSessionQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type CheckSessionQuery = { __typename?: 'Query', checkSession: { __typename?: 'CheckSessionResponse', isValid: boolean, user?: { __typename?: 'User', uid: string, firstName: string, lastName: string, email: string, isAuthorized: boolean, createdAt: string, tokenCount: number, bodyWeight: number, bodyWeightUnit: string, templates: Array<{ __typename?: 'Template', title: string, weightUnit?: string | null, multiplier: number, repsDisplay?: string | null, index: number, isBodyWeight: boolean }> } | null } };
 
-export type ProfilePageQueryVariables = Exact<{
+export type ExerciseTrendsQueryVariables = Exact<{
   uid: Scalars['ID']['input'];
-  grain: TimeGrain;
-  range: DateRangeInput;
   exerciseTitle: Scalars['String']['input'];
 }>;
 
 
-export type ProfilePageQuery = { __typename?: 'Query', user?: { __typename?: 'User', workoutTrends: { __typename?: 'WorkoutTrendResponse', grain: TimeGrain, rangeStart: string, rangeEnd: string, buckets: Array<{ __typename?: 'WorkoutAggregate', periodStart: string, periodEnd: string, workCapacityKg: number, durationSeconds: number }> }, userStats?: { __typename?: 'UserStats', totalWorkouts: number, totalExercises: number, totalTime?: number | null, longestWorkout?: number | null, mostRepsInWorkout?: number | null, largestWorkCapacityKg?: number | null, topExercises?: string | null, oldestWorkoutDate?: string | null } | null, exerciseTrends: { __typename?: 'ExerciseTrendsResponse', exerciseTitle: string, rangeStart: string, rangeEnd: string, dailyBuckets: Array<{ __typename?: 'ExerciseAggregate', periodStart: string, periodEnd: string, totalWorkCapacityKg: number, workCapacityComponents: Array<{ __typename?: 'WorkCapacityComponent', weight: number, weightUnit: string, workCapacityKg: number }> }>, weeklyBuckets: Array<{ __typename?: 'ExerciseAggregate', periodStart: string, periodEnd: string, totalWorkCapacityKg: number, workCapacityComponents: Array<{ __typename?: 'WorkCapacityComponent', weight: number, weightUnit: string, workCapacityKg: number }> }>, monthlyBuckets: Array<{ __typename?: 'ExerciseAggregate', periodStart: string, periodEnd: string, totalWorkCapacityKg: number, workCapacityComponents: Array<{ __typename?: 'WorkCapacityComponent', weight: number, weightUnit: string, workCapacityKg: number }> }>, yearlyBuckets: Array<{ __typename?: 'ExerciseAggregate', periodStart: string, periodEnd: string, totalWorkCapacityKg: number, workCapacityComponents: Array<{ __typename?: 'WorkCapacityComponent', weight: number, weightUnit: string, workCapacityKg: number }> }> } } | null };
+export type ExerciseTrendsQuery = { __typename?: 'Query', user?: { __typename?: 'User', exerciseTrends: { __typename?: 'ExerciseTrendsResponse', exerciseTitle: string, rangeStart: string, rangeEnd: string, dailyBuckets: Array<{ __typename?: 'ExerciseAggregate', periodStart: string, periodEnd: string, totalWorkCapacityKg: number, workCapacityComponents: Array<{ __typename?: 'WorkCapacityComponent', weight: number, weightUnit: string, workCapacityKg: number }> }>, weeklyBuckets: Array<{ __typename?: 'ExerciseAggregate', periodStart: string, periodEnd: string, totalWorkCapacityKg: number, workCapacityComponents: Array<{ __typename?: 'WorkCapacityComponent', weight: number, weightUnit: string, workCapacityKg: number }> }>, monthlyBuckets: Array<{ __typename?: 'ExerciseAggregate', periodStart: string, periodEnd: string, totalWorkCapacityKg: number, workCapacityComponents: Array<{ __typename?: 'WorkCapacityComponent', weight: number, weightUnit: string, workCapacityKg: number }> }>, yearlyBuckets: Array<{ __typename?: 'ExerciseAggregate', periodStart: string, periodEnd: string, totalWorkCapacityKg: number, workCapacityComponents: Array<{ __typename?: 'WorkCapacityComponent', weight: number, weightUnit: string, workCapacityKg: number }> }> } } | null };
+
+export type ProfilePageQueryVariables = Exact<{
+  uid: Scalars['ID']['input'];
+  grain: TimeGrain;
+  range: DateRangeInput;
+}>;
+
+
+export type ProfilePageQuery = { __typename?: 'Query', user?: { __typename?: 'User', workoutTrends: { __typename?: 'WorkoutTrendResponse', grain: TimeGrain, rangeStart: string, rangeEnd: string, buckets: Array<{ __typename?: 'WorkoutAggregate', periodStart: string, periodEnd: string, workCapacityKg: number, durationSeconds: number }> }, userStats?: { __typename?: 'UserStats', totalWorkouts: number, totalExercises: number, totalTime?: number | null, longestWorkout?: number | null, mostRepsInWorkout?: number | null, largestWorkCapacityKg?: number | null, topExercises?: string | null, oldestWorkoutDate?: string | null } | null } | null };
 
 
 export const LoginDocument = gql`
@@ -1085,30 +1092,9 @@ export type CheckSessionQueryHookResult = ReturnType<typeof useCheckSessionQuery
 export type CheckSessionLazyQueryHookResult = ReturnType<typeof useCheckSessionLazyQuery>;
 export type CheckSessionSuspenseQueryHookResult = ReturnType<typeof useCheckSessionSuspenseQuery>;
 export type CheckSessionQueryResult = Apollo.QueryResult<CheckSessionQuery, CheckSessionQueryVariables>;
-export const ProfilePageDocument = gql`
-    query ProfilePage($uid: ID!, $grain: TimeGrain!, $range: DateRangeInput!, $exerciseTitle: String!) {
+export const ExerciseTrendsDocument = gql`
+    query ExerciseTrends($uid: ID!, $exerciseTitle: String!) {
   user(uid: $uid) {
-    workoutTrends(grain: $grain, range: $range) {
-      grain
-      rangeStart
-      rangeEnd
-      buckets {
-        periodStart
-        periodEnd
-        workCapacityKg
-        durationSeconds
-      }
-    }
-    userStats {
-      totalWorkouts
-      totalExercises
-      totalTime
-      longestWorkout
-      mostRepsInWorkout
-      largestWorkCapacityKg
-      topExercises
-      oldestWorkoutDate
-    }
     exerciseTrends(exerciseTitle: $exerciseTitle) {
       exerciseTitle
       rangeStart
@@ -1159,6 +1145,67 @@ export const ProfilePageDocument = gql`
     `;
 
 /**
+ * __useExerciseTrendsQuery__
+ *
+ * To run a query within a React component, call `useExerciseTrendsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useExerciseTrendsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useExerciseTrendsQuery({
+ *   variables: {
+ *      uid: // value for 'uid'
+ *      exerciseTitle: // value for 'exerciseTitle'
+ *   },
+ * });
+ */
+export function useExerciseTrendsQuery(baseOptions: Apollo.QueryHookOptions<ExerciseTrendsQuery, ExerciseTrendsQueryVariables> & ({ variables: ExerciseTrendsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ExerciseTrendsQuery, ExerciseTrendsQueryVariables>(ExerciseTrendsDocument, options);
+      }
+export function useExerciseTrendsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ExerciseTrendsQuery, ExerciseTrendsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ExerciseTrendsQuery, ExerciseTrendsQueryVariables>(ExerciseTrendsDocument, options);
+        }
+export function useExerciseTrendsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ExerciseTrendsQuery, ExerciseTrendsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ExerciseTrendsQuery, ExerciseTrendsQueryVariables>(ExerciseTrendsDocument, options);
+        }
+export type ExerciseTrendsQueryHookResult = ReturnType<typeof useExerciseTrendsQuery>;
+export type ExerciseTrendsLazyQueryHookResult = ReturnType<typeof useExerciseTrendsLazyQuery>;
+export type ExerciseTrendsSuspenseQueryHookResult = ReturnType<typeof useExerciseTrendsSuspenseQuery>;
+export type ExerciseTrendsQueryResult = Apollo.QueryResult<ExerciseTrendsQuery, ExerciseTrendsQueryVariables>;
+export const ProfilePageDocument = gql`
+    query ProfilePage($uid: ID!, $grain: TimeGrain!, $range: DateRangeInput!) {
+  user(uid: $uid) {
+    workoutTrends(grain: $grain, range: $range) {
+      grain
+      rangeStart
+      rangeEnd
+      buckets {
+        periodStart
+        periodEnd
+        workCapacityKg
+        durationSeconds
+      }
+    }
+    userStats {
+      totalWorkouts
+      totalExercises
+      totalTime
+      longestWorkout
+      mostRepsInWorkout
+      largestWorkCapacityKg
+      topExercises
+      oldestWorkoutDate
+    }
+  }
+}
+    `;
+
+/**
  * __useProfilePageQuery__
  *
  * To run a query within a React component, call `useProfilePageQuery` and pass it any options that fit your needs.
@@ -1173,7 +1220,6 @@ export const ProfilePageDocument = gql`
  *      uid: // value for 'uid'
  *      grain: // value for 'grain'
  *      range: // value for 'range'
- *      exerciseTitle: // value for 'exerciseTitle'
  *   },
  * });
  */
