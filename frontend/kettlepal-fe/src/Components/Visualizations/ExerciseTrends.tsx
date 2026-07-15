@@ -9,6 +9,7 @@ import {
   HStack,
   Select,
   VStack,
+  Text,
 } from "@chakra-ui/react";
 import {
   ExerciseTrendsResponse,
@@ -18,6 +19,8 @@ import theme from "../../Constants/theme";
 import { useEffect, useState } from "react";
 import { useUser } from "../../Contexts/UserContext";
 import LoadingSpinner from "../LoadingSpinner";
+import { formatSelectedDateRange } from "../../utils/Time/time";
+import Detail from "../ViewWorkouts/ViewDetailedWorkoutModal/Detail";
 
 export default function ExerciseTrends() {
   //TODO: Fetch unique exercises from DB
@@ -29,13 +32,18 @@ export default function ExerciseTrends() {
   const { loading, error, data } = useExerciseTrendsQuery({
     variables: { uid: user?.uid ?? "", exerciseTitle },
   });
+  const exerciseTrends = data?.user?.exerciseTrends;
 
   useEffect(() => {
     if (error) {
       setShowServerError(true);
     }
   }, [error]);
-  console.log(data);
+
+  const dataRangeShown = formatSelectedDateRange(
+    exerciseTrends?.rangeStart,
+    exerciseTrends?.rangeEnd
+  );
 
   return (
     <VStack
@@ -68,28 +76,53 @@ export default function ExerciseTrends() {
               <LoadingSpinner disableMessage={true} />
             </Center>
           ) : (
-            <FormControl>
-              <FormLabel>Exercise</FormLabel>
-              <Select
-                size={["sm", "sm", "md"]}
-                fontSize={["16px"]}
-                placeholder={"Select"}
-                name="exercise"
-                focusBorderColor={theme.colors.green[300]}
-                color={theme.colors.black}
-                bg={theme.colors.white}
-                value={exerciseTitle}
-                onChange={(event) => setExerciseTitle(event.target.value)}
-              >
-                {userRecordedExercises.map((exercise) => {
-                  return (
-                    <option key={exercise} value={exercise}>
-                      {exercise}
-                    </option>
-                  );
-                })}
-              </Select>
-            </FormControl>
+            <VStack w="100%">
+              <HStack w="100%" justifyContent={"space-around"}>
+                <FormControl maxW="200px">
+                  <FormLabel>Exercise</FormLabel>
+                  <Select
+                    size={["sm", "sm", "md"]}
+                    fontSize={["16px"]}
+                    placeholder={"Select"}
+                    name="exercise"
+                    focusBorderColor={theme.colors.green[300]}
+                    color={theme.colors.black}
+                    bg={theme.colors.white}
+                    value={exerciseTitle}
+                    onChange={(event) => setExerciseTitle(event.target.value)}
+                  >
+                    {userRecordedExercises.map((exercise) => {
+                      return (
+                        <option key={exercise} value={exercise}>
+                          {exercise}
+                        </option>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
+                <VStack>
+                  <Text
+                    fontSize={["sm", "md"]}
+                    fontWeight="medium"
+                    color={theme.colors.grey[700]}
+                  >
+                    Selected Period
+                  </Text>
+                  <Text>{dataRangeShown}</Text>
+                </VStack>
+              </HStack>
+              <HStack w="100%" justifyContent={"space-around"}>
+                <Detail
+                  title={"Work Capacity"}
+                  value={"999,999 kg"}
+                  variant="md"
+                  color={theme.colors.graphSecondary[500]}
+                />
+                <Text>
+                  <b>TO DO:</b> Horizontal Bars
+                </Text>
+              </HStack>
+            </VStack>
           )}
         </>
       )}
