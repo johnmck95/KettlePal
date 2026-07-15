@@ -117,6 +117,25 @@ export type Exercise = {
   workoutUid: Scalars['ID']['output'];
 };
 
+export type ExerciseAggregate = {
+  __typename?: 'ExerciseAggregate';
+  periodEnd: Scalars['String']['output'];
+  periodStart: Scalars['String']['output'];
+  totalWorkCapacityKg: Scalars['Float']['output'];
+  workCapacityComponents: Array<WorkCapacityComponent>;
+};
+
+export type ExerciseTrendsResponse = {
+  __typename?: 'ExerciseTrendsResponse';
+  dailyBuckets: Array<ExerciseAggregate>;
+  exerciseTitle: Scalars['String']['output'];
+  monthlyBuckets: Array<ExerciseAggregate>;
+  rangeEnd: Scalars['String']['output'];
+  rangeStart: Scalars['String']['output'];
+  weeklyBuckets: Array<ExerciseAggregate>;
+  yearlyBuckets: Array<ExerciseAggregate>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   addExercise?: Maybe<Exercise>;
@@ -131,6 +150,7 @@ export type Mutation = {
   invalidateToken: Scalars['Boolean']['output'];
   login?: Maybe<User>;
   refreshToken: RefreshTokenResponse;
+  resetPassword?: Maybe<Scalars['Boolean']['output']>;
   signUp?: Maybe<User>;
   updateExercise?: Maybe<Exercise>;
   updateUser?: Maybe<User>;
@@ -191,6 +211,12 @@ export type MutationDeleteWorkoutWithExercisesArgs = {
 export type MutationLoginArgs = {
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
+};
+
+
+export type MutationResetPasswordArgs = {
+  newPassword: Scalars['String']['input'];
+  userToUpdateUid: Scalars['ID']['input'];
 };
 
 
@@ -322,6 +348,7 @@ export type User = {
   bodyWeightUnit: Scalars['String']['output'];
   createdAt: Scalars['String']['output'];
   email: Scalars['String']['output'];
+  exerciseTrends: ExerciseTrendsResponse;
   firstName: Scalars['String']['output'];
   isAuthorized: Scalars['Boolean']['output'];
   lastName: Scalars['String']['output'];
@@ -332,6 +359,11 @@ export type User = {
   userStats?: Maybe<UserStats>;
   workoutTrends: WorkoutTrendResponse;
   workouts: Array<Maybe<Workout>>;
+};
+
+
+export type UserExerciseTrendsArgs = {
+  exerciseTitle: Scalars['String']['input'];
 };
 
 
@@ -375,6 +407,13 @@ export type UserWithTemplates = {
   __typename?: 'UserWithTemplates';
   templates: Array<Template>;
   user: User;
+};
+
+export type WorkCapacityComponent = {
+  __typename?: 'WorkCapacityComponent';
+  weight: Scalars['Float']['output'];
+  weightUnit: Scalars['String']['output'];
+  workCapacityKg: Scalars['Float']['output'];
 };
 
 export type Workout = {
@@ -499,6 +538,8 @@ export type ResolversTypes = ResolversObject<{
   EditExerciseInput: EditExerciseInput;
   EditUserInput: EditUserInput;
   Exercise: ResolverTypeWrapper<Exercise>;
+  ExerciseAggregate: ResolverTypeWrapper<ExerciseAggregate>;
+  ExerciseTrendsResponse: ResolverTypeWrapper<ExerciseTrendsResponse>;
   Float: ResolverTypeWrapper<Scalars['Float']['output']>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
@@ -514,6 +555,7 @@ export type ResolversTypes = ResolversObject<{
   UserPastWorkouts: ResolverTypeWrapper<UserPastWorkouts>;
   UserStats: ResolverTypeWrapper<UserStats>;
   UserWithTemplates: ResolverTypeWrapper<UserWithTemplates>;
+  WorkCapacityComponent: ResolverTypeWrapper<WorkCapacityComponent>;
   Workout: ResolverTypeWrapper<Workout>;
   WorkoutAggregate: ResolverTypeWrapper<WorkoutAggregate>;
   WorkoutTrendResponse: ResolverTypeWrapper<WorkoutTrendResponse>;
@@ -535,6 +577,8 @@ export type ResolversParentTypes = ResolversObject<{
   EditExerciseInput: EditExerciseInput;
   EditUserInput: EditUserInput;
   Exercise: Exercise;
+  ExerciseAggregate: ExerciseAggregate;
+  ExerciseTrendsResponse: ExerciseTrendsResponse;
   Float: Scalars['Float']['output'];
   ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
@@ -549,6 +593,7 @@ export type ResolversParentTypes = ResolversObject<{
   UserPastWorkouts: UserPastWorkouts;
   UserStats: UserStats;
   UserWithTemplates: UserWithTemplates;
+  WorkCapacityComponent: WorkCapacityComponent;
   Workout: Workout;
   WorkoutAggregate: WorkoutAggregate;
   WorkoutTrendResponse: WorkoutTrendResponse;
@@ -577,6 +622,25 @@ export type ExerciseResolvers<ContextType = any, ParentType extends ResolversPar
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type ExerciseAggregateResolvers<ContextType = any, ParentType extends ResolversParentTypes['ExerciseAggregate'] = ResolversParentTypes['ExerciseAggregate']> = ResolversObject<{
+  periodEnd?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  periodStart?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  totalWorkCapacityKg?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  workCapacityComponents?: Resolver<Array<ResolversTypes['WorkCapacityComponent']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
+export type ExerciseTrendsResponseResolvers<ContextType = any, ParentType extends ResolversParentTypes['ExerciseTrendsResponse'] = ResolversParentTypes['ExerciseTrendsResponse']> = ResolversObject<{
+  dailyBuckets?: Resolver<Array<ResolversTypes['ExerciseAggregate']>, ParentType, ContextType>;
+  exerciseTitle?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  monthlyBuckets?: Resolver<Array<ResolversTypes['ExerciseAggregate']>, ParentType, ContextType>;
+  rangeEnd?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  rangeStart?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  weeklyBuckets?: Resolver<Array<ResolversTypes['ExerciseAggregate']>, ParentType, ContextType>;
+  yearlyBuckets?: Resolver<Array<ResolversTypes['ExerciseAggregate']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type MutationResolvers<ContextType = any, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = ResolversObject<{
   addExercise?: Resolver<Maybe<ResolversTypes['Exercise']>, ParentType, ContextType, RequireFields<MutationAddExerciseArgs, 'exercise' | 'workoutUid'>>;
   addOrUpdateSettings?: Resolver<ResolversTypes['UserWithTemplates'], ParentType, ContextType, RequireFields<MutationAddOrUpdateSettingsArgs, 'settings' | 'userUid'>>;
@@ -590,6 +654,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   invalidateToken?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   login?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationLoginArgs, 'email' | 'password'>>;
   refreshToken?: Resolver<ResolversTypes['RefreshTokenResponse'], ParentType, ContextType>;
+  resetPassword?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationResetPasswordArgs, 'newPassword' | 'userToUpdateUid'>>;
   signUp?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationSignUpArgs, 'user'>>;
   updateExercise?: Resolver<Maybe<ResolversTypes['Exercise']>, ParentType, ContextType, RequireFields<MutationUpdateExerciseArgs, 'edits' | 'uid'>>;
   updateUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationUpdateUserArgs, 'edits' | 'uid'>>;
@@ -633,6 +698,7 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   bodyWeightUnit?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  exerciseTrends?: Resolver<ResolversTypes['ExerciseTrendsResponse'], ParentType, ContextType, RequireFields<UserExerciseTrendsArgs, 'exerciseTitle'>>;
   firstName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   isAuthorized?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   lastName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -677,6 +743,13 @@ export type UserWithTemplatesResolvers<ContextType = any, ParentType extends Res
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 }>;
 
+export type WorkCapacityComponentResolvers<ContextType = any, ParentType extends ResolversParentTypes['WorkCapacityComponent'] = ResolversParentTypes['WorkCapacityComponent']> = ResolversObject<{
+  weight?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  weightUnit?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  workCapacityKg?: Resolver<ResolversTypes['Float'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+}>;
+
 export type WorkoutResolvers<ContextType = any, ParentType extends ResolversParentTypes['Workout'] = ResolversParentTypes['Workout']> = ResolversObject<{
   comment?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -717,6 +790,8 @@ export type WorkoutWithExercisesResolvers<ContextType = any, ParentType extends 
 export type Resolvers<ContextType = any> = ResolversObject<{
   CheckSessionResponse?: CheckSessionResponseResolvers<ContextType>;
   Exercise?: ExerciseResolvers<ContextType>;
+  ExerciseAggregate?: ExerciseAggregateResolvers<ContextType>;
+  ExerciseTrendsResponse?: ExerciseTrendsResponseResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
   RefreshTokenResponse?: RefreshTokenResponseResolvers<ContextType>;
@@ -725,6 +800,7 @@ export type Resolvers<ContextType = any> = ResolversObject<{
   UserPastWorkouts?: UserPastWorkoutsResolvers<ContextType>;
   UserStats?: UserStatsResolvers<ContextType>;
   UserWithTemplates?: UserWithTemplatesResolvers<ContextType>;
+  WorkCapacityComponent?: WorkCapacityComponentResolvers<ContextType>;
   Workout?: WorkoutResolvers<ContextType>;
   WorkoutAggregate?: WorkoutAggregateResolvers<ContextType>;
   WorkoutTrendResponse?: WorkoutTrendResponseResolvers<ContextType>;
