@@ -98,7 +98,12 @@ const CHECK_SESSION_QUERY = gql`
 `;
 
 const PROFILE_PAGE_QUERY = gql`
-  query ProfilePage($uid: ID!, $grain: TimeGrain!, $range: DateRangeInput!) {
+  query ProfilePage(
+    $uid: ID!
+    $grain: TimeGrain!
+    $range: DateRangeInput!
+    $exerciseTitle: String!
+  ) {
     user(uid: $uid) {
       workoutTrends(grain: $grain, range: $range) {
         grain
@@ -120,6 +125,51 @@ const PROFILE_PAGE_QUERY = gql`
         largestWorkCapacityKg
         topExercises
         oldestWorkoutDate
+      }
+      exerciseTrends(exerciseTitle: $exerciseTitle) {
+        exerciseTitle
+        rangeStart
+        rangeEnd
+        dailyBuckets {
+          periodStart
+          periodEnd
+          totalWorkCapacityKg
+          workCapacityComponents {
+            weight
+            weightUnit
+            workCapacityKg
+          }
+        }
+        weeklyBuckets {
+          periodStart
+          periodEnd
+          totalWorkCapacityKg
+          workCapacityComponents {
+            weight
+            weightUnit
+            workCapacityKg
+          }
+        }
+        monthlyBuckets {
+          periodStart
+          periodEnd
+          totalWorkCapacityKg
+          workCapacityComponents {
+            weight
+            weightUnit
+            workCapacityKg
+          }
+        }
+        yearlyBuckets {
+          periodStart
+          periodEnd
+          totalWorkCapacityKg
+          workCapacityComponents {
+            weight
+            weightUnit
+            workCapacityKg
+          }
+        }
       }
     }
   }
