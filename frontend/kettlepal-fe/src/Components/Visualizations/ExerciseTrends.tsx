@@ -10,22 +10,34 @@ import {
   Select,
   VStack,
   Text,
+  RangeSlider,
+  RangeSliderTrack,
+  RangeSliderFilledTrack,
+  RangeSliderThumb,
 } from "@chakra-ui/react";
-import {
-  ExerciseTrendsResponse,
-  useExerciseTrendsQuery,
-} from "../../generated/frontend-types";
+import { useExerciseTrendsQuery } from "../../generated/frontend-types";
 import theme from "../../Constants/theme";
 import { useEffect, useState } from "react";
 import { useUser } from "../../Contexts/UserContext";
 import LoadingSpinner from "../LoadingSpinner";
-import { formatSelectedDateRange } from "../../utils/Time/time";
+import {
+  dateToDayNumber,
+  dayNumberToDate,
+  formatSelectedDateRange,
+} from "../../utils/Time/time";
 import Detail from "../ViewWorkouts/ViewDetailedWorkoutModal/Detail";
 
 export default function ExerciseTrends() {
   //TODO: Fetch unique exercises from DB
   const userRecordedExercises = ["Clean", "Swing", "Press", "Squat"];
   const [exerciseTitle, setExerciseTitle] = useState(userRecordedExercises[0]);
+  // YYYY-MM-DD representation of the date range
+  const [selectedDateRange, setSelectedDateRange] = useState<[string, string]>([
+    "",
+    "",
+  ]);
+  // Numerical representation of the date range
+  const [sliderRange, setSliderRange] = useState<[number, number]>([0, 0]);
   const user = useUser().user;
   const [showServerError, setShowServerError] = useState<boolean>(false);
 
@@ -39,6 +51,21 @@ export default function ExerciseTrends() {
       setShowServerError(true);
     }
   }, [error]);
+
+  // Initialize slider with exercise date range.
+  useEffect(() => {
+    if (exerciseTrends?.rangeStart && exerciseTrends?.rangeEnd) {
+      const start = dateToDayNumber(exerciseTrends.rangeStart);
+      const end = dateToDayNumber(exerciseTrends.rangeEnd);
+
+      setSliderRange([start, end]);
+
+      setSelectedDateRange([
+        exerciseTrends.rangeStart,
+        exerciseTrends.rangeEnd,
+      ]);
+    }
+  }, [exerciseTrends]);
 
   const dataRangeShown = formatSelectedDateRange(
     exerciseTrends?.rangeStart,
@@ -77,6 +104,7 @@ export default function ExerciseTrends() {
             </Center>
           ) : (
             <VStack w="100%">
+              {/* EXERCISE SELECTOR & SELECTED PERIOD */}
               <HStack w="100%" justifyContent={"space-around"}>
                 <FormControl maxW="200px">
                   <FormLabel>Exercise</FormLabel>
@@ -111,6 +139,8 @@ export default function ExerciseTrends() {
                   <Text>{dataRangeShown}</Text>
                 </VStack>
               </HStack>
+
+              {/* WORK CAPACITYU AND HORIZONTAL BARS */}
               <HStack w="100%" justifyContent={"space-around"}>
                 <Detail
                   title={"Work Capacity"}
@@ -122,6 +152,52 @@ export default function ExerciseTrends() {
                   <b>TO DO:</b> Horizontal Bars
                 </Text>
               </HStack>
+
+              {/* RANGE SLIDER */}
+              {exerciseTrends?.rangeStart && exerciseTrends?.rangeEnd && (
+                <VStack w="80%">
+                  <RangeSlider
+                    min={dateToDayNumber(exerciseTrends.rangeStart)}
+                    max={dateToDayNumber(exerciseTrends.rangeEnd)}
+                    value={sliderRange}
+                    onChange={(value) => {
+                      const [start, end] = value as [number, number];
+                      setSliderRange([start, end]);
+                      setSelectedDateRange([
+                        dayNumberToDate(start),
+                        dayNumberToDate(end),
+                      ]);
+                    }}
+                    step={1}
+                    w="100%"
+                  >
+                    <RangeSliderTrack bg={theme.colors.graphSecondary[200]}>
+                      <RangeSliderFilledTrack bg={theme.colors.bole[200]} />
+                    </RangeSliderTrack>
+
+                    <RangeSliderThumb
+                      index={0}
+                      bg={theme.colors.bole[400]}
+                      borderColor={theme.colors.bole[800]}
+                    />
+                    <RangeSliderThumb
+                      index={1}
+                      bg={theme.colors.bole[400]}
+                      borderColor={theme.colors.bole[800]}
+                    />
+                  </RangeSlider>
+
+                  <HStack w="100%" justifyContent="space-between">
+                    <Text fontSize="sm" color={theme.colors.grey[700]}>
+                      {selectedDateRange[0]}
+                    </Text>
+
+                    <Text fontSize="sm" color={theme.colors.grey[700]}>
+                      {selectedDateRange[0]}
+                    </Text>
+                  </HStack>
+                </VStack>
+              )}
             </VStack>
           )}
         </>
