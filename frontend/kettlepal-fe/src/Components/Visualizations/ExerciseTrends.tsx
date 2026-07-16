@@ -28,9 +28,8 @@ import {
 import Detail from "../ViewWorkouts/ViewDetailedWorkoutModal/Detail";
 
 export default function ExerciseTrends() {
-  //TODO: Fetch unique exercises from DB
-  const userRecordedExercises = ["Clean", "Swing", "Press", "Squat"];
-  const [exerciseTitle, setExerciseTitle] = useState(userRecordedExercises[0]);
+  const [uniqueExerciseTitles, setUniqueExerciseTitles] = useState([""]);
+  const [exerciseTitle, setExerciseTitle] = useState(uniqueExerciseTitles[0]);
   // YYYY-MM-DD representation of the date range
   const [selectedDateRange, setSelectedDateRange] = useState<[string, string]>([
     "",
@@ -65,8 +64,11 @@ export default function ExerciseTrends() {
         exerciseTrends.rangeEnd,
       ]);
     }
-  }, [exerciseTrends]);
-
+    if (data?.uniqueExerciseTitles) {
+      setUniqueExerciseTitles(data.uniqueExerciseTitles);
+      setExerciseTitle(data.uniqueExerciseTitles[0]);
+    }
+  }, [data]);
   const dataRangeShown = formatSelectedDateRange(
     exerciseTrends?.rangeStart,
     exerciseTrends?.rangeEnd
@@ -119,7 +121,7 @@ export default function ExerciseTrends() {
                     value={exerciseTitle}
                     onChange={(event) => setExerciseTitle(event.target.value)}
                   >
-                    {userRecordedExercises.map((exercise) => {
+                    {uniqueExerciseTitles.map((exercise) => {
                       return (
                         <option key={exercise} value={exercise}>
                           {exercise}
@@ -193,7 +195,7 @@ export default function ExerciseTrends() {
                     </Text>
 
                     <Text fontSize="sm" color={theme.colors.grey[700]}>
-                      {selectedDateRange[0]}
+                      {selectedDateRange[1]}
                     </Text>
                   </HStack>
                 </VStack>

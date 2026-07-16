@@ -127,6 +127,7 @@ const PROFILE_PAGE_QUERY = gql`
 
 const EXERCISE_TRENDS_QUERY = gql`
   query ExerciseTrends($uid: ID!, $exerciseTitle: String!) {
+    uniqueExerciseTitles(userUid: $uid)
     user(uid: $uid) {
       exerciseTrends(exerciseTitle: $exerciseTitle) {
         exerciseTitle
