@@ -105,6 +105,17 @@ export default function ExerciseTrendsStackedBarChart({ buckets }: Props) {
       (a, b) =>
         new Date(a.periodStart).getTime() - new Date(b.periodStart).getTime()
     );
+    const first = new Date(sortedBuckets[0].periodStart);
+    const last = new Date(sortedBuckets[sortedBuckets.length - 1].periodStart);
+
+    const spanYears = last.getFullYear() - first.getFullYear();
+
+    const dateFormatter =
+      spanYears === 0
+        ? d3.timeFormat("%b %d") // Jan 05
+        : spanYears <= 3
+        ? d3.timeFormat("%b %Y") // Jan 2024
+        : d3.timeFormat("%Y"); // 2024
 
     // Scales
     const x = d3
@@ -176,7 +187,7 @@ export default function ExerciseTrendsStackedBarChart({ buckets }: Props) {
         d3
           .axisBottom(x)
           .tickValues(tickValues)
-          .tickFormat((value) => d3.timeFormat("%b %d")(new Date(value)))
+          .tickFormat((value) => dateFormatter(new Date(value)))
       );
 
     return () => {
