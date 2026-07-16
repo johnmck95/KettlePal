@@ -88,6 +88,12 @@ export default function ExerciseTrends() {
   const buckets = bucketOptions.find(
     (bucket) => (bucket?.length ?? 0) <= MAX_BUCKETS
   );
+  const filteredBuckets = buckets?.filter((bucket) => {
+    const bucketStart = dateToDayNumber(bucket.periodStart);
+    const bucketEnd = dateToDayNumber(bucket.periodEnd);
+
+    return bucketEnd >= sliderRange[0] && bucketStart <= sliderRange[1];
+  });
 
   const sumWorkCapacityKg = buckets?.reduce(
     (sum, bucket) => sum + bucket.totalWorkCapacityKg,
@@ -178,11 +184,13 @@ export default function ExerciseTrends() {
               </HStack>
 
               {/* STACKED BAR CHART */}
-              {buckets && <ExerciseTrendsStackedBarChart buckets={buckets} />}
+              {filteredBuckets && (
+                <ExerciseTrendsStackedBarChart buckets={filteredBuckets} />
+              )}
 
               {/* RANGE SLIDER */}
               {exerciseTrends?.rangeStart && exerciseTrends?.rangeEnd && (
-                <VStack w="80%">
+                <VStack w="100%">
                   <RangeSlider
                     min={dateToDayNumber(exerciseTrends.rangeStart)}
                     max={dateToDayNumber(exerciseTrends.rangeEnd)}
@@ -206,11 +214,21 @@ export default function ExerciseTrends() {
                       index={0}
                       bg={theme.colors.bole[400]}
                       borderColor={theme.colors.bole[800]}
+                      _focus={{
+                        bg: theme.colors.bole[400],
+                        borderColor: theme.colors.bole[800],
+                        boxShadow: "none",
+                      }}
                     />
                     <RangeSliderThumb
                       index={1}
                       bg={theme.colors.bole[400]}
                       borderColor={theme.colors.bole[800]}
+                      _focus={{
+                        bg: theme.colors.bole[400],
+                        borderColor: theme.colors.bole[800],
+                        boxShadow: "none",
+                      }}
                     />
                   </RangeSlider>
 
