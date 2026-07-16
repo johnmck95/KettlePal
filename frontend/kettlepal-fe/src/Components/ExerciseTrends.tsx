@@ -52,7 +52,7 @@ export default function ExerciseTrends() {
     }
   }, [error]);
 
-  // Initialize slider with exercise date range.
+  // Initialize controls from incoming data
   useEffect(() => {
     if (exerciseTrends?.rangeStart && exerciseTrends?.rangeEnd) {
       const start = dateToDayNumber(exerciseTrends.rangeStart);
@@ -67,13 +67,34 @@ export default function ExerciseTrends() {
     }
     if (data?.uniqueExerciseTitles) {
       setUniqueExerciseTitles(data.uniqueExerciseTitles);
-      setExerciseTitle(data.uniqueExerciseTitles[0]);
+      // Only initialize once
+      if (!exerciseTitle && data.uniqueExerciseTitles.length > 0) {
+        setExerciseTitle(data.uniqueExerciseTitles[0]);
+      }
     }
   }, [data]);
   const dataRangeShown = formatSelectedDateRange(
     exerciseTrends?.rangeStart,
     exerciseTrends?.rangeEnd
   );
+
+  const MAX_BUCKETS = 100;
+  const bucketOptions = [
+    exerciseTrends?.dailyBuckets,
+    exerciseTrends?.weeklyBuckets,
+    exerciseTrends?.monthlyBuckets,
+    exerciseTrends?.yearlyBuckets,
+  ];
+  const buckets = bucketOptions.find(
+    (bucket) => (bucket?.length ?? 0) <= MAX_BUCKETS
+  );
+
+  const sumWorkCapacityKg = buckets?.reduce(
+    (sum, bucket) => sum + bucket.totalWorkCapacityKg,
+    0
+  );
+  const summedWorkCapacityKg =
+    Math.round(sumWorkCapacityKg ?? 0).toLocaleString() + "kg";
 
   return (
     <VStack
@@ -147,7 +168,7 @@ export default function ExerciseTrends() {
               <HStack w="100%" justifyContent={"space-around"}>
                 <Detail
                   title={"Work Capacity"}
-                  value={"999,999 kg"}
+                  value={summedWorkCapacityKg}
                   variant="md"
                   color={theme.colors.graphSecondary[500]}
                 />
@@ -157,11 +178,7 @@ export default function ExerciseTrends() {
               </HStack>
 
               {/* STACKED BAR CHART */}
-              {exerciseTrends && (
-                <ExerciseTrendsStackedBarChart
-                  buckets={exerciseTrends.weeklyBuckets}
-                />
-              )}
+              {buckets && <ExerciseTrendsStackedBarChart buckets={buckets} />}
 
               {/* RANGE SLIDER */}
               {exerciseTrends?.rangeStart && exerciseTrends?.rangeEnd && (
