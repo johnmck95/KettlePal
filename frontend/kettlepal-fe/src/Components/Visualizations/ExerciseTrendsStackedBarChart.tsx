@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import * as d3 from "d3";
 import {
   ExerciseAggregate,
@@ -72,7 +72,10 @@ export default function ExerciseTrendsStackedBarChart({ buckets }: Props) {
     }
   });
 
-  const colour = (weightLabel: string) => colourMap.get(weightLabel) ?? "#999";
+  const colour = useCallback(
+    (weightLabel: string) => colourMap.get(weightLabel) ?? "#999",
+    [colourMap]
+  );
 
   useEffect(() => {
     const svgEl = svgRef.current;
@@ -153,9 +156,7 @@ export default function ExerciseTrendsStackedBarChart({ buckets }: Props) {
           .attr("width", x.bandwidth())
           .attr("y", y(accumulated))
           .attr("height", y(start) - y(accumulated))
-          .attr("fill", colour(weightLabel(component)))
-          .attr("stroke", "white")
-          .attr("stroke-width", 1);
+          .attr("fill", colour(weightLabel(component)));
       });
     });
 
@@ -181,7 +182,7 @@ export default function ExerciseTrendsStackedBarChart({ buckets }: Props) {
     return () => {
       svg.selectAll("*").remove();
     };
-  }, [buckets]);
+  }, [buckets, colour]);
 
   return (
     <div style={{ width: "100%" }}>

@@ -657,7 +657,11 @@ export const resolvers = {
           )
         )
         .where("w.userUid", parent.uid)
-        .andWhere("e.title", exerciseTitle);
+        .andWhere("e.title", exerciseTitle)
+        .whereNotNull("e.weight")
+        .whereNotNull("e.sets")
+        .whereNotNull("e.reps")
+        .whereNotNull("e.multiplier");
 
       if (exercises.length === 0) {
         return {

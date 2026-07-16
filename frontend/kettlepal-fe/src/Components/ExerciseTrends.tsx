@@ -45,7 +45,7 @@ export default function ExerciseTrends() {
     variables: { uid: user?.uid ?? "", exerciseTitle },
   });
   const exerciseTrends = data?.user?.exerciseTrends;
-  console.log(exerciseTrends?.dailyBuckets);
+
   useEffect(() => {
     if (error) {
       setShowServerError(true);
