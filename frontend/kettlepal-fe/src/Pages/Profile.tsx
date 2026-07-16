@@ -44,11 +44,11 @@ import {
 } from "../utils/Time/time";
 import Detail from "../Components/ViewWorkouts/ViewDetailedWorkoutModal/Detail";
 import LoadingSpinner from "../Components/LoadingSpinner";
-import Graph from "../Components/Visualizations/Graph";
+import WorkoutTrendsGraph from "../Components/Visualizations/WorkoutTrendsGraph";
 import dayjs from "dayjs";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
-import ExerciseTrends from "../Components/Visualizations/ExerciseTrends";
+import ExerciseTrends from "../Components/ExerciseTrends";
 
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
@@ -353,7 +353,7 @@ export default function Profile() {
           ) : (
             <>
               {data?.user?.workoutTrends && bucket && (
-                <Graph
+                <WorkoutTrendsGraph
                   workoutTrends={data?.user?.workoutTrends}
                   showTime={showTime}
                   showWC={showWC}

@@ -15,17 +15,18 @@ import {
   RangeSliderFilledTrack,
   RangeSliderThumb,
 } from "@chakra-ui/react";
-import { useExerciseTrendsQuery } from "../../generated/frontend-types";
-import theme from "../../Constants/theme";
+import { useExerciseTrendsQuery } from "../generated/frontend-types";
+import theme from "../Constants/theme";
 import { useEffect, useState } from "react";
-import { useUser } from "../../Contexts/UserContext";
-import LoadingSpinner from "../LoadingSpinner";
+import { useUser } from "../Contexts/UserContext";
+import LoadingSpinner from "./LoadingSpinner";
 import {
   dateToDayNumber,
   dayNumberToDate,
   formatSelectedDateRange,
-} from "../../utils/Time/time";
-import Detail from "../ViewWorkouts/ViewDetailedWorkoutModal/Detail";
+} from "../utils/Time/time";
+import Detail from "./ViewWorkouts/ViewDetailedWorkoutModal/Detail";
+import ExerciseTrendsStackedBarChart from "./Visualizations/ExerciseTrendsStackedBarChart";
 
 export default function ExerciseTrends() {
   const [uniqueExerciseTitles, setUniqueExerciseTitles] = useState([""]);
@@ -44,7 +45,7 @@ export default function ExerciseTrends() {
     variables: { uid: user?.uid ?? "", exerciseTitle },
   });
   const exerciseTrends = data?.user?.exerciseTrends;
-
+  console.log(exerciseTrends?.dailyBuckets);
   useEffect(() => {
     if (error) {
       setShowServerError(true);
@@ -154,6 +155,13 @@ export default function ExerciseTrends() {
                   <b>TO DO:</b> Horizontal Bars
                 </Text>
               </HStack>
+
+              {/* STACKED BAR CHART */}
+              {exerciseTrends && (
+                <ExerciseTrendsStackedBarChart
+                  buckets={exerciseTrends.weeklyBuckets}
+                />
+              )}
 
               {/* RANGE SLIDER */}
               {exerciseTrends?.rangeStart && exerciseTrends?.rangeEnd && (

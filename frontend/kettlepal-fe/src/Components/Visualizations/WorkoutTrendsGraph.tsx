@@ -133,7 +133,7 @@ function segmentIntersection(
   };
 }
 
-export default function Graph({
+export default function WorkoutTrendsGraph({
   workoutTrends,
   showTime,
   showWC,
