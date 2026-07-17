@@ -355,7 +355,7 @@ export default function Profile() {
           />
         </Alert>
       ) : (
-        <Box w="100%" h={["200px", "300px"]} borderRadius="6px">
+        <Box w="100%" h="100%" borderRadius="6px">
           {loading ? (
             <Center h="100%" w="100%">
               <LoadingSpinner disableMessage={true} />

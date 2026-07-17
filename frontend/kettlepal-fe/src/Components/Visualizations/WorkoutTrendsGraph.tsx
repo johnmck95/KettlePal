@@ -574,7 +574,7 @@ export default function WorkoutTrendsGraph({
       style={{
         position: "relative",
         width: "100%",
-        height: "100%",
+        height: "200px",
         padding: 0,
       }}
     >

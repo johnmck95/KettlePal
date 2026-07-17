@@ -86,7 +86,7 @@ export default function ExerciseTrends() {
     activeBucket?.periodEnd ?? selectedDateRange[1]
   );
 
-  const MAX_BUCKETS = 60;
+  const MAX_BUCKETS = 40;
 
   const filterBuckets = (buckets?: ExerciseAggregate[]) =>
     buckets?.filter((bucket) => {
@@ -174,6 +174,7 @@ export default function ExerciseTrends() {
                       fontSize={["16px"]}
                       placeholder={"Select"}
                       name="exercise"
+                      borderRadius="5px"
                       maxW={["150px", "240px"]}
                       focusBorderColor={theme.colors.green[300]}
                       color={theme.colors.black}
@@ -233,6 +234,7 @@ export default function ExerciseTrends() {
                 <VStack w="100%">
                   <Trendline
                     buckets={filteredBuckets}
+                    activeBucket={activeBucket}
                     setActiveBucket={setActiveBucket}
                   />
                   <StackedBarChart

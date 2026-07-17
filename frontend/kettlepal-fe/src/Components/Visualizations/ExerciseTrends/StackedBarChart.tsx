@@ -97,10 +97,10 @@ export default function StackedBarChart({
     const height = svgEl.clientHeight || 300;
 
     const margin = {
-      top: 20,
-      right: 20,
+      top: 10,
+      right: 25,
       bottom: 20,
-      left: 20,
+      left: 10,
     };
 
     const innerWidth = width - margin.left - margin.right;
