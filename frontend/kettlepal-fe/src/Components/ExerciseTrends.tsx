@@ -15,7 +15,10 @@ import {
   RangeSliderFilledTrack,
   RangeSliderThumb,
 } from "@chakra-ui/react";
-import { useExerciseTrendsQuery } from "../generated/frontend-types";
+import {
+  ExerciseAggregate,
+  useExerciseTrendsQuery,
+} from "../generated/frontend-types";
 import theme from "../Constants/theme";
 import { useEffect, useState } from "react";
 import { useUser } from "../Contexts/UserContext";
@@ -40,6 +43,9 @@ export default function ExerciseTrends() {
   const [sliderRange, setSliderRange] = useState<[number, number]>([0, 0]);
   const user = useUser().user;
   const [showServerError, setShowServerError] = useState<boolean>(false);
+  const [activeBucket, setActiveBucket] = useState<ExerciseAggregate | null>(
+    null
+  );
 
   const { loading, error, data } = useExerciseTrendsQuery({
     variables: { uid: user?.uid ?? "", exerciseTitle },
@@ -185,7 +191,10 @@ export default function ExerciseTrends() {
 
               {/* STACKED BAR CHART */}
               {filteredBuckets && (
-                <ExerciseTrendsStackedBarChart buckets={filteredBuckets} />
+                <ExerciseTrendsStackedBarChart
+                  buckets={filteredBuckets}
+                  setActiveBucket={setActiveBucket}
+                />
               )}
 
               {/* RANGE SLIDER */}

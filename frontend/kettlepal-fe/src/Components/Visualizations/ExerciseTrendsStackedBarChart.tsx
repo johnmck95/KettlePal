@@ -9,6 +9,7 @@ import theme from "../../Constants/theme";
 
 interface Props {
   buckets: ExerciseAggregate[];
+  setActiveBucket: (activeBucket: ExerciseAggregate | null) => void;
 }
 
 const LB_TO_KG = 0.45359237;
@@ -17,7 +18,10 @@ const weightInKg = (weight: number, unit: string): number =>
 const weightLabel = (component: WorkCapacityComponent): string =>
   `${component.weight} ${component.weightUnit}`;
 
-export default function ExerciseTrendsStackedBarChart({ buckets }: Props) {
+export default function ExerciseTrendsStackedBarChart({
+  buckets,
+  setActiveBucket,
+}: Props) {
   const svgRef = useRef<SVGSVGElement | null>(null);
 
   const uniqueWeights = Array.from(
@@ -169,6 +173,46 @@ export default function ExerciseTrendsStackedBarChart({ buckets }: Props) {
           .attr("height", y(start) - y(accumulated))
           .attr("fill", colour(weightLabel(component)));
       });
+    });
+
+    // Tell parent component when a bar is hovered
+    sortedBuckets.forEach((bucket) => {
+      const xPos = x(bucket.periodStart);
+      if (xPos === undefined) {
+        return;
+      }
+      const barTop = y(bucket.totalWorkCapacityKg);
+      const barHeight = innerHeight - barTop;
+
+      const highlight = chart
+        .append("rect")
+        .attr("x", xPos - 1)
+        .attr("y", barTop - 1)
+        .attr("width", x.bandwidth() + 2)
+        .attr("height", barHeight + 2)
+        .attr("fill", "rgba(0,0,0,0.32)")
+        .attr("stroke", theme.colors.grey[400])
+        .attr("stroke-width", 2)
+        .attr("rx", 2)
+        .attr("opacity", 0)
+        .style("pointer-events", "none");
+
+      chart
+        .append("rect")
+        .attr("x", xPos)
+        .attr("y", 0)
+        .attr("width", x.bandwidth())
+        .attr("height", innerHeight)
+        .attr("fill", "transparent")
+        .style("cursor", "pointer")
+        .on("mouseenter", () => {
+          highlight.interrupt().transition().duration(120).attr("opacity", 1);
+          setActiveBucket(bucket);
+        })
+        .on("mouseleave", () => {
+          highlight.interrupt().transition().duration(120).attr("opacity", 0);
+          setActiveBucket(null);
+        });
     });
 
     // X Axis
