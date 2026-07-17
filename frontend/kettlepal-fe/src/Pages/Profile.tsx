@@ -247,6 +247,16 @@ export default function Profile() {
       </HStack>
 
       {/* WEEKLY PROGRESS GRAPH */}
+      <Heading
+        size={["md", "lg"]}
+        color={theme.colors.grey[700]}
+        fontWeight={400}
+        textDecoration="underline"
+        textDecorationColor={theme.colors.grey[300]}
+        mt={["1.25rem", "2rem"]}
+      >
+        Workout Trends
+      </Heading>
       <HStack
         w="90%"
         mt="0.75rem"
@@ -448,12 +458,17 @@ export default function Profile() {
       <ExerciseTrends />
 
       {/* LIFETIME TOTALS */}
-      <VStack
-        w="90%"
-        pt="2rem"
-        mt="2rem"
-        borderTop={`2px solid ${theme.colors.green[100]}`}
-      >
+      <VStack w="90%" mt="2.5rem">
+        <Heading
+          pb="1rem"
+          size={["md", "lg"]}
+          color={theme.colors.grey[700]}
+          fontWeight={400}
+          textDecoration="underline"
+          textDecorationColor={theme.colors.grey[300]}
+        >
+          Lifetime Statistics
+        </Heading>
         <HStack w="100%" justifyContent="space-evenly" my="0.5rem">
           <Detail
             title="Total Workouts"

@@ -14,6 +14,7 @@ import {
   RangeSliderTrack,
   RangeSliderFilledTrack,
   RangeSliderThumb,
+  Heading,
 } from "@chakra-ui/react";
 import {
   ExerciseAggregate,
@@ -84,39 +85,50 @@ export default function ExerciseTrends() {
     activeBucket?.periodEnd ?? selectedDateRange[1]
   );
 
-  const MAX_BUCKETS = 100;
-  const bucketOptions = [
-    exerciseTrends?.dailyBuckets,
-    exerciseTrends?.weeklyBuckets,
-    exerciseTrends?.monthlyBuckets,
-    exerciseTrends?.yearlyBuckets,
+  const MAX_BUCKETS = 60;
+
+  const filterBuckets = (buckets?: ExerciseAggregate[]) =>
+    buckets?.filter((bucket) => {
+      const bucketStart = dateToDayNumber(bucket.periodStart);
+      const bucketEnd = dateToDayNumber(bucket.periodEnd);
+
+      return bucketEnd >= sliderRange[0] && bucketStart <= sliderRange[1];
+    }) ?? [];
+
+  const filteredBucketOptions = [
+    filterBuckets(exerciseTrends?.dailyBuckets),
+    filterBuckets(exerciseTrends?.weeklyBuckets),
+    filterBuckets(exerciseTrends?.monthlyBuckets),
+    filterBuckets(exerciseTrends?.yearlyBuckets),
   ];
-  const buckets = bucketOptions.find(
-    (bucket) => (bucket?.length ?? 0) <= MAX_BUCKETS
-  );
-  const filteredBuckets = buckets?.filter((bucket) => {
-    const bucketStart = dateToDayNumber(bucket.periodStart);
-    const bucketEnd = dateToDayNumber(bucket.periodEnd);
 
-    return bucketEnd >= sliderRange[0] && bucketStart <= sliderRange[1];
-  });
+  const filteredBuckets =
+    filteredBucketOptions.find(
+      (bucketOption) => bucketOption.length <= MAX_BUCKETS
+    ) ?? filteredBucketOptions[filteredBucketOptions.length - 1];
 
-  const sumWorkCapacityKg = buckets?.reduce(
+  const sumWorkCapacityKg = filteredBuckets.reduce(
     (sum, bucket) => sum + bucket.totalWorkCapacityKg,
     0
   );
+
   const summedWorkCapacityKg =
     Math.round(
       activeBucket?.totalWorkCapacityKg ?? sumWorkCapacityKg ?? 0
     ).toLocaleString() + "kg";
 
   return (
-    <VStack
-      w="90%"
-      pt="2rem"
-      mt="2rem"
-      borderTop={`2px solid ${theme.colors.green[100]}`}
-    >
+    <VStack w="90%" mt="3.5rem">
+      <Heading
+        pb="1.5rem"
+        size={["md", "lg"]}
+        color={theme.colors.grey[700]}
+        fontWeight={400}
+        textDecoration="underline"
+        textDecorationColor={theme.colors.grey[300]}
+      >
+        Exercise Trends
+      </Heading>
       {showServerError ? (
         <Alert
           status="error"
@@ -161,7 +173,7 @@ export default function ExerciseTrends() {
                       fontSize={["16px"]}
                       placeholder={"Select"}
                       name="exercise"
-                      maxW="240px"
+                      maxW={["150px", "240px"]}
                       focusBorderColor={theme.colors.green[300]}
                       color={theme.colors.black}
                       bg={theme.colors.white}
@@ -188,7 +200,11 @@ export default function ExerciseTrends() {
                   >
                     Active Period
                   </Text>
-                  <Text fontSize={["sm", "md"]} fontWeight={"bold"}>
+                  <Text
+                    fontSize={["sm", "md"]}
+                    fontWeight={"bold"}
+                    textAlign="center"
+                  >
                     {dataRangeShown}
                   </Text>
                 </VStack>

@@ -109,17 +109,29 @@ export default function ExerciseTrendsStackedBarChart({
       (a, b) =>
         new Date(a.periodStart).getTime() - new Date(b.periodStart).getTime()
     );
-    const first = new Date(sortedBuckets[0].periodStart);
-    const last = new Date(sortedBuckets[sortedBuckets.length - 1].periodStart);
 
-    const spanYears = last.getFullYear() - first.getFullYear();
+    const firstBucket = sortedBuckets[0];
+    const bucketDays =
+      (new Date(firstBucket.periodEnd).getTime() -
+        new Date(firstBucket.periodStart).getTime()) /
+        (1000 * 60 * 60 * 24) +
+      1;
 
-    const dateFormatter =
-      spanYears === 0
-        ? d3.timeFormat("%b %d") // Jan 05
-        : spanYears <= 3
-        ? d3.timeFormat("%b %Y") // Jan 2024
-        : d3.timeFormat("%Y"); // 2024
+    let dateFormatter: (date: Date) => string;
+
+    if (bucketDays <= 2) {
+      // Daily
+      dateFormatter = d3.utcFormat("%b %-d, %Y"); // Jul 5, 2026
+    } else if (bucketDays <= 8) {
+      // Weekly
+      dateFormatter = d3.utcFormat("%b %Y"); // Jul 2026
+    } else if (bucketDays <= 32) {
+      // Monthly
+      dateFormatter = d3.utcFormat("%b %Y"); // Jul '26
+    } else {
+      // Yearly
+      dateFormatter = d3.utcFormat("%Y"); // 2026
+    }
 
     // Scales
     const x = d3
