@@ -254,26 +254,28 @@ export default function ExerciseTrends() {
                     w="100%"
                   >
                     <RangeSliderTrack bg={theme.colors.graphSecondary[200]}>
-                      <RangeSliderFilledTrack bg={theme.colors.bole[200]} />
+                      <RangeSliderFilledTrack
+                        bg={theme.colors.graphSecondary[500]}
+                      />
                     </RangeSliderTrack>
 
                     <RangeSliderThumb
                       index={0}
-                      bg={theme.colors.bole[400]}
-                      borderColor={theme.colors.bole[800]}
+                      bg={theme.colors.graphSecondary[500]}
+                      borderColor={theme.colors.graphSecondary[800]}
                       _focus={{
-                        bg: theme.colors.bole[400],
-                        borderColor: theme.colors.bole[800],
+                        bg: theme.colors.graphSecondary[500],
+                        borderColor: theme.colors.graphSecondary[800],
                         boxShadow: "none",
                       }}
                     />
                     <RangeSliderThumb
                       index={1}
-                      bg={theme.colors.bole[400]}
-                      borderColor={theme.colors.bole[800]}
+                      bg={theme.colors.graphSecondary[500]}
+                      borderColor={theme.colors.graphSecondary[800]}
                       _focus={{
-                        bg: theme.colors.bole[400],
-                        borderColor: theme.colors.bole[800],
+                        bg: theme.colors.graphSecondary[500],
+                        borderColor: theme.colors.graphSecondary[800],
                         boxShadow: "none",
                       }}
                     />
