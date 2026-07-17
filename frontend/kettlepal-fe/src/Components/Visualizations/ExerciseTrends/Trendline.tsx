@@ -3,6 +3,11 @@ import * as d3 from "d3";
 
 import { ExerciseAggregate } from "../../../generated/frontend-types";
 import theme from "../../../Constants/theme";
+import {
+  STANDARD_KETTLEBELL_COLOURS,
+  createGlowFilter,
+  weightLabel,
+} from "../../../utils/Visualiations/constants";
 
 interface Props {
   buckets: ExerciseAggregate[];
@@ -10,40 +15,16 @@ interface Props {
   setActiveBucket: (activeBucket: ExerciseAggregate | null) => void;
 }
 
-function createGlowFilter(
-  defs: d3.Selection<SVGDefsElement, unknown, null, undefined>,
-  id: string,
-  color: string
-) {
-  const filter = defs
-    .append("filter")
-    .attr("id", id)
-    .attr("x", "-50%")
-    .attr("y", "-50%")
-    .attr("width", "200%")
-    .attr("height", "200%");
+function dominantWeight(bucket: ExerciseAggregate): string | null {
+  if (bucket.workCapacityComponents.length === 0) {
+    return null;
+  }
 
-  filter
-    .append("feGaussianBlur")
-    .attr("stdDeviation", 4)
-    .attr("result", "blur");
-
-  filter
-    .append("feFlood")
-    .attr("flood-color", color)
-    .attr("flood-opacity", 0.7)
-    .attr("result", "color");
-
-  filter
-    .append("feComposite")
-    .attr("in", "color")
-    .attr("in2", "blur")
-    .attr("operator", "in")
-    .attr("result", "glow");
-
-  const merge = filter.append("feMerge");
-  merge.append("feMergeNode").attr("in", "glow");
-  merge.append("feMergeNode").attr("in", "SourceGraphic");
+  return weightLabel(
+    bucket.workCapacityComponents.reduce((max, component) =>
+      component.workCapacityKg > max.workCapacityKg ? component : max
+    )
+  );
 }
 
 export default function Trendline({
@@ -99,15 +80,20 @@ export default function Trendline({
       .range([innerHeight, 0])
       .nice();
 
+    const getWeightColour = (bucket: ExerciseAggregate) =>
+      STANDARD_KETTLEBELL_COLOURS[dominantWeight(bucket) ?? ""] ??
+      theme.colors.graphSecondary[500];
+
     // Definitions
     const defs = svg.append("defs");
+
     createGlowFilter(
       defs,
       "glowWorkCapacity",
       theme.colors.graphSecondary[500]
     );
 
-    // Left Y axis
+    // Axes
     const yAxisLeftGroup = g.append("g").call(
       d3
         .axisLeft(y)
@@ -117,26 +103,24 @@ export default function Trendline({
 
     yAxisLeftGroup.select(".domain").remove();
 
-    // Right Y axis
-    const yAxisRight = d3
-      .axisRight(y)
-      .ticks(4)
-      .tickSize(-innerWidth)
-      .tickFormat((d) => {
-        const value = Number(d);
-        if (value >= 1000) {
-          return `${value / 1000}k`;
-        }
-        return `${value}`;
-      });
-
     const yAxisRightGroup = g
       .append("g")
       .attr("transform", `translate(${innerWidth},0)`)
-      .call(yAxisRight);
+      .call(
+        d3
+          .axisRight(y)
+          .ticks(4)
+          .tickSize(-innerWidth)
+          .tickFormat((d) => {
+            const value = Number(d);
+            return value >= 1000 ? `${value / 1000}k` : `${value}`;
+          })
+      );
+
     yAxisRightGroup
       .selectAll("path, line")
       .attr("stroke", theme.colors.grey[200]);
+
     yAxisRightGroup.select(".domain").remove();
 
     yAxisRightGroup
@@ -145,60 +129,56 @@ export default function Trendline({
       .style("fill", theme.colors.graphSecondary[500])
       .style("font-weight", "500");
 
-    // Chart borders
-    g.append("line")
-      .attr("x1", 0)
-      .attr("x2", 0)
-      .attr("y1", 0)
-      .attr("y2", innerHeight)
-      .attr("stroke", theme.colors.grey[300]);
+    // Borders
+    [
+      [0, 0, 0, innerHeight],
+      [innerWidth, 0, innerWidth, innerHeight],
+      [0, innerHeight, innerWidth, innerHeight],
+    ].forEach(([x1, y1, x2, y2]) => {
+      g.append("line")
+        .attr("x1", x1)
+        .attr("x2", x2)
+        .attr("y1", y1)
+        .attr("y2", y2)
+        .attr("stroke", theme.colors.grey[300]);
+    });
 
-    g.append("line")
-      .attr("x1", innerWidth)
-      .attr("x2", innerWidth)
-      .attr("y1", 0)
-      .attr("y2", innerHeight)
-      .attr("stroke", theme.colors.grey[300]);
-
-    g.append("line")
-      .attr("x1", 0)
-      .attr("x2", innerWidth)
-      .attr("y1", innerHeight)
-      .attr("y2", innerHeight)
-      .attr("stroke", theme.colors.grey[300]);
-
-    // Area
+    // Dominant-weight coloured area shading
     const area = d3
       .area<ExerciseAggregate>()
       .x((d) => (x(d.periodStart) ?? 0) + x.bandwidth() / 2)
       .y0(innerHeight)
       .y1((d) => y(d.totalWorkCapacityKg))
-      .curve(d3.curveLinear);
+      .curve(d3.curveMonotoneX);
 
-    g.append("path")
-      .datum(sortedBuckets)
-      .attr("fill", theme.colors.graphSecondary[500])
-      .attr("fill-opacity", 0.18)
-      .attr("stroke", "none")
-      .attr("d", area);
+    for (let i = 0; i < sortedBuckets.length - 1; i++) {
+      g.append("path")
+        .datum([sortedBuckets[i], sortedBuckets[i + 1]])
+        .attr("fill", getWeightColour(sortedBuckets[i]))
+        .attr("fill-opacity", 0.18)
+        .attr("stroke", "none")
+        .attr("d", area);
+    }
 
-    // Line
-    const line = d3
+    // Dominant-weight trendline
+    const trendLine = d3
       .line<ExerciseAggregate>()
       .x((d) => (x(d.periodStart) ?? 0) + x.bandwidth() / 2)
       .y((d) => y(d.totalWorkCapacityKg))
-      .curve(d3.curveLinear);
+      .curve(d3.curveMonotoneX);
 
-    g.append("path")
-      .datum(sortedBuckets)
-      .attr("fill", "none")
-      .attr("stroke", theme.colors.graphSecondary[500])
-      .attr("stroke-width", 2)
-      .attr("d", line);
+    for (let i = 0; i < sortedBuckets.length - 1; i++) {
+      g.append("path")
+        .datum([sortedBuckets[i], sortedBuckets[i + 1]])
+        .attr("fill", "none")
+        .attr("stroke", getWeightColour(sortedBuckets[i]))
+        .attr("stroke-width", 3)
+        .attr("stroke-linecap", "round")
+        .attr("d", trendLine);
+    }
 
     // Points
-    const points = g
-      .selectAll(".trend-point")
+    g.selectAll(".trend-point")
       .data(sortedBuckets)
       .enter()
       .append("circle")
@@ -207,11 +187,27 @@ export default function Trendline({
       .attr("cy", (d) => y(d.totalWorkCapacityKg))
       .attr("r", 4)
       .attr("fill", theme.colors.white)
-      .attr("stroke", theme.colors.graphSecondary[500])
+      .attr("stroke", (d) => getWeightColour(d))
       .attr("stroke-width", 2)
-      .style("cursor", "pointer");
+      .style("cursor", "pointer")
+      .on("mouseenter", function (event, d) {
+        d3.select(this)
+          .transition()
+          .duration(150)
+          .attr("r", 7)
+          .attr("fill", getWeightColour(d))
+          .attr("stroke-width", 3);
+      })
+      .on("mouseleave", function (_, d) {
+        d3.select(this)
+          .transition()
+          .duration(150)
+          .attr("r", 4)
+          .attr("fill", theme.colors.white)
+          .attr("stroke-width", 2);
+      });
 
-    // Hover area
+    // Hover
     g.append("rect")
       .attr("width", innerWidth)
       .attr("height", innerHeight)
@@ -220,10 +216,10 @@ export default function Trendline({
         const [mouseX] = d3.pointer(event);
 
         const closestBucket = sortedBuckets.reduce((closest, bucket) => {
+          if (!closest) return bucket;
+
           const bucketX = (x(bucket.periodStart) ?? 0) + x.bandwidth() / 2;
-          if (!closest) {
-            return bucket;
-          }
+
           const closestX = (x(closest.periodStart) ?? 0) + x.bandwidth() / 2;
 
           return Math.abs(mouseX - bucketX) < Math.abs(mouseX - closestX)
@@ -231,17 +227,14 @@ export default function Trendline({
             : closest;
         }, null as ExerciseAggregate | null);
 
-        if (closestBucket) {
-          setActiveBucket(closestBucket);
-        }
+        setActiveBucket(closestBucket);
       })
-      .on("mouseleave", () => {
-        setActiveBucket(null);
-      });
+      .on("mouseleave", () => setActiveBucket(null));
 
     // Active bucket
     if (activeBucket) {
       const xPos = (x(activeBucket.periodStart) ?? 0) + x.bandwidth() / 2;
+
       const yPos = y(activeBucket.totalWorkCapacityKg);
 
       g.append("line")
@@ -257,7 +250,7 @@ export default function Trendline({
         .attr("cx", xPos)
         .attr("cy", yPos)
         .attr("r", 8)
-        .attr("fill", theme.colors.graphSecondary[500])
+        .attr("fill", getWeightColour(activeBucket))
         .attr("filter", "url(#glowWorkCapacity)");
     }
 
@@ -267,12 +260,7 @@ export default function Trendline({
   }, [buckets, activeBucket, setActiveBucket]);
 
   return (
-    <div
-      style={{
-        width: "100%",
-        height: "200px",
-      }}
-    >
+    <div style={{ width: "100%", height: "200px" }}>
       <svg
         ref={svgRef}
         style={{

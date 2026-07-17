@@ -5,6 +5,7 @@ import {
   ProfilePageQuery,
 } from "../../generated/frontend-types";
 import theme from "../../Constants/theme";
+import { createGlowFilter } from "../../utils/Visualiations/constants";
 
 interface VisualizationProps {
   workoutTrends: NonNullable<ProfilePageQuery["user"]>["workoutTrends"];
@@ -45,41 +46,6 @@ function getTickFormat(grain: VisualizationProps["grain"]) {
       return d3.timeFormat("%b %d"); // Jan 3rd, Feb 5th...
   }
 }
-
-// ---------- Glow filter helper ---------- //
-
-function createGlowFilter(
-  defs: d3.Selection<SVGDefsElement, unknown, null, undefined>,
-  id: string,
-  color: string
-) {
-  const filter = defs
-    .append("filter")
-    .attr("id", id)
-    .attr("x", "-50%")
-    .attr("y", "-50%")
-    .attr("width", "200%")
-    .attr("height", "200%");
-  filter
-    .append("feGaussianBlur")
-    .attr("stdDeviation", 4)
-    .attr("result", "blur");
-  filter
-    .append("feFlood")
-    .attr("flood-color", color)
-    .attr("flood-opacity", 0.7)
-    .attr("result", "color");
-  filter
-    .append("feComposite")
-    .attr("in", "color")
-    .attr("in2", "blur")
-    .attr("operator", "in")
-    .attr("result", "glow");
-  const merge = filter.append("feMerge");
-  merge.append("feMergeNode").attr("in", "glow");
-  merge.append("feMergeNode").attr("in", "SourceGraphic");
-}
-
 // ---------- Format helpers ---------- //
 
 function formatDurationTick(seconds: number): string {

@@ -6,6 +6,11 @@ import {
 } from "../../../generated/frontend-types";
 import { Box, Wrap, WrapItem, Text } from "@chakra-ui/react";
 import theme from "../../../Constants/theme";
+import {
+  LB_TO_KG,
+  STANDARD_KETTLEBELL_COLOURS,
+  weightLabel,
+} from "../../../utils/Visualiations/constants";
 
 interface Props {
   buckets: ExerciseAggregate[];
@@ -13,11 +18,8 @@ interface Props {
   setActiveBucket: (activeBucket: ExerciseAggregate | null) => void;
 }
 
-const LB_TO_KG = 0.45359237;
 const weightInKg = (weight: number, unit: string): number =>
   unit === "lb" ? weight * LB_TO_KG : weight;
-const weightLabel = (component: WorkCapacityComponent): string =>
-  `${component.weight} ${component.weightUnit}`;
 
 export default function StackedBarChart({
   buckets,
@@ -39,22 +41,6 @@ export default function StackedBarChart({
         ])
     ).values()
   ).sort((a, b) => a.sortWeightKg - b.sortWeightKg);
-
-  const STANDARD_KETTLEBELL_COLOURS: Record<string, string> = {
-    "8 kg": theme.colors.green[100],
-    "10 kg": theme.colors.feldgrau[100],
-    "12 kg": theme.colors.grey[600],
-    "14 kg": theme.colors.grey[500],
-    "16 kg": theme.colors.olive[100],
-    "18 kg": theme.colors.green[500],
-    "20 kg": theme.colors.lion[500],
-    "22 kg": theme.colors.lion[700],
-    "24 kg": theme.colors.graphPrimary[500],
-    "26 kg": theme.colors.feldgrau[600],
-    "28 kg": theme.colors.bole[500],
-    "30 kg": theme.colors.bole[700],
-    "32 kg": theme.colors.grey[800],
-  };
 
   const generateColour = (index: number): string => {
     // Golden angle gives visually distributed colours
