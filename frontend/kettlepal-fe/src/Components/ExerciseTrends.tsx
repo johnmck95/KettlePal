@@ -30,7 +30,8 @@ import {
   formatSelectedDateRange,
 } from "../utils/Time/time";
 import Detail from "./ViewWorkouts/ViewDetailedWorkoutModal/Detail";
-import ExerciseTrendsStackedBarChart from "./Visualizations/ExerciseTrendsStackedBarChart";
+import StackedBarChart from "./Visualizations/ExerciseTrends/StackedBarChart";
+import Trendline from "./Visualizations/ExerciseTrends/Trendline";
 
 export default function ExerciseTrends() {
   const [uniqueExerciseTitles, setUniqueExerciseTitles] = useState([""]);
@@ -227,12 +228,19 @@ export default function ExerciseTrends() {
                 </Text>
               </HStack>
 
-              {/* STACKED BAR CHART */}
+              {/* VISUALIZATIONS */}
               {filteredBuckets && (
-                <ExerciseTrendsStackedBarChart
-                  buckets={filteredBuckets}
-                  setActiveBucket={setActiveBucket}
-                />
+                <VStack w="100%">
+                  <Trendline
+                    buckets={filteredBuckets}
+                    setActiveBucket={setActiveBucket}
+                  />
+                  <StackedBarChart
+                    buckets={filteredBuckets}
+                    activeBucket={activeBucket}
+                    setActiveBucket={setActiveBucket}
+                  />
+                </VStack>
               )}
 
               {/* RANGE SLIDER */}

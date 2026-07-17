@@ -3,12 +3,13 @@ import * as d3 from "d3";
 import {
   ExerciseAggregate,
   WorkCapacityComponent,
-} from "../../generated/frontend-types";
+} from "../../../generated/frontend-types";
 import { Box, Wrap, WrapItem, Text } from "@chakra-ui/react";
-import theme from "../../Constants/theme";
+import theme from "../../../Constants/theme";
 
 interface Props {
   buckets: ExerciseAggregate[];
+  activeBucket: ExerciseAggregate | null;
   setActiveBucket: (activeBucket: ExerciseAggregate | null) => void;
 }
 
@@ -18,8 +19,9 @@ const weightInKg = (weight: number, unit: string): number =>
 const weightLabel = (component: WorkCapacityComponent): string =>
   `${component.weight} ${component.weightUnit}`;
 
-export default function ExerciseTrendsStackedBarChart({
+export default function StackedBarChart({
   buckets,
+  activeBucket,
   setActiveBucket,
 }: Props) {
   const svgRef = useRef<SVGSVGElement | null>(null);
@@ -195,6 +197,9 @@ export default function ExerciseTrendsStackedBarChart({
       }
       const barTop = y(bucket.totalWorkCapacityKg);
       const barHeight = innerHeight - barTop;
+      const isActive =
+        activeBucket?.periodStart === bucket.periodStart &&
+        activeBucket?.periodEnd === bucket.periodEnd;
 
       const highlight = chart
         .append("rect")
@@ -206,7 +211,7 @@ export default function ExerciseTrendsStackedBarChart({
         .attr("stroke", theme.colors.grey[400])
         .attr("stroke-width", 2)
         .attr("rx", 2)
-        .attr("opacity", 0)
+        .attr("opacity", isActive ? 1 : 0)
         .style("pointer-events", "none");
 
       chart
@@ -218,11 +223,9 @@ export default function ExerciseTrendsStackedBarChart({
         .attr("fill", "transparent")
         .style("cursor", "pointer")
         .on("mouseenter", () => {
-          highlight.interrupt().transition().duration(120).attr("opacity", 1);
           setActiveBucket(bucket);
         })
         .on("mouseleave", () => {
-          highlight.interrupt().transition().duration(120).attr("opacity", 0);
           setActiveBucket(null);
         });
     });
@@ -249,7 +252,7 @@ export default function ExerciseTrendsStackedBarChart({
     return () => {
       svg.selectAll("*").remove();
     };
-  }, [buckets, colour]);
+  }, [buckets, colour, activeBucket]);
 
   return (
     <div style={{ width: "100%" }}>
