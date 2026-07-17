@@ -80,8 +80,8 @@ export default function ExerciseTrends() {
     }
   }, [data]);
   const dataRangeShown = formatSelectedDateRange(
-    exerciseTrends?.rangeStart,
-    exerciseTrends?.rangeEnd
+    activeBucket?.periodStart ?? selectedDateRange[0],
+    activeBucket?.periodEnd ?? selectedDateRange[1]
   );
 
   const MAX_BUCKETS = 100;
@@ -106,7 +106,9 @@ export default function ExerciseTrends() {
     0
   );
   const summedWorkCapacityKg =
-    Math.round(sumWorkCapacityKg ?? 0).toLocaleString() + "kg";
+    Math.round(
+      activeBucket?.totalWorkCapacityKg ?? sumWorkCapacityKg ?? 0
+    ).toLocaleString() + "kg";
 
   return (
     <VStack
@@ -141,45 +143,65 @@ export default function ExerciseTrends() {
           ) : (
             <VStack w="100%">
               {/* EXERCISE SELECTOR & SELECTED PERIOD */}
-              <HStack w="100%" justifyContent={"space-around"}>
-                <FormControl maxW="200px">
-                  <FormLabel>Exercise</FormLabel>
-                  <Select
-                    size={["sm", "sm", "md"]}
-                    fontSize={["16px"]}
-                    placeholder={"Select"}
-                    name="exercise"
-                    focusBorderColor={theme.colors.green[300]}
-                    color={theme.colors.black}
-                    bg={theme.colors.white}
-                    value={exerciseTitle}
-                    onChange={(event) => setExerciseTitle(event.target.value)}
-                  >
-                    {uniqueExerciseTitles.map((exercise) => {
-                      return (
-                        <option key={exercise} value={exercise}>
-                          {exercise}
-                        </option>
-                      );
-                    })}
-                  </Select>
+              <HStack w="100%" alignItems="flex-start" mb={3}>
+                <FormControl w="50%" h="100%">
+                  <VStack>
+                    <FormLabel
+                      fontSize={["xs", "sm"]}
+                      w="240px"
+                      m={0}
+                      textAlign="center"
+                      fontWeight="medium"
+                      color={theme.colors.grey[600]}
+                    >
+                      Exercise
+                    </FormLabel>
+                    <Select
+                      size={["sm", "sm", "md"]}
+                      fontSize={["16px"]}
+                      placeholder={"Select"}
+                      name="exercise"
+                      maxW="240px"
+                      focusBorderColor={theme.colors.green[300]}
+                      color={theme.colors.black}
+                      bg={theme.colors.white}
+                      value={exerciseTitle}
+                      onChange={(event) => setExerciseTitle(event.target.value)}
+                    >
+                      {uniqueExerciseTitles.map((exercise) => {
+                        return (
+                          <option key={exercise} value={exercise}>
+                            {exercise}
+                          </option>
+                        );
+                      })}
+                    </Select>
+                  </VStack>
                 </FormControl>
-                <VStack>
+                <VStack w="50%">
                   <Text
-                    fontSize={["sm", "md"]}
+                    fontSize={["xs", "sm"]}
+                    w="240px"
                     fontWeight="medium"
-                    color={theme.colors.grey[700]}
+                    color={theme.colors.grey[600]}
+                    textAlign="center"
                   >
-                    Selected Period
+                    Active Period
                   </Text>
-                  <Text>{dataRangeShown}</Text>
+                  <Text fontSize={["sm", "md"]} fontWeight={"bold"}>
+                    {dataRangeShown}
+                  </Text>
                 </VStack>
               </HStack>
 
-              {/* WORK CAPACITYU AND HORIZONTAL BARS */}
+              {/* WORK CAPACITY AND HORIZONTAL BARS */}
               <HStack w="100%" justifyContent={"space-around"}>
                 <Detail
-                  title={"Work Capacity"}
+                  title={
+                    activeBucket !== null
+                      ? "Work Capacity"
+                      : "Total Work Capacity"
+                  }
                   value={summedWorkCapacityKg}
                   variant="md"
                   color={theme.colors.graphSecondary[500]}

@@ -240,7 +240,7 @@ export function formatSelectedDateRange(
     return `${formatDate(
       startDate,
       showYear
-    )}, ${endDate.getFullYear()} - ${formatDate(
+    )}, ${startDate.getFullYear()} - ${formatDate(
       endDate,
       showYear
     )}, ${endDate.getFullYear()}`;
