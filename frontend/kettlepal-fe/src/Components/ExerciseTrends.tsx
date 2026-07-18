@@ -15,6 +15,7 @@ import {
   RangeSliderFilledTrack,
   RangeSliderThumb,
   Heading,
+  Box,
 } from "@chakra-ui/react";
 import {
   ExerciseAggregate,
@@ -32,6 +33,7 @@ import {
 import Detail from "./ViewWorkouts/ViewDetailedWorkoutModal/Detail";
 import StackedBarChart from "./Visualizations/ExerciseTrends/StackedBarChart";
 import Trendline from "./Visualizations/ExerciseTrends/Trendline";
+import WorkCapacityBars from "./WorkCapacityBars";
 
 export default function ExerciseTrends() {
   const [uniqueExerciseTitles, setUniqueExerciseTitles] = useState([""]);
@@ -80,13 +82,18 @@ export default function ExerciseTrends() {
         setExerciseTitle(data.uniqueExerciseTitles[0]);
       }
     }
-  }, [data]);
+  }, [
+    data,
+    exerciseTitle,
+    exerciseTrends?.rangeStart,
+    exerciseTrends?.rangeEnd,
+  ]);
   const dataRangeShown = formatSelectedDateRange(
     activeBucket?.periodStart ?? selectedDateRange[0],
     activeBucket?.periodEnd ?? selectedDateRange[1]
   );
 
-  const MAX_BUCKETS = 40;
+  const MAX_BUCKETS = 25;
 
   const filterBuckets = (buckets?: ExerciseAggregate[]) =>
     buckets?.filter((bucket) => {
@@ -156,7 +163,12 @@ export default function ExerciseTrends() {
           ) : (
             <VStack w="100%">
               {/* EXERCISE SELECTOR & SELECTED PERIOD */}
-              <HStack w="100%" alignItems="flex-start" mb={3}>
+              <HStack
+                w="100%"
+                alignItems="flex-start"
+                mb={3}
+                justifyContent={"space-around"}
+              >
                 <FormControl w="50%" h="100%">
                   <VStack>
                     <FormLabel
@@ -214,24 +226,37 @@ export default function ExerciseTrends() {
 
               {/* WORK CAPACITY AND HORIZONTAL BARS */}
               <HStack w="100%" justifyContent={"space-around"}>
-                <Detail
-                  title={
-                    activeBucket !== null
-                      ? "Work Capacity"
-                      : "Total Work Capacity"
-                  }
-                  value={summedWorkCapacityKg}
-                  variant="md"
-                  color={theme.colors.graphSecondary[500]}
-                />
-                <Text>
-                  <b>TO DO:</b> Horizontal Bars
-                </Text>
+                <Box w="50%">
+                  <Detail
+                    title={
+                      activeBucket !== null
+                        ? "Work Capacity"
+                        : "Total Work Capacity"
+                    }
+                    value={summedWorkCapacityKg}
+                    variant="md"
+                    color={theme.colors.graphSecondary[500]}
+                  />
+                </Box>
+
+                <VStack maxW="50%" w="100%" h="120px" justifyContent={"center"}>
+                  <Text
+                    fontSize={["xs", "sm"]}
+                    w="100%"
+                    fontWeight="medium"
+                    color={theme.colors.grey[600]}
+                    textAlign="center"
+                    mb="0.25rem"
+                  >
+                    Weights Used
+                  </Text>
+                  <WorkCapacityBars activeBucket={activeBucket} />
+                </VStack>
               </HStack>
 
               {/* VISUALIZATIONS */}
               {filteredBuckets && (
-                <VStack w="100%">
+                <VStack w="100%" gap={0}>
                   <Trendline
                     buckets={filteredBuckets}
                     activeBucket={activeBucket}
