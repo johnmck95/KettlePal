@@ -195,9 +195,10 @@ export default function ExerciseTrends() {
                           color={theme.colors.black}
                           bg={theme.colors.white}
                           value={exerciseTitle}
-                          onChange={(event) =>
-                            setExerciseTitle(event.target.value)
-                          }
+                          onChange={(event) => {
+                            setExerciseTitle(event.target.value);
+                            setActiveBucket(null);
+                          }}
                         >
                           {uniqueExerciseTitles.map((exercise) => (
                             <option key={exercise} value={exercise}>

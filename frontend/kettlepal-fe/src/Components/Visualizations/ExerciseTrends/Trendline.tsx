@@ -228,8 +228,7 @@ export default function Trendline({
         }, null as ExerciseAggregate | null);
 
         setActiveBucket(closestBucket);
-      })
-      .on("mouseleave", () => setActiveBucket(null));
+      });
 
     // Active bucket
     if (activeBucket) {

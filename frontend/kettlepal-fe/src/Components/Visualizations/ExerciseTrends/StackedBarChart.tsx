@@ -1,9 +1,6 @@
 import { useCallback, useEffect, useRef } from "react";
 import * as d3 from "d3";
-import {
-  ExerciseAggregate,
-  WorkCapacityComponent,
-} from "../../../generated/frontend-types";
+import { ExerciseAggregate } from "../../../generated/frontend-types";
 import { Box, Wrap, WrapItem, Text } from "@chakra-ui/react";
 import theme from "../../../Constants/theme";
 import {
@@ -210,9 +207,6 @@ export default function StackedBarChart({
         .style("cursor", "pointer")
         .on("mouseenter", () => {
           setActiveBucket(bucket);
-        })
-        .on("mouseleave", () => {
-          setActiveBucket(null);
         });
     });
 
