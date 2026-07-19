@@ -195,19 +195,19 @@ export default function ExerciseTrends() {
               <LoadingSpinner disableMessage={true} />
             </Center>
           ) : (
-            <VStack w="100%">
+            <VStack w="100%" gap={0}>
               {/* EXERCISE SELECTOR & SELECTED PERIOD */}
               <HStack
                 w="100%"
                 alignItems="flex-start"
                 justifyContent="space-between"
-                mb={3}
+                mb={0}
               >
                 {/* LEFT COLUMN */}
-                <VStack w="50%" gap={3} alignItems="flex-start">
-                  <Flex gap={0} alignItems={"flex-start"}>
+                <VStack w="50%" gap={1} alignItems="flex-start">
+                  <Flex alignItems={"flex-start"}>
                     <FormControl>
-                      <VStack gap={0} alignItems={"flex-start"}>
+                      <VStack gap={0.5} alignItems={"flex-start"}>
                         <FormLabel
                           fontSize={["xs"]}
                           m={0}
@@ -253,7 +253,7 @@ export default function ExerciseTrends() {
                       Active Period
                     </Text>
 
-                    <Text fontSize={["sm"]} fontWeight="bold">
+                    <Text fontSize={["xs", "sm"]} fontWeight="bold">
                       {dataRangeShown}
                     </Text>
                   </VStack>
@@ -267,7 +267,7 @@ export default function ExerciseTrends() {
                       Work Capacity
                     </Text>
 
-                    <Text fontSize={["sm"]} fontWeight="bold">
+                    <Text fontSize={["xs", "sm"]} fontWeight="bold">
                       {summedWorkCapacityKg}
                     </Text>
                   </VStack>
