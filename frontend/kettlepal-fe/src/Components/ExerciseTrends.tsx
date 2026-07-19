@@ -325,6 +325,7 @@ export default function ExerciseTrends() {
                         dayNumberToDate(start),
                         dayNumberToDate(end),
                       ]);
+                      setActiveBucket(null);
                     }}
                     step={1}
                     w="100%"

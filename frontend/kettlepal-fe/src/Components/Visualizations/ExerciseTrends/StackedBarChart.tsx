@@ -208,7 +208,7 @@ export default function StackedBarChart({
           height: "100px",
         }}
       />
-      <Wrap spacing="18px" justify="center" my="1rem">
+      <Wrap spacing={[2, 4, 6]} justify="center" my="1rem">
         {uniqueWeights.map((weight) => (
           <WrapItem key={weight.label} alignItems="center">
             <Box
