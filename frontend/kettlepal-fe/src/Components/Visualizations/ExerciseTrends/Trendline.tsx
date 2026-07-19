@@ -1,10 +1,9 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import * as d3 from "d3";
 
 import { ExerciseAggregate } from "../../../generated/frontend-types";
 import theme from "../../../Constants/theme";
 import {
-  STANDARD_KETTLEBELL_COLOURS,
   createGlowFilter,
   weightLabel,
 } from "../../../utils/Visualiations/constants";
@@ -12,6 +11,7 @@ import {
 interface Props {
   buckets: ExerciseAggregate[];
   activeBucket: ExerciseAggregate | null;
+  colourMap: Map<string, string>;
   setActiveBucket: (activeBucket: ExerciseAggregate | null) => void;
 }
 
@@ -19,7 +19,6 @@ function dominantWeight(bucket: ExerciseAggregate): string | null {
   if (bucket.workCapacityComponents.length === 0) {
     return null;
   }
-
   return weightLabel(
     bucket.workCapacityComponents.reduce((max, component) =>
       component.workCapacityKg > max.workCapacityKg ? component : max
@@ -30,9 +29,15 @@ function dominantWeight(bucket: ExerciseAggregate): string | null {
 export default function Trendline({
   buckets,
   activeBucket,
+  colourMap,
   setActiveBucket,
 }: Props) {
   const svgRef = useRef<SVGSVGElement | null>(null);
+
+  const colour = useCallback(
+    (weightLabel: string) => colourMap.get(weightLabel) ?? "#999",
+    [colourMap]
+  );
 
   useEffect(() => {
     const svgEl = svgRef.current;
@@ -80,9 +85,10 @@ export default function Trendline({
       .range([innerHeight, 0])
       .nice();
 
-    const getWeightColour = (bucket: ExerciseAggregate) =>
-      STANDARD_KETTLEBELL_COLOURS[dominantWeight(bucket) ?? ""] ??
-      theme.colors.graphSecondary[500];
+    const getWeightColour = (bucket: ExerciseAggregate) => {
+      const label = dominantWeight(bucket);
+      return label ? colour(label) : theme.colors.graphSecondary[500];
+    };
 
     // Definitions
     const defs = svg.append("defs");
@@ -256,7 +262,7 @@ export default function Trendline({
     return () => {
       svg.selectAll("*").remove();
     };
-  }, [buckets, activeBucket, setActiveBucket]);
+  }, [buckets, activeBucket, colour, setActiveBucket]);
 
   return (
     <div style={{ width: "100%", height: "200px" }}>

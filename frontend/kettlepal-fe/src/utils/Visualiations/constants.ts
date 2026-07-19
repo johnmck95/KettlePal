@@ -57,3 +57,14 @@ export function createGlowFilter(
   merge.append("feMergeNode").attr("in", "glow");
   merge.append("feMergeNode").attr("in", "SourceGraphic");
 }
+
+export const weightInKg = (weight: number, unit: string): number =>
+  unit === "lb" ? weight * LB_TO_KG : weight;
+
+export const generateColour = (index: number): string => {
+  const hue = (index * 137.508) % 360;
+  const saturation = 38 + (index % 3) * 4;
+  const lightness = 45 + (index % 2) * 4;
+
+  return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+};

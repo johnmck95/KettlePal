@@ -23,7 +23,7 @@ import {
   useExerciseTrendsQuery,
 } from "../generated/frontend-types";
 import theme from "../Constants/theme";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useUser } from "../Contexts/UserContext";
 import LoadingSpinner from "./LoadingSpinner";
 import {
@@ -31,10 +31,15 @@ import {
   dayNumberToDate,
   formatSelectedDateRange,
 } from "../utils/Time/time";
-import Detail from "./ViewWorkouts/ViewDetailedWorkoutModal/Detail";
 import StackedBarChart from "./Visualizations/ExerciseTrends/StackedBarChart";
 import Trendline from "./Visualizations/ExerciseTrends/Trendline";
 import WorkCapacityBars from "./WorkCapacityBars";
+import {
+  STANDARD_KETTLEBELL_COLOURS,
+  generateColour,
+  weightInKg,
+  weightLabel,
+} from "../utils/Visualiations/constants";
 
 export default function ExerciseTrends() {
   const [uniqueExerciseTitles, setUniqueExerciseTitles] = useState([""]);
@@ -125,6 +130,35 @@ export default function ExerciseTrends() {
     Math.round(
       activeBucket?.totalWorkCapacityKg ?? sumWorkCapacityKg ?? 0
     ).toLocaleString() + "kg";
+
+  const uniqueWeights = Array.from(
+    new Map(
+      filteredBuckets
+        .flatMap((bucket) => bucket.workCapacityComponents)
+        .map((component) => [
+          weightLabel(component),
+          {
+            label: weightLabel(component),
+            sortWeightKg: weightInKg(component.weight, component.weightUnit),
+          },
+        ])
+    ).values()
+  ).sort((a, b) => a.sortWeightKg - b.sortWeightKg);
+
+  const colourMap = useMemo(() => {
+    const map = new Map<string, string>();
+    uniqueWeights.forEach((weight, index) => {
+      map.set(
+        weight.label,
+        STANDARD_KETTLEBELL_COLOURS[weight.label] ??
+          generateColour(
+            index + Object.keys(STANDARD_KETTLEBELL_COLOURS).length
+          )
+      );
+    });
+
+    return map;
+  }, [uniqueWeights]);
 
   return (
     <VStack w="90%" mt="3.5rem">
@@ -251,7 +285,10 @@ export default function ExerciseTrends() {
                     Weights Used
                   </Text>
 
-                  <WorkCapacityBars activeBucket={activeBucket} />
+                  <WorkCapacityBars
+                    activeBucket={activeBucket}
+                    colourMap={colourMap}
+                  />
                 </VStack>
               </HStack>
 
@@ -261,11 +298,14 @@ export default function ExerciseTrends() {
                   <Trendline
                     buckets={filteredBuckets}
                     activeBucket={activeBucket}
+                    colourMap={colourMap}
                     setActiveBucket={setActiveBucket}
                   />
                   <StackedBarChart
                     buckets={filteredBuckets}
                     activeBucket={activeBucket}
+                    colourMap={colourMap}
+                    uniqueWeights={uniqueWeights}
                     setActiveBucket={setActiveBucket}
                   />
                 </VStack>

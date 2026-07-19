@@ -1,12 +1,13 @@
 import { Box, Flex, Text } from "@chakra-ui/react";
 import { ExerciseAggregate } from "../generated/frontend-types";
-import { STANDARD_KETTLEBELL_COLOURS } from "../utils/Visualiations/constants";
+import { weightLabel } from "../utils/Visualiations/constants";
 
 interface Props {
   activeBucket: ExerciseAggregate | null;
+  colourMap: Map<string, string>;
 }
 
-const WorkCapacityBars = ({ activeBucket }: Props) => {
+const WorkCapacityBars = ({ activeBucket, colourMap }: Props) => {
   return (
     <>
       {activeBucket ? (
@@ -16,8 +17,8 @@ const WorkCapacityBars = ({ activeBucket }: Props) => {
               (component.workCapacityKg / activeBucket.totalWorkCapacityKg) *
               100;
 
-            const weightKey = `${component.weight} ${component.weightUnit}`;
-            const colour = STANDARD_KETTLEBELL_COLOURS[weightKey] ?? "gray.400";
+            const weightKey = weightLabel(component);
+            const colour = colourMap.get(weightKey) ?? "gray.400";
 
             return (
               <Box key={weightKey} mb={1}>

@@ -4,7 +4,7 @@ import { ExerciseAggregate } from "../../../generated/frontend-types";
 import { Box, Wrap, WrapItem, Text } from "@chakra-ui/react";
 import theme from "../../../Constants/theme";
 import {
-  LB_TO_KG,
+  weightInKg,
   STANDARD_KETTLEBELL_COLOURS,
   weightLabel,
 } from "../../../utils/Visualiations/constants";
@@ -12,54 +12,19 @@ import {
 interface Props {
   buckets: ExerciseAggregate[];
   activeBucket: ExerciseAggregate | null;
+  colourMap: Map<string, string>;
+  uniqueWeights: { label: string; sortWeightKg: number }[];
   setActiveBucket: (activeBucket: ExerciseAggregate | null) => void;
 }
-
-const weightInKg = (weight: number, unit: string): number =>
-  unit === "lb" ? weight * LB_TO_KG : weight;
 
 export default function StackedBarChart({
   buckets,
   activeBucket,
+  colourMap,
+  uniqueWeights,
   setActiveBucket,
 }: Props) {
   const svgRef = useRef<SVGSVGElement | null>(null);
-
-  const uniqueWeights = Array.from(
-    new Map(
-      buckets
-        .flatMap((bucket) => bucket.workCapacityComponents)
-        .map((component) => [
-          weightLabel(component),
-          {
-            label: weightLabel(component),
-            sortWeightKg: weightInKg(component.weight, component.weightUnit),
-          },
-        ])
-    ).values()
-  ).sort((a, b) => a.sortWeightKg - b.sortWeightKg);
-
-  const generateColour = (index: number): string => {
-    // Golden angle gives visually distributed colours
-    const hue = (index * 137.508) % 360;
-
-    return `hsl(${hue}, 60%, 55%)`;
-  };
-
-  const colourMap = new Map<string, string>();
-
-  uniqueWeights.forEach((weight, index) => {
-    const standardColour = STANDARD_KETTLEBELL_COLOURS[weight.label];
-
-    if (standardColour) {
-      colourMap.set(weight.label, standardColour);
-    } else {
-      colourMap.set(
-        weight.label,
-        generateColour(index + Object.keys(STANDARD_KETTLEBELL_COLOURS).length)
-      );
-    }
-  });
 
   const colour = useCallback(
     (weightLabel: string) => colourMap.get(weightLabel) ?? "#999",
