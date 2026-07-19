@@ -41,7 +41,7 @@ Make sure you **"_Add To Homescreen_"** on mobile devices for the best experienc
 
 ### Track Progress Over Time
 
-<img src="image-2.png" alt="alt text" width="400" >
+<img src="image-11.png" alt="alt text" width="600" >
 
 ### View, Search, Analyze & Update Past Workouts
 
