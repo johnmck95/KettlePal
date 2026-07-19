@@ -224,6 +224,7 @@ export default function ExerciseTrends() {
                           name="exercise"
                           borderRadius="5px"
                           maxW={["150px", "240px"]}
+                          minW="150px"
                           focusBorderColor={theme.colors.green[300]}
                           color={theme.colors.black}
                           bg={theme.colors.white}
