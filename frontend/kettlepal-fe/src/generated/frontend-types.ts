@@ -118,6 +118,25 @@ export type Exercise = {
   workoutUid: Scalars['ID']['output'];
 };
 
+export type ExerciseAggregate = {
+  __typename?: 'ExerciseAggregate';
+  periodEnd: Scalars['String']['output'];
+  periodStart: Scalars['String']['output'];
+  totalWorkCapacityKg: Scalars['Float']['output'];
+  workCapacityComponents: Array<WorkCapacityComponent>;
+};
+
+export type ExerciseTrendsResponse = {
+  __typename?: 'ExerciseTrendsResponse';
+  dailyBuckets: Array<ExerciseAggregate>;
+  exerciseTitle: Scalars['String']['output'];
+  monthlyBuckets: Array<ExerciseAggregate>;
+  rangeEnd: Scalars['String']['output'];
+  rangeStart: Scalars['String']['output'];
+  weeklyBuckets: Array<ExerciseAggregate>;
+  yearlyBuckets: Array<ExerciseAggregate>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   addExercise?: Maybe<Exercise>;
@@ -132,6 +151,7 @@ export type Mutation = {
   invalidateToken: Scalars['Boolean']['output'];
   login?: Maybe<User>;
   refreshToken: RefreshTokenResponse;
+  resetPassword?: Maybe<Scalars['Boolean']['output']>;
   signUp?: Maybe<User>;
   updateExercise?: Maybe<Exercise>;
   updateUser?: Maybe<User>;
@@ -192,6 +212,12 @@ export type MutationDeleteWorkoutWithExercisesArgs = {
 export type MutationLoginArgs = {
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
+};
+
+
+export type MutationResetPasswordArgs = {
+  newPassword: Scalars['String']['input'];
+  userToUpdateUid: Scalars['ID']['input'];
 };
 
 
@@ -323,6 +349,7 @@ export type User = {
   bodyWeightUnit: Scalars['String']['output'];
   createdAt: Scalars['String']['output'];
   email: Scalars['String']['output'];
+  exerciseTrends: ExerciseTrendsResponse;
   firstName: Scalars['String']['output'];
   isAuthorized: Scalars['Boolean']['output'];
   lastName: Scalars['String']['output'];
@@ -333,6 +360,11 @@ export type User = {
   userStats?: Maybe<UserStats>;
   workoutTrends: WorkoutTrendResponse;
   workouts: Array<Maybe<Workout>>;
+};
+
+
+export type UserExerciseTrendsArgs = {
+  exerciseTitle: Scalars['String']['input'];
 };
 
 
@@ -376,6 +408,13 @@ export type UserWithTemplates = {
   __typename?: 'UserWithTemplates';
   templates: Array<Template>;
   user: User;
+};
+
+export type WorkCapacityComponent = {
+  __typename?: 'WorkCapacityComponent';
+  weight: Scalars['Float']['output'];
+  weightUnit: Scalars['String']['output'];
+  workCapacityKg: Scalars['Float']['output'];
 };
 
 export type Workout = {
@@ -513,6 +552,14 @@ export type ProfilePageQueryVariables = Exact<{
 
 
 export type ProfilePageQuery = { __typename?: 'Query', user?: { __typename?: 'User', workoutTrends: { __typename?: 'WorkoutTrendResponse', grain: TimeGrain, rangeStart: string, rangeEnd: string, buckets: Array<{ __typename?: 'WorkoutAggregate', periodStart: string, periodEnd: string, workCapacityKg: number, durationSeconds: number }> }, userStats?: { __typename?: 'UserStats', totalWorkouts: number, totalExercises: number, totalTime?: number | null, longestWorkout?: number | null, mostRepsInWorkout?: number | null, largestWorkCapacityKg?: number | null, topExercises?: string | null, oldestWorkoutDate?: string | null } | null } | null };
+
+export type ExerciseTrendsQueryVariables = Exact<{
+  uid: Scalars['ID']['input'];
+  exerciseTitle: Scalars['String']['input'];
+}>;
+
+
+export type ExerciseTrendsQuery = { __typename?: 'Query', uniqueExerciseTitles: Array<string>, user?: { __typename?: 'User', exerciseTrends: { __typename?: 'ExerciseTrendsResponse', exerciseTitle: string, rangeStart: string, rangeEnd: string, dailyBuckets: Array<{ __typename?: 'ExerciseAggregate', periodStart: string, periodEnd: string, totalWorkCapacityKg: number, workCapacityComponents: Array<{ __typename?: 'WorkCapacityComponent', weight: number, weightUnit: string, workCapacityKg: number }> }>, weeklyBuckets: Array<{ __typename?: 'ExerciseAggregate', periodStart: string, periodEnd: string, totalWorkCapacityKg: number, workCapacityComponents: Array<{ __typename?: 'WorkCapacityComponent', weight: number, weightUnit: string, workCapacityKg: number }> }>, monthlyBuckets: Array<{ __typename?: 'ExerciseAggregate', periodStart: string, periodEnd: string, totalWorkCapacityKg: number, workCapacityComponents: Array<{ __typename?: 'WorkCapacityComponent', weight: number, weightUnit: string, workCapacityKg: number }> }>, yearlyBuckets: Array<{ __typename?: 'ExerciseAggregate', periodStart: string, periodEnd: string, totalWorkCapacityKg: number, workCapacityComponents: Array<{ __typename?: 'WorkCapacityComponent', weight: number, weightUnit: string, workCapacityKg: number }> }> } } | null };
 
 
 export const LoginDocument = gql`
@@ -1107,3 +1154,89 @@ export type ProfilePageQueryHookResult = ReturnType<typeof useProfilePageQuery>;
 export type ProfilePageLazyQueryHookResult = ReturnType<typeof useProfilePageLazyQuery>;
 export type ProfilePageSuspenseQueryHookResult = ReturnType<typeof useProfilePageSuspenseQuery>;
 export type ProfilePageQueryResult = Apollo.QueryResult<ProfilePageQuery, ProfilePageQueryVariables>;
+export const ExerciseTrendsDocument = gql`
+    query ExerciseTrends($uid: ID!, $exerciseTitle: String!) {
+  uniqueExerciseTitles(userUid: $uid)
+  user(uid: $uid) {
+    exerciseTrends(exerciseTitle: $exerciseTitle) {
+      exerciseTitle
+      rangeStart
+      rangeEnd
+      dailyBuckets {
+        periodStart
+        periodEnd
+        totalWorkCapacityKg
+        workCapacityComponents {
+          weight
+          weightUnit
+          workCapacityKg
+        }
+      }
+      weeklyBuckets {
+        periodStart
+        periodEnd
+        totalWorkCapacityKg
+        workCapacityComponents {
+          weight
+          weightUnit
+          workCapacityKg
+        }
+      }
+      monthlyBuckets {
+        periodStart
+        periodEnd
+        totalWorkCapacityKg
+        workCapacityComponents {
+          weight
+          weightUnit
+          workCapacityKg
+        }
+      }
+      yearlyBuckets {
+        periodStart
+        periodEnd
+        totalWorkCapacityKg
+        workCapacityComponents {
+          weight
+          weightUnit
+          workCapacityKg
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useExerciseTrendsQuery__
+ *
+ * To run a query within a React component, call `useExerciseTrendsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useExerciseTrendsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useExerciseTrendsQuery({
+ *   variables: {
+ *      uid: // value for 'uid'
+ *      exerciseTitle: // value for 'exerciseTitle'
+ *   },
+ * });
+ */
+export function useExerciseTrendsQuery(baseOptions: Apollo.QueryHookOptions<ExerciseTrendsQuery, ExerciseTrendsQueryVariables> & ({ variables: ExerciseTrendsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ExerciseTrendsQuery, ExerciseTrendsQueryVariables>(ExerciseTrendsDocument, options);
+      }
+export function useExerciseTrendsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ExerciseTrendsQuery, ExerciseTrendsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ExerciseTrendsQuery, ExerciseTrendsQueryVariables>(ExerciseTrendsDocument, options);
+        }
+export function useExerciseTrendsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<ExerciseTrendsQuery, ExerciseTrendsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<ExerciseTrendsQuery, ExerciseTrendsQueryVariables>(ExerciseTrendsDocument, options);
+        }
+export type ExerciseTrendsQueryHookResult = ReturnType<typeof useExerciseTrendsQuery>;
+export type ExerciseTrendsLazyQueryHookResult = ReturnType<typeof useExerciseTrendsLazyQuery>;
+export type ExerciseTrendsSuspenseQueryHookResult = ReturnType<typeof useExerciseTrendsSuspenseQuery>;
+export type ExerciseTrendsQueryResult = Apollo.QueryResult<ExerciseTrendsQuery, ExerciseTrendsQueryVariables>;

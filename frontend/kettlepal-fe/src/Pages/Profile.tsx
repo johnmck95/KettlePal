@@ -44,10 +44,11 @@ import {
 } from "../utils/Time/time";
 import Detail from "../Components/ViewWorkouts/ViewDetailedWorkoutModal/Detail";
 import LoadingSpinner from "../Components/LoadingSpinner";
-import Graph from "../Components/Visualizations/Graph";
+import WorkoutTrendsGraph from "../Components/Visualizations/WorkoutTrendsGraph";
 import dayjs from "dayjs";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
+import ExerciseTrends from "../Components/ExerciseTrends";
 
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
@@ -245,6 +246,17 @@ export default function Profile() {
         />
       </HStack>
 
+      {/* WEEKLY PROGRESS GRAPH */}
+      <Heading
+        size={["md", "lg"]}
+        color={theme.colors.grey[700]}
+        fontWeight={400}
+        textDecoration="underline"
+        textDecorationColor={theme.colors.grey[300]}
+        mt={["1.25rem", "2rem"]}
+      >
+        Workout Trends
+      </Heading>
       <HStack
         w="90%"
         mt="0.75rem"
@@ -343,7 +355,7 @@ export default function Profile() {
           />
         </Alert>
       ) : (
-        <Box w="100%" h={["200px", "300px"]} borderRadius="6px">
+        <Box w="100%" h="100%" borderRadius="6px">
           {loading ? (
             <Center h="100%" w="100%">
               <LoadingSpinner disableMessage={true} />
@@ -351,7 +363,7 @@ export default function Profile() {
           ) : (
             <>
               {data?.user?.workoutTrends && bucket && (
-                <Graph
+                <WorkoutTrendsGraph
                   workoutTrends={data?.user?.workoutTrends}
                   showTime={showTime}
                   showWC={showWC}
@@ -441,12 +453,22 @@ export default function Profile() {
         </VStack>
       </HStack>
 
-      <VStack
-        w="90%"
-        pt="2rem"
-        mt="2rem"
-        borderTop={`2px solid ${theme.colors.green[100]}`}
-      >
+      {/* EXERCISE GRAPH */}
+
+      <ExerciseTrends />
+
+      {/* LIFETIME TOTALS */}
+      <VStack w="90%" mt="2.5rem">
+        <Heading
+          pb="1rem"
+          size={["md", "lg"]}
+          color={theme.colors.grey[700]}
+          fontWeight={400}
+          textDecoration="underline"
+          textDecorationColor={theme.colors.grey[300]}
+        >
+          Lifetime Statistics
+        </Heading>
         <HStack w="100%" justifyContent="space-evenly" my="0.5rem">
           <Detail
             title="Total Workouts"

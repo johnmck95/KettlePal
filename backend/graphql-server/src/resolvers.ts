@@ -32,6 +32,7 @@ import {
   Workout,
   UserWorkoutTrendsArgs,
   TimeGrain,
+  UserExerciseTrendsArgs,
 } from "./generated/backend-types.js";
 import getFuzzyWorkoutSearchResults from "./utils/Search/PastWorkoutsFuzzySearch.js";
 import knexConfig from "./knexfile.js";
@@ -45,6 +46,13 @@ import {
   validateRangeStartIsFirstOfMonth,
   validateRangeStartIsMonday,
 } from "./utils/verifyWorkoutTrends.js";
+import {
+  ExercisesForTrend,
+  generateDailyExerciseBuckets,
+  generateMonthlyExerciseBuckets,
+  generateWeeklyISOBuckets,
+  generateYearlyExerciseBuckets,
+} from "./utils/exerciseTrends.js";
 
 const knexInstance = knex(knexConfig);
 
@@ -622,6 +630,70 @@ export const resolvers = {
           };
         }
       }
+    },
+    async exerciseTrends(
+      parent: User,
+      { exerciseTitle }: UserExerciseTrendsArgs
+    ) {
+      const exercises: Array<ExercisesForTrend> = await knexInstance(
+        "exercises as e"
+      )
+        .join("workouts as w", "w.uid", "e.workoutUid")
+        .select(
+          "e.title",
+          "e.weight",
+          "e.weightUnit",
+          "e.sets",
+          "e.reps",
+          "e.multiplier",
+          "w.date",
+          { workoutUid: "w.uid" },
+          knexInstance.raw(
+            `CASE
+               WHEN e."weightUnit" = 'lb'
+               THEN e.weight * 0.45359237 * e.sets * e.reps * e.multiplier
+               ELSE e.weight * e.sets * e.reps * e.multiplier
+             END AS "workCapacityKg"`
+          )
+        )
+        .where("w.userUid", parent.uid)
+        .andWhere("e.title", exerciseTitle)
+        .whereNotNull("e.weight")
+        .whereNotNull("e.sets")
+        .whereNotNull("e.reps")
+        .whereNotNull("e.multiplier");
+
+      if (exercises.length === 0) {
+        return {
+          exerciseTitle,
+          rangeStart: "",
+          rangeEnd: "",
+          dailyBuckets: [],
+          weeklyBuckets: [],
+          monthlyBuckets: [],
+          yearlyBuckets: [],
+        };
+      }
+
+      const sorted = [...exercises].sort((a, b) =>
+        a.date.localeCompare(b.date)
+      );
+      const rangeStart = sorted[0].date;
+      const rangeEnd = sorted[sorted.length - 1].date;
+      const dailyBuckets = generateDailyExerciseBuckets(exercises);
+      const weeklyBuckets = generateWeeklyISOBuckets(exercises);
+      const monthlyBuckets = generateMonthlyExerciseBuckets(exercises);
+      const yearlyBuckets = generateYearlyExerciseBuckets(exercises);
+
+      return {
+        exerciseTitle,
+        rangeStart,
+        rangeEnd,
+        dailyBuckets,
+        weeklyBuckets,
+        monthlyBuckets,
+        yearlyBuckets,
+      };
     },
   },
 

@@ -240,7 +240,7 @@ export function formatSelectedDateRange(
     return `${formatDate(
       startDate,
       showYear
-    )}, ${endDate.getFullYear()} - ${formatDate(
+    )}, ${startDate.getFullYear()} - ${formatDate(
       endDate,
       showYear
     )}, ${endDate.getFullYear()}`;
@@ -360,4 +360,17 @@ export const isNextRangeInFuture = (
     default:
       return false;
   }
+};
+
+export const dateToDayNumber = (date: string) =>
+  Math.floor(
+    (new Date(date).getTime() - new Date("1970-01-01").getTime()) /
+      (1000 * 60 * 60 * 24)
+  );
+
+export const dayNumberToDate = (dayNumber: number) => {
+  const date = new Date("1970-01-01");
+  date.setDate(date.getDate() + dayNumber);
+
+  return date.toISOString().split("T")[0];
 };

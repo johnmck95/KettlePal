@@ -124,3 +124,56 @@ const PROFILE_PAGE_QUERY = gql`
     }
   }
 `;
+
+const EXERCISE_TRENDS_QUERY = gql`
+  query ExerciseTrends($uid: ID!, $exerciseTitle: String!) {
+    uniqueExerciseTitles(userUid: $uid)
+    user(uid: $uid) {
+      exerciseTrends(exerciseTitle: $exerciseTitle) {
+        exerciseTitle
+        rangeStart
+        rangeEnd
+        dailyBuckets {
+          periodStart
+          periodEnd
+          totalWorkCapacityKg
+          workCapacityComponents {
+            weight
+            weightUnit
+            workCapacityKg
+          }
+        }
+        weeklyBuckets {
+          periodStart
+          periodEnd
+          totalWorkCapacityKg
+          workCapacityComponents {
+            weight
+            weightUnit
+            workCapacityKg
+          }
+        }
+        monthlyBuckets {
+          periodStart
+          periodEnd
+          totalWorkCapacityKg
+          workCapacityComponents {
+            weight
+            weightUnit
+            workCapacityKg
+          }
+        }
+        yearlyBuckets {
+          periodStart
+          periodEnd
+          totalWorkCapacityKg
+          workCapacityComponents {
+            weight
+            weightUnit
+            workCapacityKg
+          }
+        }
+      }
+    }
+  }
+`;

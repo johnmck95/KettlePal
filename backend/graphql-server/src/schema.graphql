@@ -23,6 +23,7 @@ type User {
     grain: TimeGrain!
     range: DateRangeInput!
   ): WorkoutTrendResponse!
+  exerciseTrends(exerciseTitle: String!): ExerciseTrendsResponse!
 }
 
 type WorkoutAggregate {
@@ -32,11 +33,34 @@ type WorkoutAggregate {
   durationSeconds: Int!
 }
 
+type ExerciseAggregate {
+  periodStart: String!
+  periodEnd: String!
+  totalWorkCapacityKg: Float!
+  workCapacityComponents: [WorkCapacityComponent!]!
+}
+
+type WorkCapacityComponent {
+  weight: Float!
+  weightUnit: String!
+  workCapacityKg: Float!
+}
+
 type WorkoutTrendResponse {
   grain: TimeGrain!
   rangeStart: String!
   rangeEnd: String!
   buckets: [WorkoutAggregate!]!
+}
+
+type ExerciseTrendsResponse {
+  exerciseTitle: String!
+  rangeStart: String!
+  rangeEnd: String!
+  dailyBuckets: [ExerciseAggregate!]!
+  weeklyBuckets: [ExerciseAggregate!]!
+  monthlyBuckets: [ExerciseAggregate!]!
+  yearlyBuckets: [ExerciseAggregate!]!
 }
 
 type UserStats {
