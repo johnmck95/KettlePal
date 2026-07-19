@@ -5,7 +5,6 @@ import { Box, Wrap, WrapItem, Text } from "@chakra-ui/react";
 import theme from "../../../Constants/theme";
 import {
   weightInKg,
-  STANDARD_KETTLEBELL_COLOURS,
   weightLabel,
 } from "../../../utils/Visualiations/constants";
 
@@ -149,7 +148,7 @@ export default function StackedBarChart({
         activeBucket?.periodStart === bucket.periodStart &&
         activeBucket?.periodEnd === bucket.periodEnd;
 
-      const highlight = chart
+      chart
         .append("rect")
         .attr("x", xPos - 1)
         .attr("y", barTop - 1)
@@ -197,7 +196,7 @@ export default function StackedBarChart({
     return () => {
       svg.selectAll("*").remove();
     };
-  }, [buckets, colour, activeBucket]);
+  }, [buckets, colour, activeBucket, setActiveBucket]);
 
   return (
     <div style={{ width: "100%" }}>

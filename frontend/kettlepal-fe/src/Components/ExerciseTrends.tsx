@@ -15,7 +15,6 @@ import {
   RangeSliderFilledTrack,
   RangeSliderThumb,
   Heading,
-  Box,
   Flex,
 } from "@chakra-ui/react";
 import {
