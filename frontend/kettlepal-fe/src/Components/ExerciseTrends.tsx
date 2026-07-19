@@ -16,6 +16,7 @@ import {
   RangeSliderThumb,
   Heading,
   Box,
+  Flex,
 } from "@chakra-ui/react";
 import {
   ExerciseAggregate,
@@ -166,83 +167,81 @@ export default function ExerciseTrends() {
               <HStack
                 w="100%"
                 alignItems="flex-start"
+                justifyContent="space-between"
                 mb={3}
-                justifyContent={"space-around"}
               >
-                <FormControl w="50%" h="100%">
-                  <VStack>
-                    <FormLabel
-                      fontSize={["xs", "sm"]}
-                      w="240px"
-                      m={0}
-                      textAlign="center"
+                {/* LEFT COLUMN */}
+                <VStack w="50%" gap={3} alignItems="flex-start">
+                  <Flex gap={0} alignItems={"flex-start"}>
+                    <FormControl>
+                      <VStack gap={0} alignItems={"flex-start"}>
+                        <FormLabel
+                          fontSize={["xs"]}
+                          m={0}
+                          fontWeight="medium"
+                          color={theme.colors.grey[600]}
+                        >
+                          Exercise
+                        </FormLabel>
+
+                        <Select
+                          size={["sm", "sm", "md"]}
+                          fontSize="16px"
+                          placeholder="Select"
+                          name="exercise"
+                          borderRadius="5px"
+                          maxW={["150px", "240px"]}
+                          focusBorderColor={theme.colors.green[300]}
+                          color={theme.colors.black}
+                          bg={theme.colors.white}
+                          value={exerciseTitle}
+                          onChange={(event) =>
+                            setExerciseTitle(event.target.value)
+                          }
+                        >
+                          {uniqueExerciseTitles.map((exercise) => (
+                            <option key={exercise} value={exercise}>
+                              {exercise}
+                            </option>
+                          ))}
+                        </Select>
+                      </VStack>
+                    </FormControl>
+                  </Flex>
+
+                  <VStack gap={0} alignItems={"flex-start"}>
+                    <Text
+                      fontSize={["xs"]}
                       fontWeight="medium"
                       color={theme.colors.grey[600]}
                     >
-                      Exercise
-                    </FormLabel>
-                    <Select
-                      size={["sm", "sm", "md"]}
-                      fontSize={["16px"]}
-                      placeholder={"Select"}
-                      name="exercise"
-                      borderRadius="5px"
-                      maxW={["150px", "240px"]}
-                      focusBorderColor={theme.colors.green[300]}
-                      color={theme.colors.black}
-                      bg={theme.colors.white}
-                      value={exerciseTitle}
-                      onChange={(event) => setExerciseTitle(event.target.value)}
-                    >
-                      {uniqueExerciseTitles.map((exercise) => {
-                        return (
-                          <option key={exercise} value={exercise}>
-                            {exercise}
-                          </option>
-                        );
-                      })}
-                    </Select>
+                      Active Period
+                    </Text>
+
+                    <Text fontSize={["sm"]} fontWeight="bold">
+                      {dataRangeShown}
+                    </Text>
                   </VStack>
-                </FormControl>
-                <VStack w="50%">
-                  <Text
-                    fontSize={["xs", "sm"]}
-                    w="240px"
-                    fontWeight="medium"
-                    color={theme.colors.grey[600]}
-                    textAlign="center"
-                  >
-                    Active Period
-                  </Text>
-                  <Text
-                    fontSize={["sm", "md"]}
-                    fontWeight={"bold"}
-                    textAlign="center"
-                  >
-                    {dataRangeShown}
-                  </Text>
+
+                  <VStack gap={0} alignItems={"flex-start"}>
+                    <Text
+                      fontSize={["xs"]}
+                      fontWeight="medium"
+                      color={theme.colors.grey[600]}
+                    >
+                      Work Capacity
+                    </Text>
+
+                    <Text fontSize={["sm"]} fontWeight="bold">
+                      {summedWorkCapacityKg}
+                    </Text>
+                  </VStack>
                 </VStack>
-              </HStack>
 
-              {/* WORK CAPACITY AND HORIZONTAL BARS */}
-              <HStack w="100%" justifyContent={"space-around"}>
-                <Box w="50%">
-                  <Detail
-                    title={
-                      activeBucket !== null
-                        ? "Work Capacity"
-                        : "Total Work Capacity"
-                    }
-                    value={summedWorkCapacityKg}
-                    variant="md"
-                    color={theme.colors.graphSecondary[500]}
-                  />
-                </Box>
-
-                <VStack maxW="50%" w="100%" h="120px" justifyContent={"center"}>
+                {/* RIGHT COLUMN */}
+                <VStack w="50%" justify="flex-start">
                   <Text
                     fontSize={["xs", "sm"]}
-                    w="100%"
                     fontWeight="medium"
                     color={theme.colors.grey[600]}
                     textAlign="center"
@@ -250,6 +249,7 @@ export default function ExerciseTrends() {
                   >
                     Weights Used
                   </Text>
+
                   <WorkCapacityBars activeBucket={activeBucket} />
                 </VStack>
               </HStack>

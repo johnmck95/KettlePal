@@ -10,7 +10,7 @@ const WorkCapacityBars = ({ activeBucket }: Props) => {
   return (
     <>
       {activeBucket ? (
-        <Box w="100%" maxW="360px">
+        <Box w="100%" maxW="320px">
           {activeBucket.workCapacityComponents.map((component) => {
             const percentage =
               (component.workCapacityKg / activeBucket.totalWorkCapacityKg) *
