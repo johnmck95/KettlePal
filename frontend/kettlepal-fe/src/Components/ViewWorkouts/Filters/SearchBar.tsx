@@ -1,9 +1,10 @@
 import React from "react";
 import {
+  Box,
   Button,
-  InputLeftElement,
   Input,
   InputGroup,
+  InputLeftElement,
   InputRightAddon,
 } from "@chakra-ui/react";
 import { FaSearch } from "react-icons/fa";
@@ -20,50 +21,73 @@ export default function SearchBar({ onSearchSubmit }: SearchBarProps) {
     setSearchQuery(event.target.value);
   }
 
+  function handleSubmit() {
+    onSearchSubmit(searchQuery);
+  }
+
   return (
-    <InputGroup
-      size="md"
-      borderRadius={30}
-      boxShadow={`0px 1px 4px ${theme.colors.grey[400]}`}
+    <Box
+      borderRadius={6}
+      w="100%"
+      transition="all 0.15s ease"
+      _hover={{
+        boxShadow: `0 0 0 1px ${theme.colors.green[50]}`,
+      }}
+      _focusWithin={{
+        boxShadow: `0 0 0 1px ${theme.colors.green[400]}`,
+      }}
     >
-      <InputLeftElement
-        pointerEvents="none"
-        children={<FaSearch color="gray.600" />}
-      />
-      <Input
-        borderRadius={30}
-        placeholder="Search..."
-        color={theme.colors.black}
-        focusBorderColor={theme.colors.green[300]}
-        bg={theme.colors.white}
-        type="text"
-        name="searchQuery"
-        value={searchQuery}
-        onChange={handleChange}
-        onKeyDown={(event) => {
-          if (event.key === "Enter") {
-            onSearchSubmit(searchQuery);
-          }
-        }}
-      />
-      <InputRightAddon p={0} border="none" borderRightRadius={30}>
-        <Button
-          size="md"
-          borderLeftRadius={0}
-          borderRightRadius={30}
-          variant="primary"
-          boxShadow={`0px 1px 4px ${theme.colors.grey[400]}`}
+      <InputGroup size="md">
+        <InputLeftElement pointerEvents="none">
+          <FaSearch color={theme.colors.grey[600]} />
+        </InputLeftElement>
+
+        <Input
+          bg={theme.colors.white}
+          color={theme.colors.black}
+          placeholder="Search..."
+          type="text"
+          name="searchQuery"
+          value={searchQuery}
+          onChange={handleChange}
+          onKeyDown={(event) => {
+            if (event.key === "Enter") {
+              handleSubmit();
+            }
+          }}
+          border={`1px solid ${theme.colors.green[400]}`}
+          borderRight="none"
+          borderRightRadius={0}
+          borderLeftRadius={4}
+          focusBorderColor={theme.colors.green[500]}
           sx={{
-            _focus: {
-              borderColor: theme.colors.green[300],
-              boxShadow: `0 0 0 1px ${theme.colors.green[300]}`,
+            _hover: {
+              borderColor: theme.colors.green[500],
             },
           }}
-          onClick={() => onSearchSubmit(searchQuery)}
-        >
-          Search
-        </Button>
-      </InputRightAddon>
-    </InputGroup>
+        />
+
+        <InputRightAddon p={0} bg="transparent" border="none">
+          <Button
+            m={0}
+            size="md"
+            variant="primary"
+            borderLeftRadius={0}
+            borderRightRadius={4}
+            onClick={handleSubmit}
+            sx={{
+              _hover: {
+                bg: theme.colors.green[600],
+              },
+              _active: {
+                bg: theme.colors.green[800],
+              },
+            }}
+          >
+            Search
+          </Button>
+        </InputRightAddon>
+      </InputGroup>
+    </Box>
   );
 }
