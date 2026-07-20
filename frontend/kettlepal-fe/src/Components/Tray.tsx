@@ -117,7 +117,7 @@ export default function Tray() {
                   w="100%"
                   textAlign="center"
                 >
-                  Past
+                  History
                 </Text>
               </VStack>
             </Link>
@@ -161,7 +161,7 @@ export default function Tray() {
                   w="100%"
                   textAlign="center"
                 >
-                  New
+                  Log
                 </Text>
               </VStack>
             </Link>

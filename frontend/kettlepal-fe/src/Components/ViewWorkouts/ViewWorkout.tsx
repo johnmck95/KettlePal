@@ -80,7 +80,11 @@ export default function ViewWorkout({
           <LoadingSpinner size={16} />
         ) : (
           <>
-            <CalendarWidget date={workoutWithExercises?.date ?? ""} w="4rem" />
+            <CalendarWidget
+              date={workoutWithExercises?.date ?? ""}
+              w="3.5rem"
+              h="4rem"
+            />
             <VStack mx="1rem">
               {exercises?.map((exercise) => {
                 return (

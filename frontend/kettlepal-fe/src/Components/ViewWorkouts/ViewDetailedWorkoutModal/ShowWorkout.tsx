@@ -58,6 +58,8 @@ export default function ShowWorkout({
         variant="primary"
         onClick={() => setShowDetails((prevShowDetails) => !prevShowDetails)}
         my="0.5rem"
+        borderRadius="full"
+        h="2rem"
         ref={focusRef}
         sx={{
           _focus: {
