@@ -19,9 +19,9 @@ export default function Filters({
     <VStack w="100%" mt="0.4rem" mb="0.8rem">
       <SearchBar onSearchSubmit={onSearchSubmit} />
       {searchQuery && (
-        <HStack>
-          <Text fontSize="12px" color={theme.colors.grey[500]}>
-            <b>Results for:</b> <i>{searchQuery}</i>
+        <HStack w="100%">
+          <Text fontSize="12px" color={theme.colors.grey[600]}>
+            <b>Results For:</b> <i>{searchQuery}</i>
           </Text>
           <Icon
             as={FaTimes}
