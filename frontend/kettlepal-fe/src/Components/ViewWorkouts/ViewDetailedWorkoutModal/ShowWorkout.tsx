@@ -1,12 +1,12 @@
 import { Box, Button, Flex, HStack, Text } from "@chakra-ui/react";
 import { formatDurationShort } from "../../../utils/Time/time";
-import Detail from "./Detail";
 import { FuzzySearchQuery } from "../../../generated/frontend-types";
 import theme from "../../../Constants/theme";
 import ViewDetailedExercise from "./ViewDetailedExercise";
 import { useState } from "react";
 import dayjs from "dayjs";
 import { totalWorkoutWorkCapacity } from "../../../utils/Workouts/workouts";
+import KeyMetricCard from "../../KeyMetricCard";
 
 interface ShowWorkoutProps {
   workoutWithExercises: NonNullable<
@@ -36,19 +36,19 @@ export default function ShowWorkout({
       </Text>
 
       {/* ELAPSED TIME & TOTAL WORK CAPACITY */}
-      <HStack w="100%" justifyContent="space-evenly" my="1rem">
-        <Detail
-          title={"Time"}
-          value={formatDurationShort(elapsedSeconds ?? 0)}
-          variant="md"
-          color={theme.colors.graphPrimary[500]}
-        />
-        <Detail
-          title={"Work Capacity"}
-          value={totalWorkoutWorkCapacity(workoutWithExercises)}
-          variant="md"
-          color={theme.colors.graphSecondary[500]}
-        />
+      <HStack spacing={[2, 4]} w="100%" my={4}>
+        <Box w="50%">
+          <KeyMetricCard
+            metric="time"
+            value={formatDurationShort(elapsedSeconds ?? 0)}
+          />
+        </Box>
+        <Box w="50%">
+          <KeyMetricCard
+            metric="workCapacity"
+            value={totalWorkoutWorkCapacity(workoutWithExercises)}
+          />
+        </Box>
       </HStack>
 
       {/* SHOW DETAILS BUTTON */}
