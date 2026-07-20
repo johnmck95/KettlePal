@@ -45,7 +45,8 @@ Make sure you **"_Add To Homescreen_"** on mobile devices for the best experienc
 
 ### View, Search, Analyze & Update Past Workouts
 
-<img src="image-3.png" alt="alt text" width="800" >
+<img src="image-9.png" alt="alt text" width="600" >
+![alt text](image-9.png)
 
 ### Customize Your Exercise List
 
