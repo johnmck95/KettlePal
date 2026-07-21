@@ -46,7 +46,6 @@ Make sure you **"_Add To Homescreen_"** on mobile devices for the best experienc
 ### View, Search, Analyze & Update Past Workouts
 
 <img src="image-9.png" alt="alt text" width="600" >
-![alt text](image-9.png)
 
 ### Customize Your Exercise List
 
@@ -111,14 +110,13 @@ This starts:
 ### Common Commands
 
 ```bash
+# Start all services
+docker compose up
+
 # Stop all services
 docker compose down
 
 # View logs
 docker compose logs -f frontend
 docker compose logs -f backend
-
-# Reset database (-v DELETES volumes)
-docker compose down -v
-docker compose up
 ```
