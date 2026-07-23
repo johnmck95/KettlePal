@@ -14,8 +14,11 @@ const WorkCapacityBars = ({ activeBucket, colourMap }: Props) => {
         <Box w="100%" maxW="320px">
           {activeBucket.workCapacityComponents.map((component) => {
             const percentage =
-              (component.workCapacityKg / activeBucket.totalWorkCapacityKg) *
-              100;
+              activeBucket.totalWorkCapacityKg > 0
+                ? (component.workCapacityKg /
+                    activeBucket.totalWorkCapacityKg) *
+                  100
+                : 100;
 
             const weightKey = weightLabel(component);
             const colour = colourMap.get(weightKey) ?? "gray.400";
