@@ -99,7 +99,7 @@ export default function ExerciseTrends() {
   );
 
   const MAX_BUCKETS = 25;
-
+  const MIN_BUCKETS = 10;
   const filterBuckets = (buckets?: ExerciseAggregate[]) =>
     buckets?.filter((bucket) => {
       const bucketStart = dateToDayNumber(bucket.periodStart);
@@ -108,17 +108,51 @@ export default function ExerciseTrends() {
       return bucketEnd >= sliderRange[0] && bucketStart <= sliderRange[1];
     }) ?? [];
 
-  const filteredBucketOptions = [
-    filterBuckets(exerciseTrends?.dailyBuckets),
-    filterBuckets(exerciseTrends?.weeklyBuckets),
-    filterBuckets(exerciseTrends?.monthlyBuckets),
-    filterBuckets(exerciseTrends?.yearlyBuckets),
-  ];
+  const filteredBucketOptions = useMemo(
+    () => [
+      filterBuckets(exerciseTrends?.dailyBuckets),
+      filterBuckets(exerciseTrends?.weeklyBuckets),
+      filterBuckets(exerciseTrends?.monthlyBuckets),
+      filterBuckets(exerciseTrends?.yearlyBuckets),
+    ],
+    [
+      exerciseTrends?.dailyBuckets,
+      exerciseTrends?.weeklyBuckets,
+      exerciseTrends?.monthlyBuckets,
+      exerciseTrends?.yearlyBuckets,
+      sliderRange,
+    ]
+  );
 
-  const filteredBuckets =
-    filteredBucketOptions.find(
-      (bucketOption) => bucketOption.length <= MAX_BUCKETS
-    ) ?? filteredBucketOptions[filteredBucketOptions.length - 1];
+  // Choose the aggregate that has atleast MIN_BUCKETS, ideally less
+  // than MAX_BUCKETS (if MIN is still respected).
+  const getBestBucketOption = (options: ExerciseAggregate[][]) => {
+    let index = 0;
+    // Start with the finest granularity and move coarser if needed
+    while (index < options.length - 1 && options[index].length > MAX_BUCKETS) {
+      const nextBucketCount = options[index + 1].length;
+      // Only move coarser if the next increment is still useful
+      if (nextBucketCount >= MIN_BUCKETS) {
+        index++;
+      } else {
+        break;
+      }
+    }
+
+    // Move finer if we have too few buckets
+    while (index > 0 && options[index].length < MIN_BUCKETS) {
+      const previousBucketCount = options[index - 1].length;
+      // Previous granularity must actually give us more buckets
+      if (previousBucketCount <= MAX_BUCKETS) {
+        index--;
+      } else {
+        break;
+      }
+    }
+    return options[index];
+  };
+
+  const filteredBuckets = getBestBucketOption(filteredBucketOptions);
 
   const sumWorkCapacityKg = filteredBuckets.reduce(
     (sum, bucket) => sum + bucket.totalWorkCapacityKg,
@@ -359,11 +393,19 @@ export default function ExerciseTrends() {
                   </RangeSlider>
 
                   <HStack w="100%" justifyContent="space-between">
-                    <Text fontSize="sm" color={theme.colors.grey[700]}>
+                    <Text
+                      fontSize="sm"
+                      color={theme.colors.grey[700]}
+                      fontWeight={600}
+                    >
                       {selectedDateRange[0]}
                     </Text>
 
-                    <Text fontSize="sm" color={theme.colors.grey[700]}>
+                    <Text
+                      fontSize="sm"
+                      color={theme.colors.grey[700]}
+                      fontWeight={600}
+                    >
                       {selectedDateRange[1]}
                     </Text>
                   </HStack>
