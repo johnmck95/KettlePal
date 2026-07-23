@@ -1,5 +1,8 @@
 import theme from "../../Constants/theme";
-import { WorkCapacityComponent } from "../../generated/frontend-types";
+import {
+  ExerciseAggregate,
+  WorkCapacityComponent,
+} from "../../generated/frontend-types";
 
 export const STANDARD_KETTLEBELL_COLOURS: Record<string, string> = {
   "8 kg": theme.colors.green[100],
@@ -68,3 +71,14 @@ export const generateColour = (index: number): string => {
 
   return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
 };
+
+export function dominantWeight(bucket: ExerciseAggregate): string | null {
+  if (bucket.workCapacityComponents.length === 0) {
+    return null;
+  }
+  return weightLabel(
+    bucket.workCapacityComponents.reduce((max, component) =>
+      component.workCapacityKg > max.workCapacityKg ? component : max
+    )
+  );
+}

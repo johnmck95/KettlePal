@@ -5,7 +5,7 @@ import { ExerciseAggregate } from "../../../generated/frontend-types";
 import theme from "../../../Constants/theme";
 import {
   createGlowFilter,
-  weightLabel,
+  dominantWeight,
 } from "../../../utils/Visualiations/constants";
 
 interface Props {
@@ -13,17 +13,6 @@ interface Props {
   activeBucket: ExerciseAggregate | null;
   colourMap: Map<string, string>;
   setActiveBucket: (activeBucket: ExerciseAggregate | null) => void;
-}
-
-function dominantWeight(bucket: ExerciseAggregate): string | null {
-  if (bucket.workCapacityComponents.length === 0) {
-    return null;
-  }
-  return weightLabel(
-    bucket.workCapacityComponents.reduce((max, component) =>
-      component.workCapacityKg > max.workCapacityKg ? component : max
-    )
-  );
 }
 
 export default function Trendline({
@@ -93,11 +82,11 @@ export default function Trendline({
     // Definitions
     const defs = svg.append("defs");
 
-    createGlowFilter(
-      defs,
-      "glowWorkCapacity",
-      theme.colors.graphSecondary[500]
-    );
+    const activeColour = activeBucket
+      ? getWeightColour(activeBucket)
+      : theme.colors.graphSecondary[500];
+
+    createGlowFilter(defs, "glowWorkCapacity", activeColour);
 
     // Axes
     const yAxisLeftGroup = g.append("g").call(
