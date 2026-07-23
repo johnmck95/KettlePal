@@ -32,6 +32,10 @@ export default function ViewDetailedExercise({
         fontSize={showDetails ? "xl" : "md"}
         color={theme.colors.black}
         mt={showDetails ? "1rem" : "0.25rem"}
+        w="100%"
+        borderBottom={
+          showDetails ? `2px solid ${theme.colors.green[50]}` : "none"
+        }
       >
         <b>{formatExerciseString(exercise)}</b>
       </Text>
