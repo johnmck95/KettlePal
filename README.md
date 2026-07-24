@@ -120,3 +120,14 @@ docker compose down
 docker compose logs -f frontend
 docker compose logs -f backend
 ```
+
+### LLM Integration
+
+For local development, I am using Claude Code with Ollama. This is less powerful than frontier models, but allows me to use LLMs at zero cost. I can use local model that are less powerful for trivial changes, and cloud hosted models for deeper reasoning.
+
+Run `ollama launch claude --model minimax-m3:cloud` to use Claude Code (with the minimax-m3 cloud model).
+
+- `vim ~/.zshrc` to modify ollama context length
+- `ollama serve` to validate the Ollama server is running
+- `ollama list` to see available models
+- Go to https://ollama.com/settings to see free usage limits.
