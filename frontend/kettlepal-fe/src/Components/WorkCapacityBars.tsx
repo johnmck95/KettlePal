@@ -14,8 +14,11 @@ const WorkCapacityBars = ({ activeBucket, colourMap }: Props) => {
         <Box w="100%" maxW="320px">
           {activeBucket.workCapacityComponents.map((component) => {
             const percentage =
-              (component.workCapacityKg / activeBucket.totalWorkCapacityKg) *
-              100;
+              activeBucket.totalWorkCapacityKg > 0
+                ? (component.workCapacityKg /
+                    activeBucket.totalWorkCapacityKg) *
+                  100
+                : 100;
 
             const weightKey = weightLabel(component);
             const colour = colourMap.get(weightKey) ?? "gray.400";
@@ -60,7 +63,8 @@ const WorkCapacityBars = ({ activeBucket, colourMap }: Props) => {
           textAlign="center"
         >
           <Text fontSize="sm" color="gray.500">
-            Hover over the graph to see the distrubution of work capacity.
+            Hover over the graph to see the distribution of weights that were
+            used.
           </Text>
         </Box>
       )}

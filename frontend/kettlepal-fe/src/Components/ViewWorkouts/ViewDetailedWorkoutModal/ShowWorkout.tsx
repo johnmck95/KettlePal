@@ -70,18 +70,7 @@ export default function ShowWorkout({
       >
         {showDetails ? "Hide" : "Show"} Details
       </Button>
-      <Box
-        width="100%"
-        margin="0"
-        padding="0"
-        sx={{
-          "& > *:not(:first-of-type)": {
-            borderTop: showDetails
-              ? `1px solid ${theme.colors.feldgrau[100]}`
-              : "none",
-          },
-        }}
-      >
+      <Box width="100%" margin="0" padding="0">
         {/* EXERCISES */}
         {exercises?.map((exercise) => (
           <ViewDetailedExercise
