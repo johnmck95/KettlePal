@@ -116,6 +116,7 @@ export default function ExerciseTrends() {
       filterBuckets(exerciseTrends?.yearlyBuckets),
     ],
     [
+      filterBuckets,
       exerciseTrends?.dailyBuckets,
       exerciseTrends?.weeklyBuckets,
       exerciseTrends?.monthlyBuckets,
