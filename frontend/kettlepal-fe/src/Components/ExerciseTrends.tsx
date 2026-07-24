@@ -108,21 +108,12 @@ export default function ExerciseTrends() {
       return bucketEnd >= sliderRange[0] && bucketStart <= sliderRange[1];
     }) ?? [];
 
-  const filteredBucketOptions = useMemo(
-    () => [
-      filterBuckets(exerciseTrends?.dailyBuckets),
-      filterBuckets(exerciseTrends?.weeklyBuckets),
-      filterBuckets(exerciseTrends?.monthlyBuckets),
-      filterBuckets(exerciseTrends?.yearlyBuckets),
-    ],
-    [
-      filterBuckets,
-      exerciseTrends?.dailyBuckets,
-      exerciseTrends?.weeklyBuckets,
-      exerciseTrends?.monthlyBuckets,
-      exerciseTrends?.yearlyBuckets,
-    ]
-  );
+  const filteredBucketOptions = [
+    filterBuckets(exerciseTrends?.dailyBuckets),
+    filterBuckets(exerciseTrends?.weeklyBuckets),
+    filterBuckets(exerciseTrends?.monthlyBuckets),
+    filterBuckets(exerciseTrends?.yearlyBuckets),
+  ];
 
   // Choose the aggregate that has atleast MIN_BUCKETS, ideally less
   // than MAX_BUCKETS (if MIN is still respected).
