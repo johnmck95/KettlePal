@@ -121,7 +121,6 @@ export default function ExerciseTrends() {
       exerciseTrends?.weeklyBuckets,
       exerciseTrends?.monthlyBuckets,
       exerciseTrends?.yearlyBuckets,
-      sliderRange,
     ]
   );
 
