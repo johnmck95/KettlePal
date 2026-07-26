@@ -190,10 +190,18 @@ export const resolvers = {
         throw new NotAuthorizedError();
       }
       try {
-        return await knexInstance("workouts")
+        const workout = await knexInstance("workouts")
           .select("*")
           .where({ uid: uid })
           .first();
+        if (!workout) {
+          return null;
+        }
+        // Ownership check — a logged-in user can only read their own workouts.
+        if (workout.userUid !== req.userUid) {
+          throw new NotAuthorizedError();
+        }
+        return workout;
       } catch (error) {
         console.error("Error fetching workout:", error);
         throw error;
@@ -1017,6 +1025,17 @@ export const resolvers = {
       }
 
       try {
+        // Ownership check — only the workout's owner can rewrite it.
+        const workout = await knexInstance("workouts")
+          .where({ uid: uid })
+          .first();
+        if (!workout) {
+          throw new Error("Workout not found.");
+        }
+        if (workout.userUid !== req.userUid) {
+          throw new NotAuthorizedError();
+        }
+
         await knexInstance("workouts").where({ uid: uid }).update(edits);
         return await knexInstance("workouts").where({ uid: uid }).first();
       } catch (error) {
