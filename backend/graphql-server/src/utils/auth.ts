@@ -86,7 +86,28 @@ export async function refreshTokens(req: AuthenticatedRequest, res: Response) {
       process.env.REFRESH_TOKEN_SECRET
     ) as TokenPayload;
 
-    // Grab the user referenced in the JWT
+    // Atomically rotate tokenCount. The JWT's stamped tokenCount must match
+    // the DB's current value — if it doesn't, another refresh (or an
+    // invalidateToken) has already moved on and this token is stale. Doing
+    // the check and the increment in a single conditional UPDATE prevents
+    // the race where two concurrent refreshes both read the same tokenCount
+    // and both mint valid new tokens.
+    const incremented = await knexInstance("users")
+      .where({ uid: data.userUid, tokenCount: data.tokenCount })
+      .increment("tokenCount", 1);
+
+    if (incremented === 0) {
+      // The token was validly signed but its tokenCount no longer matches
+      // the DB — either a parallel refresh won, or the user logged out
+      // everywhere. Clear cookies so the client re-authenticates.
+      res.clearCookie(ACCESS_TOKEN_COOKIE_NAME);
+      res.clearCookie(REFRESH_TOKEN_COOKIE_NAME);
+      return { success: false, message: "Stale refresh token" };
+    }
+
+    // Re-read the user to get the *new* tokenCount for the freshly-issued
+    // tokens. We sign with the new value so the next refresh also passes
+    // the conditional update.
     const user = await knexInstance("users")
       .where({ uid: data.userUid })
       .first();
