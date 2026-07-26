@@ -16,26 +16,49 @@ export interface AuthenticatedRequest extends Request {
   userUid?: string;
 }
 
+class MissingTokenSecretError extends Error {
+  constructor(missing: string[]) {
+    super(
+      `Missing JWT secret(s) in environment: ${missing.join(
+        ", "
+      )}. Refusing to issue tokens.`
+    );
+    this.name = "MissingTokenSecretError";
+  }
+}
+
 export function createTokens(user: User): {
   refreshToken: string;
   accessToken: string;
 } {
-  if (
-    process.env.REFRESH_TOKEN_SECRET === undefined ||
-    process.env.ACCESS_TOKEN_SECRET === undefined
-  ) {
-    return { refreshToken: "", accessToken: "" };
+  const missing: string[] = [];
+  if (process.env.REFRESH_TOKEN_SECRET === undefined) {
+    missing.push("REFRESH_TOKEN_SECRET");
   }
+  if (process.env.ACCESS_TOKEN_SECRET === undefined) {
+    missing.push("ACCESS_TOKEN_SECRET");
+  }
+  if (missing.length > 0) {
+    // Throwing here (instead of returning empty strings) fails fast at the
+    // call site — signUp / login / refreshTokens all wrap their calls in
+    // try/catch and will surface the error to the client. Returning empty
+    // tokens silently would set useless cookies the client would then try
+    // to use, masking the misconfiguration.
+    throw new MissingTokenSecretError(missing);
+  }
+  // The non-null assertions are safe because the throw above guards both
+  // env vars. process.env.* is typed as `string | undefined` regardless of
+  // runtime checks, so TS needs the hint.
   const refreshToken = sign(
     { userUid: user.uid, tokenCount: user.tokenCount },
-    process.env.REFRESH_TOKEN_SECRET,
+    process.env.REFRESH_TOKEN_SECRET!,
     {
       expiresIn: "30 days",
     }
   );
   const accessToken = sign(
     { userUid: user.uid },
-    process.env.ACCESS_TOKEN_SECRET,
+    process.env.ACCESS_TOKEN_SECRET!,
     {
       expiresIn: "15m",
     }
@@ -112,13 +135,10 @@ export async function refreshTokens(req: AuthenticatedRequest, res: Response) {
       .where({ uid: data.userUid })
       .first();
 
-    // Create new tokens
-    const tokens = createTokens(user);
-    if (!tokens) {
-      return { success: false, message: "Failed to create tokens" };
-    }
+    // Create new tokens. Throws if the JWT secrets are missing — that gets
+    // caught below and surfaces as a refresh failure.
     const { refreshToken: newRefreshToken, accessToken: newAccessToken } =
-      tokens;
+      createTokens(user);
 
     // Set new tokens in HTTP-only cookies
     setAccessToken(res, newAccessToken);
@@ -126,7 +146,19 @@ export async function refreshTokens(req: AuthenticatedRequest, res: Response) {
 
     return { success: true, message: "Tokens refreshed successfully" };
   } catch (error) {
-    console.error("Error verifying refresh token:", error);
-    return { success: false, message: "Invalid refresh token" };
+    if (error instanceof Error) {
+      console.error("Error refreshing token:", error.message);
+    } else {
+      console.error("Error refreshing token:", error);
+    }
+    // Clear cookies on any refresh failure so the client re-authenticates
+    // rather than retrying against the same broken tokens.
+    res.clearCookie(ACCESS_TOKEN_COOKIE_NAME);
+    res.clearCookie(REFRESH_TOKEN_COOKIE_NAME);
+    return {
+      success: false,
+      message:
+        error instanceof Error ? error.message : "Invalid refresh token",
+    };
   }
 }
