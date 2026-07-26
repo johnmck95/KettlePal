@@ -56,6 +56,20 @@ import {
 
 const knexInstance = knex(knexConfig);
 
+// Strip the password hash from a User row before returning it to the client.
+// The User type no longer exposes `password`, but every code path that hands a
+// users-table row back to GraphQL should run through this so a stray
+// `select("*")` can't leak the hash. Accepts any object — including ones
+// typed without a `password` field — because the column exists at the DB layer
+// even when the GraphQL type doesn't surface it.
+const stripPassword = <T extends object | null | undefined>(user: T): T => {
+  if (!user) return user;
+  const { password, ...safe } = user as Record<string, unknown> & {
+    password?: unknown;
+  };
+  return safe as T;
+};
+
 // Incoming Resolver Properties are: (parent, args, context)
 export const resolvers = {
   // The top-level resolvers inside Query are the entry point resolvers for the graph, not nested queries like workout{ exercises{...} }
@@ -65,7 +79,8 @@ export const resolvers = {
         throw new NotAuthorizedError();
       }
       try {
-        return await knexInstance("users").select("*");
+        const users = await knexInstance("users").select("*");
+        return users.map((u) => stripPassword(u));
       } catch (error) {
         console.error("Error fetching users:", error);
         throw error;
@@ -88,7 +103,9 @@ export const resolvers = {
         offset: offset ?? undefined,
       });
 
-      return pastWorkouts;
+      // Strip the password hash from the user row spread into the
+      // UserPastWorkouts response.
+      return stripPassword(pastWorkouts);
     },
 
     async user(
@@ -100,10 +117,11 @@ export const resolvers = {
         throw new NotAuthorizedError();
       }
       try {
-        return await knexInstance("users")
+        const user = await knexInstance("users")
           .select("*")
           .where({ uid: uid })
           .first();
+        return stripPassword(user);
       } catch (error) {
         console.error("Error fetching user:", error);
         throw error;
@@ -232,10 +250,12 @@ export const resolvers = {
     checkSession(_: any, __: any, { req }: { req: AuthenticatedRequest }) {
       // Middleware is responsible for validating JWTs
       if (req.userUid) {
-        const user = knexInstance("users").where({ uid: req.userUid }).first();
+        const userPromise = knexInstance("users")
+          .where({ uid: req.userUid })
+          .first();
         return {
           isValid: true,
-          user,
+          user: userPromise.then((u) => stripPassword(u)),
         };
       } else {
         return { isValid: false };
@@ -743,7 +763,7 @@ export const resolvers = {
           })
           .first();
 
-        return insertedUser;
+        return stripPassword(insertedUser);
       } catch (error) {
         console.error("Error adding user:", error);
         throw error;
@@ -911,7 +931,8 @@ export const resolvers = {
 
       try {
         await knexInstance("users").where({ uid: uid }).update(edits);
-        return await knexInstance("users").where({ uid: uid }).first();
+        const updated = await knexInstance("users").where({ uid: uid }).first();
+        return stripPassword(updated);
       } catch (e) {
         console.error("Error updating user:", e);
         throw e;
@@ -1131,7 +1152,8 @@ export const resolvers = {
 
         console.log(`${numAffectedRows} rows affected in deleteUser mutation.`);
 
-        return await knexInstance("users").select("*");
+        const remainingUsers = await knexInstance("users").select("*");
+        return remainingUsers.map((u) => stripPassword(u));
       } catch (error) {
         console.error("Error deleting user:", error);
         throw error;
@@ -1260,7 +1282,7 @@ export const resolvers = {
         setAccessToken(res, accessToken);
         setRefreshToken(res, refreshToken);
 
-        return insertedUser;
+        return stripPassword(insertedUser);
       } catch (error) {
         console.error(error);
         throw error; // Re-throw for client to see.
@@ -1332,7 +1354,7 @@ export const resolvers = {
       setAccessToken(res, accessToken);
       setRefreshToken(res, refreshToken);
 
-      return user;
+      return stripPassword(user);
     },
 
     async refreshToken(
@@ -1449,7 +1471,7 @@ export const resolvers = {
         .orderBy("index", "asc");
 
       return {
-        user,
+        user: stripPassword(user),
         templates,
       };
     },

@@ -352,7 +352,6 @@ export type User = {
   firstName: Scalars['String']['output'];
   isAuthorized: Scalars['Boolean']['output'];
   lastName: Scalars['String']['output'];
-  password: Scalars['String']['output'];
   templates: Array<Template>;
   tokenCount: Scalars['Int']['output'];
   uid: Scalars['ID']['output'];
@@ -380,11 +379,8 @@ export type UserWorkoutsArgs = {
 
 export type UserPastWorkouts = {
   __typename?: 'UserPastWorkouts';
-  email: Scalars['String']['output'];
   firstName: Scalars['String']['output'];
-  isAuthorized: Scalars['Boolean']['output'];
   lastName: Scalars['String']['output'];
-  password: Scalars['String']['output'];
   uid: Scalars['ID']['output'];
   workoutWithExercises: Array<Maybe<WorkoutWithExercises>>;
 };
@@ -702,7 +698,6 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
   firstName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   isAuthorized?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   lastName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  password?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   templates?: Resolver<Array<ResolversTypes['Template']>, ParentType, ContextType>;
   tokenCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   uid?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
@@ -713,11 +708,8 @@ export type UserResolvers<ContextType = any, ParentType extends ResolversParentT
 }>;
 
 export type UserPastWorkoutsResolvers<ContextType = any, ParentType extends ResolversParentTypes['UserPastWorkouts'] = ResolversParentTypes['UserPastWorkouts']> = ResolversObject<{
-  email?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   firstName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  isAuthorized?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType>;
   lastName?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  password?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   uid?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   workoutWithExercises?: Resolver<Array<Maybe<ResolversTypes['WorkoutWithExercises']>>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
