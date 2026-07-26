@@ -748,20 +748,42 @@ export const resolvers = {
       if (!req.userUid) {
         throw new NotAuthorizedError();
       }
+
+      // Only admins may create users. The public signup path is `signUp` —
+      // exposing `addUser` to regular users lets an attacker mint accounts
+      // and pollute the users table.
+      const requestingUser = await knexInstance("users")
+        .where({ uid: req.userUid })
+        .first();
+      if (!requestingUser || requestingUser.isAuthorized !== true) {
+        throw new NotAuthorizedError();
+      }
+
       try {
-        let newUser = {
-          ...user,
+        // Reject email collisions up front (the unique index would catch it
+        // too, but the error message is unhelpful and we'd be hashing for
+        // nothing).
+        const emailTaken = await knexInstance("users")
+          .where({ email: user.email })
+          .first();
+        if (emailTaken) {
+          throw new Error("Email is already in use.");
+        }
+
+        // Hash the password the same way signUp does — addUser was previously
+        // storing the plaintext, which is a bug regardless of who can call it.
+        const hashedPassword = await bcrypt.hash(user.password, 12);
+        const newUser = {
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email: user.email,
+          password: hashedPassword,
           isAuthorized: false,
         };
-        await knexInstance("users").insert(newUser);
 
-        const insertedUser = await knexInstance("users")
-          .where({
-            email: user.email,
-            firstName: user.firstName,
-            lastName: user.lastName,
-          })
-          .first();
+        const [insertedUser] = await knexInstance("users")
+          .insert(newUser)
+          .returning("*");
 
         return stripPassword(insertedUser);
       } catch (error) {
@@ -1130,6 +1152,23 @@ export const resolvers = {
       if (!req.userUid) {
         throw new NotAuthorizedError();
       }
+
+      // Only admins may delete users. A regular user previously had no gate
+      // here at all, so any logged-in user could delete unowned users with
+      // no workouts (i.e. fresh accounts).
+      const requestingUser = await knexInstance("users")
+        .where({ uid: req.userUid })
+        .first();
+      if (!requestingUser || requestingUser.isAuthorized !== true) {
+        throw new NotAuthorizedError();
+      }
+
+      // Disallow self-delete — there's no UI reason for an admin to do this
+      // and it removes their own session/cookie authority mid-request.
+      if (uid === req.userUid) {
+        throw new Error("Admins cannot delete their own account.");
+      }
+
       try {
         const workoutsCount = Number(
           (
