@@ -73,8 +73,14 @@ export const ACCESS_TOKEN_COOKIE_NAME = "access-token";
 export function setAccessToken(res: Response, accessToken: string) {
   res.cookie(ACCESS_TOKEN_COOKIE_NAME, accessToken, {
     httpOnly: true,
+    // `secure` must be true for any `sameSite` value other than "none" — we
+    // keep it gated on production so dev over plain HTTP still works.
     secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+    // Lax blocks cross-site sub-requests (the CSRF vector) while still
+    // allowing top-level navigations, which is what we want. Combined with
+    // the Origin guard in src/index.ts, cross-site POSTs from any other
+    // origin can't carry these cookies even if Lax were ever bypassed.
+    sameSite: "lax",
     path: "/",
     maxAge: 15 * 60 * 1000, // 15 minutes
   });
@@ -84,7 +90,7 @@ export function setRefreshToken(res: Response, refreshToken: string) {
   res.cookie(REFRESH_TOKEN_COOKIE_NAME, refreshToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "none" : "strict",
+    sameSite: "lax",
     path: "/",
     maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
   });
