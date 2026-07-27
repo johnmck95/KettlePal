@@ -126,8 +126,6 @@ docker compose logs -f backend
 For local development, I am using Claude Code with Ollama. For smaller tasks, use an on-prem model with unlimited access. For deeper reasoning, use a cloud-hosted model.
 While both options are less powerful than a frontier model, they are completely free and very usable.
 
-Run `ollama launch claude --model minimax-m3:cloud` to use Claude Code (with the minimax-m3 cloud model).
-
 | Model      | Hosting Location | `command`                                       | Use Case                            |
 | ---------- | ---------------- | ----------------------------------------------- | ----------------------------------- |
 | minimax-m3 | Cloud            | `ollama launch claude --model minimax-m3:cloud` | Complex Reasoning.                  |
