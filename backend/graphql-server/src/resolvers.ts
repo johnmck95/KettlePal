@@ -18,6 +18,7 @@ import {
   setRefreshToken,
 } from "./utils/auth.js";
 import { NotAuthorizedError } from "./utils/Errors/NotAuthorizedError.js";
+import { validateAndNormalizeEmail } from "./utils/validateEmail.js";
 import {
   AddOrEditUserInput,
   AddOrEditWorkoutInput,
@@ -778,11 +779,15 @@ export const resolvers = {
       await requireAdmin(req);
 
       try {
+        // Normalize the email so admin-created accounts collide with same
+        // addresses from the public signUp path (case-insensitive).
+        const email = validateAndNormalizeEmail(user.email);
+
         // Reject email collisions up front (the unique index would catch it
         // too, but the error message is unhelpful and we'd be hashing for
         // nothing).
         const emailTaken = await knexInstance("users")
-          .where({ email: user.email })
+          .where({ email })
           .first();
         if (emailTaken) {
           throw new Error("Email is already in use.");
@@ -794,7 +799,7 @@ export const resolvers = {
         const newUser = {
           firstName: user.firstName,
           lastName: user.lastName,
-          email: user.email,
+          email,
           password: hashedPassword,
           isAuthorized: false,
         };
@@ -987,7 +992,7 @@ export const resolvers = {
         safeUpdates.lastName = edits.lastName;
       }
       if (edits.email !== undefined && edits.email !== null) {
-        safeUpdates.email = edits.email;
+        safeUpdates.email = validateAndNormalizeEmail(edits.email);
       }
       if (edits.password !== undefined && edits.password !== null) {
         if (edits.password.length < 8) {
@@ -1348,17 +1353,18 @@ export const resolvers = {
       { user }: { user: AddOrEditUserInput },
       { res }: { res: Response }
     ) {
+      const email = validateAndNormalizeEmail(user.email);
       const hashedPassword = await bcrypt.hash(user.password, 12);
       const newUser = {
         firstName: user.firstName,
         lastName: user.lastName,
-        email: user.email,
+        email,
         password: hashedPassword,
         isAuthorized: false,
       };
       try {
         const emailTaken = await knexInstance("users")
-          .where({ email: user.email })
+          .where({ email })
           .first();
 
         if (emailTaken) {
@@ -1419,7 +1425,10 @@ export const resolvers = {
       { email, password }: { email: string; password: string },
       { res }: { res: Response }
     ) {
-      const user = await knexInstance("users").where({ email: email }).first();
+      const normalizedEmail = validateAndNormalizeEmail(email);
+      const user = await knexInstance("users")
+        .where({ email: normalizedEmail })
+        .first();
 
       if (!user) {
         throw new Error("Invalid email address, please try again.");

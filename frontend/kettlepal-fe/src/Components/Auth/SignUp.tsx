@@ -20,6 +20,7 @@ import theme from "../../Constants/theme";
 import { useSignUpMutation } from "../../generated/frontend-types";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../Contexts/UserContext";
+import { validateAndNormalizeEmail } from "../../utils/validateEmail";
 
 export default function SignUp({
   handleComponentSwap,
@@ -106,27 +107,18 @@ export default function SignUp({
       isValid = false;
     }
 
-    // Validate Email - required and valid format
-    if (state.email.trim().length === 0) {
+    // Validate Email. Same check as the BE (utils/validateEmail.ts)
+    try {
+      // Throws if invalid
+      validateAndNormalizeEmail(state.email);
+    } catch (err) {
       setState((prevState) => ({
         ...prevState,
         errors: {
           ...prevState.errors,
           email: {
             isInvalid: true,
-            message: "Email is required",
-          },
-        },
-      }));
-      isValid = false;
-    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(state.email)) {
-      setState((prevState) => ({
-        ...prevState,
-        errors: {
-          ...prevState.errors,
-          email: {
-            isInvalid: true,
-            message: "Email is invalid",
+            message: err instanceof Error ? err.message : "Email is invalid",
           },
         },
       }));
@@ -202,7 +194,7 @@ export default function SignUp({
             user: {
               firstName: state.firstName.trim(),
               lastName: state.lastName.trim(),
-              email: state.email.trim(),
+              email: validateAndNormalizeEmail(state.email),
               password: state.password,
             },
           },
