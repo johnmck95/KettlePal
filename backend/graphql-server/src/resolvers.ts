@@ -2,7 +2,7 @@ import knex from "knex";
 import * as bcrypt from "bcrypt";
 import { verifyExercises } from "./utils/verifyExercises.js";
 import { verifyWorkout } from "./utils/verifyWorkout.js";
-import { verifyTemplates, verifyUserSettings } from "./utils/verifySettings.js";
+import { verifyUserSettings } from "./utils/verifySettings.js";
 import { Response } from "express";
 import {
   formatExercisesForDB,
@@ -18,11 +18,13 @@ import {
   setRefreshToken,
 } from "./utils/auth.js";
 import { NotAuthorizedError } from "./utils/Errors/NotAuthorizedError.js";
+import { validateAndNormalizeEmail } from "./utils/validateEmail.js";
 import {
   AddOrEditUserInput,
   AddOrEditWorkoutInput,
   AddOrUpdateSettingsInput,
   AddWorkoutWithExercisesInput,
+  EditUserInput,
   Exercise,
   QueryPastWorkoutsArgs,
   QueryUserArgs,
@@ -53,19 +55,48 @@ import {
   generateWeeklyISOBuckets,
   generateYearlyExerciseBuckets,
 } from "./utils/exerciseTrends.js";
+import { verifyTemplates } from "./utils/verifyTemplates.js";
 
 const knexInstance = knex(knexConfig);
+
+// Strip the password hash from a User row before returning it to the client.
+// The User type no longer exposes `password`, but every code path that hands a
+// users-table row back to GraphQL should run through this so a stray
+// `select("*")` can't leak the hash. Accepts any object — including ones
+// typed without a `password` field
+const stripPassword = <T extends object | null | undefined>(user: T): T => {
+  if (!user) return user;
+  const { password, ...safe } = user as Record<string, unknown> & {
+    password?: unknown;
+  };
+  return safe as T;
+};
+
+// Throws NotAuthorizedError unless the request is from a user whose
+// `isAuthorized` column is true. Used wherever an operation should be limited
+// to admins (addUser, deleteUser, resetPassword, Query.users, ...).
+const requireAdmin = async (req: AuthenticatedRequest): Promise<void> => {
+  if (!req.userUid) {
+    throw new NotAuthorizedError();
+  }
+  const requestingUser = await knexInstance("users")
+    .where({ uid: req.userUid })
+    .first();
+  if (!requestingUser || requestingUser.isAuthorized !== true) {
+    throw new NotAuthorizedError();
+  }
+};
 
 // Incoming Resolver Properties are: (parent, args, context)
 export const resolvers = {
   // The top-level resolvers inside Query are the entry point resolvers for the graph, not nested queries like workout{ exercises{...} }
   Query: {
     async users(_: any, __: any, { req }: { req: AuthenticatedRequest }) {
-      if (!req.userUid) {
-        throw new NotAuthorizedError();
-      }
+      // Listing every user (emails, isAuthorized flags) is admin-only.
+      await requireAdmin(req);
       try {
-        return await knexInstance("users").select("*");
+        const users = await knexInstance("users").select("*");
+        return users.map((u) => stripPassword(u));
       } catch (error) {
         console.error("Error fetching users:", error);
         throw error;
@@ -88,7 +119,7 @@ export const resolvers = {
         offset: offset ?? undefined,
       });
 
-      return pastWorkouts;
+      return stripPassword(pastWorkouts);
     },
 
     async user(
@@ -100,10 +131,11 @@ export const resolvers = {
         throw new NotAuthorizedError();
       }
       try {
-        return await knexInstance("users")
+        const user = await knexInstance("users")
           .select("*")
           .where({ uid: uid })
           .first();
+        return stripPassword(user);
       } catch (error) {
         console.error("Error fetching user:", error);
         throw error;
@@ -157,10 +189,18 @@ export const resolvers = {
         throw new NotAuthorizedError();
       }
       try {
-        return await knexInstance("workouts")
+        const workout = await knexInstance("workouts")
           .select("*")
           .where({ uid: uid })
           .first();
+        if (!workout) {
+          return null;
+        }
+        // Ownership check — a logged-in user can only read their own workouts.
+        if (workout.userUid !== req.userUid) {
+          throw new NotAuthorizedError();
+        }
+        return workout;
       } catch (error) {
         console.error("Error fetching workout:", error);
         throw error;
@@ -232,10 +272,12 @@ export const resolvers = {
     checkSession(_: any, __: any, { req }: { req: AuthenticatedRequest }) {
       // Middleware is responsible for validating JWTs
       if (req.userUid) {
-        const user = knexInstance("users").where({ uid: req.userUid }).first();
+        const userPromise = knexInstance("users")
+          .where({ uid: req.userUid })
+          .first();
         return {
           isValid: true,
-          user,
+          user: userPromise.then((u) => stripPassword(u)),
         };
       } else {
         return { isValid: false };
@@ -728,22 +770,36 @@ export const resolvers = {
       if (!req.userUid) {
         throw new NotAuthorizedError();
       }
+
+      // Only admins may create users. The public signup path is `signUp` —
+      // exposing `addUser` to regular users lets an attacker mint accounts
+      // and pollute the users table.
+      await requireAdmin(req);
+
       try {
-        let newUser = {
-          ...user,
+        const email = validateAndNormalizeEmail(user.email);
+
+        // Reject email collisions up front
+        const emailTaken = await knexInstance("users").where({ email }).first();
+        if (emailTaken) {
+          throw new Error("Email is already in use.");
+        }
+
+        // Hash the password the same way signUp does
+        const hashedPassword = await bcrypt.hash(user.password, 12);
+        const newUser = {
+          firstName: user.firstName,
+          lastName: user.lastName,
+          email,
+          password: hashedPassword,
           isAuthorized: false,
         };
-        await knexInstance("users").insert(newUser);
 
-        const insertedUser = await knexInstance("users")
-          .where({
-            email: user.email,
-            firstName: user.firstName,
-            lastName: user.lastName,
-          })
-          .first();
+        const [insertedUser] = await knexInstance("users")
+          .insert(newUser)
+          .returning("*");
 
-        return insertedUser;
+        return stripPassword(insertedUser);
       } catch (error) {
         console.error("Error adding user:", error);
         throw error;
@@ -899,7 +955,7 @@ export const resolvers = {
       _: any,
       args: {
         uid: string;
-        edits: AddOrEditUserInput;
+        edits: EditUserInput;
       },
       { req }: { req: AuthenticatedRequest }
     ) {
@@ -909,9 +965,44 @@ export const resolvers = {
 
       const { edits, uid } = args;
 
+      // Whitelist the fields the user is allowed to change on themselves.
+      // EditUserInput still advertises `password`, but spreading `edits`
+      // directly would also let any extra field land in the UPDATE — so we
+      // build the patch explicitly. (tokenCount, isAuthorized, createdAt,
+      // etc. are not user-settable here.)
+      const safeUpdates: {
+        firstName?: string;
+        lastName?: string;
+        email?: string;
+        password?: string;
+      } = {};
+      if (edits.firstName !== undefined && edits.firstName !== null) {
+        safeUpdates.firstName = edits.firstName;
+      }
+      if (edits.lastName !== undefined && edits.lastName !== null) {
+        safeUpdates.lastName = edits.lastName;
+      }
+      if (edits.email !== undefined && edits.email !== null) {
+        safeUpdates.email = validateAndNormalizeEmail(edits.email);
+      }
+      if (edits.password !== undefined && edits.password !== null) {
+        if (edits.password.length < 8) {
+          throw new Error("Password must be at least 8 characters.");
+        }
+        safeUpdates.password = await bcrypt.hash(edits.password, 12);
+      }
+
+      if (Object.keys(safeUpdates).length === 0) {
+        // Nothing to update — return the current row rather than running a
+        // no-op UPDATE and reading it back.
+        const current = await knexInstance("users").where({ uid: uid }).first();
+        return stripPassword(current);
+      }
+
       try {
-        await knexInstance("users").where({ uid: uid }).update(edits);
-        return await knexInstance("users").where({ uid: uid }).first();
+        await knexInstance("users").where({ uid: uid }).update(safeUpdates);
+        const updated = await knexInstance("users").where({ uid: uid }).first();
+        return stripPassword(updated);
       } catch (e) {
         console.error("Error updating user:", e);
         throw e;
@@ -928,6 +1019,17 @@ export const resolvers = {
       }
 
       try {
+        // Ownership check — only the workout's owner can rewrite it.
+        const workout = await knexInstance("workouts")
+          .where({ uid: uid })
+          .first();
+        if (!workout) {
+          throw new Error("Workout not found.");
+        }
+        if (workout.userUid !== req.userUid) {
+          throw new NotAuthorizedError();
+        }
+
         await knexInstance("workouts").where({ uid: uid }).update(edits);
         return await knexInstance("workouts").where({ uid: uid }).first();
       } catch (error) {
@@ -1106,9 +1208,15 @@ export const resolvers = {
       { uid }: { uid: String },
       { req }: { req: AuthenticatedRequest }
     ) {
-      if (!req.userUid) {
-        throw new NotAuthorizedError();
+      // Only admins may delete users
+      await requireAdmin(req);
+
+      // Disallow self-delete — there's no UI reason for an admin to do this
+      // and it removes their own session/cookie authority mid-request.
+      if (uid === req.userUid) {
+        throw new Error("Admins cannot delete their own account.");
       }
+
       try {
         const workoutsCount = Number(
           (
@@ -1131,7 +1239,8 @@ export const resolvers = {
 
         console.log(`${numAffectedRows} rows affected in deleteUser mutation.`);
 
-        return await knexInstance("users").select("*");
+        const remainingUsers = await knexInstance("users").select("*");
+        return remainingUsers.map((u) => stripPassword(u));
       } catch (error) {
         console.error("Error deleting user:", error);
         throw error;
@@ -1231,18 +1340,17 @@ export const resolvers = {
       { user }: { user: AddOrEditUserInput },
       { res }: { res: Response }
     ) {
+      const email = validateAndNormalizeEmail(user.email);
       const hashedPassword = await bcrypt.hash(user.password, 12);
       const newUser = {
         firstName: user.firstName,
         lastName: user.lastName,
-        email: user.email,
+        email,
         password: hashedPassword,
         isAuthorized: false,
       };
       try {
-        const emailTaken = await knexInstance("users")
-          .where({ email: user.email })
-          .first();
+        const emailTaken = await knexInstance("users").where({ email }).first();
 
         if (emailTaken) {
           throw new Error("Email is already in use.");
@@ -1260,7 +1368,7 @@ export const resolvers = {
         setAccessToken(res, accessToken);
         setRefreshToken(res, refreshToken);
 
-        return insertedUser;
+        return stripPassword(insertedUser);
       } catch (error) {
         console.error(error);
         throw error; // Re-throw for client to see.
@@ -1275,20 +1383,8 @@ export const resolvers = {
       }: { userToUpdateUid: string; newPassword: string },
       { req }: { req: AuthenticatedRequest }
     ) {
-      if (!req.userUid) {
-        throw new NotAuthorizedError();
-      }
-
       // 1. Only administrators are currently allowed to reset a users password
-      const requestingUser = await knexInstance("users")
-        .where({ uid: req.userUid })
-        .first();
-
-      if (requestingUser.isAuthorized !== true) {
-        throw new Error(
-          "The requesting user is not authorized to reset the password. This feature is only available for administrators"
-        );
-      }
+      await requireAdmin(req);
 
       // 2. Check password atleast 8 characters
       if (newPassword.length < 8) {
@@ -1314,7 +1410,10 @@ export const resolvers = {
       { email, password }: { email: string; password: string },
       { res }: { res: Response }
     ) {
-      const user = await knexInstance("users").where({ email: email }).first();
+      const normalizedEmail = validateAndNormalizeEmail(email);
+      const user = await knexInstance("users")
+        .where({ email: normalizedEmail })
+        .first();
 
       if (!user) {
         throw new Error("Invalid email address, please try again.");
@@ -1332,7 +1431,7 @@ export const resolvers = {
       setAccessToken(res, accessToken);
       setRefreshToken(res, refreshToken);
 
-      return user;
+      return stripPassword(user);
     },
 
     async refreshToken(
@@ -1449,7 +1548,7 @@ export const resolvers = {
         .orderBy("index", "asc");
 
       return {
-        user,
+        user: stripPassword(user),
         templates,
       };
     },

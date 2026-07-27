@@ -5,6 +5,7 @@ import http from "http";
 import cors, { CorsOptions } from "cors";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
+import rateLimit from "express-rate-limit";
 import resolvers from "./resolvers.js";
 import pkg from "jsonwebtoken";
 import {
@@ -12,7 +13,7 @@ import {
   TokenPayload,
   refreshTokens,
 } from "./utils/auth.js";
-import { Response, NextFunction } from "express";
+import { Response, NextFunction, Request } from "express";
 const { verify } = pkg;
 import knex from "knex";
 import { allowedOrigins, backendURL } from "./utils/urls.js";
@@ -20,6 +21,11 @@ import { readFileSync } from "fs";
 import knexConfig from "./knexfile.js";
 
 const app = express();
+
+// Trust the first proxy hop (Render). Without this, express-rate-limit
+// sees every request as coming from the load balancer and a single bot
+// could exhaust the bucket for everyone else.
+app.set("trust proxy", 1);
 
 // A simple ping endpoint to help keep the production application
 // from sleeping, with the help of UptimeRobot.
@@ -144,6 +150,110 @@ const server = new ApolloServer({
 
 async function startApolloServer() {
   await server.start();
+
+  // CSRF defense — reject mutations whose Origin header doesn't match a
+  // trusted frontend. SameSite=Lax on the cookies already blocks the
+  // cross-site POST vector at the browser, but this guard catches anything
+  // that ever finds a way around that (older browsers, custom clients,
+  // future regressions). Reads are intentionally unrestricted — they don't
+  // mutate state and were never the CSRF concern.
+  app.use(
+    "/graphql",
+    (
+      req: Request,
+      _res: Response,
+      next: (err?: unknown) => void
+    ): void => {
+      // GraphQL request bodies are JSON-parsed by bodyParser above, so
+      // req.body.query exists for any well-formed request.
+      const query: string | undefined = req.body?.query;
+      const isMutation =
+        typeof query === "string" && query.trimStart().startsWith("mutation");
+      if (!isMutation) {
+        return next();
+      }
+
+      // No Origin header: same-origin browser requests and most non-browser
+      // callers. Both are safe — browsers always send Origin on cross-site
+      // POSTs, so a missing header means the request isn't a cross-site
+      // attack.
+      const originHeader = req.headers.origin;
+      if (!originHeader) {
+        return next();
+      }
+
+      if (allowedOrigins.includes(originHeader)) {
+        return next();
+      }
+
+      // Rejecting here bypasses Apollo — write the GraphQL-shaped response
+      // directly so the FE sees the same error envelope as any other
+      // resolver-side throw.
+      _res.status(403).json({
+        errors: [
+          {
+            message: `Cross-origin mutation from ${originHeader} is not allowed.`,
+            extensions: { code: "FORBIDDEN" },
+          },
+        ],
+      });
+    }
+  );
+  // Rate limiting — applied per-IP, per-operation name. Auth-touching
+  // mutations get a tight bucket; everything else gets a generous one.
+  // Skipped entirely in non-production so dev tooling / scripts aren't
+  // throttled. In-memory store means limits are per-instance, which is
+  // acceptable for a single Render service.
+  const isProduction = process.env.NODE_ENV === "production";
+
+  // Operations that touch credentials, sessions, or admin-only reads.
+  // These need the tightest bucket — credential stuffing and account
+  // enumeration are the highest-impact abuse cases against this API.
+  const AUTH_OPERATIONS = new Set<string>([
+    "login",
+    "signUp",
+    "resetPassword",
+    "invalidateToken",
+    "refreshToken",
+    "users",
+  ]);
+
+  if (isProduction) {
+    const authLimiter = rateLimit({
+      windowMs: 60 * 1000, // 1 minute
+      limit: 5, // 5 attempts per minute per IP per operation
+      standardHeaders: "draft-7",
+      legacyHeaders: false,
+      message: {
+        errors: [{ message: "Too many auth requests, please slow down." }],
+      },
+    });
+    const defaultLimiter = rateLimit({
+      windowMs: 60 * 1000,
+      limit: 60, // 60 req/min/IP/operation for ordinary traffic
+      standardHeaders: "draft-7",
+      legacyHeaders: false,
+      message: {
+        errors: [
+          { message: "Too many requests, please slow down." },
+        ],
+      },
+    });
+
+    // Dispatcher: pull the GraphQL operation name off the parsed body and
+    // hand the request to the matching limiter. Body parsing happens before
+    // we get here (see `bodyParser.json()` above), so `req.body?.operationName`
+    // is populated. Anonymous queries (no operationName) fall through to the
+    // default bucket — they're rare and Apollo will reject malformed ones.
+    app.use("/graphql", (req: Request, res: Response, next: NextFunction) => {
+      const operationName: string | undefined = req.body?.operationName;
+      const limiter =
+        operationName && AUTH_OPERATIONS.has(operationName)
+          ? authLimiter
+          : defaultLimiter;
+      limiter(req, res, next);
+    });
+  }
 
   // Set up GraphQL endpoint with CORS, Apollo middleware, and user context
   app.use(

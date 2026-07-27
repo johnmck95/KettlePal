@@ -353,7 +353,6 @@ export type User = {
   firstName: Scalars['String']['output'];
   isAuthorized: Scalars['Boolean']['output'];
   lastName: Scalars['String']['output'];
-  password: Scalars['String']['output'];
   templates: Array<Template>;
   tokenCount: Scalars['Int']['output'];
   uid: Scalars['ID']['output'];
@@ -381,11 +380,8 @@ export type UserWorkoutsArgs = {
 
 export type UserPastWorkouts = {
   __typename?: 'UserPastWorkouts';
-  email: Scalars['String']['output'];
   firstName: Scalars['String']['output'];
-  isAuthorized: Scalars['Boolean']['output'];
   lastName: Scalars['String']['output'];
-  password: Scalars['String']['output'];
   uid: Scalars['ID']['output'];
   workoutWithExercises: Array<Maybe<WorkoutWithExercises>>;
 };

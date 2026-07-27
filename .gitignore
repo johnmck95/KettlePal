@@ -5,3 +5,5 @@ dist/
 .env
 .env.local
 .env.*.local
+*.env
+backend/graphql-server/src/bin/2024-parsedOutput.json
