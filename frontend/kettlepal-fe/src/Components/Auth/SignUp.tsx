@@ -50,11 +50,17 @@ export default function SignUp({
 
   function handleChange(event: ChangeEvent<HTMLInputElement>): void {
     const { name, value } = event.target;
-    setState((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-    validateForm();
+    if (state.submitted) {
+      setState((prevState) => {
+        const next = { ...prevState, [name]: value };
+        return { ...next, errors: computeErrors(next) };
+      });
+    } else {
+      setState((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
+    }
   }
 
   const [signUpMutation, { loading, error }] = useSignUpMutation({
@@ -68,118 +74,69 @@ export default function SignUp({
     },
   });
 
-  function validateForm() {
-    let isValid = true;
+  function computeErrors(s: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+  }) {
+    const errors = { ...initialErrors };
 
-    // Clear previous errors
-    setState((prevState) => ({
-      ...prevState,
-      errors: initialErrors,
-    }));
-
-    // Validate First Name
-    if (state.firstName.trim().length === 0) {
-      setState((prevState) => ({
-        ...prevState,
-        errors: {
-          ...prevState.errors,
-          firstName: {
-            isInvalid: true,
-            message: "First Name is required",
-          },
-        },
-      }));
-      isValid = false;
+    if (s.firstName.trim().length === 0) {
+      errors.firstName = {
+        isInvalid: true,
+        message: "First Name is required",
+      };
     }
 
-    // Validate Last Name
-    if (state.lastName.trim().length === 0) {
-      setState((prevState) => ({
-        ...prevState,
-        errors: {
-          ...prevState.errors,
-          lastName: {
-            isInvalid: true,
-            message: "Last Name is required",
-          },
-        },
-      }));
-      isValid = false;
+    if (s.lastName.trim().length === 0) {
+      errors.lastName = {
+        isInvalid: true,
+        message: "Last Name is required",
+      };
     }
 
-    // Validate Email. Same check as the BE (utils/validateEmail.ts)
     try {
-      // Throws if invalid
-      validateAndNormalizeEmail(state.email);
+      validateAndNormalizeEmail(s.email);
     } catch (err) {
-      setState((prevState) => ({
-        ...prevState,
-        errors: {
-          ...prevState.errors,
-          email: {
-            isInvalid: true,
-            message: err instanceof Error ? err.message : "Email is invalid",
-          },
-        },
-      }));
-      isValid = false;
+      errors.email = {
+        isInvalid: true,
+        message: err instanceof Error ? err.message : "Email is invalid",
+      };
     }
 
-    // Validate Password - required and min 8 chars
-    if (state.password.length === 0) {
-      setState((prevState) => ({
-        ...prevState,
-        errors: {
-          ...prevState.errors,
-          password: {
-            isInvalid: true,
-            message: "Password is required",
-          },
-        },
-      }));
-      isValid = false;
-    } else if (state.password.length < 8) {
-      setState((prevState) => ({
-        ...prevState,
-        errors: {
-          ...prevState.errors,
-          password: {
-            isInvalid: true,
-            message: "Password must be at least 8 characters",
-          },
-        },
-      }));
-      isValid = false;
+    if (s.password.length === 0) {
+      errors.password = {
+        isInvalid: true,
+        message: "Password is required",
+      };
+    } else if (s.password.length < 8) {
+      errors.password = {
+        isInvalid: true,
+        message: "Password must be at least 8 characters",
+      };
     }
 
-    // Validate Confirm Password - required and matches password
-    if (state.confirmPassword.length === 0) {
-      setState((prevState) => ({
-        ...prevState,
-        errors: {
-          ...prevState.errors,
-          confirmPassword: {
-            isInvalid: true,
-            message: "Please confirm your password",
-          },
-        },
-      }));
-      isValid = false;
-    } else if (state.confirmPassword !== state.password) {
-      setState((prevState) => ({
-        ...prevState,
-        errors: {
-          ...prevState.errors,
-          confirmPassword: {
-            isInvalid: true,
-            message: "Passwords do not match",
-          },
-        },
-      }));
-      isValid = false;
+    if (s.confirmPassword.length === 0) {
+      errors.confirmPassword = {
+        isInvalid: true,
+        message: "Please confirm your password",
+      };
+    } else if (s.confirmPassword !== s.password) {
+      errors.confirmPassword = {
+        isInvalid: true,
+        message: "Passwords do not match",
+      };
     }
 
-    return isValid;
+    return errors;
+  }
+
+  function validateForm(): boolean {
+    const errors = computeErrors(state);
+    setState((prevState) => ({ ...prevState, errors }));
+    return Object.values(errors).every((e) => !e.isInvalid);
   }
 
   const handleSubmit = async (event: React.FormEvent) => {
