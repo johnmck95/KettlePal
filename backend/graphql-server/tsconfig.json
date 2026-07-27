@@ -12,7 +12,6 @@
     "resolveJsonModule": true,
     "noEmitOnError": true,
     "allowImportingTsExtensions": false,
-    "types": ["jest", "node"],
     "baseUrl": "src",
     "paths": {
       "@utils/*": ["utils/*"],
