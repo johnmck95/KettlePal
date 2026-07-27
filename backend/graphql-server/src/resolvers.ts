@@ -2,7 +2,7 @@ import knex from "knex";
 import * as bcrypt from "bcrypt";
 import { verifyExercises } from "./utils/verifyExercises.js";
 import { verifyWorkout } from "./utils/verifyWorkout.js";
-import { verifyTemplates, verifyUserSettings } from "./utils/verifySettings.js";
+import { verifyUserSettings } from "./utils/verifySettings.js";
 import { Response } from "express";
 import {
   formatExercisesForDB,
@@ -55,6 +55,7 @@ import {
   generateWeeklyISOBuckets,
   generateYearlyExerciseBuckets,
 } from "./utils/exerciseTrends.js";
+import { verifyTemplates } from "./utils/verifyTemplates.js";
 
 const knexInstance = knex(knexConfig);
 
@@ -786,9 +787,7 @@ export const resolvers = {
         // Reject email collisions up front (the unique index would catch it
         // too, but the error message is unhelpful and we'd be hashing for
         // nothing).
-        const emailTaken = await knexInstance("users")
-          .where({ email })
-          .first();
+        const emailTaken = await knexInstance("users").where({ email }).first();
         if (emailTaken) {
           throw new Error("Email is already in use.");
         }
@@ -1004,9 +1003,7 @@ export const resolvers = {
       if (Object.keys(safeUpdates).length === 0) {
         // Nothing to update — return the current row rather than running a
         // no-op UPDATE and reading it back.
-        const current = await knexInstance("users")
-          .where({ uid: uid })
-          .first();
+        const current = await knexInstance("users").where({ uid: uid }).first();
         return stripPassword(current);
       }
 
@@ -1363,9 +1360,7 @@ export const resolvers = {
         isAuthorized: false,
       };
       try {
-        const emailTaken = await knexInstance("users")
-          .where({ email })
-          .first();
+        const emailTaken = await knexInstance("users").where({ email }).first();
 
         if (emailTaken) {
           throw new Error("Email is already in use.");
