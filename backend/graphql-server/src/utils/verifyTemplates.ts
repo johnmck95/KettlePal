@@ -1,5 +1,5 @@
-import { AddOrUpdateTemplateInput } from "../generated/backend-types";
-import { validRepsDisplayed } from "./verifyExercises";
+import { AddOrUpdateTemplateInput } from "../generated/backend-types.js";
+import { validRepsDisplayed } from "./verifyExercises.js";
 
 export function verifyTemplates(templates: AddOrUpdateTemplateInput[]): {
   result: boolean;
