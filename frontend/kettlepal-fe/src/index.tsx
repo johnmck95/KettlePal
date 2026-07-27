@@ -76,8 +76,10 @@ const client = new ApolloClient({
   cache: cache,
   link: httpLink,
   defaultOptions: {
+    // cache-and-network means: render cached data immediately (if any),
+    // then kick off a background fetch and re-render when it lands.
     watchQuery: {
-      fetchPolicy: "network-only",
+      fetchPolicy: "cache-and-network",
       errorPolicy: "all",
     },
     query: {
