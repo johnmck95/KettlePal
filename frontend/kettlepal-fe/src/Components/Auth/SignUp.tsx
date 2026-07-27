@@ -206,11 +206,6 @@ export default function SignUp({
   };
 
   const [showServerError, setShowServerError] = useState<boolean>(true);
-  useEffect(() => {
-    if (error || contextError) {
-      setShowServerError(true);
-    }
-  }, [error, contextError]);
 
   useEffect(() => {
     if (error || contextError) {
