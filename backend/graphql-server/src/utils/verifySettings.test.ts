@@ -1,5 +1,5 @@
 import { validRepsDisplayed } from "./verifyExercises.js";
-import { verifyTemplates } from "./verifySettings.js";
+import { verifyTemplates } from "./verifyTemplates.js";
 
 describe("verifyTemplates", () => {
   it("Let's template be an empty array", () => {

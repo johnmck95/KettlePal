@@ -39,16 +39,10 @@ export function createTokens(user: User): {
     missing.push("ACCESS_TOKEN_SECRET");
   }
   if (missing.length > 0) {
-    // Throwing here (instead of returning empty strings) fails fast at the
-    // call site — signUp / login / refreshTokens all wrap their calls in
-    // try/catch and will surface the error to the client. Returning empty
-    // tokens silently would set useless cookies the client would then try
-    // to use, masking the misconfiguration.
+    // Do not set empty/useless cookies
     throw new MissingTokenSecretError(missing);
   }
-  // The non-null assertions are safe because the throw above guards both
-  // env vars. process.env.* is typed as `string | undefined` regardless of
-  // runtime checks, so TS needs the hint.
+  // The non-null assertions are safe because the throw above guards env vars.
   const refreshToken = sign(
     { userUid: user.uid, tokenCount: user.tokenCount },
     process.env.REFRESH_TOKEN_SECRET!,
@@ -73,8 +67,6 @@ export const ACCESS_TOKEN_COOKIE_NAME = "access-token";
 export function setAccessToken(res: Response, accessToken: string) {
   res.cookie(ACCESS_TOKEN_COOKIE_NAME, accessToken, {
     httpOnly: true,
-    // `secure` must be true for any `sameSite` value other than "none" — we
-    // keep it gated on production so dev over plain HTTP still works.
     secure: process.env.NODE_ENV === "production",
     // Lax blocks cross-site sub-requests (the CSRF vector) while still
     // allowing top-level navigations, which is what we want. Combined with
@@ -163,8 +155,7 @@ export async function refreshTokens(req: AuthenticatedRequest, res: Response) {
     res.clearCookie(REFRESH_TOKEN_COOKIE_NAME);
     return {
       success: false,
-      message:
-        error instanceof Error ? error.message : "Invalid refresh token",
+      message: error instanceof Error ? error.message : "Invalid refresh token",
     };
   }
 }

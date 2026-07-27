@@ -61,17 +61,12 @@ describe("normalizeEmail", () => {
   });
 
   it("preserves dot.case in the local part", () => {
-    // RFC-5321 says local-part is technically case-sensitive, but every
-    // provider treats it as case-insensitive. We lowercase but don't
-    // otherwise munge valid local-part characters.
     expect(normalizeEmail("First.Last@Example.com")).toBe(
       "first.last@example.com"
     );
   });
 
   it("returns the input as-is (lowercased) when no @ is present", () => {
-    // Defensive — the regex rejects this, but normalizeEmail shouldn't
-    // throw on garbage input.
     expect(normalizeEmail("not-an-email")).toBe("not-an-email");
   });
 });
@@ -86,7 +81,6 @@ describe("validateAndNormalizeEmail", () => {
   });
 
   it("treats mixed-case variants as the same account", () => {
-    // The whole point of the lowercase pass — these should collide.
     const a = validateAndNormalizeEmail("User@Example.com");
     const b = validateAndNormalizeEmail("user@EXAMPLE.COM");
     const c = validateAndNormalizeEmail("USER@example.com");
@@ -108,9 +102,7 @@ describe("validateAndNormalizeEmail", () => {
     expect(() => validateAndNormalizeEmail(undefined)).toThrow(
       "Email is required."
     );
-    expect(() => validateAndNormalizeEmail(null)).toThrow(
-      "Email is required."
-    );
+    expect(() => validateAndNormalizeEmail(null)).toThrow("Email is required.");
     expect(() => validateAndNormalizeEmail(42)).toThrow("Email is required.");
   });
 

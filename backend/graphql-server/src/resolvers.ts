@@ -63,8 +63,7 @@ const knexInstance = knex(knexConfig);
 // The User type no longer exposes `password`, but every code path that hands a
 // users-table row back to GraphQL should run through this so a stray
 // `select("*")` can't leak the hash. Accepts any object — including ones
-// typed without a `password` field — because the column exists at the DB layer
-// even when the GraphQL type doesn't surface it.
+// typed without a `password` field
 const stripPassword = <T extends object | null | undefined>(user: T): T => {
   if (!user) return user;
   const { password, ...safe } = user as Record<string, unknown> & {
@@ -120,8 +119,6 @@ export const resolvers = {
         offset: offset ?? undefined,
       });
 
-      // Strip the password hash from the user row spread into the
-      // UserPastWorkouts response.
       return stripPassword(pastWorkouts);
     },
 
@@ -780,20 +777,15 @@ export const resolvers = {
       await requireAdmin(req);
 
       try {
-        // Normalize the email so admin-created accounts collide with same
-        // addresses from the public signUp path (case-insensitive).
         const email = validateAndNormalizeEmail(user.email);
 
-        // Reject email collisions up front (the unique index would catch it
-        // too, but the error message is unhelpful and we'd be hashing for
-        // nothing).
+        // Reject email collisions up front
         const emailTaken = await knexInstance("users").where({ email }).first();
         if (emailTaken) {
           throw new Error("Email is already in use.");
         }
 
-        // Hash the password the same way signUp does — addUser was previously
-        // storing the plaintext, which is a bug regardless of who can call it.
+        // Hash the password the same way signUp does
         const hashedPassword = await bcrypt.hash(user.password, 12);
         const newUser = {
           firstName: user.firstName,
@@ -1216,9 +1208,7 @@ export const resolvers = {
       { uid }: { uid: String },
       { req }: { req: AuthenticatedRequest }
     ) {
-      // Only admins may delete users. A regular user previously had no gate
-      // here at all, so any logged-in user could delete unowned users with
-      // no workouts (i.e. fresh accounts).
+      // Only admins may delete users
       await requireAdmin(req);
 
       // Disallow self-delete — there's no UI reason for an admin to do this
