@@ -2,6 +2,7 @@ import {
   Alert,
   AlertDescription,
   AlertIcon,
+  Box,
   Center,
   CloseButton,
   FormControl,
@@ -20,6 +21,7 @@ import {
 import {
   ExerciseAggregate,
   useExerciseTrendsQuery,
+  useUniqueExerciseTitlesQuery,
 } from "../generated/frontend-types";
 import theme from "../Constants/theme";
 import { useEffect, useMemo, useState } from "react";
@@ -41,8 +43,10 @@ import {
 } from "../utils/Visualiations/constants";
 
 export default function ExerciseTrends() {
-  const [uniqueExerciseTitles, setUniqueExerciseTitles] = useState([""]);
-  const [exerciseTitle, setExerciseTitle] = useState(uniqueExerciseTitles[0]);
+  const [uniqueExerciseTitles, setUniqueExerciseTitles] = useState<string[]>(
+    []
+  );
+  const [exerciseTitle, setExerciseTitle] = useState("");
   // YYYY-MM-DD representation of the date range
   const [selectedDateRange, setSelectedDateRange] = useState<[string, string]>([
     "",
@@ -56,8 +60,17 @@ export default function ExerciseTrends() {
     null
   );
 
+  // Fetch the dropdown options independently of the trends data so that
+  // loading the page never triggers the expensive trends query.
+  const { data: uniqueTitlesData } = useUniqueExerciseTitlesQuery({
+    variables: { uid: user?.uid ?? "" },
+    skip: !user?.uid,
+  });
+
+  // Only fetch exercise trends once a valid exercise is selected.
   const { loading, error, data } = useExerciseTrendsQuery({
     variables: { uid: user?.uid ?? "", exerciseTitle },
+    skip: !user?.uid || !exerciseTitle,
   });
   const exerciseTrends = data?.user?.exerciseTrends;
 
@@ -66,6 +79,13 @@ export default function ExerciseTrends() {
       setShowServerError(true);
     }
   }, [error]);
+
+  // Populate the dropdown options from the dedicated query
+  useEffect(() => {
+    if (uniqueTitlesData?.uniqueExerciseTitles) {
+      setUniqueExerciseTitles(uniqueTitlesData.uniqueExerciseTitles);
+    }
+  }, [uniqueTitlesData]);
 
   // Initialize controls from incoming data
   useEffect(() => {
@@ -80,19 +100,7 @@ export default function ExerciseTrends() {
         exerciseTrends.rangeEnd,
       ]);
     }
-    if (data?.uniqueExerciseTitles) {
-      setUniqueExerciseTitles(data.uniqueExerciseTitles);
-      // Only initialize once
-      if (!exerciseTitle && data.uniqueExerciseTitles.length > 0) {
-        setExerciseTitle(data.uniqueExerciseTitles[0]);
-      }
-    }
-  }, [
-    data,
-    exerciseTitle,
-    exerciseTrends?.rangeStart,
-    exerciseTrends?.rangeEnd,
-  ]);
+  }, [exerciseTrends?.rangeStart, exerciseTrends?.rangeEnd]);
   const dataRangeShown = formatSelectedDateRange(
     activeBucket?.periodStart ?? selectedDateRange[0],
     activeBucket?.periodEnd ?? selectedDateRange[1]
@@ -214,61 +222,59 @@ export default function ExerciseTrends() {
           />
         </Alert>
       ) : (
-        <>
-          {loading ? (
-            <Center h="100%" w="100%">
-              <LoadingSpinner disableMessage={true} />
-            </Center>
-          ) : (
-            <VStack w="100%" gap={0}>
-              {/* EXERCISE SELECTOR & SELECTED PERIOD */}
-              <HStack
-                w="100%"
-                alignItems="flex-start"
-                justifyContent="space-between"
-                mb={0}
-              >
-                {/* LEFT COLUMN */}
-                <VStack w="50%" gap={1} alignItems="flex-start">
-                  <Flex alignItems={"flex-start"}>
-                    <FormControl>
-                      <VStack gap={0.5} alignItems={"flex-start"}>
-                        <FormLabel
-                          fontSize={["xs"]}
-                          m={0}
-                          fontWeight="medium"
-                          color={theme.colors.grey[600]}
-                        >
-                          Exercise
-                        </FormLabel>
+        <VStack w="100%" gap={0}>
+          {/* EXERCISE SELECTOR */}
+          <HStack
+            w="100%"
+            alignItems="flex-start"
+            justifyContent="space-between"
+            mb={0}
+          >
+            {/* LEFT COLUMN */}
+            <VStack w="50%" gap={1} alignItems="flex-start">
+              <Flex alignItems={"flex-start"}>
+                <FormControl>
+                  <VStack gap={0.5} alignItems={"flex-start"}>
+                    <FormLabel
+                      fontSize={["xs"]}
+                      m={0}
+                      fontWeight="medium"
+                      color={theme.colors.grey[600]}
+                    >
+                      Exercise
+                    </FormLabel>
 
-                        <Select
-                          size={["sm", "sm", "md"]}
-                          fontSize="16px"
-                          placeholder="Select"
-                          name="exercise"
-                          borderRadius="5px"
-                          maxW={["150px", "240px"]}
-                          minW="150px"
-                          focusBorderColor={theme.colors.green[300]}
-                          color={theme.colors.black}
-                          bg={theme.colors.white}
-                          value={exerciseTitle}
-                          onChange={(event) => {
-                            setExerciseTitle(event.target.value);
-                            setActiveBucket(null);
-                          }}
-                        >
-                          {uniqueExerciseTitles.map((exercise) => (
-                            <option key={exercise} value={exercise}>
-                              {exercise}
-                            </option>
-                          ))}
-                        </Select>
-                      </VStack>
-                    </FormControl>
-                  </Flex>
+                    <Select
+                      size={["sm", "sm", "md"]}
+                      fontSize="16px"
+                      placeholder="Select"
+                      name="exercise"
+                      borderRadius="5px"
+                      maxW={["150px", "240px"]}
+                      minW="150px"
+                      focusBorderColor={theme.colors.green[300]}
+                      color={theme.colors.black}
+                      bg={theme.colors.white}
+                      value={exerciseTitle}
+                      onChange={(event) => {
+                        setExerciseTitle(event.target.value);
+                        setActiveBucket(null);
+                        setSelectedDateRange(["", ""]);
+                        setSliderRange([0, 0]);
+                      }}
+                    >
+                      {uniqueExerciseTitles.map((exercise) => (
+                        <option key={exercise} value={exercise}>
+                          {exercise}
+                        </option>
+                      ))}
+                    </Select>
+                  </VStack>
+                </FormControl>
+              </Flex>
 
+              {exerciseTitle && (
+                <>
                   <VStack gap={0} alignItems={"flex-start"}>
                     <Text
                       fontSize={["xs"]}
@@ -296,27 +302,52 @@ export default function ExerciseTrends() {
                       {summedWorkCapacityKg}
                     </Text>
                   </VStack>
-                </VStack>
+                </>
+              )}
+            </VStack>
 
-                {/* RIGHT COLUMN */}
-                <VStack w="50%" justify="flex-start">
-                  <Text
-                    fontSize={["xs", "sm"]}
-                    fontWeight="medium"
-                    color={theme.colors.grey[600]}
-                    textAlign="center"
-                    mb="0.25rem"
-                  >
-                    Weights Used
-                  </Text>
+            {/* RIGHT COLUMN */}
+            {exerciseTitle && (
+              <VStack w="50%" justify="flex-start">
+                <Text
+                  fontSize={["xs", "sm"]}
+                  fontWeight="medium"
+                  color={theme.colors.grey[600]}
+                  textAlign="center"
+                  mb="0.25rem"
+                >
+                  Weights Used
+                </Text>
 
-                  <WorkCapacityBars
-                    activeBucket={activeBucket}
-                    colourMap={colourMap}
-                  />
-                </VStack>
-              </HStack>
+                <WorkCapacityBars
+                  activeBucket={activeBucket}
+                  colourMap={colourMap}
+                />
+              </VStack>
+            )}
+          </HStack>
 
+          {loading ? (
+            <Center h="100%" w="100%" minH="120px">
+              <LoadingSpinner disableMessage={true} />
+            </Center>
+          ) : !exerciseTitle ? (
+            <Box
+              w="100%"
+              py={8}
+              px={6}
+              m={4}
+              border="1px dashed"
+              borderColor={theme.colors.grey[300]}
+              borderRadius="md"
+              textAlign="center"
+            >
+              <Text fontSize="sm" color={theme.colors.grey[500]}>
+                Select an exercise to view its trends.
+              </Text>
+            </Box>
+          ) : (
+            <>
               {/* VISUALIZATIONS */}
               {filteredBuckets && (
                 <VStack w="100%" gap={0}>
@@ -402,9 +433,9 @@ export default function ExerciseTrends() {
                   </HStack>
                 </VStack>
               )}
-            </VStack>
+            </>
           )}
-        </>
+        </VStack>
       )}
     </VStack>
   );
