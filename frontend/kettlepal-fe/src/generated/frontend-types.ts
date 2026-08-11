@@ -557,6 +557,13 @@ export type ExerciseTrendsQueryVariables = Exact<{
 
 export type ExerciseTrendsQuery = { __typename?: 'Query', uniqueExerciseTitles: Array<string>, user?: { __typename?: 'User', exerciseTrends: { __typename?: 'ExerciseTrendsResponse', exerciseTitle: string, rangeStart: string, rangeEnd: string, dailyBuckets: Array<{ __typename?: 'ExerciseAggregate', periodStart: string, periodEnd: string, totalWorkCapacityKg: number, workCapacityComponents: Array<{ __typename?: 'WorkCapacityComponent', weight: number, weightUnit: string, workCapacityKg: number }> }>, weeklyBuckets: Array<{ __typename?: 'ExerciseAggregate', periodStart: string, periodEnd: string, totalWorkCapacityKg: number, workCapacityComponents: Array<{ __typename?: 'WorkCapacityComponent', weight: number, weightUnit: string, workCapacityKg: number }> }>, monthlyBuckets: Array<{ __typename?: 'ExerciseAggregate', periodStart: string, periodEnd: string, totalWorkCapacityKg: number, workCapacityComponents: Array<{ __typename?: 'WorkCapacityComponent', weight: number, weightUnit: string, workCapacityKg: number }> }>, yearlyBuckets: Array<{ __typename?: 'ExerciseAggregate', periodStart: string, periodEnd: string, totalWorkCapacityKg: number, workCapacityComponents: Array<{ __typename?: 'WorkCapacityComponent', weight: number, weightUnit: string, workCapacityKg: number }> }> } } | null };
 
+export type UniqueExerciseTitlesQueryVariables = Exact<{
+  uid: Scalars['ID']['input'];
+}>;
+
+
+export type UniqueExerciseTitlesQuery = { __typename?: 'Query', uniqueExerciseTitles: Array<string> };
+
 
 export const LoginDocument = gql`
     mutation Login($email: String!, $password: String!) {
@@ -1236,3 +1243,41 @@ export type ExerciseTrendsQueryHookResult = ReturnType<typeof useExerciseTrendsQ
 export type ExerciseTrendsLazyQueryHookResult = ReturnType<typeof useExerciseTrendsLazyQuery>;
 export type ExerciseTrendsSuspenseQueryHookResult = ReturnType<typeof useExerciseTrendsSuspenseQuery>;
 export type ExerciseTrendsQueryResult = Apollo.QueryResult<ExerciseTrendsQuery, ExerciseTrendsQueryVariables>;
+export const UniqueExerciseTitlesDocument = gql`
+    query UniqueExerciseTitles($uid: ID!) {
+  uniqueExerciseTitles(userUid: $uid)
+}
+    `;
+
+/**
+ * __useUniqueExerciseTitlesQuery__
+ *
+ * To run a query within a React component, call `useUniqueExerciseTitlesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUniqueExerciseTitlesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUniqueExerciseTitlesQuery({
+ *   variables: {
+ *      uid: // value for 'uid'
+ *   },
+ * });
+ */
+export function useUniqueExerciseTitlesQuery(baseOptions: Apollo.QueryHookOptions<UniqueExerciseTitlesQuery, UniqueExerciseTitlesQueryVariables> & ({ variables: UniqueExerciseTitlesQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<UniqueExerciseTitlesQuery, UniqueExerciseTitlesQueryVariables>(UniqueExerciseTitlesDocument, options);
+      }
+export function useUniqueExerciseTitlesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<UniqueExerciseTitlesQuery, UniqueExerciseTitlesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<UniqueExerciseTitlesQuery, UniqueExerciseTitlesQueryVariables>(UniqueExerciseTitlesDocument, options);
+        }
+export function useUniqueExerciseTitlesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<UniqueExerciseTitlesQuery, UniqueExerciseTitlesQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<UniqueExerciseTitlesQuery, UniqueExerciseTitlesQueryVariables>(UniqueExerciseTitlesDocument, options);
+        }
+export type UniqueExerciseTitlesQueryHookResult = ReturnType<typeof useUniqueExerciseTitlesQuery>;
+export type UniqueExerciseTitlesLazyQueryHookResult = ReturnType<typeof useUniqueExerciseTitlesLazyQuery>;
+export type UniqueExerciseTitlesSuspenseQueryHookResult = ReturnType<typeof useUniqueExerciseTitlesSuspenseQuery>;
+export type UniqueExerciseTitlesQueryResult = Apollo.QueryResult<UniqueExerciseTitlesQuery, UniqueExerciseTitlesQueryVariables>;

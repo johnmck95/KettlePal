@@ -177,3 +177,9 @@ const EXERCISE_TRENDS_QUERY = gql`
     }
   }
 `;
+
+const UNIQUE_EXERCISE_TITLES_QUERY = gql`
+  query UniqueExerciseTitles($uid: ID!) {
+    uniqueExerciseTitles(userUid: $uid)
+  }
+`;
