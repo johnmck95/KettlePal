@@ -355,6 +355,34 @@ const useCreateWorkoutForm = () => {
     }));
   }
 
+  // Inserts a variation of an existing exercise right after it, so warmup /
+  // working sets of the same movement stay visually grouped while being
+  // logged as separate exercises under the hood.
+  function handleAddExerciseVariant(baseIndex: number): void {
+    updateState((prevState) => {
+      const base = prevState.exercises[baseIndex];
+      if (!base) return prevState;
+
+      const newExercise = {
+        title: { value: base.title.value, errors: [] },
+        weight: { value: "", errors: [] },
+        weightUnit: { value: base.weightUnit.value, errors: [] },
+        sets: { value: "", errors: [] },
+        reps: { value: "", errors: [] },
+        repsDisplay: { value: base.repsDisplay.value, errors: [] },
+        comment: { value: "", errors: [] },
+        elapsedSeconds: { value: 0, errors: [] },
+        multiplier: { value: base.multiplier.value, errors: [] },
+        key: `key-${Date.now()}-${Math.random().toString(36)}`,
+      };
+
+      const exercises = [...prevState.exercises];
+      exercises.splice(baseIndex + 1, 0, newExercise);
+
+      return { ...prevState, exercises };
+    });
+  }
+
   // Deletes an exercise object from state
   function deleteExercise(index: number): void {
     updateState((prevState) => ({
@@ -480,6 +508,7 @@ const useCreateWorkoutForm = () => {
     handleTimerIsActive,
     handleStateChange,
     handleAddExercise,
+    handleAddExerciseVariant,
     handleExercise,
     deleteExercise,
     onOpenSaveWorkout,

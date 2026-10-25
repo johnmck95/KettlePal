@@ -1,6 +1,12 @@
 import React from "react";
 
-import { GridItem, SimpleGrid, Text, useMediaQuery } from "@chakra-ui/react";
+import {
+  Button,
+  GridItem,
+  SimpleGrid,
+  Text,
+  useMediaQuery,
+} from "@chakra-ui/react";
 import AddComment from "./FormComponents/NewWorkout/Generic/AddComment";
 import ConfirmModal from "../ConfirmModal";
 import ExerciseTitle from "./FormComponents/NewWorkout/Exercise/ExerciseTitle";
@@ -26,6 +32,10 @@ interface CreateExerciseProps {
   submitted: boolean;
   trackWorkout: boolean;
   showComments: boolean;
+  addExerciseVariant?: () => void;
+  flat?: boolean;
+  hideSharedFields?: boolean;
+  stripColor?: string;
   forceMobileStyle?: boolean;
   forceCloseButton?: boolean;
   completedSets?: number;
@@ -42,6 +52,10 @@ export default function CreateExercise({
   submitted,
   trackWorkout,
   showComments,
+  addExerciseVariant,
+  flat = false,
+  hideSharedFields = false,
+  stripColor,
   forceMobileStyle = false,
   forceCloseButton = false,
   completedSets,
@@ -104,6 +118,8 @@ export default function CreateExercise({
       onOpenDeleteExercise={onOpenDeleteExercise}
       forceMobileStyle={forceMobileStyle}
       forceCloseButton={forceCloseButton}
+      flat={flat}
+      stripColor={stripColor}
     >
       {trackWorkout ? (
         <Text
@@ -125,60 +141,112 @@ export default function CreateExercise({
         </Text>
       ) : (
         <>
-          <SimpleGrid
-            gap={1}
-            templateColumns={{
-              base: forceMobileStyle ? "41% 32% 24%" : "47% 27% 21%",
-              lg: forceMobileStyle ? "" : "34% 8% 8% 20% 15% 12%",
-            }}
-            w="100%"
-          >
-            {/* TITLE */}
-            <GridItem colSpan={1}>
-              <ExerciseTitle
-                titleIsInvalid={submitted && exercise.title.errors.length > 0}
-                customTitle={customTitle}
-                exercise={exercise}
-                exerciseIndex={exerciseIndex}
-                setCustomTitle={setCustomTitle}
-                handleExercise={handleExercise}
-              />
-            </GridItem>
-
-            {/* SETS */}
-            <GridItem colSpan={1}>
+          {isMobile ? (
+            <>
+              {!hideSharedFields && (
+                <SimpleGrid
+                  gap={1}
+                  templateColumns="2fr 1fr"
+                  w="100%"
+                  mb="0.5rem"
+                  sx={{ "& > *": { minWidth: 0 } }}
+                >
+                  <ExerciseTitle
+                    titleIsInvalid={submitted && exercise.title.errors.length > 0}
+                    customTitle={customTitle}
+                    exercise={exercise}
+                    exerciseIndex={exerciseIndex}
+                    setCustomTitle={setCustomTitle}
+                    handleExercise={handleExercise}
+                  />
+                  <ExerciseRepsDisplay
+                    repsDisplayIsInvalid={
+                      submitted && exercise.repsDisplay.errors.length > 0
+                    }
+                    exercise={exercise}
+                    exerciseIndex={exerciseIndex}
+                    handleExercise={handleExercise}
+                  />
+                </SimpleGrid>
+              )}
+              <SimpleGrid
+                gap={1}
+                templateColumns="20% 20% 30% 30%"                w="100%"
+                sx={{ "& > *": { minWidth: 0 } }}
+              >
+                <ExerciseSets
+                  setsIsInvalid={submitted && exercise.sets.errors.length > 0}
+                  exercise={exercise}
+                  exerciseIndex={exerciseIndex}
+                  handleExercise={handleExercise}
+                />
+                <ExerciseReps
+                  repsIsInvalid={submitted && exercise.reps.errors.length > 0}
+                  exercise={exercise}
+                  exerciseIndex={exerciseIndex}
+                  handleExercise={handleExercise}
+                />
+                <ExerciseWeight
+                  weightIsInvalid={submitted && exercise.weight.errors.length > 0}
+                  customWeight={customWeight}
+                  exercise={exercise}
+                  exerciseIndex={exerciseIndex}
+                  setCustomWeight={setCustomWeight}
+                  handleExercise={handleExercise}
+                />
+                <ExerciseWeightUnit
+                  weightUnitIsInvalid={
+                    submitted && exercise.weightUnit.errors.length > 0
+                  }
+                  exercise={exercise}
+                  exerciseIndex={exerciseIndex}
+                  handleExercise={handleExercise}
+                />
+              </SimpleGrid>
+            </>
+          ) : (
+            <SimpleGrid
+              gap={1}
+              templateColumns={
+                hideSharedFields
+                  ? "1fr 1fr 1.5fr 1.3fr"
+                  : "2.4fr 1.6fr 0.9fr 0.9fr 1.4fr 1.2fr"
+              }
+              w="100%"
+              sx={{ "& > *": { minWidth: 0 } }}
+            >
+              {!hideSharedFields && (
+                <>
+                  <ExerciseTitle
+                    titleIsInvalid={submitted && exercise.title.errors.length > 0}
+                    customTitle={customTitle}
+                    exercise={exercise}
+                    exerciseIndex={exerciseIndex}
+                    setCustomTitle={setCustomTitle}
+                    handleExercise={handleExercise}
+                  />
+                  <ExerciseRepsDisplay
+                    repsDisplayIsInvalid={
+                      submitted && exercise.repsDisplay.errors.length > 0
+                    }
+                    exercise={exercise}
+                    exerciseIndex={exerciseIndex}
+                    handleExercise={handleExercise}
+                  />
+                </>
+              )}
               <ExerciseSets
                 setsIsInvalid={submitted && exercise.sets.errors.length > 0}
                 exercise={exercise}
                 exerciseIndex={exerciseIndex}
                 handleExercise={handleExercise}
               />
-            </GridItem>
-
-            {/* REPS */}
-            <GridItem colSpan={1}>
               <ExerciseReps
                 repsIsInvalid={submitted && exercise.reps.errors.length > 0}
                 exercise={exercise}
                 exerciseIndex={exerciseIndex}
                 handleExercise={handleExercise}
               />
-            </GridItem>
-
-            {/* REPS DISPLAY */}
-            <GridItem colSpan={1}>
-              <ExerciseRepsDisplay
-                repsDisplayIsInvalid={
-                  submitted && exercise.repsDisplay.errors.length > 0
-                }
-                exercise={exercise}
-                exerciseIndex={exerciseIndex}
-                handleExercise={handleExercise}
-              />
-            </GridItem>
-
-            {/* WEIGHT */}
-            <GridItem colSpan={1}>
               <ExerciseWeight
                 weightIsInvalid={submitted && exercise.weight.errors.length > 0}
                 customWeight={customWeight}
@@ -187,10 +255,6 @@ export default function CreateExercise({
                 setCustomWeight={setCustomWeight}
                 handleExercise={handleExercise}
               />
-            </GridItem>
-
-            {/* WEIGHT UNIT */}
-            <GridItem colSpan={1}>
               <ExerciseWeightUnit
                 weightUnitIsInvalid={
                   submitted && exercise.weightUnit.errors.length > 0
@@ -199,9 +263,8 @@ export default function CreateExercise({
                 exerciseIndex={exerciseIndex}
                 handleExercise={handleExercise}
               />
-            </GridItem>
-            {/* </Flex> */}
-          </SimpleGrid>
+            </SimpleGrid>
+          )}
 
           {/* EXERCISE COMMENT */}
           {showComments && (

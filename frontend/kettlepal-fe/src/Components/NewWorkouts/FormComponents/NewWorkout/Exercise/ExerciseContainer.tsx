@@ -13,6 +13,8 @@ interface ExerciseContainerProps {
   onTouchEnd: any;
   forceMobileStyle: boolean;
   forceCloseButton: boolean;
+  flat?: boolean;
+  stripColor?: string;
   setOffset: (offset: number) => void;
   onOpenDeleteExercise: () => void;
   swipeDistance: () => number;
@@ -29,6 +31,8 @@ export function ExerciseContainer({
   onTouchMove,
   forceMobileStyle,
   forceCloseButton,
+  flat = false,
+  stripColor,
   swipeDistance,
   onOpenDeleteExercise,
 }: ExerciseContainerProps) {
@@ -36,14 +40,17 @@ export function ExerciseContainer({
   const renderAsMobile = forceMobileStyle === true || isMobile === true;
 
   return (
-    <Box mx="0.15rem" mb={errors.length > 0 ? "1rem" : "0rem"}>
+    <Box mx={flat ? "0.5rem" : "0.15rem"} mb={errors.length > 0 ? "1rem" : "0rem"}>
       <VStack
-        w={`calc(100%-0.5rem + ${swipeDistance()})`}
-        borderRadius={"5px"}
-        p="0.75rem"
-        mb="0.5rem"
-        boxShadow={`0px 1px 4px ${theme.colors.grey[400]}`}
-        bg="white"
+        w={flat ? "100%" : `calc(100%-0.5rem + ${swipeDistance()})`}
+        borderRadius={flat ? "0" : "5px"}
+        p={flat ? "0.25rem" : "0.75rem"}
+        mb={flat ? "0" : "0.5rem"}
+        borderLeft={stripColor ? "4px solid" : "none"}
+        borderColor={stripColor}
+        boxShadow={flat ? "none" : `0px 1px 4px ${theme.colors.grey[400]}`}
+        bg={flat ? "transparent" : "white"}
+        minH={flat ? "3rem" : undefined}
         position="relative"
         transition="right 0.4s ease-in-out"
         right={
