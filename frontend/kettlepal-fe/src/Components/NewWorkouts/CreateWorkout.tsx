@@ -1,5 +1,7 @@
 import React from "react";
 import CreateExercise from "./CreateExercise";
+import ExerciseTitle from "./FormComponents/NewWorkout/Exercise/ExerciseTitle";
+import ExerciseRepsDisplay from "./FormComponents/NewWorkout/Exercise/ExerciseRepsDisplay";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Alert,
@@ -13,6 +15,7 @@ import {
   Grid,
   GridItem,
   HStack,
+  SimpleGrid,
   Heading,
   Icon,
   Link,
@@ -68,6 +71,7 @@ export default function CreateWorkout() {
     handleTimerIsActive,
     handleStateChange,
     handleAddExercise,
+    handleAddExerciseVariant,
     handleExercise,
     deleteExercise,
     onOpenSaveWorkout,
@@ -274,8 +278,8 @@ export default function CreateWorkout() {
                 {workoutState === "initial"
                   ? "Start"
                   : workoutState === "active"
-                  ? "Pause"
-                  : "Resume"}
+                    ? "Pause"
+                    : "Resume"}
               </Button>
             </Flex>
           </GridItem>
@@ -368,42 +372,200 @@ export default function CreateWorkout() {
 
         {/* EXERCISES */}
         <motion.div layoutRoot>
-          <AnimatePresence mode="popLayout">
-            {state.exercises.map((exercise, index) => {
-              return (
-                <motion.div
-                  key={exercise.key}
-                  layout="position"
-                  layoutId={exercise.key}
-                  initial={{ opacity: 0, x: 40 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -40 }}
-                  transition={{
-                    layout: { duration: 0.3, ease: "easeInOut" },
-                    opacity: { duration: 0.2 },
-                  }}
-                >
-                  <Box my="1.25rem">
-                    <CreateExercise
-                      key={index}
-                      exercise={exercise}
-                      handleExercise={handleExercise}
-                      deleteExercise={deleteExercise}
-                      exerciseIndex={index}
-                      submitted={submitted}
-                      trackWorkout={showTracking}
-                      showComments={addComments}
-                      completedSets={completedSetsMap[exercise.key] ?? 0}
-                      completedASet={() => completedASet(exercise.key)}
-                      removedASet={() => removedASet(exercise.key)}
-                      resetCompletedExercisesSessionStorage={
-                        resetCompletedExercisesSessionStorage
-                      }
-                    />
-                  </Box>
-                </motion.div>
-              );
-            })}
+          <AnimatePresence mode="sync">
+            {(() => {
+              // Group consecutive exercises that share the same (non-empty)
+              // title so warmup/working sets of one movement are visually
+              // attached while still being logged as separate exercises.
+              const groups: number[][] = [];
+              state.exercises.forEach((exercise, i) => {
+                const prev = state.exercises[i - 1];
+                if (
+                  i > 0 &&
+                  exercise.title.value.trim() !== "" &&
+                  exercise.title.value === prev?.title.value
+                ) {
+                  groups[groups.length - 1].push(i);
+                } else {
+                  groups.push([i]);
+                }
+              });
+
+              return groups.map((group) => {
+                if (group.length === 1) {
+                  const index = group[0];
+                  const exercise = state.exercises[index];
+                  return (
+                    <motion.div
+                      key={exercise.key}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{
+                        layout: { duration: 0.3, ease: "easeInOut" },
+                        opacity: { duration: 0.2 },
+                      }}
+                    >
+                      <Box my="1.25rem">
+                        <CreateExercise
+                          stripColor={theme.colors.grey[400]}
+                          exercise={exercise}
+                          handleExercise={handleExercise}
+                          deleteExercise={deleteExercise}
+                          exerciseIndex={index}
+                          submitted={submitted}
+                          trackWorkout={showTracking}
+                          showComments={addComments}
+                          completedSets={completedSetsMap[exercise.key] ?? 0}
+                          completedASet={() => completedASet(exercise.key)}
+                          removedASet={() => removedASet(exercise.key)}
+                          resetCompletedExercisesSessionStorage={
+                            resetCompletedExercisesSessionStorage
+                          }
+                          addExerciseVariant={() =>
+                            handleAddExerciseVariant(index)
+                          }
+                        />
+                      </Box>
+                    </motion.div>
+                  );
+                }
+
+                return (
+                  <motion.div
+                    key={`group-${group
+                      .map((i) => state.exercises[i].key)
+                      .join("-")}`}
+                    layout="position"
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{
+                      layout: { duration: 0.3, ease: "easeInOut" },
+                      opacity: { duration: 0.2 },
+                    }}
+                  >
+                    <Box
+                      my="1.25rem"
+                      mx="0.15rem"
+                      p="0.5rem"
+                      borderLeft="4px solid"
+                      borderColor={theme.colors.grey[600]}
+                      borderRadius="5px"
+                      boxShadow={`0px 1px 4px ${theme.colors.grey[400]}`}
+                      bg="white"
+                    >
+                      {(() => {
+                        const firstIndex = group[0];
+                        const firstExercise = state.exercises[firstIndex];
+                        const syncShared = (
+                          name: string,
+                          value: string | number,
+                        ) =>
+                          group.forEach((idx) =>
+                            handleExercise(name, value, idx),
+                          );
+                        if (showTracking) return null;
+                        return (
+                          <Box p="0.25rem" mb="0.5rem">
+                            <SimpleGrid gap={1} columns={2}>
+                              <ExerciseTitle
+                                titleIsInvalid={
+                                  submitted &&
+                                  firstExercise.title.errors.length > 0
+                                }
+                                customTitle={false}
+                                exercise={firstExercise}
+                                exerciseIndex={firstIndex}
+                                setCustomTitle={() => {}}
+                                handleExercise={(name, value) =>
+                                  syncShared(name, value)
+                                }
+                              />
+                              <ExerciseRepsDisplay
+                                repsDisplayIsInvalid={
+                                  submitted &&
+                                  firstExercise.repsDisplay.errors.length > 0
+                                }
+                                exercise={firstExercise}
+                                exerciseIndex={firstIndex}
+                                handleExercise={(name, value) =>
+                                  syncShared(name, value)
+                                }
+                              />
+                            </SimpleGrid>
+                            {submitted &&
+                              (firstExercise.title.errors.length > 0 ||
+                                firstExercise.repsDisplay.errors.length >
+                                  0) && (
+                                <Box mt="0.25rem">
+                                  {firstExercise.title.errors.map((err) => (
+                                    <Text
+                                      key={err}
+                                      fontSize="xs"
+                                      color={theme.colors.error}
+                                    >
+                                      • {err}
+                                    </Text>
+                                  ))}
+                                  {firstExercise.repsDisplay.errors.map(
+                                    (err) => (
+                                      <Text
+                                        key={err}
+                                        fontSize="xs"
+                                        color={theme.colors.error}
+                                      >
+                                        • {err}
+                                      </Text>
+                                    ),
+                                  )}
+                                </Box>
+                              )}
+                          </Box>
+                        );
+                      })()}
+
+                      {group.map((index, pos) => {
+                        const exercise = state.exercises[index];
+                        return (
+                          <Box
+                            key={exercise.key}
+                            mb={pos === group.length - 1 ? 0 : "0.5rem"}
+                            pt={pos === 0 ? "0.25rem" : "0.5rem"}
+                            pl="0.35rem"
+                            pb="0.25rem"
+                            borderLeft="3px solid"
+                            borderColor={theme.colors.grey[400]}
+                            borderRadius="5px"
+                            borderTop="none"
+                          >
+                            <CreateExercise
+                              exercise={exercise}
+                              handleExercise={handleExercise}
+                              deleteExercise={deleteExercise}
+                              exerciseIndex={index}
+                              submitted={submitted}
+                              trackWorkout={showTracking}
+                              showComments={addComments}
+                              completedSets={
+                                completedSetsMap[exercise.key] ?? 0
+                              }
+                              completedASet={() => completedASet(exercise.key)}
+                              removedASet={() => removedASet(exercise.key)}
+                              resetCompletedExercisesSessionStorage={
+                                resetCompletedExercisesSessionStorage
+                              }
+                              flat
+                              hideSharedFields
+                            />
+                          </Box>
+                        );
+                      })}
+                    </Box>
+                  </motion.div>
+                );
+              });
+            })()}
           </AnimatePresence>
         </motion.div>
 
@@ -495,7 +657,7 @@ export default function CreateWorkout() {
                     <Detail
                       title={"Time"}
                       value={formatDurationShort(
-                        state.elapsedSeconds.value ?? 0
+                        state.elapsedSeconds.value ?? 0,
                       )}
                       variant="md"
                       color={theme.colors.graphPrimary[500]}
@@ -519,7 +681,7 @@ export default function CreateWorkout() {
 
                   {state.exercises.map((exercise, index) => {
                     const incompleteEntry = incompleteExercises.find(
-                      (entry) => entry.index === index
+                      (entry) => entry.index === index,
                     );
                     const isIncomplete = !!incompleteEntry;
                     return (
