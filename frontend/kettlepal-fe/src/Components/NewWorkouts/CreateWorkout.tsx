@@ -408,7 +408,7 @@ export default function CreateWorkout() {
                     >
                       <Box my="1.25rem">
                         <CreateExercise
-                          stripColor={theme.colors.grey[400]}
+                          stripColor={theme.colors.grey[300]}
                           exercise={exercise}
                           handleExercise={handleExercise}
                           deleteExercise={deleteExercise}
@@ -450,7 +450,7 @@ export default function CreateWorkout() {
                       mx="0.15rem"
                       p="0.5rem"
                       borderLeft="4px solid"
-                      borderColor={theme.colors.grey[600]}
+                      borderColor={theme.colors.grey[500]}
                       borderRadius="5px"
                       boxShadow={`0px 1px 4px ${theme.colors.grey[400]}`}
                       bg="white"
@@ -531,11 +531,11 @@ export default function CreateWorkout() {
                           <Box
                             key={exercise.key}
                             mb={pos === group.length - 1 ? 0 : "0.5rem"}
-                            pt={pos === 0 ? "0.25rem" : "0.5rem"}
+                            pt={pos === 0 ? "0.1rem" : "0.25rem"}
                             pl="0.35rem"
-                            pb="0.25rem"
+                            pb="0.1rem"
                             borderLeft="3px solid"
-                            borderColor={theme.colors.grey[400]}
+                            borderColor={theme.colors.grey[300]}
                             borderRadius="5px"
                             borderTop="none"
                           >

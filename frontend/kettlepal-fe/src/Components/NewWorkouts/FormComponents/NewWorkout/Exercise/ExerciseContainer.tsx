@@ -40,20 +40,17 @@ export function ExerciseContainer({
   const renderAsMobile = forceMobileStyle === true || isMobile === true;
 
   return (
-    <Box
-      mx={flat ? "0.5rem" : "0.15rem"}
-      mb={errors.length > 0 ? "1rem" : "0rem"}
-    >
+    <Box mb={errors.length > 0 ? "1rem" : "0rem"}>
       <VStack
         w={flat ? "100%" : `calc(100%-0.5rem + ${swipeDistance()})`}
         borderRadius={flat ? "0" : "5px"}
-        p={flat ? "0.25rem" : "0.75rem"}
+        p={flat ? "0.1rem" : "0.75rem"}
         mb={flat ? "0" : "0.5rem"}
         borderLeft={stripColor ? "4px solid" : "none"}
         borderColor={stripColor}
         boxShadow={flat ? "none" : `0px 1px 4px ${theme.colors.grey[400]}`}
         bg={flat ? "transparent" : "white"}
-        minH={flat ? "3rem" : undefined}
+        minH={flat ? "1.75rem" : undefined}
         position="relative"
         transition="right 0.4s ease-in-out"
         right={

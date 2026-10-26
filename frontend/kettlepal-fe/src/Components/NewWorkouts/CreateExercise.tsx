@@ -167,9 +167,8 @@ export default function CreateExercise({
               )}
               <SimpleGrid
                 gap={1}
-                templateColumns="20% 20% 30% 30%"
+                templateColumns="20% 20% 1fr 30%"
                 w="100%"
-                px="0.5rem"
                 sx={{ "& > *": { minWidth: 0 } }}
               >
                 <ExerciseSets
