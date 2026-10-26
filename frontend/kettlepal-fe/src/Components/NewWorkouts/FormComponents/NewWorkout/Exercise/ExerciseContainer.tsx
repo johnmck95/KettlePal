@@ -32,7 +32,7 @@ export function ExerciseContainer({
   forceMobileStyle,
   forceCloseButton,
   flat = false,
-  stripColor: stripColor,
+  stripColor,
   swipeDistance,
   onOpenDeleteExercise,
 }: ExerciseContainerProps) {

@@ -34,7 +34,7 @@ export default function ExerciseWeight({
       ? Preconfigurations[exercise.title.value]?.isBodyWeight?.value
       : user?.templates?.some(
           (template) =>
-            template.isBodyWeight && template.title === exercise.title.value
+            template.isBodyWeight && template.title === exercise.title.value,
         );
 
   return (
@@ -43,7 +43,7 @@ export default function ExerciseWeight({
         Weight{" "}
         <Text
           as="span"
-          fontSize={["11px", "14px"]}
+          fontSize={["10px", "12px"]}
           color={theme.colors.feldgrau[700]}
         >
           (x{exercise.multiplier.value.toFixed(2)})
@@ -97,7 +97,7 @@ export default function ExerciseWeight({
               : handleExercise(
                   event.target.name,
                   event.target.value,
-                  exerciseIndex
+                  exerciseIndex,
                 )
           }
           focusBorderColor={theme.colors.green[300]}
