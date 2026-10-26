@@ -32,7 +32,7 @@ export function ExerciseContainer({
   forceMobileStyle,
   forceCloseButton,
   flat = false,
-  stripColor,
+  stripColor: stripColor,
   swipeDistance,
   onOpenDeleteExercise,
 }: ExerciseContainerProps) {
@@ -40,7 +40,10 @@ export function ExerciseContainer({
   const renderAsMobile = forceMobileStyle === true || isMobile === true;
 
   return (
-    <Box mx={flat ? "0.5rem" : "0.15rem"} mb={errors.length > 0 ? "1rem" : "0rem"}>
+    <Box
+      mx={flat ? "0.5rem" : "0.15rem"}
+      mb={errors.length > 0 ? "1rem" : "0rem"}
+    >
       <VStack
         w={flat ? "100%" : `calc(100%-0.5rem + ${swipeDistance()})`}
         borderRadius={flat ? "0" : "5px"}

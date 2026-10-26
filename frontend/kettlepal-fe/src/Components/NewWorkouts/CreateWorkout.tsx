@@ -278,8 +278,8 @@ export default function CreateWorkout() {
                 {workoutState === "initial"
                   ? "Start"
                   : workoutState === "active"
-                  ? "Pause"
-                  : "Resume"}
+                    ? "Pause"
+                    : "Resume"}
               </Button>
             </Flex>
           </GridItem>
@@ -378,12 +378,12 @@ export default function CreateWorkout() {
               // title so warmup/working sets of one movement are visually
               // attached while still being logged as separate exercises.
               const groups: number[][] = [];
-              state.exercises.forEach((ex, i) => {
+              state.exercises.forEach((exercise, i) => {
                 const prev = state.exercises[i - 1];
                 if (
                   i > 0 &&
-                  ex.title.value.trim() !== "" &&
-                  ex.title.value === prev?.title.value
+                  exercise.title.value.trim() !== "" &&
+                  exercise.title.value === prev?.title.value
                 ) {
                   groups[groups.length - 1].push(i);
                 } else {
@@ -408,7 +408,7 @@ export default function CreateWorkout() {
                     >
                       <Box my="1.25rem">
                         <CreateExercise
-                          stripColor={theme.colors.green[50]}
+                          stripColor={theme.colors.lion[100]}
                           exercise={exercise}
                           handleExercise={handleExercise}
                           deleteExercise={deleteExercise}
@@ -450,7 +450,7 @@ export default function CreateWorkout() {
                       mx="0.15rem"
                       p="0.5rem"
                       borderLeft="4px solid"
-                      borderColor={theme.colors.green[600]}
+                      borderColor={theme.colors.lion[700]}
                       borderRadius="5px"
                       boxShadow={`0px 1px 4px ${theme.colors.grey[400]}`}
                       bg="white"
@@ -458,37 +458,41 @@ export default function CreateWorkout() {
                       {(() => {
                         const firstIndex = group[0];
                         const firstExercise = state.exercises[firstIndex];
-                        const syncShared = (name: string, value: string | number) =>
+                        const syncShared = (
+                          name: string,
+                          value: string | number,
+                        ) =>
                           group.forEach((idx) =>
-                            handleExercise(name, value, idx)
+                            handleExercise(name, value, idx),
                           );
                         return (
-                          <Box p="0.25rem" mb="0.5rem" borderBottom="2px solid" borderColor={theme.colors.green[50]}>
+                          <Box p="0.25rem" mb="0.5rem">
                             <SimpleGrid gap={1} columns={2}>
-                            <ExerciseTitle
-                              titleIsInvalid={
-                                submitted && firstExercise.title.errors.length > 0
-                              }
-                              customTitle={false}
-                              exercise={firstExercise}
-                              exerciseIndex={firstIndex}
-                              setCustomTitle={() => {}}
-                              handleExercise={(name, value) =>
-                                syncShared(name, value)
-                              }
-                            />
-                            <ExerciseRepsDisplay
-                              repsDisplayIsInvalid={
-                                submitted &&
-                                firstExercise.repsDisplay.errors.length > 0
-                              }
-                              exercise={firstExercise}
-                              exerciseIndex={firstIndex}
-                              handleExercise={(name, value) =>
-                                syncShared(name, value)
-                              }
-                            />
-                          </SimpleGrid>
+                              <ExerciseTitle
+                                titleIsInvalid={
+                                  submitted &&
+                                  firstExercise.title.errors.length > 0
+                                }
+                                customTitle={false}
+                                exercise={firstExercise}
+                                exerciseIndex={firstIndex}
+                                setCustomTitle={() => {}}
+                                handleExercise={(name, value) =>
+                                  syncShared(name, value)
+                                }
+                              />
+                              <ExerciseRepsDisplay
+                                repsDisplayIsInvalid={
+                                  submitted &&
+                                  firstExercise.repsDisplay.errors.length > 0
+                                }
+                                exercise={firstExercise}
+                                exerciseIndex={firstIndex}
+                                handleExercise={(name, value) =>
+                                  syncShared(name, value)
+                                }
+                              />
+                            </SimpleGrid>
                           </Box>
                         );
                       })()}
@@ -500,13 +504,11 @@ export default function CreateWorkout() {
                             key={exercise.key}
                             mb={pos === group.length - 1 ? 0 : "0.5rem"}
                             pt={pos === 0 ? "0.25rem" : "0.5rem"}
-                            px="0.25rem"
+                            pl="0.35rem"
                             pb="0.25rem"
-                            borderTop={
-                              pos === 0
-                                ? "none"
-                                : `1px solid ${theme.colors.green[50]}`
-                            }
+                            borderLeft="3px solid"
+                            borderColor={theme.colors.lion[100]}
+                            borderTop="none"
                           >
                             <CreateExercise
                               exercise={exercise}
@@ -626,7 +628,7 @@ export default function CreateWorkout() {
                     <Detail
                       title={"Time"}
                       value={formatDurationShort(
-                        state.elapsedSeconds.value ?? 0
+                        state.elapsedSeconds.value ?? 0,
                       )}
                       variant="md"
                       color={theme.colors.graphPrimary[500]}
@@ -650,7 +652,7 @@ export default function CreateWorkout() {
 
                   {state.exercises.map((exercise, index) => {
                     const incompleteEntry = incompleteExercises.find(
-                      (entry) => entry.index === index
+                      (entry) => entry.index === index,
                     );
                     const isIncomplete = !!incompleteEntry;
                     return (

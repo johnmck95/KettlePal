@@ -1,12 +1,6 @@
 import React from "react";
 
-import {
-  Button,
-  GridItem,
-  SimpleGrid,
-  Text,
-  useMediaQuery,
-} from "@chakra-ui/react";
+import { SimpleGrid, Text, useMediaQuery } from "@chakra-ui/react";
 import AddComment from "./FormComponents/NewWorkout/Generic/AddComment";
 import ConfirmModal from "../ConfirmModal";
 import ExerciseTitle from "./FormComponents/NewWorkout/Exercise/ExerciseTitle";
@@ -152,7 +146,9 @@ export default function CreateExercise({
                   sx={{ "& > *": { minWidth: 0 } }}
                 >
                   <ExerciseTitle
-                    titleIsInvalid={submitted && exercise.title.errors.length > 0}
+                    titleIsInvalid={
+                      submitted && exercise.title.errors.length > 0
+                    }
                     customTitle={customTitle}
                     exercise={exercise}
                     exerciseIndex={exerciseIndex}
@@ -171,7 +167,9 @@ export default function CreateExercise({
               )}
               <SimpleGrid
                 gap={1}
-                templateColumns="20% 20% 30% 30%"                w="100%"
+                templateColumns="20% 20% 30% 30%"
+                w="100%"
+                px="0.5rem"
                 sx={{ "& > *": { minWidth: 0 } }}
               >
                 <ExerciseSets
@@ -187,7 +185,9 @@ export default function CreateExercise({
                   handleExercise={handleExercise}
                 />
                 <ExerciseWeight
-                  weightIsInvalid={submitted && exercise.weight.errors.length > 0}
+                  weightIsInvalid={
+                    submitted && exercise.weight.errors.length > 0
+                  }
                   customWeight={customWeight}
                   exercise={exercise}
                   exerciseIndex={exerciseIndex}
@@ -218,7 +218,9 @@ export default function CreateExercise({
               {!hideSharedFields && (
                 <>
                   <ExerciseTitle
-                    titleIsInvalid={submitted && exercise.title.errors.length > 0}
+                    titleIsInvalid={
+                      submitted && exercise.title.errors.length > 0
+                    }
                     customTitle={customTitle}
                     exercise={exercise}
                     exerciseIndex={exerciseIndex}
