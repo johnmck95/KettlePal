@@ -465,6 +465,7 @@ export default function CreateWorkout() {
                           group.forEach((idx) =>
                             handleExercise(name, value, idx),
                           );
+                        if (showTracking) return null;
                         return (
                           <Box p="0.25rem" mb="0.5rem">
                             <SimpleGrid gap={1} columns={2}>
@@ -493,6 +494,33 @@ export default function CreateWorkout() {
                                 }
                               />
                             </SimpleGrid>
+                            {submitted &&
+                              (firstExercise.title.errors.length > 0 ||
+                                firstExercise.repsDisplay.errors.length >
+                                  0) && (
+                                <Box mt="0.25rem">
+                                  {firstExercise.title.errors.map((err) => (
+                                    <Text
+                                      key={err}
+                                      fontSize="xs"
+                                      color={theme.colors.error}
+                                    >
+                                      • {err}
+                                    </Text>
+                                  ))}
+                                  {firstExercise.repsDisplay.errors.map(
+                                    (err) => (
+                                      <Text
+                                        key={err}
+                                        fontSize="xs"
+                                        color={theme.colors.error}
+                                      >
+                                        • {err}
+                                      </Text>
+                                    ),
+                                  )}
+                                </Box>
+                              )}
                           </Box>
                         );
                       })()}

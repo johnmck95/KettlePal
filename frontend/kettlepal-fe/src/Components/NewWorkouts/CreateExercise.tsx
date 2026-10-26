@@ -86,12 +86,12 @@ export default function CreateExercise({
   });
 
   const errors = [
-    ...exercise.title.errors,
+    ...(hideSharedFields ? [] : exercise.title.errors),
     ...exercise.weight.errors,
     ...exercise.weightUnit.errors,
     ...exercise.sets.errors,
     ...exercise.reps.errors,
-    ...exercise.repsDisplay.errors,
+    ...(hideSharedFields ? [] : exercise.repsDisplay.errors),
     ...exercise.comment.errors,
     ...exercise.elapsedSeconds.errors,
     ...exercise.multiplier.errors,
