@@ -454,6 +454,7 @@ export default function CreateWorkout() {
                       borderRadius="5px"
                       boxShadow={`0px 1px 4px ${theme.colors.grey[400]}`}
                       bg="white"
+                      position="relative"
                     >
                       {(() => {
                         const firstIndex = group[0];
