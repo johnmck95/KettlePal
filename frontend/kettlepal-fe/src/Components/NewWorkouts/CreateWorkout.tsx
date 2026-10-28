@@ -383,7 +383,8 @@ export default function CreateWorkout() {
                 if (
                   i > 0 &&
                   exercise.title.value.trim() !== "" &&
-                  exercise.title.value === prev?.title.value
+                  exercise.title.value === prev?.title.value &&
+                  exercise.repsDisplay.value === prev?.repsDisplay.value
                 ) {
                   groups[groups.length - 1].push(i);
                 } else {
@@ -454,6 +455,7 @@ export default function CreateWorkout() {
                       borderRadius="5px"
                       boxShadow={`0px 1px 4px ${theme.colors.grey[400]}`}
                       bg="white"
+                      position="relative"
                     >
                       {(() => {
                         const firstIndex = group[0];

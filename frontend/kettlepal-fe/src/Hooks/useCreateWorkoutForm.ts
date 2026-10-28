@@ -68,12 +68,12 @@ const useCreateWorkoutForm = () => {
 
       sessionStorage.setItem(
         `completedSets-${exerciseKey}`,
-        nextCompleted.toString()
+        nextCompleted.toString(),
       );
 
       // Bump exercise.sets if needed
       const exerciseIndex = state.exercises.findIndex(
-        (e) => e.key === exerciseKey
+        (e) => e.key === exerciseKey,
       );
 
       if (exerciseIndex !== -1) {
@@ -104,7 +104,7 @@ const useCreateWorkoutForm = () => {
 
       sessionStorage.setItem(
         `completedSets-${exerciseKey}`,
-        nextCount.toString()
+        nextCount.toString(),
       );
 
       return next;
@@ -131,7 +131,7 @@ const useCreateWorkoutForm = () => {
         t.comment,
         t.elapsedSeconds,
         t.multiplier,
-      ].some((f) => f.errors.length > 0)
+      ].some((f) => f.errors.length > 0),
     );
 
   const timerIsActiveRef = useRef<boolean>(false);
@@ -144,7 +144,9 @@ const useCreateWorkoutForm = () => {
 
   const updateState = useCallback(
     (
-      producer: (prev: CreateOrUpdateWorkoutState) => CreateOrUpdateWorkoutState
+      producer: (
+        prev: CreateOrUpdateWorkoutState,
+      ) => CreateOrUpdateWorkoutState,
     ) => {
       setState((prev) => {
         const next = producer(prev);
@@ -206,7 +208,7 @@ const useCreateWorkoutForm = () => {
         };
       });
     },
-    []
+    [],
   );
 
   // The StopWatch ref to control start/pause from CreateWorkout.tsx
@@ -235,7 +237,7 @@ const useCreateWorkoutForm = () => {
     }
     const clockStarted = parseInt(
       sessionStorage.getItem(STOPWATCH_TIMESTAMP_KEY) ?? "",
-      10
+      10,
     );
     if (!!clockStarted && state.exercises.length > 0) {
       handleWorkoutState(showTracking ? "submit" : "active");
@@ -291,7 +293,7 @@ const useCreateWorkoutForm = () => {
         },
       }));
     },
-    [updateState]
+    [updateState],
   );
 
   // Update workout timer every 1s
@@ -301,7 +303,7 @@ const useCreateWorkoutForm = () => {
       interval = setInterval(() => {
         const storedTimestamp = parseInt(
           sessionStorage.getItem(STOPWATCH_TIMESTAMP_KEY) ?? "",
-          10
+          10,
         );
         setTime(calculateElapsedTime(storedTimestamp));
       }, 1000);
@@ -401,15 +403,84 @@ const useCreateWorkoutForm = () => {
     | "comment"
     | "elapsedSeconds"
     | "multiplier";
+
+  // Group same-titled exercises together, preserving each group's original
+  // relative position (so a renamed group stays near where it was).
+  function clusterByTitle(
+    exercises: CreateOrUpdateWorkoutState["exercises"],
+    priorityGroupKey: string,
+    prevExercises: CreateOrUpdateWorkoutState["exercises"],
+    changedKey: string,
+  ): CreateOrUpdateWorkoutState["exercises"] {
+    const keyOf = (
+      exercise: CreateOrUpdateWorkoutState["exercises"][number],
+    ) =>
+      exercise.title.value.trim() === ""
+        ? `__empty__${exercise.key}`
+        : `${exercise.title.value.trim()}__${exercise.repsDisplay.value.trim()}`;
+
+    const grouped = new Map<string, CreateOrUpdateWorkoutState["exercises"]>();
+    exercises.forEach((exercise) => {
+      const key = keyOf(exercise);
+      if (!grouped.has(key)) grouped.set(key, []);
+      grouped.get(key)!.push(exercise);
+    });
+
+    const groupIndexIn = (
+      list: CreateOrUpdateWorkoutState["exercises"],
+      title: string,
+    ) => {
+      const seen = new Set<string>();
+      let i = 0;
+      for (const exercise of list) {
+        const key = keyOf(exercise);
+        if (!seen.has(key)) {
+          seen.add(key);
+          if (key === title) {
+            return i;
+          }
+          i++;
+        }
+      }
+      return -1;
+    };
+
+    const changed = prevExercises.find(
+      (exercise) => exercise.key === changedKey,
+    );
+    const changedOldKey = changed ? keyOf(changed) : "";
+    const normalizedNew = priorityGroupKey;
+
+    const oldGroupOfChanged = changed
+      ? groupIndexIn(prevExercises, keyOf(changed))
+      : -1;
+    const existingGroup = groupIndexIn(prevExercises, normalizedNew);
+
+    const sortedKeys = Array.from(grouped.keys()).sort((a, b) => {
+      const isNewlyAdded = changedOldKey.startsWith("__empty__");
+      const pos = (key: string) =>
+        key === normalizedNew
+          ? isNewlyAdded || existingGroup < 0
+            ? Math.max(oldGroupOfChanged, 0)
+            : existingGroup
+          : Math.max(groupIndexIn(prevExercises, key), 0);
+      return pos(a) - pos(b);
+    });
+
+    return sortedKeys.flatMap((key) => grouped.get(key)!);
+  }
+
   // Updates all per-exercise state properties based on the index.
   function handleExercise(
     name: string,
     value: string | number,
-    index: number
+    index: number,
   ): void {
-    updateState((prevState) => ({
-      ...prevState,
-      exercises: prevState.exercises.map((exercise, i) => {
+    updateState((prevState) => {
+      const prevExercises = prevState.exercises;
+      const changedKey = prevExercises[index]?.key;
+
+      const updated = prevExercises.map((exercise, i) => {
         if (i === index) {
           return {
             ...exercise,
@@ -417,8 +488,25 @@ const useCreateWorkoutForm = () => {
           };
         }
         return exercise;
-      }),
-    }));
+      });
+
+      let nextExercises = updated;
+      if ((name === "title" || name === "repsDisplay") && changedKey) {
+        const updatedExercise = updated[index];
+        const priorityKey =
+          updatedExercise.title.value.trim() === ""
+            ? `__empty__${updatedExercise.key}`
+            : `${updatedExercise.title.value.trim()}__${updatedExercise.repsDisplay.value.trim()}`;
+        nextExercises = clusterByTitle(
+          updated,
+          priorityKey,
+          prevExercises,
+          changedKey,
+        );
+      }
+
+      return { ...prevState, exercises: nextExercises };
+    });
   }
 
   /**

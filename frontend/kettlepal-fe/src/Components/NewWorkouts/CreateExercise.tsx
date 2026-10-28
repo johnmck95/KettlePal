@@ -96,7 +96,7 @@ export default function CreateExercise({
     ...exercise.elapsedSeconds.errors,
     ...exercise.multiplier.errors,
   ];
-  const [isMobile] = useMediaQuery("(max-width: 430px)");
+  const [isMobile] = useMediaQuery("(max-width: 768px)");
 
   return (
     <ExerciseContainer
