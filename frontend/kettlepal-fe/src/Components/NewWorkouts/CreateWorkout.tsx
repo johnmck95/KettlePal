@@ -383,7 +383,8 @@ export default function CreateWorkout() {
                 if (
                   i > 0 &&
                   exercise.title.value.trim() !== "" &&
-                  exercise.title.value === prev?.title.value
+                  exercise.title.value === prev?.title.value &&
+                  exercise.repsDisplay.value === prev?.repsDisplay.value
                 ) {
                   groups[groups.length - 1].push(i);
                 } else {

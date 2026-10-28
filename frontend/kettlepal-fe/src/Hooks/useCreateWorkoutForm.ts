@@ -408,7 +408,7 @@ const useCreateWorkoutForm = () => {
   // relative position (so a renamed group stays near where it was).
   function clusterByTitle(
     exercises: CreateOrUpdateWorkoutState["exercises"],
-    newTitle: string,
+    priorityGroupKey: string,
     prevExercises: CreateOrUpdateWorkoutState["exercises"],
     changedKey: string,
   ): CreateOrUpdateWorkoutState["exercises"] {
@@ -417,7 +417,7 @@ const useCreateWorkoutForm = () => {
     ) =>
       exercise.title.value.trim() === ""
         ? `__empty__${exercise.key}`
-        : exercise.title.value.trim();
+        : `${exercise.title.value.trim()}__${exercise.repsDisplay.value.trim()}`;
 
     const grouped = new Map<string, CreateOrUpdateWorkoutState["exercises"]>();
     exercises.forEach((exercise) => {
@@ -448,13 +448,8 @@ const useCreateWorkoutForm = () => {
     const changed = prevExercises.find(
       (exercise) => exercise.key === changedKey,
     );
-    const changedOldKey = changed
-      ? changed.title.value.trim() === ""
-        ? `__empty__${changed.key}`
-        : changed.title.value.trim()
-      : "";
-    const normalizedNew =
-      newTitle.trim() === "" ? `__empty__${changedKey}` : newTitle.trim();
+    const changedOldKey = changed ? keyOf(changed) : "";
+    const normalizedNew = priorityGroupKey;
 
     const oldGroupOfChanged = changed
       ? groupIndexIn(prevExercises, keyOf(changed))
@@ -495,10 +490,20 @@ const useCreateWorkoutForm = () => {
         return exercise;
       });
 
-      const nextExercises =
-        name === "title" && changedKey
-          ? clusterByTitle(updated, String(value), prevExercises, changedKey)
-          : updated;
+      let nextExercises = updated;
+      if ((name === "title" || name === "repsDisplay") && changedKey) {
+        const updatedExercise = updated[index];
+        const priorityKey =
+          updatedExercise.title.value.trim() === ""
+            ? `__empty__${updatedExercise.key}`
+            : `${updatedExercise.title.value.trim()}__${updatedExercise.repsDisplay.value.trim()}`;
+        nextExercises = clusterByTitle(
+          updated,
+          priorityKey,
+          prevExercises,
+          changedKey,
+        );
+      }
 
       return { ...prevState, exercises: nextExercises };
     });
