@@ -71,7 +71,7 @@ export function ExerciseContainer({
             variant="closeX"
             aria-label="Delete Exercise"
             icon={<FaTimes />}
-            size="sm"
+            size="xs"
             zIndex={2}
             onClick={onOpenDeleteExercise}
             position="absolute"
